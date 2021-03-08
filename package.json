@@ -5,8 +5,12 @@
   "author": "Salesforce, Inc.",
   "bugs": "https://github.com/heroku/sf-plugin-functions/issues",
   "dependencies": {
+    "@heroku-cli/schema": "^1.0.25",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
+    "axios": "^0.21.1",
+    "axios-debug-log": "^0.8.2",
+    "netrc-parser": "^3.1.6",
     "tslib": "^2.1.0"
   },
   "devDependencies": {
