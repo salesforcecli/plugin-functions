@@ -21,7 +21,7 @@ export default class ConfigSet extends Command {
 
   parseKeyValuePairs(pairs: Array<string>) {
     if (pairs.length === 0) {
-      this.error('Usage: sfdx v2:app:config:set KEY1=VALUE1 [KEY2=VALUE2 ...]\nMust specify KEY and VALUE to set.')
+      this.error('Usage: sf env:config:set KEY1=VALUE1 [KEY2=VALUE2 ...]\nMust specify KEY and VALUE to set.')
     }
 
     return pairs.reduce((acc, elem) => {
