@@ -4,6 +4,7 @@ import {Config, Repository, Signature} from 'nodegit'
 import * as path from 'path'
 import {createEnv} from 'yeoman-environment'
 import Command from '../../lib/base'
+import * as fs from 'fs-extra'
 
 const options = {
   outputdir: '.',
@@ -24,6 +25,12 @@ export default class GenerateProject extends Command {
 
   async run() {
     const {flags} = this.parse(GenerateProject)
+    const projectPath = path.resolve(`./${flags.name}`)
+
+    if (await fs.pathExists(projectPath)) {
+      this.error(`Directory ${flags.name} already exists.`)
+    }
+
     const env = createEnv()
     env.registerStub(ProjectGenerator, 'project-generator')
 
@@ -34,7 +41,7 @@ export default class GenerateProject extends Command {
     })
 
     // Initialize git repo in the directory we just created
-    const repo = await Repository.init(path.resolve(`./${flags.name}`), 0)
+    const repo = await Repository.init(projectPath, 0)
 
     // Get list of changes from the repo (should be all our unstaged files)
     const index = await repo.refreshIndex()
