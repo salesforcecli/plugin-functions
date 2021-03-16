@@ -8,11 +8,10 @@
     "@heroku-cli/color": "^1.1.14",
     "@heroku-cli/schema": "^1.0.25",
     "@heroku/eventsource": "^1.0.7",
-    "@oclif/command": "^1",
-    "@oclif/config": "^1",
     "@salesforce/core": "^2.20.5",
     "@salesforce/plugin-org": "^1.6.2",
     "@salesforce/templates": "^51.3.0",
+    "@oclif/core": "^0.4.0",
     "axios": "^0.21.1",
     "axios-debug-log": "^0.8.2",
     "cli-ux": "^5.5.1",
@@ -73,10 +72,11 @@
   },
   "repository": "heroku/sf-plugin-functions",
   "scripts": {
+    "build": "rm -rf lib && tsc -b",
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "prepack": "yarn build && oclif-dev manifest && oclif-dev readme",
     "version": "oclif-dev readme && git add README.md"
   }
 }
