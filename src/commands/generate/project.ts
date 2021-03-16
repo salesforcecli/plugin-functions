@@ -1,11 +1,11 @@
 import {flags} from '@oclif/command'
 import ProjectGenerator from '@salesforce/templates/lib/generators/projectGenerator'
-import {Config, Repository, Signature} from 'nodegit'
+import * as execa from 'execa'
+import * as fs from 'fs-extra'
+import {Repository, Signature} from 'nodegit'
 import * as path from 'path'
 import {createEnv} from 'yeoman-environment'
 import Command from '../../lib/base'
-import * as fs from 'fs-extra'
-import * as execa from 'execa'
 
 const options = {
   outputdir: '.',
