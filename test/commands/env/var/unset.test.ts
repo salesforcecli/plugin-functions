@@ -13,7 +13,7 @@ describe('sf env:var:unset', () => {
   )
   .command(['env:var:unset', 'foo', '--app', 'my-app'])
   .it('works with a single variable', ctx => {
-    expect(ctx.stderr).to.contain('Unsetting foo and restarting ⬢ my-app... done\n')
+    expect(ctx.stderr).to.contain('Unsetting foo and restarting my-app... done\n')
   })
 
   test
@@ -29,6 +29,6 @@ describe('sf env:var:unset', () => {
   )
   .command(['env:var:unset', 'foo', 'bar', '--app', 'my-app'])
   .it('works with a multiple variables', ctx => {
-    expect(ctx.stderr).to.contain('Unsetting foo, bar and restarting ⬢ my-app... done\n')
+    expect(ctx.stderr).to.contain('Unsetting foo, bar and restarting my-app... done\n')
   })
 })

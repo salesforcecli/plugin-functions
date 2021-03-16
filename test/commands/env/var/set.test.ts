@@ -14,7 +14,7 @@ describe('sf env:var:set', () => {
   )
   .command(['env:var:set', 'foo=bar', '--app', 'my-app'])
   .it('works with a single variable', ctx => {
-    expect(ctx.stderr).to.contain('Setting foo and restarting ⬢ my-app... done\n')
+    expect(ctx.stderr).to.contain('Setting foo and restarting my-app... done\n')
   })
 
   test
@@ -30,7 +30,7 @@ describe('sf env:var:set', () => {
   )
   .command(['env:var:set', 'foo=bar', 'bar=baz', '--app', 'my-app'])
   .it('works with a multiple variables', ctx => {
-    expect(ctx.stderr).to.contain('Setting foo, bar and restarting ⬢ my-app... done\n')
+    expect(ctx.stderr).to.contain('Setting foo, bar and restarting my-app... done\n')
   })
 
   test
