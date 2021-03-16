@@ -9,7 +9,6 @@
     "@heroku-cli/schema": "^1.0.25",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
-    "ansi-colors": "^4.1.1",
     "axios": "^0.21.1",
     "axios-debug-log": "^0.8.2",
     "cli-ux": "^5.5.1",
@@ -60,7 +59,7 @@
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
-    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   }
 }
