@@ -2,6 +2,7 @@ import {expect, test} from '@oclif/test'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import * as assert from 'yeoman-assert'
+import GenerateProject from '../../../src/commands/generate/project'
 
 const standardfolderarray = [
   'aura',
@@ -43,6 +44,7 @@ describe('sf generate function', () => {
     assert.file([path.join('foo', 'scripts', 'apex', 'hello.apex')])
     assert.file([path.join('foo', 'README.md')])
     assert.file([path.join('foo', 'sfdx-project.json')])
+    assert.file([path.join('foo', '.git')])
     assert.fileContent(path.join('foo', 'sfdx-project.json'), '"namespace": "",')
     assert.fileContent(path.join('foo', 'sfdx-project.json'), '"path": "force-app",')
     assert.fileContent(path.join('foo', 'sfdx-project.json'), 'sourceApiVersion')
@@ -94,4 +96,16 @@ describe('sf generate function', () => {
     expect(error.message).to.include('Directory foo already exists.')
   })
   .it('should not create duplicate project in the directory where command is executed')
+
+  test
+  .stdout()
+  .stderr()
+  .finally(() => {
+    fs.removeSync('foo')
+  })
+  .stub(GenerateProject.prototype, 'hasGit', () => Promise.resolve(false))
+  .command(['generate:project', '--name=foo'])
+  .it('doesn\'t try to git init when git is not installed', ctx => {
+    expect(ctx.stdout).to.contain('No git installation found. Skipping git init.')
+  })
 })
