@@ -1,6 +1,6 @@
 import * as Heroku from '@heroku-cli/schema'
-import {Command as Base} from '@oclif/command'
 import {Org, SfdxProject} from '@salesforce/core'
+import {Command as Base} from '@oclif/core'
 import {cli} from 'cli-ux'
 import {URL} from 'url'
 import APIClient from './api-client'
