@@ -5,6 +5,7 @@ import * as path from 'path'
 import {createEnv} from 'yeoman-environment'
 import Command from '../../lib/base'
 import * as fs from 'fs-extra'
+import * as execa from 'execa'
 
 const options = {
   outputdir: '.',
@@ -21,6 +22,36 @@ export default class GenerateProject extends Command {
       char: 'n',
       required: true,
     }),
+  }
+
+  private async hasGit() {
+    try {
+      await execa('git', ['--version'])
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
+  private async gitInit(projectPath: string) {
+    // Initialize git repo in the directory we just created
+    const repo = await Repository.init(projectPath, 0)
+
+    // Get list of changes from the repo (should be all our unstaged files)
+    const index = await repo.refreshIndex()
+
+    // Get list of file paths for all our unstaged changes and then stage all of them
+    const files = await repo.getStatus()
+    const filePaths = files.map(file => file.path())
+    await index.addAll(filePaths)
+    await index.write()
+    const changes = await index.writeTree()
+
+    // Generate Signatures for both author and committer
+    const author = Signature.now('salesforce cli team', 'salesforce@cli.com')
+    const committer = Signature.now('salesforce cli team', 'salesforce@cli.com')
+
+    await repo.createCommit('HEAD', author, committer, 'Initial commit from sf cli', changes, [])
   }
 
   async run() {
@@ -40,26 +71,11 @@ export default class GenerateProject extends Command {
       }
     })
 
-    // Initialize git repo in the directory we just created
-    const repo = await Repository.init(projectPath, 0)
+    if (!await this.hasGit()) {
+      this.log('No git installation found. Skipping git init.')
+      return
+    }
 
-    // Get list of changes from the repo (should be all our unstaged files)
-    const index = await repo.refreshIndex()
-
-    // Get list of file paths for all our unstaged changes and then stage all of them
-    const files = await repo.getStatus()
-    const filePaths = files.map(file => file.path())
-    await index.addAll(filePaths)
-    await index.write()
-    const changes = await index.writeTree()
-
-    // Generate Signatures for both author and committer
-    const author = Signature.now('salesforce cli team', 'salesforce@cli.com')
-    const config = await Config.openDefault()
-    const username = await config.getEntry('user.name')
-    const email = await config.getEntry('user.email')
-    const committer = Signature.now(username.value(), email.value())
-
-    await repo.createCommit('HEAD', author, committer, 'Initial commit from sf cli', changes, [])
+    await this.gitInit(projectPath)
   }
 }
