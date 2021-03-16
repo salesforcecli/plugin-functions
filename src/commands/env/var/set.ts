@@ -10,7 +10,7 @@ export default class ConfigSet extends Command {
   static description = 'sets a single config value for an environment'
 
   static examples = [
-    '$ sf env:config:set foo --app=my-app',
+    '$ sf env:var:set foo --app=my-app',
   ]
 
   static flags = {
@@ -21,7 +21,7 @@ export default class ConfigSet extends Command {
 
   parseKeyValuePairs(pairs: Array<string>) {
     if (pairs.length === 0) {
-      this.error('Usage: sf env:config:set KEY1=VALUE1 [KEY2=VALUE2 ...]\nMust specify KEY and VALUE to set.')
+      this.error('Usage: sf env:var:set KEY1=VALUE1 [KEY2=VALUE2 ...]\nMust specify KEY and VALUE to set.')
     }
 
     return pairs.reduce((acc, elem) => {

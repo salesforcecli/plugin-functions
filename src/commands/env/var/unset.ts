@@ -10,7 +10,7 @@ export default class ConfigUnset extends Command {
   static description = 'unset a single config value for an environment'
 
   static examples = [
-    '$ sf env:config:set foo --app=my-app',
+    '$ sf env:var:set foo --app=my-app',
   ]
 
   static flags = {
