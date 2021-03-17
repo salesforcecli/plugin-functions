@@ -22,10 +22,10 @@ jobs:
     <<: *test
     docker:
       - image: node:12
-  node-10:
+  node-14:
     <<: *test
     docker:
-      - image: node:10
+      - image: node:14
   cache:
     <<: *test
     steps:
@@ -45,8 +45,8 @@ workflows:
   "sf-plugin-functions":
     jobs:
       - node-latest
+      - node-14
       - node-12
-      - node-10
       - cache:
           filters:
             tags:

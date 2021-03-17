@@ -9,19 +9,27 @@
     "@heroku-cli/schema": "^1.0.25",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
+    "@salesforce/templates": "^51.3.0",
     "axios": "^0.21.1",
     "axios-debug-log": "^0.8.2",
     "cli-ux": "^5.5.1",
+    "execa": "^5.0.0",
+    "fs-extra": "^9.1.0",
     "netrc-parser": "^3.1.6",
-    "tslib": "^2.1.0"
+    "nodegit": "^0.27.0",
+    "yeoman-environment": "^3.1.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
     "@oclif/plugin-help": "^3",
     "@oclif/test": "^1",
     "@types/chai": "^4",
+    "@types/fs-extra": "^9.0.8",
     "@types/mocha": "^8.2.1",
     "@types/node": "^14.14.31",
+    "@types/nodegit": "^0.26.15",
+    "@types/yeoman-assert": "^3.1.1",
+    "@types/yeoman-environment": "^2.10.2",
     "chai": "^4",
     "eslint": "^7.21.0",
     "eslint-config-oclif": "^3.1",
@@ -31,7 +39,8 @@
     "nyc": "^15.1.0",
     "sinon": "^9.2.4",
     "ts-node": "^9.1.1",
-    "typescript": "^3.3"
+    "typescript": "^3.3",
+    "yeoman-assert": "^3.1.1"
   },
   "engines": {
     "node": ">=8.0.0"
