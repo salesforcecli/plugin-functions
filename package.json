@@ -7,6 +7,7 @@
   "dependencies": {
     "@heroku-cli/color": "^1.1.14",
     "@heroku-cli/schema": "^1.0.25",
+    "@heroku/eventsource": "^1.0.7",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@salesforce/templates": "^51.3.0",
