@@ -17,7 +17,6 @@
     "fs-extra": "^9.1.0",
     "netrc-parser": "^3.1.6",
     "nodegit": "^0.27.0",
-    "tslib": "^2.1.0",
     "yeoman-environment": "^3.1.0"
   },
   "devDependencies": {
