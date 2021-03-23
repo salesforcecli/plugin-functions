@@ -200,6 +200,7 @@ export default class GenerateFunction extends Command {
     name: flags.string({
       required: true,
       description: 'function name',
+      char: 'n',
     }),
     language: flags.enum({
       options: ['javascript', 'typescript'],
