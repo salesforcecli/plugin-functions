@@ -4,7 +4,7 @@ import {cli} from 'cli-ux'
 import Command from '../../../lib/base'
 
 export default class LogDrainList extends Command {
-  static description = 'list log drains'
+  static description = 'List log drains connected to a specified environment'
 
   static examples = [
     '$ sf env logdrain list --environment=billingApp-Sandbox',

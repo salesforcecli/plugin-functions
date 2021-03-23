@@ -5,7 +5,7 @@ import {cli} from 'cli-ux'
 import Command from '../../../lib/base'
 
 export default class LogDrainAdd extends Command {
-  static description = 'create a log drain'
+  static description = 'Add log drain to a specified environment'
 
   static examples = [
     '$ sf env logdrain add --environment=billingApp-Sandbox --url=https://example.com/drain',
