@@ -17,6 +17,7 @@ describe('sf env logdrain add', () => {
     .reply(200, LOG_DRAIN),
   )
   .command(['env:logdrain:add', '-e', APP_NAME, '-u', LOG_DRAIN.url])
+  .retries(3)
   .it('creates a log drain', ctx => {
     expect(ctx.stderr).to.contain(`Creating drain for environment ${APP_NAME}`)
   })
