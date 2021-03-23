@@ -27,7 +27,7 @@ const filestocopy = [
 ]
 const vscodearray = ['extensions', 'launch', 'settings']
 
-describe('sf generate function', () => {
+describe('sf generate project', () => {
   before(() => {
     // We do this just in case there was an errant test run that failed and left the previous project
     // folder laying around.
