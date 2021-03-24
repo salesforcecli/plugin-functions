@@ -31,6 +31,11 @@ export default class LogDrainList extends Command {
       return
     }
 
+    if (drains.length === 0) {
+      this.log(`No log drains found for environment ${flags.environment}.`)
+      return
+    }
+
     cli.table<Heroku.LogDrain>(drains, {
       id: {
         header: 'ID',

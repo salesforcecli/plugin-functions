@@ -38,6 +38,19 @@ describe('sf env logdrain list', () => {
   .nock('https://api.heroku.com', api =>
     api
     .get(`/apps/${APP_NAME}/log-drains`)
+    .reply(200, []),
+  )
+  .command(['env:logdrain:list', '-e', APP_NAME])
+  .it('shows a list of log drains', ctx => {
+    expect(ctx.stdout).to.contain(`No log drains found for environment ${APP_NAME}.`)
+  })
+
+  test
+  .stdout()
+  .stderr()
+  .nock('https://api.heroku.com', api =>
+    api
+    .get(`/apps/${APP_NAME}/log-drains`)
     .reply(200, LOG_DRAINS),
   )
   .command(['env:logdrain:list', '-e', APP_NAME, '--json'])
