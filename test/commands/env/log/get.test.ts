@@ -1,6 +1,4 @@
 import {expect, test} from '@oclif/test'
-// import * as sinon from 'sinon'
-
 const fs = require('fs')
 import {readFileSync} from 'fs'
 
@@ -23,95 +21,42 @@ describe('logs', () => {
   )
   .nock('https://api.heroku.com', api =>
     api
-    .post(`/apps/${appName}/log-sessions`, matches({body: {
-      dyno: 'web.2',
-      source: 'app',
-      tail: true,
-    },
-    }))
+    .post(`/apps/${appName}/log-sessions`)
     .reply(200, fakeResponseData),
   )
-  .command(['env:log:get', '--space=production', '--app=functions', '--function=functionName'])
+  .command(['env:log:get', `--app=${appName}`])
   .it('shows logSessionURL', ctx => {
     const logs = readFileSync('test/helpers/logoutput.txt', 'utf-8')
     expect(ctx.stdout).to.include(logs)
   })
 
-  //   test
-  //   .do(function () {
-  //     logplexCreationMutation = () => ({
-  //       functionID: '11111111-1111-1111-1111-111111111111',
-  //       logSessionURL: `${logSessionURLBase}${logSessionURLAddress}`,
-  //     })
+  test
+  .stdout()
+  .nock(logSessionURLBase, {}, api => api
+  .get(logSessionURLAddress)
+  .reply(404, (_uri: any, _requestBody: any) => {}),
+  )
+  .nock('https://api.heroku.com', api =>
+    api
+    .post(`/apps/${appName}/log-sessions`)
+    .reply(200, fakeResponseData),
+  )
+  .command(['env:log:get', `--app=${appName}`])
+  .catch((error: Error) => expect(error.message).to.equal('Request failed with status code 404'))
+  .it('shows 404 error')
 
-  //     graphqlHandler = sinon.spy((_uri, {query, variables}, cb) => {
-  //       return executeQuery(query, variables, {
-  //         Function: () => ({
-  //           functionID: '11111111-1111-1111-1111-111111111111',
-  //           lineCount: 10,
-  //           tail: true,
-  //         }),
-  //         Mutation: () => ({
-  //           logSessionStart: logplexCreationMutation,
-  //         }),
-  //       })
-  //       .then(result => cb(null, [200, result]))
-  //     })
-  //   })
-  //   .nock(logSessionURLBase, {}, api => api
-  //   .get(logSessionURLAddress)
-  //   .reply(404, (_uri: any, _requestBody: any) => {}),
-  //   )
-  //   .nock('https://api.evergreen.salesforce.com', {
-  //     reqheaders: {
-  //       Authorization: /Bearer/i,
-  //       'content-type': v => v.includes('application/json'),
-  //     },
-  //   }, api => api
-  //   .post('/graphql')
-  //   .twice()
-  //   .reply(graphqlHandler),
-  //   )
-  //   .command(['evergreen:logs', '--space=production', '--app=functions', '--function=functionName'])
-  //   .catch((error: Error) => expect(error.message).to.equal('Request failed with status code 404'))
-  //   .it('shows 404 error')
-
-  //   test
-  //   .do(function () {
-  //     logplexCreationMutation = () => ({
-  //       functionID: '11111111-1111-1111-1111-111111111111',
-  //       logSessionURL: `${logSessionURLBase}${logSessionURLAddress}`,
-  //     })
-
-//     graphqlHandler = sinon.spy((_uri, {query, variables}, cb) => {
-//       return executeQuery(query, variables, {
-//         Function: () => ({
-//           functionID: '11111111-1111-1111-1111-111111111111',
-//           lineCount: 10,
-//           tail: true,
-//         }),
-//         Mutation: () => ({
-//           logSessionStart: logplexCreationMutation,
-//         }),
-//       })
-//       .then(result => cb(null, [200, result]))
-//     })
-//   })
-//   .nock(logSessionURLBase, {}, api => api
-//   .get(logSessionURLAddress)
-//   .reply(403, (_uri: any, _requestBody: any) => {}),
-//   )
-//   .nock('https://api.evergreen.salesforce.com', {
-//     reqheaders: {
-//       Authorization: /Bearer/i,
-//       'content-type': v => v.includes('application/json'),
-//     },
-//   }, api => api
-//   .post('/graphql')
-//   .twice()
-//   .reply(graphqlHandler),
-//   )
-//   .command(['evergreen:logs', '--space=production', '--app=functions', '--function=functionName'])
-//   .catch((error: Error) => expect(error.message).to.equal('Request failed with status code 403'))
-//   .it('shows 403 error')
+  test
+  .stdout()
+  .nock(logSessionURLBase, {}, api => api
+  .get(logSessionURLAddress)
+  .reply(403, (_uri: any, _requestBody: any) => {}),
+  )
+  .nock('https://api.heroku.com', api =>
+    api
+    .post(`/apps/${appName}/log-sessions`)
+    .reply(200, fakeResponseData),
+  )
+  .command(['env:log:get', `--app=${appName}`])
+  .catch((error: Error) => expect(error.message).to.equal('Request failed with status code 403'))
+  .it('shows 403 error')
 })
