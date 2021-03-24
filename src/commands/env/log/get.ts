@@ -100,11 +100,9 @@ export default class Logs extends Command {
     }),
     space: flags.string({
       description: 'space name of function to retrieve logs',
-      required: true,
     }),
     function: flags.string({
       description: 'function name of function to retrieve logs',
-      required: true,
     }),
   }
 
@@ -120,6 +118,8 @@ export default class Logs extends Command {
     })
 
     const logURL = response.data.logplex_url
+
+    console.log('response: ', response)
 
     if (logURL) {
       await this.readLogs(logURL, true)
