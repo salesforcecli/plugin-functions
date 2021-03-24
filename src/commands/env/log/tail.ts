@@ -3,13 +3,19 @@ import {flags} from '@oclif/command'
 import Command from '../../../lib/base'
 import axios from 'axios'
 import {cli} from 'cli-ux'
-import * as stream from 'stream'
+import * as Stream from 'stream'
 import * as url from 'url'
 import * as util from 'util'
+import EventSource = require('@heroku/eventsource')
+
+type EventSourceError = Error & ({
+  status?: number;
+  message?: string;
+})
 
 // this splits a stream into lines
 function lineTransform() {
-  const transform = new stream.Transform({objectMode: true, decodeStrings: false})
+  const transform = new Stream.Transform({objectMode: true, decodeStrings: false})
   let _lastLineData: string
 
   transform._transform = function (chunk, _encoding, next) {
@@ -32,20 +38,7 @@ function lineTransform() {
   return transform
 }
 
-import * as Stream from 'stream'
-const EventSource = require('@heroku/eventsource')
-
-type EventSource = {
-  addEventListener(event: string, callback: (x: any) => void): void;
-  close(): void;
-}
-
-type EventSourceError = Error & ({
-  status?: number;
-  message?: string;
-})
-
-function eventSourceStream(url: string, eventSourceOptions: any, tail?: boolean): Stream.Readable {
+function eventSourceStream(url: string, eventSourceOptions: EventSourceOptions, tail?: boolean): Stream.Readable {
   let eventSource: EventSource
 
   const stream = new Stream.Readable({
