@@ -24,7 +24,7 @@ describe('logs', () => {
     .post(`/apps/${appName}/log-sessions`)
     .reply(200, fakeResponseData),
   )
-  .command(['env:log:get', `--app=${appName}`])
+  .command(['env:log:tail', `--environment=${appName}`])
   .it('shows logSessionURL', ctx => {
     const logs = readFileSync('test/helpers/logoutput.txt', 'utf-8')
     expect(ctx.stdout).to.include(logs)
@@ -34,14 +34,14 @@ describe('logs', () => {
   .stdout()
   .nock(logSessionURLBase, {}, api => api
   .get(logSessionURLAddress)
-  .reply(404, (_uri: any, _requestBody: any) => {}),
+  .reply(404, {}),
   )
   .nock('https://api.heroku.com', api =>
     api
     .post(`/apps/${appName}/log-sessions`)
     .reply(200, fakeResponseData),
   )
-  .command(['env:log:get', `--app=${appName}`])
+  .command(['env:log:tail', `--environment=${appName}`])
   .catch((error: Error) => expect(error.message).to.equal('Request failed with status code 404'))
   .it('shows 404 error')
 
@@ -49,14 +49,14 @@ describe('logs', () => {
   .stdout()
   .nock(logSessionURLBase, {}, api => api
   .get(logSessionURLAddress)
-  .reply(403, (_uri: any, _requestBody: any) => {}),
+  .reply(403, {}),
   )
   .nock('https://api.heroku.com', api =>
     api
     .post(`/apps/${appName}/log-sessions`)
     .reply(200, fakeResponseData),
   )
-  .command(['env:log:get', `--app=${appName}`])
+  .command(['env:log:tail', `--environment=${appName}`])
   .catch((error: Error) => expect(error.message).to.equal('Request failed with status code 403'))
   .it('shows 403 error')
 })

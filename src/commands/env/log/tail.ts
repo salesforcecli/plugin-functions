@@ -87,39 +87,30 @@ function eventSourceStream(url: string, eventSourceOptions: any, tail?: boolean)
 }
 
 export default class Logs extends Command {
-  static description = 'stream log output for a function'
+  static description = 'stream log output for an environment'
 
   static examples = [
-    '$ sf env log get hotel-sf --space production --app exampleApp --function exampleFunction',
+    'sf env log tail --environment=billingApp-Scratch1',
   ]
 
   static flags = {
-    app: flags.string({
-      description: 'app name of function to retrieve logs',
+    environment: flags.string({
+      description: 'environment name to retrieve logs',
       required: true,
-    }),
-    space: flags.string({
-      description: 'space name of function to retrieve logs',
-    }),
-    function: flags.string({
-      description: 'function name of function to retrieve logs',
     }),
   }
 
   async run() {
     const {flags} = this.parse(Logs)
 
-    const response: {data:  {logplex_url: string}} = await this.client.post(`/apps/${flags.app}/log-sessions`, {
+    const response: {data:  {logplex_url: string}} = await this.client.post(`/apps/${flags.environment}/log-sessions`, {
       data: {
-        dyno: 'web.1',
         source: 'app',
         tail: true,
       },
     })
 
     const logURL = response.data.logplex_url
-
-    console.log('response: ', response)
 
     if (logURL) {
       await this.readLogs(logURL, true)
