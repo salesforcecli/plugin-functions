@@ -79,7 +79,7 @@ function eventSourceStream(url: string, eventSourceOptions: EventSourceOptions, 
   return stream
 }
 
-export default class LogsTail extends Command {
+export default class LogTail extends Command {
   static description = 'stream log output for an environment'
 
   static examples = [
@@ -95,7 +95,7 @@ export default class LogsTail extends Command {
   }
 
   async run() {
-    const {flags} = this.parse(LogsTail)
+    const {flags} = this.parse(LogTail)
 
     const response = await this.client.post<Heroku.LogSession>(`/apps/${flags.environment}/log-sessions`, {
       data: {
@@ -130,7 +130,7 @@ export default class LogsTail extends Command {
   }
 
   async readLogs(logSessionURL: string, tail: boolean) {
-    const u = (new URL(logSessionURL))
+    const u = new URL(logSessionURL)
     const stream = u.searchParams.has('srv') ? await this.simpleStreamingStream(logSessionURL) : this.eventSourceStream(logSessionURL, tail)
     stream.setEncoding('utf8')
 
