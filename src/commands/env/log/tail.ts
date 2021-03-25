@@ -1,10 +1,10 @@
 import {flags} from '@oclif/command'
 
 import Command from '../../../lib/base'
+import * as Heroku from '@heroku-cli/schema'
 import axios from 'axios'
 import {cli} from 'cli-ux'
 import * as Stream from 'stream'
-import * as url from 'url'
 import * as util from 'util'
 import EventSource = require('@heroku/eventsource')
 
@@ -79,7 +79,7 @@ function eventSourceStream(url: string, eventSourceOptions: EventSourceOptions, 
   return stream
 }
 
-export default class Logs extends Command {
+export default class LogsTail extends Command {
   static description = 'stream log output for an environment'
 
   static examples = [
@@ -89,14 +89,15 @@ export default class Logs extends Command {
   static flags = {
     environment: flags.string({
       description: 'environment name to retrieve logs',
+      char: 'e',
       required: true,
     }),
   }
 
   async run() {
-    const {flags} = this.parse(Logs)
+    const {flags} = this.parse(LogsTail)
 
-    const response: {data:  {logplex_url: string}} = await this.client.post(`/apps/${flags.environment}/log-sessions`, {
+    const response = await this.client.post<Heroku.LogSession>(`/apps/${flags.environment}/log-sessions`, {
       data: {
         source: 'app',
         tail: true,
@@ -129,8 +130,8 @@ export default class Logs extends Command {
   }
 
   async readLogs(logSessionURL: string, tail: boolean) {
-    const u = url.parse(logSessionURL)
-    const stream = (u.query && u.query.includes('srv')) ? (await this.simpleStreamingStream(logSessionURL)) : this.eventSourceStream(logSessionURL, tail)
+    const u = (new URL(logSessionURL))
+    const stream = u.searchParams.has('srv') ? await this.simpleStreamingStream(logSessionURL) : this.eventSourceStream(logSessionURL, tail)
     stream.setEncoding('utf8')
 
     stream.on('data', data => {

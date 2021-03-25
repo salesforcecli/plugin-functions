@@ -13,11 +13,12 @@ describe('logs', () => {
 
   test
   .stdout()
-  .nock(logSessionURLBase, {}, api => api
-  .get(logSessionURLAddress)
-  .reply(200, (_uri: any, _requestBody: any) => {
-    return fs.createReadStream('test/helpers/logoutput.txt')
-  }),
+  .nock(logSessionURLBase, {}, api =>
+    api
+    .get(logSessionURLAddress)
+    .reply(200, (_uri: any, _requestBody: any) => {
+      return fs.createReadStream('test/helpers/logoutput.txt')
+    }),
   )
   .nock('https://api.heroku.com', api =>
     api
@@ -32,9 +33,10 @@ describe('logs', () => {
 
   test
   .stdout()
-  .nock(logSessionURLBase, {}, api => api
-  .get(logSessionURLAddress)
-  .reply(404, {}),
+  .nock(logSessionURLBase, {}, api =>
+    api
+    .get(logSessionURLAddress)
+    .reply(404, {}),
   )
   .nock('https://api.heroku.com', api =>
     api
@@ -47,9 +49,10 @@ describe('logs', () => {
 
   test
   .stdout()
-  .nock(logSessionURLBase, {}, api => api
-  .get(logSessionURLAddress)
-  .reply(403, {}),
+  .nock(logSessionURLBase, {}, api =>
+    api
+    .get(logSessionURLAddress)
+    .reply(403, {}),
   )
   .nock('https://api.heroku.com', api =>
     api
