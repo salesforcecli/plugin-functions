@@ -1,7 +1,8 @@
+import * as Heroku from '@heroku-cli/schema'
 import {Command as Base} from '@oclif/command'
+import {Org, SfdxProject} from '@salesforce/core'
 import {cli} from 'cli-ux'
 import {URL} from 'url'
-
 import APIClient from './api-client'
 import NetrcMachine from './netrc'
 import SfdcAccount from './sfdc-account'
@@ -85,6 +86,36 @@ export default abstract class Command extends Base {
     const {data} = await this.client.get<SfdcAccount>('/account', {
       headers: {
         Accept: 'application/vnd.heroku+json; version=3.salesforce_sso',
+      },
+    })
+
+    return data
+  }
+
+  protected async fetchOrg(aliasOrUsername?: string) {
+    return Org.create({
+      aliasOrUsername,
+    })
+  }
+
+  protected async fetchOrgId(aliasOrUsername?: string) {
+    const org = await this.fetchOrg(aliasOrUsername)
+
+    return org.getOrgId()
+  }
+
+  protected async fetchSfdxProject() {
+    const project = await SfdxProject.resolve()
+
+    return project.resolveProjectConfig()
+  }
+
+  protected async fetchAppForProject(projectName: string, orgAliasOrUsername?: string) {
+    const orgId = await this.fetchOrgId(orgAliasOrUsername)
+
+    const {data} = await this.client.get<Heroku.App>(`/sales-org-connections/${orgId}/apps/${projectName}`, {
+      headers: {
+        Accept: 'application/vnd.heroku+json; version=3.evergreen',
       },
     })
 
