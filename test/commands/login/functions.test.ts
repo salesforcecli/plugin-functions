@@ -34,8 +34,8 @@ describe('sf login functions', () => {
   .finally(ctx => ctx.setStub.restore())
   .it('can save a bearer token from heroku identity service', ctx => {
     expect(windowOpenStub.firstCall.args[0]).to.equal('https://cli-auth.heroku.com/browser_url')
-    expect(ctx.setStub.firstCall.args).to.be.eql(['password', 'evergreen-id-bearer'])
-    expect(ctx.setStub.secondCall.args).to.be.eql(['password', 'evergreen-id-refresh'])
+    expect(ctx.setStub.firstCall).to.have.been.calledWith('password', 'evergreen-id-bearer')
+    expect(ctx.setStub.secondCall).to.have.been.calledWith('password', 'evergreen-id-refresh')
   })
 
   describe('checking against SALESFORCE_FUNCTIONS_IDENTITY_URL set to https://heroku-identity.herokuapp.com', () => {
@@ -71,8 +71,8 @@ describe('sf login functions', () => {
     .finally(ctx => ctx.setStub.restore())
     .it('uses the URL from the environment variable', ctx => {
       expect(windowOpenStub.firstCall.args[0]).to.equal(SALESFORCE_FUNCTIONS_IDENTITY_URL + '/browser_url')
-      expect(ctx.setStub.firstCall.args).to.be.eql(['password', 'evergreen-id-bearer'])
-      expect(ctx.setStub.secondCall.args).to.be.eql(['password', 'evergreen-id-refresh'])
+      expect(ctx.setStub.firstCall).to.have.been.calledWith('password', 'evergreen-id-bearer')
+      expect(ctx.setStub.secondCall).to.have.been.calledWith('password', 'evergreen-id-refresh')
     })
   })
 })

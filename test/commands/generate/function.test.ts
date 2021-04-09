@@ -1,4 +1,3 @@
-/* eslint @typescript-eslint/ban-ts-ignore: "off"  */
 import {expect, test} from '@oclif/test'
 import * as sinon from 'sinon'
 import * as fs from 'fs-extra'
@@ -31,10 +30,8 @@ describe('sf generate:function', () => {
   .it('generates a javascript function', ctx => {
     expect(ctx.stderr).to.equal('')
     expect(ctx.stdout).to.contain('Created javascript')
-    // @ts-ignore
-    expect(fs.mkdirpSync.called).to.be.true
-    // @ts-ignore
-    expect(fs.outputFileSync.callCount).to.equal(javascriptBasicTemplateFiles)
+    expect(fs.mkdirpSync).to.be.called
+    expect(fs.outputFileSync).to.have.callCount(javascriptBasicTemplateFiles)
   })
 
   // Typescript
@@ -43,10 +40,8 @@ describe('sf generate:function', () => {
   .it('generates a typescript function', ctx => {
     expect(ctx.stderr).to.equal('')
     expect(ctx.stdout).to.contain('Created typescript')
-    // @ts-ignore
-    expect(fs.mkdirpSync.called).to.be.true
-    // @ts-ignore
-    expect(fs.outputFileSync.callCount).to.equal(typescriptBasicTemplateFiles)
+    expect(fs.mkdirpSync).to.be.called
+    expect(fs.outputFileSync).to.have.callCount(typescriptBasicTemplateFiles)
   })
 
   testTemplate('javascript', null)
@@ -56,15 +51,12 @@ describe('sf generate:function', () => {
   .it('does not generate a function when it is not run inside a project', ctx => {
     expect(ctx.stderr).to.equal('')
     expect(ctx.stdout).to.not.contain('Created javascript')
-    // @ts-ignore
-    expect(fs.mkdirpSync.called).to.be.false
-    // @ts-ignore
-    expect(fs.outputFileSync.callCount).to.equal(0)
+    expect(fs.mkdirpSync).to.not.have.been.called
+    expect(fs.outputFileSync).to.not.have.been.called
   })
 
   testTemplate('typescript', '../../../sfdx-project.json')
   .it('generates a function even if called from below the root of a project', () => {
-    // @ts-ignore
-    expect(fs.outputFileSync.calledWith('../../../functions/MyFunction/index.ts')).to.be.true
+    expect(fs.outputFileSync).to.have.been.calledWith('../../../functions/MyFunction/index.ts')
   })
 })

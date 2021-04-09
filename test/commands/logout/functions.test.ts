@@ -11,7 +11,7 @@ describe('sf logout functions', () => {
   .command(['logout:functions'])
   .finally(ctx => ctx.deleteSpy.restore())
   .it('deletes both machine entries in netrc', ctx => {
-    expect(ctx.deleteSpy.calledTwice).to.be.true
+    expect(ctx.deleteSpy).to.have.been.calledTwice
     expect(ctx.stdout).to.contain('Logged out successfully')
   })
 })
