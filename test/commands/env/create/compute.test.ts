@@ -44,6 +44,7 @@ describe('sf env create compute', () => {
   test
   .stdout()
   .stderr()
+  .retries(3)
   .do(() => {
     sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
     sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK)
@@ -72,6 +73,7 @@ describe('sf env create compute', () => {
   test
   .stdout()
   .stderr()
+  .retries(3)
   .do(() => {
     orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
     sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK)
