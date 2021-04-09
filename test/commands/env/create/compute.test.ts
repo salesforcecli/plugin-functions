@@ -69,16 +69,18 @@ describe('sf env create compute', () => {
   let orgStub: any
 
   const aliasSetSpy = sandbox.spy()
+  const aliasWriteSpy = sandbox.spy()
 
   test
-  .stdout()
-  .stderr()
+  .stdout({print: true})
+  .stderr({print: true})
   .retries(3)
   .do(() => {
     orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
     sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK)
     sandbox.stub(Aliases, 'create' as any).returns({
       set: aliasSetSpy,
+      write: aliasWriteSpy,
     })
   })
   .finally(() => {
@@ -92,12 +94,13 @@ describe('sf env create compute', () => {
     .reply(200, APP_MOCK)
   })
   .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`])
-  .it('creates a compute environment using the default org and project when no flags are passed', ctx => {
+  .it('creates a compute environment using and sets an alias using values passed in flags', ctx => {
     expect(ctx.stderr).to.contain(`Creating compute environment for org ID ${ORG_MOCK.id}`)
     expect(ctx.stdout).to.contain(`New compute environment created with ID ${APP_MOCK.name}`)
     expect(ctx.stdout).to.contain(`Your compute environment with local alias ${ENVIRONMENT_ALIAS} is ready`)
     expect(orgStub).to.have.been.calledWith({aliasOrUsername: ORG_ALIAS})
     expect(aliasSetSpy).to.have.been.calledWith(ENVIRONMENT_ALIAS, APP_MOCK.name)
+    expect(aliasWriteSpy).to.have.been.called
   })
 
   test

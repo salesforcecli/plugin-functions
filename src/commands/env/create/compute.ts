@@ -72,7 +72,7 @@ export default class EnvCreateCompute extends Command {
 
       // If environment creation fails because an environment already exists for this org and project
       // we want to fetch the existing environment so that we can point the user to it
-      if (error.body.message.includes(DUPLICATE_PROJECT_MESSAGE)) {
+      if (error.body?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
         cli.action.stop('error!')
         const app = await this.fetchAppForProject(projectName, org.getUsername())
 
