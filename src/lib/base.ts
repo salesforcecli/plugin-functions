@@ -93,6 +93,7 @@ export default abstract class Command extends Base {
   }
 
   protected async fetchOrg(aliasOrUsername?: string) {
+    // if `aliasOrUsername` is null here, Org.create will pull the default org from the surrounding environment
     return Org.create({
       aliasOrUsername,
     })
