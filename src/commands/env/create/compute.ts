@@ -56,6 +56,8 @@ export default class EnvCreateCompute extends Command {
         const aliases = await Aliases.create({})
 
         aliases.set(alias, app.name!)
+
+        await aliases.write()
       }
 
       cli.action.stop()
