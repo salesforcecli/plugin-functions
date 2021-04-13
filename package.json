@@ -11,6 +11,7 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@salesforce/core": "^2.20.5",
+    "@salesforce/plugin-org": "^1.6.2",
     "@salesforce/templates": "^51.3.0",
     "axios": "^0.21.1",
     "axios-debug-log": "^0.8.2",
@@ -19,6 +20,7 @@
     "execa": "^5.0.0",
     "fs-extra": "^9.1.0",
     "handlebars": "^4.7.7",
+    "lodash": "^4.17.21",
     "netrc-parser": "^3.1.6",
     "nodegit": "^0.27.0",
     "yeoman-environment": "^3.1.0"
