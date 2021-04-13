@@ -7,6 +7,14 @@ import {format} from 'date-fns'
 import Command from '../../../lib/base'
 
 export default class EnvCreateCompute extends Command {
+  static description = 'create a compute environment for use with Salesforce Functions'
+
+  static examples = [
+    '$ sf env create compute',
+    '$ sf env create compute --setalias my-compute-environment',
+    '$ sf env create compute --connected-org my-scratch-org',
+  ]
+
   static flags = {
     'connected-org': flags.string({
       char: 'o',
