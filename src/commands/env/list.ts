@@ -34,9 +34,10 @@ export default class EnvList extends Command {
 
   private aliases?: Aliases
 
-  private aliasReverseLookup?: Dictionary<string[]>
+  private aliasReverseLookup?: Dictionary<string>
 
   async resolveOrgs(all = false) {
+    // adapted from https://github.com/salesforcecli/plugin-org/blob/3012cc04a670e4bf71e75a02e2f0981a71eb4e0d/src/commands/force/org/list.ts#L44-L90
     let fileNames: Array<string> = []
     try {
       fileNames = await AuthInfo.listAllAuthFiles()
@@ -86,27 +87,28 @@ export default class EnvList extends Command {
     if (!this.aliasReverseLookup) {
       const entries = this.aliases.entries()
 
-      this.aliasReverseLookup = entries.reduce((acc: Dictionary<string[]>, [alias, environmentName]) => {
+      // Because there's no reliable way to query aliases *by their value*, we instead grab *all* of
+      // the aliases and create a reverse lookup table that is keyed on the alias values rather than
+      // the aliases themselves.Then we cache it, because we definitely don't want to do this any
+      // more than we have to.
+      this.aliasReverseLookup = entries.reduce((acc: Dictionary<string>, [alias, environmentName]) => {
         if (typeof environmentName !== 'string') {
           return acc
         }
 
-        if (acc[environmentName]) {
-          acc[environmentName].push(alias)
-        } else {
-          acc[environmentName] = [alias]
-        }
+        // You might have looked at this and realized that a user could potentially have multiple
+        // aliases that point to the same value, in which case we could be clobbering a previous
+        // entry here by simply assigning the current alias to the value in the lookup table
+
+        // Congratulations! You are correct, but since we don't have any way to know which alias is
+        // the one they care about, we simply have to pick one
+        acc[environmentName] = alias
+
         return acc
       }, {})
     }
 
-    const match = this.aliasReverseLookup[environmentName]
-
-    if (match) {
-      return match[0]
-    }
-
-    return ''
+    return this.aliasReverseLookup[environmentName] ?? ''
   }
 
   private async resolveAliasesForEnvironments(envs: Array<ComputeEnvironment>) {
