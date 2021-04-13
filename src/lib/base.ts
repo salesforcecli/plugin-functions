@@ -5,7 +5,7 @@ import {cli} from 'cli-ux'
 import {URL} from 'url'
 import APIClient from './api-client'
 import NetrcMachine from './netrc'
-import SfdcAccount from './sfdc-account'
+import {SfdcAccount} from './sfdc-types'
 
 export default abstract class Command extends Base {
   // Putting this here so we don't have to hide every single v2 command during development
