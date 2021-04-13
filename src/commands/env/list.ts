@@ -1,3 +1,4 @@
+import herokuColor from '@heroku-cli/color'
 import {flags} from '@oclif/command'
 import {Aliases, AuthInfo} from '@salesforce/core'
 import {identifyActiveOrgByStatus, OrgListUtil} from '@salesforce/plugin-org/lib/shared/orgListUtil'
@@ -5,11 +6,8 @@ import {ExtendedAuthFields} from '@salesforce/plugin-org/lib/shared/orgTypes'
 import {cli} from 'cli-ux'
 import {sortBy} from 'lodash'
 import Command from '../../lib/base'
-import herokuColor from '@heroku-cli/color'
-import * as Heroku from '@heroku-cli/schema'
 import herokuVariant from '../../lib/heroku-variant'
 import {ComputeEnvironment, Dictionary} from '../../lib/sfdc-types'
-import roundToNearestMinutesWithOptions from 'date-fns/esm/fp/roundToNearestMinutesWithOptions/index.js'
 
 type EnvironmentType = 'org' | 'scratchorg' | 'compute'
 
