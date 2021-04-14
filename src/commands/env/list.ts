@@ -141,6 +141,12 @@ export default class EnvList extends Command {
 
   renderOrgTable(orgs: Array<ExtendedAuthFields>) {
     cli.log(herokuColor.bold(`Type: ${herokuColor.cyan('Salesforce Org')}`))
+
+    if (!orgs.length) {
+      cli.log('No orgs found')
+      return
+    }
+
     cli.table(orgs, {
       alias: {
         header: 'ALIAS',
@@ -161,6 +167,12 @@ export default class EnvList extends Command {
 
   renderScratchOrgTable(orgs: Array<ExtendedAuthFields>) {
     cli.log(herokuColor.bold(`Type: ${herokuColor.cyan('Scratch Org')}`))
+
+    if (!orgs.length) {
+      cli.log('No scratch orgs found')
+      return
+    }
+
     cli.table(orgs, {
       alias: {
         header: 'ALIAS',
@@ -180,6 +192,12 @@ export default class EnvList extends Command {
 
   renderComputeEnvironmentTable(envs: Array<ComputeEnvironment>) {
     cli.log(herokuColor.bold(`Type: ${herokuColor.cyan('Compute Environment')}`))
+
+    if (!envs.length) {
+      cli.log('No compute environments found.')
+      return
+    }
+
     cli.table(envs, {
       alias: {
         header: 'ALIAS',
@@ -206,15 +224,15 @@ export default class EnvList extends Command {
     const project = await this.fetchSfdxProject()
     const {nonScratchOrgs, scratchOrgs} = await this.resolveOrgs(flags.all)
     const orgs = [...nonScratchOrgs, ...scratchOrgs]
-    const environments = await this.resolveEnvironments(orgs)
+    let environments = await this.resolveEnvironments(orgs)
+    const types = flags['environment-type'] as Array<EnvironmentType> ?? ['org', 'scratchorg', 'compute']
 
     if (!flags.all) {
       this.log(`Current environments for project ${project.name}\n`)
-    }
 
-    let types = flags['environment-type'] as Array<EnvironmentType>
-    if (!types) {
-      types = ['org', 'scratchorg', 'compute']
+      if (types.includes('compute')) {
+        environments = environments.filter(env => env.sfdx_project_name === project.name)
+      }
     }
 
     const tableLookup = {

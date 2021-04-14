@@ -13,6 +13,7 @@ export interface SfdcAccount extends Heroku.Account {
   };
   salesforce_federated: boolean;
   salesforce_username: string;
+  salesforce_email: string;
 }
 
 export interface ComputeEnvironment extends Heroku.App {
