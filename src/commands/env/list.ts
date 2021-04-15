@@ -43,7 +43,7 @@ export default class EnvList extends Command {
       fileNames = await AuthInfo.listAllAuthFiles()
     } catch (error) {
       if (error.name === 'NoAuthInfoFound') {
-        this.error('No orgs Found')
+        this.error('No orgs found')
       } else {
         throw error
       }
