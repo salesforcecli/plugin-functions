@@ -4,8 +4,9 @@ import {Org, SfdxProject} from '@salesforce/core'
 import {cli} from 'cli-ux'
 import {URL} from 'url'
 import APIClient from './api-client'
+import herokuVariant from './heroku-variant'
 import NetrcMachine from './netrc'
-import SfdcAccount from './sfdc-account'
+import {SfdcAccount} from './sfdc-types'
 
 export default abstract class Command extends Base {
   // Putting this here so we don't have to hide every single v2 command during development
@@ -85,7 +86,7 @@ export default abstract class Command extends Base {
   protected async fetchAccount() {
     const {data} = await this.client.get<SfdcAccount>('/account', {
       headers: {
-        Accept: 'application/vnd.heroku+json; version=3.salesforce_sso',
+        Accept: herokuVariant('salesforce_sso'),
       },
     })
 
@@ -116,7 +117,7 @@ export default abstract class Command extends Base {
 
     const {data} = await this.client.get<Heroku.App>(`/sales-org-connections/${orgId}/apps/${projectName}`, {
       headers: {
-        Accept: 'application/vnd.heroku+json; version=3.evergreen',
+        Accept: herokuVariant('evergreen'),
       },
     })
 

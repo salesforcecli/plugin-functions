@@ -72,8 +72,8 @@ describe('sf env create compute', () => {
   const aliasWriteSpy = sandbox.spy()
 
   test
-  .stdout({print: true})
-  .stderr({print: true})
+  .stdout()
+  .stderr()
   .retries(3)
   .do(() => {
     orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
