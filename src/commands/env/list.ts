@@ -54,7 +54,6 @@ export default class EnvList extends Command {
     const groupedSortedOrgs = {
       nonScratchOrgs: sortBy(metaConfigs.nonScratchOrgs, v => [v.alias, v.username]),
       scratchOrgs: sortBy(metaConfigs.scratchOrgs, v => [v.alias, v.username]),
-      expiredScratchOrgs: metaConfigs.scratchOrgs.filter(org => !identifyActiveOrgByStatus(org)),
     }
 
     return {
