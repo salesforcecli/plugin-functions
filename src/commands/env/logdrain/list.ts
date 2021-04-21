@@ -1,5 +1,5 @@
 import * as Heroku from '@heroku-cli/schema'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import {cli} from 'cli-ux'
 import Command from '../../../lib/base'
 
@@ -11,18 +11,18 @@ export default class LogDrainList extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
+    environment: Flags.string({
       required: true,
       char: 'e',
       description: 'environment name, ID, or alias',
     }),
-    json: flags.boolean({
+    json: Flags.boolean({
       description: 'output result in json',
     }),
   }
 
   async run() {
-    const {flags} = this.parse(LogDrainList)
+    const {flags} = await this.parse(LogDrainList)
 
     const {data: drains} = await this.client.get<Array<Heroku.LogDrain>>(`apps/${flags.environment}/log-drains`)
 

@@ -1,6 +1,6 @@
 import herokuColor from '@heroku-cli/color'
 import * as Heroku from '@heroku-cli/schema'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import {cli} from 'cli-ux'
 import Command from '../../../lib/base'
 
@@ -12,12 +12,12 @@ export default class LogDrainRemove extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
+    environment: Flags.string({
       required: true,
       char: 'e',
       description: 'environment name, ID, or alias',
     }),
-    url: flags.string({
+    url: Flags.string({
       required: true,
       char: 'u',
       description: 'logdrain url to remove',
@@ -25,7 +25,7 @@ export default class LogDrainRemove extends Command {
   }
 
   async run() {
-    const {flags} = this.parse(LogDrainRemove)
+    const {flags} = await this.parse(LogDrainRemove)
 
     cli.action.start(`Deleting drain for environment ${herokuColor.app(flags.environment)}`)
 

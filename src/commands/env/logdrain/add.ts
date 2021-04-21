@@ -1,6 +1,6 @@
 import herokuColor from '@heroku-cli/color'
 import * as Heroku from '@heroku-cli/schema'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import {cli} from 'cli-ux'
 import Command from '../../../lib/base'
 
@@ -12,12 +12,12 @@ export default class LogDrainAdd extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
+    environment: Flags.string({
       required: true,
       char: 'e',
       description: 'environment name, ID, or alias',
     }),
-    url: flags.string({
+    url: Flags.string({
       required: true,
       char: 'u',
       description: 'endpoint that will receive sent logs',
@@ -25,7 +25,7 @@ export default class LogDrainAdd extends Command {
   }
 
   async run() {
-    const {flags} = this.parse(LogDrainAdd)
+    const {flags} = await this.parse(LogDrainAdd)
 
     cli.action.start(`Creating drain for environment ${herokuColor.app(flags.environment)}`)
 

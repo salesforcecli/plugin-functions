@@ -1,5 +1,5 @@
 import herokuColor from '@heroku-cli/color'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import {Aliases, AuthInfo} from '@salesforce/core'
 import {identifyActiveOrgByStatus, OrgListUtil} from '@salesforce/plugin-org/lib/shared/orgListUtil'
 import {ExtendedAuthFields} from '@salesforce/plugin-org/lib/shared/orgTypes'
@@ -21,10 +21,10 @@ export default class EnvList extends Command {
   ]
 
   static flags = {
-    all: flags.boolean({
+    all: Flags.boolean({
       description: 'show all available envs instead of scoping to active orgs and their connected compute envs',
     }),
-    'environment-type': flags.string({
+    'environment-type': Flags.string({
       char: 't',
       description: 'filter by one or more environment types (org, scratchorg, compute)',
       options: ['org', 'scratchorg', 'compute'],
@@ -219,7 +219,7 @@ export default class EnvList extends Command {
   }
 
   async run() {
-    const {flags} = this.parse(EnvList)
+    const {flags} = await this.parse(EnvList)
     const project = await this.fetchSfdxProject()
     const {nonScratchOrgs, scratchOrgs} = await this.resolveOrgs(flags.all)
     const orgs = [...nonScratchOrgs, ...scratchOrgs]

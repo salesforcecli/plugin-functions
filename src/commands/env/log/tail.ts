@@ -1,4 +1,4 @@
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 
 import Command from '../../../lib/base'
 import * as Heroku from '@heroku-cli/schema'
@@ -87,7 +87,7 @@ export default class LogTail extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
+    environment: Flags.string({
       description: 'environment name to retrieve logs',
       char: 'e',
       required: true,
@@ -95,7 +95,7 @@ export default class LogTail extends Command {
   }
 
   async run() {
-    const {flags} = this.parse(LogTail)
+    const {flags} = await this.parse(LogTail)
 
     const response = await this.client.post<Heroku.LogSession>(`/apps/${flags.environment}/log-sessions`, {
       data: {

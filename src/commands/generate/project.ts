@@ -1,4 +1,4 @@
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import ProjectGenerator from '@salesforce/templates/lib/generators/projectGenerator'
 import * as execa from 'execa'
 import * as fs from 'fs-extra'
@@ -17,7 +17,7 @@ const options = {
 
 export default class GenerateProject extends Command {
   static flags = {
-    name: flags.string({
+    name: Flags.string({
       description: 'name of the generated project',
       char: 'n',
       required: true,
@@ -55,7 +55,7 @@ export default class GenerateProject extends Command {
   }
 
   async run() {
-    const {flags} = this.parse(GenerateProject)
+    const {flags} = await this.parse(GenerateProject)
     const projectPath = path.resolve(`./${flags.name}`)
 
     if (await fs.pathExists(projectPath)) {

@@ -1,7 +1,7 @@
 import herokuColor from '@heroku-cli/color'
 import * as Heroku from '@heroku-cli/schema'
 
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 
 import Command from '../../../lib/base'
 
@@ -13,7 +13,7 @@ export default class VarGet extends Command {
   ]
 
   static flags = {
-    app: flags.string({
+    app: Flags.string({
       required: true,
     }),
   }
@@ -26,7 +26,7 @@ export default class VarGet extends Command {
   ]
 
   async run() {
-    const {flags, args} = this.parse(VarGet)
+    const {flags, args} = await this.parse(VarGet)
 
     const {data: config} = await this.client.get<Heroku.ConfigVars>(`/apps/${flags.app}/config-vars`)
 

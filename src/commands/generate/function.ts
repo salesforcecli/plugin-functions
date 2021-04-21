@@ -1,5 +1,5 @@
 import herokuColor from '@heroku-cli/color'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import * as Handlebars from 'handlebars'
 import * as path from 'path'
 import {existsSync, mkdirpSync, outputFileSync, readFileSync} from 'fs-extra'
@@ -197,12 +197,12 @@ export default class GenerateFunction extends Command {
   ]
 
   static flags = {
-    name: flags.string({
+    name: Flags.string({
       required: true,
       description: 'function name',
       char: 'n',
     }),
-    language: flags.enum({
+    language: Flags.enum({
       options: ['javascript', 'typescript'],
       description: 'language',
       char: 'l',
@@ -211,7 +211,7 @@ export default class GenerateFunction extends Command {
   }
 
   async run() {
-    const {flags} = this.parse(GenerateFunction)
+    const {flags} = await this.parse(GenerateFunction)
     const sfdxProjectPath = this.getSfdxProjectPath()
     if (!sfdxProjectPath) {
       this.error(`${herokuColor.cyan('sf generate function')} must be run inside an sfdx project`)

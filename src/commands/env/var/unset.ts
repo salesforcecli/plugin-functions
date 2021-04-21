@@ -1,6 +1,6 @@
 import herokuColor from '@heroku-cli/color'
 import {cli} from 'cli-ux'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 
 import Command from '../../../lib/base'
 
@@ -14,13 +14,13 @@ export default class ConfigUnset extends Command {
   ]
 
   static flags = {
-    app: flags.string({
+    app: Flags.string({
       required: true,
     }),
   }
 
   async run() {
-    const {flags, argv} = this.parse(ConfigUnset)
+    const {flags, argv} = await this.parse(ConfigUnset)
 
     const configPairs = argv.reduce((acc, elem) => {
       return {

@@ -1,7 +1,7 @@
 import * as Heroku from '@heroku-cli/schema'
 import {cli} from 'cli-ux'
 import {flatMap} from 'lodash'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 
 import Command from '../../../lib/base'
 
@@ -13,13 +13,13 @@ export default class ConfigList extends Command {
   ]
 
   static flags = {
-    app: flags.string({
+    app: Flags.string({
       required: true,
     }),
   }
 
   async run() {
-    const {flags} = this.parse(ConfigList)
+    const {flags} = await this.parse(ConfigList)
 
     const {data: config} = await this.client.get<Heroku.ConfigVars>(`/apps/${flags.app}/config-vars`)
 
