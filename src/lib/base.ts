@@ -133,7 +133,7 @@ export default abstract class Command extends Base {
     return confirm
   }
 
-  protected async confirmRemovePrompt(type: 'eventsource' | 'function' | 'namespace' | 'app' | 'project' | 'space' | 'resourceinstance' | 'secret' | 'key',
+  protected async confirmRemovePrompt(type: 'environment',
     name: string, confirm?: string | string[], warningMessage?: string) {
     const confirmedValue = this.fetchConfirmationValue(name, confirm)
     if (name !== confirmedValue) {

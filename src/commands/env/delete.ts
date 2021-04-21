@@ -1,0 +1,77 @@
+import herokuColor from '@heroku-cli/color'
+import * as Heroku from '@heroku-cli/schema'
+import {flags} from '@oclif/command'
+import {Aliases, Org} from '@salesforce/core'
+import {cli} from 'cli-ux'
+import Command from '../../lib/base'
+
+export default class EnvDelete extends Command {
+  static description = 'delete an environment'
+
+  static examples = [
+    '$ sf env delete --environment=billingApp-Scratch1',
+    '$ sf env delete --environment=billingApp-Scratch1 --confirm=billingApp-Scratch1',
+  ]
+
+  static flags = {
+    environment: flags.string({
+      char: 'e',
+      description: 'environment name or alias',
+      required: true,
+    }),
+    confirm: flags.string({
+      char: 'c',
+      required: false,
+      description: 'confirmation name',
+      helpValue: 'name',
+      multiple: true,
+    }),
+  }
+
+  async run() {
+    const {flags} = this.parse(EnvDelete)
+
+    const {environment} = flags
+
+    await this.confirmRemovePrompt('environment', environment, flags.confirm)
+
+    cli.action.start(`Deleting environment ${environment}`)
+
+    let appToDelete
+
+    if (environment) {
+      try {
+        const org: Org = await Org.create({aliasOrUsername: environment})
+        if (org) {
+          throw new Error(`The environment ${herokuColor.cyan(environment)} is a Salesforce org. The env:delete command currently can only be used to delete compute environments. Please use sfdx force:org:delete to delete scratch and sandbox Salesforce org environments.`)
+        }
+      } catch (error) {
+        if (error.message.includes(`The environment ${herokuColor.cyan(environment)} is a Salesforce org.`)) {
+          this.error(error)
+        }
+      }
+    }
+
+    // See if the environment provided is an alias
+    const matchingAlias = (await Aliases.create({})).get(environment)
+    if (matchingAlias) {
+      appToDelete = matchingAlias
+    } else {
+      appToDelete = environment
+    }
+
+    try {
+      // If app exists, it will be deleted
+      await this.client.delete<Heroku.App>(`/apps/${appToDelete}`, {
+        headers: {
+          Accept: 'application/vnd.heroku+json; version=3.evergreen',
+        },
+      })
+
+      cli.action.stop()
+    } catch (error) {
+      // App with name does not exist
+      this.error('Value provided for environment does not match a compute environment name or an alias to a compute environment.')
+    }
+  }
+}
