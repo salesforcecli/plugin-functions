@@ -6,7 +6,7 @@ import {URL} from 'url'
 import APIClient from './api-client'
 import herokuVariant from './heroku-variant'
 import NetrcMachine from './netrc'
-import {SfdcAccount} from './sfdc-types'
+import {SfdcAccount, SfdxProjectConfig} from './sfdc-types'
 
 export default abstract class Command extends Base {
   // Putting this here so we don't have to hide every single v2 command during development
@@ -109,11 +109,13 @@ export default abstract class Command extends Base {
   protected async fetchSfdxProject() {
     const project = await SfdxProject.resolve()
 
-    return project.resolveProjectConfig()
+    return project.resolveProjectConfig() as Promise<SfdxProjectConfig>
   }
 
   protected async fetchAppForProject(projectName: string, orgAliasOrUsername?: string) {
     const orgId = await this.fetchOrgId(orgAliasOrUsername)
+
+    console.log(orgId)
 
     const {data} = await this.client.get<Heroku.App>(`/sales-org-connections/${orgId}/apps/${projectName}`, {
       headers: {

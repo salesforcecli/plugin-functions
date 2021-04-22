@@ -1,11 +1,11 @@
 import herokuColor from '@heroku-cli/color'
 import {flags} from '@oclif/command'
+import {existsSync, mkdirpSync, outputFileSync, readFileSync, readJSON, writeJSON} from 'fs-extra'
 import * as Handlebars from 'handlebars'
 import * as path from 'path'
-import {existsSync, mkdirpSync, outputFileSync, readFileSync, readJSON, writeJSON} from 'fs-extra'
-
-import {retrieveApiVersion} from '../../lib/sfdx-org-resources'
 import Command from '../../lib/base'
+import {resolveSfdxProjectPath} from '../../lib/path-utils'
+import {retrieveApiVersion} from '../../lib/sfdx-org-resources'
 
 const FUNCTIONS_DIR = 'functions'
 const TEMPLATE_DIR = '../../../templates'
@@ -27,18 +27,6 @@ interface TemplateConfig {
   fnName: string;
   fnNameCased: string;  // always capitalize the 1st character of the user specified function name
   isFunctionBundle: boolean;
-}
-
-function reverseWalk(fileName: string, iterations = 10): string | null {
-  if (iterations === 0) {
-    return null
-  }
-
-  if (existsSync(fileName)) {
-    return fileName
-  }
-
-  return reverseWalk(path.join('..', fileName), iterations - 1)
 }
 
 /**
@@ -212,8 +200,13 @@ export default class GenerateFunction extends Command {
 
   async run() {
     const {flags} = this.parse(GenerateFunction)
-    const sfdxProjectPath = this.getSfdxProjectPath()
-    if (!sfdxProjectPath) {
+
+    // Determine if we're in an SFDX project and return the path to sfdx-project.json
+    let sfdxProjectPath
+
+    try {
+      sfdxProjectPath = await resolveSfdxProjectPath()
+    } catch (error) {
       this.error(`${herokuColor.cyan('sf generate function')} must be run inside an sfdx project`)
     }
 
@@ -248,10 +241,5 @@ export default class GenerateFunction extends Command {
     template.write({fnDir: fnDir, fnName: fnName, fnNameCased: fnNameCased, isFunctionBundle: isFunctionBundle})
 
     this.log(`Created ${language} function ${herokuColor.green(fnName)} in ${herokuColor.green(fnDir)}.`)
-  }
-
-  // Determine if we're in an SFDX project and return the path to sfdx-project.json
-  getSfdxProjectPath() {
-    return reverseWalk(PROJECT_JSON)
   }
 }

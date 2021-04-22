@@ -47,6 +47,10 @@ export default class Login extends Command {
 
     await this.apiNetrcMachine.set('password', bearerToken)
 
+    const account = await this.fetchAccount()
+
+    await this.apiNetrcMachine.set('login', account.salesforce_username)
+
     if (refreshToken) {
       await this.identityNetrcMachine.set('password', refreshToken)
     }

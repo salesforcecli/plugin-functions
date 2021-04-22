@@ -1,4 +1,5 @@
 import * as Heroku from '@heroku-cli/schema'
+import {JsonMap} from '@salesforce/ts-types'
 
 export interface SfdcAccount extends Heroku.Account {
   salesforce_org: {
@@ -26,4 +27,9 @@ export interface ComputeEnvironment extends Heroku.App {
 
 export type Dictionary<T> = {
   [key: string]: T;
+}
+
+export interface SfdxProjectConfig extends JsonMap{
+  name: string;
+  namespace: string;
 }
