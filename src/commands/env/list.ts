@@ -69,7 +69,7 @@ export default class EnvList extends Command {
 
     const {data: environments} = await this.client.get<Array<ComputeEnvironment>>(`/enterprise-accounts/${account.salesforce_org.owner.id}/apps`, {
       headers: {
-        Accept: herokuVariant('evergreen'),
+        ...herokuVariant('evergreen'),
       },
     })
 

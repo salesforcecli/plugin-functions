@@ -7,22 +7,17 @@ import {cli} from 'cli-ux'
 import {format} from 'date-fns'
 import Command from '../../../lib/base'
 import * as execa from 'execa'
+import {difference} from 'lodash'
 import * as path from 'path'
 import {URL} from 'url'
 import debugFactory from 'debug'
 import {parseFunctionToml} from '../../../lib/function-toml'
 
 import {resolveFunctionsPaths} from '../../../lib/path-utils'
+import {FunctionReference} from '../../../lib/sfdc-types'
+import herokuVariant from '../../../lib/heroku-variant'
 
 const debug = debugFactory('project:deploy:functions')
-
-interface FunctionReference {
-  fullName: string;
-  label: string;
-  namespace?: string;
-  description: string;
-  permissionSet?: string;
-}
 
 class Git {
   private async hasGit() {
@@ -62,6 +57,10 @@ export default class ProjectDeployFunctions extends Command {
     force: flags.string({
       description: 'ignore warnings and overwrite remote repository (not allowed in production)',
     }),
+    verbose: flags.string({
+      description: 'show all deploy output',
+      char: 'v',
+    }),
   }
 
   gitRemote(app: Heroku.App) {
@@ -86,18 +85,24 @@ export default class ProjectDeployFunctions extends Command {
 
     // Heroku side: Fetch git remote URL and push working branch to Heroku git server
 
+    cli.action.start('Pushing functions to compute environment')
     const org = await this.fetchOrg(flags['connected-org'])
     const project = await this.fetchSfdxProject()
-    console.log(project)
     const app = await this.fetchAppForProject(project.name, flags['connected-org'])
 
-    // const remote = this.gitRemote(app)
+    const remote = this.gitRemote(app)
 
-    // const {stdout, stderr} = await git.exec(['push', remote, 'master'])
-    // if (stderr) {
-    //   process.stderr.write(stderr)
-    // }
-    // process.stdout.write(stdout)
+    const {stdout, stderr} = await git.exec(['push', remote, 'master'])
+    if (flags.verbose) {
+      process.stdout.write(stdout)
+      if (stderr) {
+        process.stderr.write(stderr)
+      }
+    }
+
+    cli.action.stop()
+
+    cli.action.start('Pushing function references')
 
     // FunctionReferences: create function reference using info from function.toml and project info,
     // then push to Salesforce org
@@ -117,7 +122,6 @@ export default class ProjectDeployFunctions extends Command {
         fullName: `${project.name}-${fullName}`,
         label: fullName,
         description: fnToml.function.description,
-        // namespace: project.namespace,
       }
 
       const permissionSet = fnToml.metadata?.permissionSet
@@ -140,8 +144,34 @@ export default class ProjectDeployFunctions extends Command {
       return result
     }))
 
-    console.log(results)
+    results.forEach(result => {
+      this.log(`Reference for ${result.fullName} ${result.created ? herokuColor.cyan('created') : herokuColor.green('updated')}`)
+    })
+
+    cli.action.stop()
 
     // Remove any function references for functions that no longer exist
+
+    cli.action.start('cleaning up function references')
+
+    const successfulReferences = results.reduce((acc: Array<string>, result) => {
+      if (result.success) {
+        acc.push(result.fullName)
+      }
+
+      return acc
+    }, [])
+
+    const allReferences = (await connection.metadata.list({type: 'FunctionReference'})).reduce((acc: Array<string>, ref) => {
+      acc.push(ref.fullName)
+
+      return acc
+    }, [])
+
+    const referencesToRemove = difference(allReferences, successfulReferences)
+
+    await connection.metadata.delete('FunctionReference', referencesToRemove)
+
+    cli.action.stop()
   }
 }

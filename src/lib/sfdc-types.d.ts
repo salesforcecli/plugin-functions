@@ -33,3 +33,10 @@ export interface SfdxProjectConfig extends JsonMap{
   name: string;
   namespace: string;
 }
+
+export interface FunctionReference {
+  fullName: string;
+  label: string;
+  description: string;
+  permissionSet?: string;
+}

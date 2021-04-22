@@ -86,7 +86,7 @@ export default abstract class Command extends Base {
   protected async fetchAccount() {
     const {data} = await this.client.get<SfdcAccount>('/account', {
       headers: {
-        Accept: herokuVariant('salesforce_sso'),
+        ...herokuVariant('salesforce_sso'),
       },
     })
 
@@ -115,11 +115,9 @@ export default abstract class Command extends Base {
   protected async fetchAppForProject(projectName: string, orgAliasOrUsername?: string) {
     const orgId = await this.fetchOrgId(orgAliasOrUsername)
 
-    console.log(orgId)
-
     const {data} = await this.client.get<Heroku.App>(`/sales-org-connections/${orgId}/apps/${projectName}`, {
       headers: {
-        Accept: herokuVariant('evergreen'),
+        ...herokuVariant('evergreen'),
       },
     })
 
