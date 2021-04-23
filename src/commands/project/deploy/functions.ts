@@ -42,9 +42,22 @@ class Git {
 
     return execa('git', commands)
   }
+
+  async status() {
+    const {stdout} = await this.exec(['status'])
+    return stdout
+  }
+
+  async hasUnpushedFiles() {
+    const status = await this.status()
+
+    return status.includes('Untracked files:') || status.includes('Changes to be committed:')
+  }
 }
 
 export default class ProjectDeployFunctions extends Command {
+  private git?: Git
+
   static flags = {
     'connected-org': flags.string({
       char: 'o',
@@ -57,13 +70,19 @@ export default class ProjectDeployFunctions extends Command {
     force: flags.string({
       description: 'ignore warnings and overwrite remote repository (not allowed in production)',
     }),
-    verbose: flags.string({
+    verbose: flags.boolean({
       description: 'show all deploy output',
       char: 'v',
     }),
   }
 
-  gitRemote(app: Heroku.App) {
+  async getCurrentBranch() {
+    const statusString = await this.git?.status()
+
+    return statusString!.split('\n')[0].replace('On branch ', '')
+  }
+
+  async gitRemote(app: Heroku.App) {
     const username = this.apiNetrcMachine.get('login')
     const token = this.apiNetrcMachine.get('password')
 
@@ -81,23 +100,37 @@ export default class ProjectDeployFunctions extends Command {
 
   async run() {
     const {flags} = this.parse(ProjectDeployFunctions)
-    const git = new Git()
+    this.git = new Git()
+
+    // We don't want to deploy anything if they've got work that hasn't been committed yet because
+    // it could end up being really confusing since the user isn't calling git directly
+    if (await this.git.hasUnpushedFiles()) {
+      this.error('Your repo has files that have not been committed yet. Please either commit or stash them before deploying your project.')
+    }
 
     // Heroku side: Fetch git remote URL and push working branch to Heroku git server
-
     cli.action.start('Pushing functions to compute environment')
     const org = await this.fetchOrg(flags['connected-org'])
     const project = await this.fetchSfdxProject()
     const app = await this.fetchAppForProject(project.name, flags['connected-org'])
+    const remote = await this.gitRemote(app)
 
-    const remote = this.gitRemote(app)
+    debug('pushing to git server using remote: ', remote)
 
-    const {stdout, stderr} = await git.exec(['push', remote, 'master'])
-    if (flags.verbose) {
-      process.stdout.write(stdout)
-      if (stderr) {
-        process.stderr.write(stderr)
+    try {
+      const currentBranch = await this.getCurrentBranch()
+
+      const {stdout, stderr} = await this.git.exec(['push', remote, `${currentBranch}:master`])
+      if (flags.verbose) {
+        process.stdout.write(stdout)
+        if (stderr) {
+          process.stderr.write(stderr)
+        }
       }
+    } catch (error) {
+      this.error('There was a git-related issue when deploying your functions. ' +
+      'This could be caused either by a merge conflict (because someone else has deployed ' +
+      'unmergeable changes to the same environment), or by a project name conflict.')
     }
 
     cli.action.stop()
@@ -109,7 +142,6 @@ export default class ProjectDeployFunctions extends Command {
 
     // Locate functions directory and grab paths for all function names, error if not in project or no
     // functions found
-
     const fnPaths = await resolveFunctionsPaths()
 
     // Create function reference objects
@@ -132,6 +164,8 @@ export default class ProjectDeployFunctions extends Command {
 
       return fnReference
     }))
+
+    debug('pushing function references', references)
 
     const connection = org.getConnection()
 
