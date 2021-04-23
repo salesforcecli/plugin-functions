@@ -76,8 +76,8 @@ export default abstract class Command extends Base {
   protected catch(err: any): any {
     cli.action.stop('failed')
 
-    if (err.response && err.response.status === 401) {
-      this.error('Your token has expired, please re-login with sfdx v2:auth:login')
+    if (err.http?.response?.status === 401) {
+      this.error('Your token has expired, please login with sf login functions')
     } else {
       throw err
     }

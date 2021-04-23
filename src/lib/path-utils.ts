@@ -4,7 +4,7 @@ import * as path from 'path'
 const PROJECT_JSON = 'sfdx-project.json'
 const FUNCTIONS_DIR = 'functions'
 
-export async function reverseWalk(fileName: string, iterations = 10): string | null {
+export async function reverseWalk(fileName: string, iterations = 10): Promise<string | null> {
   if (iterations === 0) {
     return null
   }

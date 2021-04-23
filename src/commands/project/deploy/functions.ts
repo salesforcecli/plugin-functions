@@ -1,59 +1,19 @@
 import herokuColor from '@heroku-cli/color'
 import * as Heroku from '@heroku-cli/schema'
 import {flags} from '@oclif/command'
-import {UpsertResult} from 'jsforce'
-import {Aliases} from '@salesforce/core'
 import {cli} from 'cli-ux'
-import {format} from 'date-fns'
-import Command from '../../../lib/base'
-import * as execa from 'execa'
+import debugFactory from 'debug'
+import {UpsertResult} from 'jsforce'
 import {difference} from 'lodash'
 import * as path from 'path'
 import {URL} from 'url'
-import debugFactory from 'debug'
+import Command from '../../../lib/base'
 import {parseFunctionToml} from '../../../lib/function-toml'
-
+import Git from '../../../lib/git'
 import {resolveFunctionsPaths} from '../../../lib/path-utils'
-import {FunctionReference} from '../../../lib/sfdc-types'
-import herokuVariant from '../../../lib/heroku-variant'
+import {FunctionReference, SfdxProjectConfig} from '../../../lib/sfdc-types'
 
 const debug = debugFactory('project:deploy:functions')
-
-class Git {
-  private async hasGit() {
-    try {
-      await execa('git', ['--version'])
-      return true
-    } catch (error) {
-      return false
-    }
-  }
-
-  async checkGit() {
-    try {
-      return this.hasGit()
-    } catch (error) {
-      throw new Error('git must be installed in order to deploy Salesforce Functions')
-    }
-  }
-
-  async exec(commands: Array<string>) {
-    await this.checkGit()
-
-    return execa('git', commands)
-  }
-
-  async status() {
-    const {stdout} = await this.exec(['status'])
-    return stdout
-  }
-
-  async hasUnpushedFiles() {
-    const status = await this.status()
-
-    return status.includes('Untracked files:') || status.includes('Changes to be committed:')
-  }
-}
 
 export default class ProjectDeployFunctions extends Command {
   private git?: Git
@@ -62,6 +22,7 @@ export default class ProjectDeployFunctions extends Command {
     'connected-org': flags.string({
       char: 'o',
       description: 'deployment org username or alias',
+      required: true,
     }),
     branch: flags.string({
       char: 'b',
@@ -98,6 +59,33 @@ export default class ProjectDeployFunctions extends Command {
     return url.toString()
   }
 
+  async resolveFunctionReferences(project: SfdxProjectConfig) {
+    // Locate functions directory and grab paths for all function names, error if not in project or no
+    // functions found
+    const fnPaths = await resolveFunctionsPaths()
+
+    // Create function reference objects
+    return Promise.all(fnPaths.map(async fnPath => {
+      const fnTomlPath = path.join(fnPath, 'function.toml')
+      const fnToml: any = await parseFunctionToml(fnTomlPath)
+      const fnName = fnToml.function.name
+
+      const fnReference: FunctionReference = {
+        fullName: `${project.name}-${fnName}`,
+        label: fnName,
+        description: fnToml.function.description,
+      }
+
+      const permissionSet = fnToml.metadata?.permissionSet
+
+      if (permissionSet) {
+        fnReference.permissionSet = permissionSet
+      }
+
+      return fnReference
+    }))
+  }
+
   async run() {
     const {flags} = this.parse(ProjectDeployFunctions)
     this.git = new Git()
@@ -109,7 +97,7 @@ export default class ProjectDeployFunctions extends Command {
     }
 
     // Heroku side: Fetch git remote URL and push working branch to Heroku git server
-    cli.action.start('Pushing functions to compute environment')
+    cli.action.start('Pushing changes to functions')
     const org = await this.fetchOrg(flags['connected-org'])
     const project = await this.fetchSfdxProject()
     const app = await this.fetchAppForProject(project.name, flags['connected-org'])
@@ -120,7 +108,7 @@ export default class ProjectDeployFunctions extends Command {
     try {
       const currentBranch = await this.getCurrentBranch()
 
-      const {stdout, stderr} = await this.git.exec(['push', remote, `${currentBranch}:master`])
+      const {stdout, stderr} = await this.git.exec(['push', remote, `${flags.branch ?? currentBranch}:master`])
       if (flags.verbose) {
         process.stdout.write(stdout)
         if (stderr) {
@@ -133,37 +121,9 @@ export default class ProjectDeployFunctions extends Command {
       'unmergeable changes to the same environment), or by a project name conflict.')
     }
 
-    cli.action.stop()
-
-    cli.action.start('Pushing function references')
-
     // FunctionReferences: create function reference using info from function.toml and project info,
     // then push to Salesforce org
-
-    // Locate functions directory and grab paths for all function names, error if not in project or no
-    // functions found
-    const fnPaths = await resolveFunctionsPaths()
-
-    // Create function reference objects
-    const references = await Promise.all(fnPaths.map(async fnPath => {
-      const fnTomlPath = path.join(fnPath, 'function.toml')
-      const fnToml: any = await parseFunctionToml(fnTomlPath)
-      const fullName = fnToml.function.name
-
-      const fnReference: FunctionReference = {
-        fullName: `${project.name}-${fullName}`,
-        label: fullName,
-        description: fnToml.function.description,
-      }
-
-      const permissionSet = fnToml.metadata?.permissionSet
-
-      if (permissionSet) {
-        fnReference.permissionSet = permissionSet
-      }
-
-      return fnReference
-    }))
+    const references = await this.resolveFunctionReferences(project)
 
     debug('pushing function references', references)
 
@@ -178,16 +138,13 @@ export default class ProjectDeployFunctions extends Command {
       return result
     }))
 
-    results.forEach(result => {
-      this.log(`Reference for ${result.fullName} ${result.created ? herokuColor.cyan('created') : herokuColor.green('updated')}`)
-    })
-
-    cli.action.stop()
+    if (flags.verbose) {
+      results.forEach(result => {
+        this.log(`Reference for ${result.fullName} ${result.created ? herokuColor.cyan('created') : herokuColor.green('updated')}`)
+      })
+    }
 
     // Remove any function references for functions that no longer exist
-
-    cli.action.start('cleaning up function references')
-
     const successfulReferences = results.reduce((acc: Array<string>, result) => {
       if (result.success) {
         acc.push(result.fullName)
@@ -203,6 +160,13 @@ export default class ProjectDeployFunctions extends Command {
     }, [])
 
     const referencesToRemove = difference(allReferences, successfulReferences)
+
+    if (referencesToRemove.length) {
+      this.log('Removing the following functions that were deleted locally:')
+      referencesToRemove.forEach(ref => {
+        this.log(ref)
+      })
+    }
 
     await connection.metadata.delete('FunctionReference', referencesToRemove)
 
