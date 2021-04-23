@@ -1,8 +1,6 @@
 import {flags} from '@oclif/command'
 import ProjectGenerator from '@salesforce/templates/lib/generators/projectGenerator'
-import * as execa from 'execa'
 import * as fs from 'fs-extra'
-import {Repository, Signature} from 'nodegit'
 import * as path from 'path'
 import {createEnv} from 'yeoman-environment'
 import Command from '../../lib/base'
@@ -24,36 +22,6 @@ export default class GenerateProject extends Command {
     }),
   }
 
-  private async hasGit() {
-    try {
-      await execa('git', ['--version'])
-      return true
-    } catch (error) {
-      return false
-    }
-  }
-
-  private async gitInit(projectPath: string) {
-    // Initialize git repo in the directory we just created
-    const repo = await Repository.init(projectPath, 0)
-
-    // Get list of changes from the repo (should be all our unstaged files)
-    const index = await repo.refreshIndex()
-
-    // Get list of file paths for all our unstaged changes and then stage all of them
-    const files = await repo.getStatus()
-    const filePaths = files.map(file => file.path())
-    await index.addAll(filePaths)
-    await index.write()
-    const changes = await index.writeTree()
-
-    // Generate Signatures for both author and committer
-    const author = Signature.now('salesforce cli team', 'salesforce@cli.com')
-    const committer = Signature.now('salesforce cli team', 'salesforce@cli.com')
-
-    await repo.createCommit('HEAD', author, committer, 'Initial commit from sf cli', changes, [])
-  }
-
   async run() {
     const {flags} = this.parse(GenerateProject)
     const projectPath = path.resolve(`./${flags.name}`)
@@ -70,12 +38,5 @@ export default class GenerateProject extends Command {
         this.error(err)
       }
     })
-
-    if (!await this.hasGit()) {
-      this.log('No git installation found. Skipping git init.')
-      return
-    }
-
-    await this.gitInit(projectPath)
   }
 }
