@@ -28,6 +28,9 @@ describe('env:delete', () => {
       get: () => COMPUTE_ENV_NAME,
     })
   })
+  .finally(() => {
+    sandbox.restore()
+  })
   .nock('https://api.heroku.com', api =>
     api
     .delete(`/apps/${COMPUTE_ENV_NAME}`)
@@ -59,6 +62,9 @@ describe('env:delete', () => {
   .stderr()
   .do(() => {
     sandbox.stub(Org, 'create' as any).returns({name: true})
+  })
+  .finally(() => {
+    sandbox.restore()
   })
   .command(['env:delete', `--environment=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
   .catch(error => {
