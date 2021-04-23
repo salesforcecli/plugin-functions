@@ -37,24 +37,25 @@ export default class EnvDelete extends Command {
 
     cli.action.start(`Deleting environment ${environment}`)
 
-    let appToDelete
-
     if (environment) {
       try {
+        // If we are able to successfully create an org, then we verify that this name does not refer to a compute environment. Regardless of what happens, this block will result in an error.
         const org: Org = await Org.create({aliasOrUsername: environment})
         if (org) {
           throw new Error(`The environment ${herokuColor.cyan(environment)} is a Salesforce org. The env:delete command currently can only be used to delete compute environments. Please use sfdx force:org:delete to delete scratch and sandbox Salesforce org environments.`)
         }
       } catch (error) {
+        // If the error is the one we throw above, then we will send the error to the user. If not (meaning the org creation failed) then we swallow the error and proceed.
         if (error.message.includes(`The environment ${herokuColor.cyan(environment)} is a Salesforce org.`)) {
           this.error(error)
         }
       }
     }
 
-    // See if the environment provided is an alias
+    // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
     const aliases = await Aliases.create({})
     const matchingAlias = aliases.get(environment)
+    let appToDelete
     if (matchingAlias) {
       appToDelete = matchingAlias
     } else {
