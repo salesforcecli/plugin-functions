@@ -53,7 +53,8 @@ export default class EnvDelete extends Command {
     }
 
     // See if the environment provided is an alias
-    const matchingAlias = (await Aliases.create({})).get(environment)
+    const aliases = await Aliases.create({})
+    const matchingAlias = aliases.get(environment)
     if (matchingAlias) {
       appToDelete = matchingAlias
     } else {
