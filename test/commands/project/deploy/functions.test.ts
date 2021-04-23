@@ -1,10 +1,9 @@
 import {expect, test} from '@oclif/test'
+import {Org, SfdxProject} from '@salesforce/core'
 import * as sinon from 'sinon'
-import {Org, SfdxProject, Aliases} from '@salesforce/core'
 import ProjectDeployFunctions from '../../../../src/commands/project/deploy/functions'
-import NetRcMachine from '../../../../src/lib/netrc'
 import Git from '../../../../src/lib/git'
-import * as pathUtils from '../../../../src/lib/path-utils'
+import NetRcMachine from '../../../../src/lib/netrc'
 
 const sandbox = sinon.createSandbox()
 

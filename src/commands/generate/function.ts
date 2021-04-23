@@ -205,7 +205,7 @@ export default class GenerateFunction extends Command {
     let sfdxProjectPath
 
     try {
-      sfdxProjectPath = await resolveSfdxProjectPath()
+      sfdxProjectPath = await resolveSfdxProjectPath(PROJECT_JSON)
     } catch (error) {
       this.error(`${herokuColor.cyan('sf generate function')} must be run inside an sfdx project`)
     }

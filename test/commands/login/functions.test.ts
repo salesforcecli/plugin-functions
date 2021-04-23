@@ -29,13 +29,19 @@ describe('sf login functions', () => {
       refresh_token: 'evergreen-id-refresh',
     })
   })
+  .nock('https://api.heroku.com', api => {
+    api
+    .get('/account')
+    .reply(200, {salesforce_username: 'username'})
+  })
   .add('setStub', () => sinon.stub(NetrcMachine.prototype, 'set').returns(Promise.resolve(undefined)))
   .command(['login:functions'])
   .finally(ctx => ctx.setStub.restore())
   .it('can save a bearer token from heroku identity service', ctx => {
     expect(windowOpenStub.firstCall.args[0]).to.equal('https://cli-auth.heroku.com/browser_url')
     expect(ctx.setStub.firstCall).to.have.been.calledWith('password', 'evergreen-id-bearer')
-    expect(ctx.setStub.secondCall).to.have.been.calledWith('password', 'evergreen-id-refresh')
+    expect(ctx.setStub.secondCall).to.have.been.calledWith('login', 'username')
+    expect(ctx.setStub.thirdCall).to.have.been.calledWith('password', 'evergreen-id-refresh')
   })
 
   describe('checking against SALESFORCE_FUNCTIONS_IDENTITY_URL set to https://heroku-identity.herokuapp.com', () => {
@@ -65,6 +71,11 @@ describe('sf login functions', () => {
         refresh_token: 'evergreen-id-refresh',
       }),
     )
+    .nock('https://api.heroku.com', api => {
+      api
+      .get('/account')
+      .reply(200, {salesforce_username: 'username'})
+    })
     .env({SALESFORCE_FUNCTIONS_IDENTITY_URL})
     .add('setStub', () => sinon.stub(NetrcMachine.prototype, 'set').returns(Promise.resolve(undefined)))
     .command(['login:functions'])
@@ -72,7 +83,8 @@ describe('sf login functions', () => {
     .it('uses the URL from the environment variable', ctx => {
       expect(windowOpenStub.firstCall.args[0]).to.equal(SALESFORCE_FUNCTIONS_IDENTITY_URL + '/browser_url')
       expect(ctx.setStub.firstCall).to.have.been.calledWith('password', 'evergreen-id-bearer')
-      expect(ctx.setStub.secondCall).to.have.been.calledWith('password', 'evergreen-id-refresh')
+      expect(ctx.setStub.secondCall).to.have.been.calledWith('login', 'username')
+      expect(ctx.setStub.thirdCall).to.have.been.calledWith('password', 'evergreen-id-refresh')
     })
   })
 })
