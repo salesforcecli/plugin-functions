@@ -38,11 +38,5 @@ export default class GenerateProject extends Command {
         this.error(err)
       }
     })
-
-    // Add 'Functions' feature to the scratch org definition
-    const scratchDefPath = path.join(flags.name, 'config', 'project-scratch-def.json')
-    const scratchDef = await fs.readJSON(scratchDefPath)
-    scratchDef.features = [...scratchDef.features, 'Functions']
-    await fs.writeJSON(scratchDefPath, scratchDef)
   }
 }

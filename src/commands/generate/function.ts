@@ -2,7 +2,7 @@ import herokuColor from '@heroku-cli/color'
 import {flags} from '@oclif/command'
 import * as Handlebars from 'handlebars'
 import * as path from 'path'
-import {existsSync, mkdirpSync, outputFileSync, readFileSync} from 'fs-extra'
+import {existsSync, mkdirpSync, outputFileSync, readFileSync, readJSON, writeJSON} from 'fs-extra'
 
 import {retrieveApiVersion} from '../../lib/sfdx-org-resources'
 import Command from '../../lib/base'
@@ -225,6 +225,14 @@ export default class GenerateFunction extends Command {
     // This allows the user to generate a function from anywhere inside their project and still have the
     // new function actually get created in the root
     const fnDir = path.join(sfdxProjectPath.replace(PROJECT_JSON, FUNCTIONS_DIR), fnName)
+
+    const scratchDefPath = path.join(sfdxProjectPath.replace(PROJECT_JSON, 'config'), 'project-scratch-def.json')
+    const scratchDef = await readJSON(scratchDefPath)
+    // Add 'Functions' feature to the project scratch org definition if it doesn't already exist
+    if (!scratchDef.features.includes('Functions')) {
+      scratchDef.features = [...scratchDef.features, 'Functions']
+      await writeJSON(scratchDefPath, scratchDef)
+    }
 
     if (existsSync(fnDir)) {
       this.error(`A function named ${flags.name} already exists.`)

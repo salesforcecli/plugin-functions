@@ -53,7 +53,6 @@ describe('sf generate project', () => {
     for (const file of vscodearray) {
       assert.file([path.join('foo', '.vscode', `${file}.json`)])
     }
-    assert.fileContent(path.join('foo', 'config', 'project-scratch-def.json'), '"features":["EnableSetPasswordInApi","Functions"]')
     assert.file([
       path.join(
         'foo',

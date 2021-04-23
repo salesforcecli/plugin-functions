@@ -1,7 +1,6 @@
 import {expect, test} from '@oclif/test'
 import * as sinon from 'sinon'
 import * as fs from 'fs-extra'
-
 import * as GenerateFunction from '../../../src/commands/generate/function'
 
 describe('sf generate:function', () => {
@@ -12,6 +11,12 @@ describe('sf generate:function', () => {
     .stub(GenerateFunction.default.prototype, 'getSfdxProjectPath', () => sfdxProjectPath)
     .stub(fs, 'mkdirpSync', sandbox.stub())
     .stub(fs, 'outputFileSync', sandbox.stub())
+    .stub(fs, 'readJSON', () => {
+      return {
+        features: ['EnableSetPasswordInApi'],
+      }
+    })
+    .stub(fs, 'writeJSON', sandbox.stub())
     .stdout({print: true})
     .stderr({print: true})
     .finally(() => {
@@ -32,6 +37,7 @@ describe('sf generate:function', () => {
     expect(ctx.stdout).to.contain('Created javascript')
     expect(fs.mkdirpSync).to.be.called
     expect(fs.outputFileSync).to.have.callCount(javascriptBasicTemplateFiles)
+    expect(fs.writeJSON).to.have.been.calledWith('config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
   })
 
   // Typescript
@@ -58,5 +64,6 @@ describe('sf generate:function', () => {
   testTemplate('typescript', '../../../sfdx-project.json')
   .it('generates a function even if called from below the root of a project', () => {
     expect(fs.outputFileSync).to.have.been.calledWith('../../../functions/MyFunction/index.ts')
+    expect(fs.writeJSON).to.have.been.calledWith('../../../config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
   })
 })
