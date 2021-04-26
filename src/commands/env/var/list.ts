@@ -9,19 +9,22 @@ export default class ConfigList extends Command {
   static description = 'list your config vars in a table'
 
   static examples = [
-    '$ sf env:var:list foo --app=my-app',
+    '$ sf env var list --environment=my-environment',
   ]
 
   static flags = {
-    app: flags.string({
+    environment: flags.string({
       required: true,
     }),
   }
 
   async run() {
     const {flags} = this.parse(ConfigList)
+    const {environment} = flags
 
-    const {data: config} = await this.client.get<Heroku.ConfigVars>(`/apps/${flags.app}/config-vars`)
+    const appName = await this.resolveAppNameForEnvironment(environment)
+
+    const {data: config} = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`)
 
     const configArray = flatMap(config, (value, key) => {
       return {
@@ -31,7 +34,7 @@ export default class ConfigList extends Command {
     })
 
     if (!configArray.length) {
-      this.warn(`No config vars found for app ${flags.app}`)
+      this.warn(`No config vars found for environment ${environment}`)
       return
     }
 
