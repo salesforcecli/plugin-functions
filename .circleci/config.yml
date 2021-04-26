@@ -1,9 +1,9 @@
 ---
 version: 2
 jobs:
-  node-latest: &test
+  node-15: &test
     docker:
-      - image: node:latest
+      - image: node:15
     working_directory: ~/cli
     steps:
       - checkout
@@ -44,7 +44,7 @@ workflows:
   version: 2
   "sf-plugin-functions":
     jobs:
-      - node-latest
+      - node-15
       - node-14
       - node-12
       - cache:
