@@ -28,7 +28,7 @@ export default class ProjectDeployFunctions extends Command {
       char: 'b',
       description: 'deploy the latest commit from a branch different from the currently active branch',
     }),
-    force: flags.string({
+    force: flags.boolean({
       description: 'ignore warnings and overwrite remote repository (not allowed in production)',
     }),
     verbose: flags.boolean({
@@ -103,12 +103,22 @@ export default class ProjectDeployFunctions extends Command {
     const app = await this.fetchAppForProject(project.name, flags['connected-org'])
     const remote = await this.gitRemote(app)
 
+    // placeholder for eventual check to see if environment is a prod environment
+    const canForcePush = true
+
     debug('pushing to git server using remote: ', remote)
 
     try {
       const currentBranch = await this.getCurrentBranch()
 
-      const {stdout, stderr} = await this.git.exec(['push', remote, `${flags.branch ?? currentBranch}:master`])
+      const {stdout, stderr} = await this.git.exec(
+        [
+          'push',
+          remote,
+          `${flags.branch ?? currentBranch}:master`,
+          flags.force && canForcePush ? '--force' : '',
+        ],
+      )
       if (flags.verbose) {
         process.stdout.write(stdout)
         if (stderr) {
@@ -118,7 +128,8 @@ export default class ProjectDeployFunctions extends Command {
     } catch (error) {
       this.error('There was a git-related issue when deploying your functions. ' +
       'This could be caused either by a merge conflict (because someone else has deployed ' +
-      'unmergeable changes to the same environment), or by a project name conflict.')
+      'unmergeable changes to the same environment), or by a project name conflict. If this is ' +
+      'a non-production environment, you may re-run this command with --force to proceed anyway.')
     }
 
     // FunctionReferences: create function reference using info from function.toml and project info,
