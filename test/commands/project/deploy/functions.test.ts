@@ -95,6 +95,7 @@ const ENVIRONMENT_MOCK = {
   sfdx_project_name: PROJECT_CONFIG_MOCK.name,
   sales_org_connection: {
     sales_org_id: ORG_MOCK.id,
+    sales_org_stage: 'test',
   },
   git_url: 'https://git.fakeheroku.com/sweet_project',
 }
@@ -236,6 +237,92 @@ describe('sf project deploy functions', () => {
     expect(error.message).to.include('please login with sf login functions')
   })
   .it('errors when there is no login in netrc', ctx => {
+    expect(ctx.execStub).to.not.have.been.called
+  })
+
+  // force push works for non-prod org
+  test
+  .stdout()
+  .stderr()
+  .nock('https://api.heroku.com', api => {
+    api
+    .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
+    .reply(200, ENVIRONMENT_MOCK)
+  })
+  .do(() => {
+    sandbox.stub(Git.prototype as any, 'hasUnpushedFiles').returns(false)
+    sandbox.stub(Git.prototype, 'status' as any).returns('On branch main')
+
+    sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK)
+    sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
+
+    const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any)
+    netrcStub.withArgs('login').returns('login')
+    netrcStub.withArgs('password').returns('password')
+
+    sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK)
+  })
+  .add('execStub', () => {
+    const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any)
+    gitExecStub
+    .withArgs(sinon.match.array.startsWith(['push']))
+    .returns({stdout: '', stderr: ''})
+
+    return gitExecStub
+  })
+  .finally(() => {
+    sandbox.restore()
+  })
+  .command(['project:deploy:functions', '--connected-org=my-scratch-org', '--force'])
+  .it('will force push when --force is used with a non-production org', ctx => {
+    expect(ctx.execStub).to.have.been.calledWith(['push', 'https://login:password@git.fakeheroku.com/sweet_project', 'main:master', '--force'])
+  })
+
+  // force push protection for prod org
+  test
+  .stdout()
+  .stderr()
+  .nock('https://api.heroku.com', api => {
+    api
+    .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
+    .reply(200, {
+      ...ENVIRONMENT_MOCK,
+      sales_org_connection: {
+        ...ENVIRONMENT_MOCK.sales_org_connection,
+        sales_org_stage: 'prod',
+      },
+
+    })
+  })
+  .do(() => {
+    sandbox.stub(Git.prototype as any, 'hasUnpushedFiles').returns(false)
+    sandbox.stub(Git.prototype, 'status' as any).returns('On branch main')
+
+    sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK)
+    sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
+
+    const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any)
+    netrcStub.withArgs('login').returns('login')
+    netrcStub.withArgs('password').returns('password')
+
+    sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK)
+  })
+  .add('execStub', () => {
+    const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any)
+    gitExecStub
+    .withArgs(sinon.match.array.startsWith(['push']))
+    .returns({stdout: '', stderr: ''})
+
+    return gitExecStub
+  })
+  .finally(() => {
+    sandbox.restore()
+  })
+  .command(['project:deploy:functions', '--connected-org=my-scratch-org', '--force'])
+  .catch(error => {
+    expect(error.message).to.include('You cannot use the `--force` flag with a production org.')
+  })
+  .it('will not force push when --force is used with a production org', ctx => {
     expect(ctx.execStub).to.not.have.been.called
   })
 })

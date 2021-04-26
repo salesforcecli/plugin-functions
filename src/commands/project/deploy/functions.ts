@@ -1,5 +1,4 @@
 import herokuColor from '@heroku-cli/color'
-import * as Heroku from '@heroku-cli/schema'
 import {flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 import debugFactory from 'debug'
@@ -11,7 +10,7 @@ import Command from '../../../lib/base'
 import {parseFunctionToml} from '../../../lib/function-toml'
 import Git from '../../../lib/git'
 import {resolveFunctionsPaths} from '../../../lib/path-utils'
-import {FunctionReference, SfdxProjectConfig} from '../../../lib/sfdc-types'
+import {ComputeEnvironment, FunctionReference, SfdxProjectConfig} from '../../../lib/sfdc-types'
 
 const debug = debugFactory('project:deploy:functions')
 
@@ -43,7 +42,7 @@ export default class ProjectDeployFunctions extends Command {
     return statusString!.split('\n')[0].replace('On branch ', '')
   }
 
-  async gitRemote(app: Heroku.App) {
+  async gitRemote(app: ComputeEnvironment) {
     const username = this.apiNetrcMachine.get('login')
     const token = this.apiNetrcMachine.get('password')
 
@@ -101,24 +100,31 @@ export default class ProjectDeployFunctions extends Command {
     const org = await this.fetchOrg(flags['connected-org'])
     const project = await this.fetchSfdxProject()
     const app = await this.fetchAppForProject(project.name, flags['connected-org'])
-    const remote = await this.gitRemote(app)
 
-    // placeholder for eventual check to see if environment is a prod environment
-    const canForcePush = true
+    if (flags.force && app.sales_org_connection?.sales_org_stage === 'prod') {
+      this.error('You cannot use the `--force` flag with a production org.')
+    }
+
+    const remote = await this.gitRemote(app)
 
     debug('pushing to git server using remote: ', remote)
 
     try {
       const currentBranch = await this.getCurrentBranch()
 
-      const {stdout, stderr} = await this.git.exec(
-        [
-          'push',
-          remote,
-          `${flags.branch ?? currentBranch}:master`,
-          flags.force && canForcePush ? '--force' : '',
-        ],
-      )
+      const pushCommand = [
+        'push',
+        remote,
+        `${flags.branch ?? currentBranch}:master`,
+      ]
+
+      // Since we error out if they try to use `--force` with a production org, we don't check for
+      // a production org here since this code would be unreachable in that scenario
+      if (flags.force) {
+        pushCommand.push('--force')
+      }
+
+      const {stdout, stderr} = await this.git.exec(pushCommand)
       if (flags.verbose) {
         process.stdout.write(stdout)
         if (stderr) {

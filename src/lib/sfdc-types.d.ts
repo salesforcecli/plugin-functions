@@ -22,6 +22,7 @@ export interface ComputeEnvironment extends Heroku.App {
   sales_org_connection?: {
     id: string;
     sales_org_id: string;
+    sales_org_stage: 'prod' | 'test';
   };
 }
 
