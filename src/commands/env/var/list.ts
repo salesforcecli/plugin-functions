@@ -34,7 +34,7 @@ export default class ConfigList extends Command {
     })
 
     if (!configArray.length) {
-      this.warn(`No config vars found for app ${environment}`)
+      this.warn(`No config vars found for environment ${environment}`)
       return
     }
 

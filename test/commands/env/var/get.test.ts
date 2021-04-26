@@ -27,6 +27,6 @@ describe('sf env:var:get', () => {
   )
   .command(['env:var:get', 'foo', '--environment', 'my-environment'])
   .it('shows a message when the config var is not defined', ctx => {
-    expect(ctx.stderr).to.include(' ›   Warning: No config var named foo found for app my-environment\n')
+    expect(ctx.stderr).to.include(' ›   Warning: No config var named foo found for environment my-environment\n')
   })
 })

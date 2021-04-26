@@ -33,6 +33,6 @@ describe('sf env:var:list', () => {
   )
   .command(['env:var:list', '--environment', 'my-environment'])
   .it('shows a message when there are no config vars', ctx => {
-    expect(ctx.stderr).to.include(' ›   Warning: No config vars found for app my-environment\n')
+    expect(ctx.stderr).to.include(' ›   Warning: No config vars found for environment my-environment\n')
   })
 })

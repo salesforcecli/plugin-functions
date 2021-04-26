@@ -36,7 +36,7 @@ export default class VarGet extends Command {
     const value = config[args.key]
 
     if (!value) {
-      this.warn(`No config var named ${herokuColor.cyan(args.key)} found for app ${herokuColor.cyan(environment)}`)
+      this.warn(`No config var named ${herokuColor.cyan(args.key)} found for environment ${herokuColor.cyan(environment)}`)
     }
 
     this.log(value)
