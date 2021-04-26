@@ -1,7 +1,7 @@
 import herokuColor from '@heroku-cli/color'
 import * as Heroku from '@heroku-cli/schema'
 import {flags} from '@oclif/command'
-import {Aliases, Org} from '@salesforce/core'
+import {Org} from '@salesforce/core'
 import {cli} from 'cli-ux'
 import Command from '../../lib/base'
 
@@ -53,18 +53,11 @@ export default class EnvDelete extends Command {
     }
 
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-    const aliases = await Aliases.create({})
-    const matchingAlias = aliases.get(environment)
-    let appToDelete
-    if (matchingAlias) {
-      appToDelete = matchingAlias
-    } else {
-      appToDelete = environment
-    }
+    const appName = await this.resolveAppNameForEnvironment(environment)
 
     try {
       // If app exists, it will be deleted
-      await this.client.delete<Heroku.App>(`/apps/${appToDelete}`, {
+      await this.client.delete<Heroku.App>(`/apps/${appName}`, {
         headers: {
           Accept: 'application/vnd.heroku+json; version=3.evergreen',
         },

@@ -1,6 +1,6 @@
 import * as Heroku from '@heroku-cli/schema'
 import {Command as Base} from '@oclif/command'
-import {Org, SfdxProject} from '@salesforce/core'
+import {Aliases, Org, SfdxProject} from '@salesforce/core'
 import {cli} from 'cli-ux'
 import {URL} from 'url'
 import APIClient from './api-client'
@@ -122,6 +122,19 @@ export default abstract class Command extends Base {
     })
 
     return data
+  }
+
+  protected async resolveAppNameForEnvironment(appNameOrAlias: string) {
+    // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
+    const aliases = await Aliases.create({})
+    const matchingAlias = aliases.get(appNameOrAlias)
+    let appName
+    if (matchingAlias) {
+      appName = matchingAlias
+    } else {
+      appName = appNameOrAlias
+    }
+    return appName
   }
 
   private fetchConfirmationValue(name: string, confirm?: string | string[]): string | undefined {
