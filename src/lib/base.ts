@@ -1,4 +1,3 @@
-import * as Heroku from '@heroku-cli/schema'
 import {Command as Base} from '@oclif/command'
 import {Aliases, Org, SfdxProject} from '@salesforce/core'
 import {cli} from 'cli-ux'
@@ -6,7 +5,7 @@ import {URL} from 'url'
 import APIClient from './api-client'
 import herokuVariant from './heroku-variant'
 import NetrcMachine from './netrc'
-import {SfdcAccount, SfdxProjectConfig, ComputeEnvironment} from './sfdc-types'
+import {ComputeEnvironment, SfdcAccount, SfdxProjectConfig} from './sfdc-types'
 
 export default abstract class Command extends Base {
   // Putting this here so we don't have to hide every single v2 command during development
