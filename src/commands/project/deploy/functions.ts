@@ -99,7 +99,17 @@ export default class ProjectDeployFunctions extends Command {
     cli.action.start('Pushing changes to functions')
     const org = await this.fetchOrg(flags['connected-org'])
     const project = await this.fetchSfdxProject()
-    const app = await this.fetchAppForProject(project.name, flags['connected-org'])
+
+    let app: ComputeEnvironment
+    try {
+      app = await this.fetchAppForProject(project.name, flags['connected-org'])
+    } catch (error) {
+      if (error.body.message?.includes('Couldn\'t find that app')) {
+        this.error(`No compute environment found for org ${flags['connected-org']}. Please ensure you've created a compute environment before deploying.`)
+      }
+
+      throw error
+    }
 
     if (flags.force && app.sales_org_connection?.sales_org_stage === 'prod') {
       this.error('You cannot use the `--force` flag with a production org.')
@@ -170,7 +180,8 @@ export default class ProjectDeployFunctions extends Command {
       return acc
     }, [])
 
-    const allReferences = (await connection.metadata.list({type: 'FunctionReference'})).reduce((acc: Array<string>, ref) => {
+    const refList = await connection.metadata.list({type: 'FunctionReference'})
+    const allReferences = refList.reduce((acc: Array<string>, ref) => {
       acc.push(ref.fullName)
 
       return acc
@@ -183,9 +194,8 @@ export default class ProjectDeployFunctions extends Command {
       referencesToRemove.forEach(ref => {
         this.log(ref)
       })
+      await connection.metadata.delete('FunctionReference', referencesToRemove)
     }
-
-    await connection.metadata.delete('FunctionReference', referencesToRemove)
 
     cli.action.stop()
   }
