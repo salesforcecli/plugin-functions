@@ -2,13 +2,17 @@
   "name": "sf-plugin-functions",
   "description": "Functions plugin for the SF CLI",
   "version": "0.0.0",
-  "author": "Salesforce, Inc.",
+  "author": "heroku-front-end@salesforce.com",
+  "bin": {
+    "functions": "./bin/run"
+  },
   "bugs": "https://github.com/heroku/sf-plugin-functions/issues",
   "dependencies": {
     "@heroku-cli/color": "^1.1.14",
     "@heroku-cli/schema": "^1.0.25",
     "@heroku/eventsource": "^1.0.7",
     "@oclif/core": "^0.5.4",
+    "@oclif/plugin-not-found": "^1.2.4",
     "@salesforce/core": "^2.20.5",
     "@salesforce/plugin-org": "^1.6.2",
     "@salesforce/templates": "^51.3.0",
@@ -21,12 +25,12 @@
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "netrc-parser": "^3.1.6",
-    "nodegit": "^0.27.0",
     "yeoman-environment": "^3.1.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
     "@oclif/plugin-help": "^3",
+    "@oclif/plugin-which": "^1.0.3",
     "@oclif/test": "^1",
     "@types/chai": "^4",
     "@types/fs-extra": "^9.0.8",
@@ -53,10 +57,10 @@
     "node": ">=10.0.0"
   },
   "files": [
+    "/bin",
     "/lib",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json",
-    "/yarn.lock"
+    "/templates",
+    "/oclif.manifest.json"
   ],
   "homepage": "https://github.com/heroku/sf-plugin-functions",
   "keywords": [
@@ -65,9 +69,13 @@
   "license": "MIT",
   "oclif": {
     "commands": "./lib/commands",
-    "bin": "oclif-example",
+    "bin": "sfdx",
+    "plugins": [
+      "@oclif/plugin-not-found"
+    ],
     "devPlugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-which"
     ]
   },
   "repository": "heroku/sf-plugin-functions",

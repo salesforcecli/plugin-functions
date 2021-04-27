@@ -10,11 +10,11 @@ export default class ConfigSet extends Command {
   static description = 'sets a single config value for an environment'
 
   static examples = [
-    '$ sf env:var:set foo --app=my-app',
+    '$ sf env var set foo=bar --environment=my-environment',
   ]
 
   static flags = {
-    app: Flags.string({
+    environment: Flags.string({
       required: true,
     }),
   }
@@ -35,12 +35,14 @@ export default class ConfigSet extends Command {
 
   async run() {
     const {flags, argv} = await this.parse(ConfigSet)
+    const {environment} = flags
 
+    const appName = await this.resolveAppNameForEnvironment(environment)
     const configPairs = this.parseKeyValuePairs(argv)
 
-    cli.action.start(`Setting ${Object.keys(configPairs).map(key => herokuColor.configVar(key)).join(', ')} and restarting ${herokuColor.app(flags.app)}`)
+    cli.action.start(`Setting ${Object.keys(configPairs).map(key => herokuColor.configVar(key)).join(', ')} and restarting ${herokuColor.app(environment)}`)
 
-    await this.client.patch(`/apps/${flags.app}/config-vars`, {
+    await this.client.patch(`/apps/${appName}/config-vars`, {
       data: configPairs,
     })
 

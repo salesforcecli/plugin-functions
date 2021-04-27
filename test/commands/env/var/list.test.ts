@@ -8,13 +8,13 @@ describe('sf env:var:list', () => {
   .stderr()
   .nock('https://api.heroku.com', api =>
     api
-    .get('/apps/my-app/config-vars')
+    .get('/apps/my-environment/config-vars')
     .reply(200, {
       foo: 'bar',
       baz: 'baq',
     }),
   )
-  .command(['env:var:list', '--app', 'my-app'])
+  .command(['env:var:list', '--environment', 'my-environment'])
   .it('shows a table of config vars', ctx => {
     expect(vacuum(ctx.stdout)).to.contain(vacuum(`
       Key Value
@@ -28,11 +28,11 @@ describe('sf env:var:list', () => {
   .stderr()
   .nock('https://api.heroku.com', api =>
     api
-    .get('/apps/my-app/config-vars')
+    .get('/apps/my-environment/config-vars')
     .reply(200, {}),
   )
-  .command(['env:var:list', '--app', 'my-app'])
+  .command(['env:var:list', '--environment', 'my-environment'])
   .it('shows a message when there are no config vars', ctx => {
-    expect(ctx.stderr).to.include('No config vars found for app my-app')
+    expect(ctx.stderr).to.include(' ›   Warning: No config vars found for environment my-environment\n')
   })
 })

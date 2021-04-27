@@ -9,14 +9,14 @@ describe('sf env:var:set', () => {
   .retries(2)
   .nock('https://api.heroku.com', api =>
     api
-    .patch('/apps/my-app/config-vars', {
+    .patch('/apps/my-environment/config-vars', {
       foo: 'bar',
     })
     .reply(200),
   )
-  .command(['env:var:set', 'foo=bar', '--app', 'my-app'])
+  .command(['env:var:set', 'foo=bar', '--environment', 'my-environment'])
   .it('works with a single variable', ctx => {
-    expect(ctx.stderr).to.contain('Setting foo and restarting my-app')
+    expect(ctx.stderr).to.contain('Setting foo and restarting my-environment')
   })
 
   test
@@ -24,19 +24,19 @@ describe('sf env:var:set', () => {
   .stderr()
   .nock('https://api.heroku.com', api =>
     api
-    .patch('/apps/my-app/config-vars', {
+    .patch('/apps/my-environment/config-vars', {
       foo: 'bar',
       bar: 'baz',
     })
     .reply(200),
   )
-  .command(['env:var:set', 'foo=bar', 'bar=baz', '--app', 'my-app'])
+  .command(['env:var:set', 'foo=bar', 'bar=baz', '--environment', 'my-environment'])
   .it('works with a multiple variables', ctx => {
-    expect(ctx.stderr).to.contain('Setting foo, bar and restarting my-app')
+    expect(ctx.stderr).to.contain('Setting foo, bar and restarting my-environment')
   })
 
   test
-  .command(['env:var:set', 'foobar', '--app', 'my-app'])
+  .command(['env:var:set', 'foobar', '--environment', 'my-environment'])
   .catch(error => {
     expect(error.message).to.contain('foobar is invalid. Please use the format key=value')
   })
