@@ -1,6 +1,6 @@
 import herokuColor from '@heroku-cli/color'
 import * as Heroku from '@heroku-cli/schema'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import {Org} from '@salesforce/core'
 import {cli} from 'cli-ux'
 import Command from '../../lib/base'
@@ -14,12 +14,12 @@ export default class EnvDelete extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
+    environment: Flags.string({
       char: 'e',
       description: 'environment name or alias',
       required: true,
     }),
-    confirm: flags.string({
+    confirm: Flags.string({
       char: 'c',
       required: false,
       description: 'confirmation name',
@@ -29,7 +29,7 @@ export default class EnvDelete extends Command {
   }
 
   async run() {
-    const {flags} = this.parse(EnvDelete)
+    const {flags} = await this.parse(EnvDelete)
 
     const {environment} = flags
 
