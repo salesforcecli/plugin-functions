@@ -220,13 +220,13 @@ export default class EnvList extends Command {
 
   async run() {
     const {flags} = this.parse(EnvList)
-    const project = await this.fetchSfdxProject()
     const {nonScratchOrgs, scratchOrgs} = await this.resolveOrgs(flags.all)
     const orgs = [...nonScratchOrgs, ...scratchOrgs]
     let environments = await this.resolveEnvironments(orgs)
     const types = flags['environment-type'] as Array<EnvironmentType> ?? ['org', 'scratchorg', 'compute']
 
     if (!flags.all) {
+      const project = await this.fetchSfdxProject()
       this.log(`Current environments for project ${project.name}\n`)
 
       if (types.includes('compute')) {
