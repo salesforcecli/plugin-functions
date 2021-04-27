@@ -23,8 +23,11 @@ export default class LogDrainList extends Command {
 
   async run() {
     const {flags} = this.parse(LogDrainList)
+    const {environment} = flags
 
-    const {data: drains} = await this.client.get<Array<Heroku.LogDrain>>(`apps/${flags.environment}/log-drains`)
+    const appName = await this.resolveAppNameForEnvironment(environment)
+
+    const {data: drains} = await this.client.get<Array<Heroku.LogDrain>>(`apps/${appName}/log-drains`)
 
     if (flags.json) {
       cli.styledJSON(drains)
@@ -32,7 +35,7 @@ export default class LogDrainList extends Command {
     }
 
     if (drains.length === 0) {
-      this.log(`No log drains found for environment ${flags.environment}.`)
+      this.log(`No log drains found for environment ${environment}.`)
       return
     }
 

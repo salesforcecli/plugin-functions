@@ -26,10 +26,13 @@ export default class LogDrainRemove extends Command {
 
   async run() {
     const {flags} = this.parse(LogDrainRemove)
+    const {environment} = flags
 
-    cli.action.start(`Deleting drain for environment ${herokuColor.app(flags.environment)}`)
+    const appName = await this.resolveAppNameForEnvironment(environment)
 
-    await this.client.delete<Heroku.LogDrain>(`apps/${flags.environment}/log-drains/${encodeURIComponent(flags.url)}`)
+    cli.action.start(`Deleting drain for environment ${herokuColor.app(environment)}`)
+
+    await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(flags.url)}`)
 
     cli.action.stop()
   }
