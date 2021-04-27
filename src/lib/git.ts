@@ -32,7 +32,11 @@ export class Git {
   async hasUnpushedFiles() {
     const status = await this.status()
 
-    return status.includes('Untracked files:') || status.includes('Changes to be committed:')
+    return (
+      status.includes('Untracked files:') ||
+      status.includes('Changes to be committed:') ||
+      status.includes('Changes not staged for commit:')
+    )
   }
 }
 
