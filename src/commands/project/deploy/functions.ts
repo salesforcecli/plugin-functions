@@ -180,7 +180,11 @@ export default class ProjectDeployFunctions extends Command {
       return acc
     }, [])
 
-    const refList = await connection.metadata.list({type: 'FunctionReference'})
+    let refList = await connection.metadata.list({type: 'FunctionReference'})
+    if (refList && !Array.isArray(refList)) {
+      refList = [refList]
+    }
+
     const allReferences = refList.reduce((acc: Array<string>, ref) => {
       acc.push(ref.fullName)
 
