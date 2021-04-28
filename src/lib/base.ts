@@ -1,4 +1,3 @@
-import * as Heroku from '@heroku-cli/schema'
 import {Command as Base} from '@oclif/command'
 import {Aliases, Org, SfdxProject} from '@salesforce/core'
 import {cli} from 'cli-ux'
@@ -6,7 +5,7 @@ import {URL} from 'url'
 import APIClient from './api-client'
 import herokuVariant from './heroku-variant'
 import NetrcMachine from './netrc'
-import {SfdcAccount} from './sfdc-types'
+import {ComputeEnvironment, SfdcAccount, SfdxProjectConfig} from './sfdc-types'
 
 export default abstract class Command extends Base {
   // Putting this here so we don't have to hide every single v2 command during development
@@ -76,8 +75,8 @@ export default abstract class Command extends Base {
   protected catch(err: any): any {
     cli.action.stop('failed')
 
-    if (err.response && err.response.status === 401) {
-      this.error('Your token has expired, please re-login with sfdx v2:auth:login')
+    if (err.http?.response?.status === 401) {
+      this.error('Your token has expired, please login with sf login functions')
     } else {
       throw err
     }
@@ -86,7 +85,7 @@ export default abstract class Command extends Base {
   protected async fetchAccount() {
     const {data} = await this.client.get<SfdcAccount>('/account', {
       headers: {
-        Accept: herokuVariant('salesforce_sso'),
+        ...herokuVariant('salesforce_sso'),
       },
     })
 
@@ -109,15 +108,15 @@ export default abstract class Command extends Base {
   protected async fetchSfdxProject() {
     const project = await SfdxProject.resolve()
 
-    return project.resolveProjectConfig()
+    return project.resolveProjectConfig() as Promise<SfdxProjectConfig>
   }
 
   protected async fetchAppForProject(projectName: string, orgAliasOrUsername?: string) {
     const orgId = await this.fetchOrgId(orgAliasOrUsername)
 
-    const {data} = await this.client.get<Heroku.App>(`/sales-org-connections/${orgId}/apps/${projectName}`, {
+    const {data} = await this.client.get<ComputeEnvironment>(`/sales-org-connections/${orgId}/apps/${projectName}`, {
       headers: {
-        Accept: herokuVariant('evergreen'),
+        ...herokuVariant('evergreen'),
       },
     })
 

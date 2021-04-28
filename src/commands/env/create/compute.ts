@@ -38,7 +38,7 @@ export default class EnvCreateCompute extends Command {
     cli.action.start(`Creating compute environment for org ID ${orgId}`)
 
     const project = await this.fetchSfdxProject()
-    const projectName = project.name as string
+    const projectName = project.name
 
     if (!projectName) {
       this.error('No project name found in sfdx-project.json.')

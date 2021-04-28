@@ -1,14 +1,20 @@
 import {expect, test} from '@oclif/test'
-import * as sinon from 'sinon'
 import * as fs from 'fs-extra'
-import * as GenerateFunction from '../../../src/commands/generate/function'
+import * as sinon from 'sinon'
+import * as pathUtils from '../../../src/lib/path-utils'
 
 describe('sf generate:function', () => {
   const sandbox: sinon.SinonSandbox = sinon.createSandbox()
 
   function testTemplate(template: string, sfdxProjectPath: string | null) {
     return test
-    .stub(GenerateFunction.default.prototype, 'getSfdxProjectPath', () => sfdxProjectPath)
+    .stub(pathUtils, 'resolveSfdxProjectPath', () => {
+      if (sfdxProjectPath) {
+        return sfdxProjectPath
+      }
+
+      throw new Error('no project path')
+    })
     .stub(fs, 'mkdirpSync', sandbox.stub())
     .stub(fs, 'outputFileSync', sandbox.stub())
     .stub(fs, 'readJSON', () => {
