@@ -26,10 +26,13 @@ export default class LogDrainAdd extends Command {
 
   async run() {
     const {flags} = this.parse(LogDrainAdd)
+    const {environment} = flags
 
-    cli.action.start(`Creating drain for environment ${herokuColor.app(flags.environment)}`)
+    const appName = await this.resolveAppNameForEnvironment(environment)
 
-    await this.client.post<Heroku.LogDrain>(`apps/${flags.environment}/log-drains`, {
+    cli.action.start(`Creating drain for environment ${herokuColor.app(environment)}`)
+
+    await this.client.post<Heroku.LogDrain>(`apps/${appName}/log-drains`, {
       data: {
         url: flags.url,
       },
