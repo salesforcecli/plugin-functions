@@ -28,16 +28,25 @@ export async function resolveSfdxProjectPath(projectJson = PROJECT_JSON) {
 
 export async function resolveFunctionsDirectory() {
   const sfdxProjectPath = await resolveSfdxProjectPath()
+  const fnPath = sfdxProjectPath.replace(PROJECT_JSON, FUNCTIONS_DIR)
 
-  return sfdxProjectPath.replace(PROJECT_JSON, FUNCTIONS_DIR)
+  if (await pathExists(fnPath)) {
+    return fnPath
+  }
+
+  throw new Error('No functions directory found')
 }
 
 export async function resolveFunctionsPaths() {
   const fnDir = await resolveFunctionsDirectory()
+  // This is the list of actual functions inside the `functions` directory
+  const fnDirs = await readdir(fnDir)
 
-  const functions = await readdir(fnDir)
+  if (!fnDirs.length) {
+    throw new Error('The functions directory does contain any functions.')
+  }
 
-  return functions.reduce((acc: Array<string>, fn: string) => {
+  return fnDirs.reduce((acc: Array<string>, fn: string) => {
     const fnPath = path.join(fnDir, fn)
     if (lstatSync(fnPath).isDirectory()) {
       acc.push(fnPath)

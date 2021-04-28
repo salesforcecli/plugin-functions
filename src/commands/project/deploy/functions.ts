@@ -99,6 +99,10 @@ export default class ProjectDeployFunctions extends Command {
     cli.action.start('Pushing changes to functions')
     const org = await this.fetchOrg(flags['connected-org'])
     const project = await this.fetchSfdxProject()
+    // FunctionReferences: create function reference using info from function.toml and project info
+    // we do this early on because we don't want to bother with anything else if it turns out
+    // there are no functions to deploy
+    const references = await this.resolveFunctionReferences(project)
 
     let app: ComputeEnvironment
     try {
@@ -147,10 +151,6 @@ export default class ProjectDeployFunctions extends Command {
       'unmergeable changes to the same environment), or by a project name conflict. If this is ' +
       'a non-production environment, you may re-run this command with --force to proceed anyway.')
     }
-
-    // FunctionReferences: create function reference using info from function.toml and project info,
-    // then push to Salesforce org
-    const references = await this.resolveFunctionReferences(project)
 
     debug('pushing function references', references)
 

@@ -225,6 +225,7 @@ describe('sf project deploy functions', () => {
     const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any)
     netrcStub.withArgs('login').returns('')
     netrcStub.withArgs('password').returns('')
+    sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK)
   })
   .add('execStub', () => {
     return sandbox.stub(Git.prototype, 'exec' as any)
