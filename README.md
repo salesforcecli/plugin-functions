@@ -10,6 +10,15 @@ Functions plugin for the SF CLI
 [![Downloads/week](https://img.shields.io/npm/dw/sf-plugin-functions.svg)](https://npmjs.org/package/sf-plugin-functions)
 [![License](https://img.shields.io/npm/l/sf-plugin-functions.svg)](https://github.com/heroku/sf-plugin-functions/blob/master/package.json)
 
+# To install and run locally
+
+- `git clone https://github.com/heroku/sf-plugin-functions.git`
+- `cd sf-plugin-functions`
+- `yarn`
+- `sfdx plugins:link`
+
+Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx login:functions`
+
 <!-- toc -->
 * [Usage](#usage)
 * [Commands](#commands)
