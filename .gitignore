@@ -11,4 +11,4 @@ oclif.manifest.json
 # Adding for sfdx trust signing
 *.tgz
 *.sig
-package.json.ba
+package.json.bak
