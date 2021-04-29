@@ -8,9 +8,6 @@ import NetrcMachine from './netrc'
 import {ComputeEnvironment, SfdcAccount, SfdxProjectConfig} from './sfdc-types'
 
 export default abstract class Command extends Base {
-  // Putting this here so we don't have to hide every single v2 command during development
-  static hidden = true;
-
   private _client!: APIClient
 
   private _auth?: string
