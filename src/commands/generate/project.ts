@@ -24,6 +24,11 @@ export default class GenerateProject extends Command {
 
   async run() {
     const {flags} = this.parse(GenerateProject)
+
+    if (flags.name.includes('-')) {
+      this.error('Project names may not include hyphens, please either remove them or use underscores.')
+    }
+
     const projectPath = path.resolve(`./${flags.name}`)
 
     if (await fs.pathExists(projectPath)) {
