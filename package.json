@@ -1,5 +1,5 @@
 {
-  "name": "sf-plugin-functions",
+  "name": "@salesforce/plugin-functions",
   "description": "Functions plugin for the SF CLI",
   "version": "0.0.1",
   "author": "heroku-front-end@salesforce.com",
