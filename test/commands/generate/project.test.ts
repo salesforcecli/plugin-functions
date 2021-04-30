@@ -97,4 +97,16 @@ describe('sf generate project', () => {
     expect(error.message).to.include('Directory foo already exists.')
   })
   .it('should not create duplicate project in the directory where command is executed')
+
+  test
+  .stdout()
+  .stderr()
+  .finally(() => {
+    fs.removeSync('foo')
+  })
+  .command(['generate:project', '--name=foo-bar'])
+  .catch(error => {
+    expect(error.message).to.include('Project names may not include hyphens')
+  })
+  .it('should not create a project if the name contains hyphens')
 })
