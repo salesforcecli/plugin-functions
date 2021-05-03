@@ -1,6 +1,6 @@
 import herokuColor from '@heroku-cli/color'
 import {flags} from '@oclif/command'
-import {existsSync, mkdirpSync, outputFileSync, readFileSync, readJSON, writeJSON} from 'fs-extra'
+import {copySync, existsSync, lstatSync, mkdirpSync, outputFileSync, readdirSync, readFileSync, readJSON, writeJSON} from 'fs-extra'
 import * as Handlebars from 'handlebars'
 import * as path from 'path'
 import Command from '../../lib/base'
@@ -171,6 +171,75 @@ class Typescript extends Javascript {
 TEMPLATE_REGISTRY.registerTemplate(new Typescript())
 
 /**
+ * Java template.
+ */
+class Java extends Template {
+  protected fnNameJavaClass = ''
+
+  protected fnNameMavenArtifactId = ''
+
+  get name(): string {
+    return 'java'
+  }
+
+  protected writeLanguageFiles(tplConfig: TemplateConfig): void {
+    this.fnNameJavaClass = Java.toJavaClassName(tplConfig.fnName)
+    this.fnNameMavenArtifactId = Java.toMavenArtifactId(tplConfig.fnName)
+
+    this.copyRecursivelySync(this.templateDir, tplConfig.fnDir)
+  }
+
+  private copyRecursivelySync(dir: string, targetDir: string): void {
+    readdirSync(dir).forEach(entry => {
+      const fullEntryPath = path.join(dir, entry)
+
+      if (lstatSync(fullEntryPath).isDirectory()) {
+        mkdirpSync(fullEntryPath)
+        this.copyRecursivelySync(fullEntryPath, path.join(targetDir, entry))
+      } else {
+        if (path.extname(entry) === '.tpl') {
+          const filename = entry.substring(0, entry.lastIndexOf('.'))
+          const filenameTemplate = Handlebars.compile(filename)
+
+          this.writeFileFromTemplate({
+            fnDir: targetDir, toFile: filenameTemplate({fnNameJavaClass: this.fnNameJavaClass}),
+            tplFile: fullEntryPath,
+            tplArgs: {fnNameJavaClass: this.fnNameJavaClass, fnNameMavenArtifactId: this.fnNameMavenArtifactId},
+          })
+
+          return
+        }
+
+        copySync(fullEntryPath, path.join(targetDir, entry))
+      }
+    })
+  }
+
+  private static toJavaClassName(input: string): string {
+    const preliminaryResult = input
+    .replace(/[^A-Za-z0-9 ]/g, '')
+    .split(' ')
+    .map(match => match.charAt(0).toUpperCase() + match.toLowerCase().substring(1))
+    .join('')
+
+    if (preliminaryResult.match(/^\d/)) {
+      return 'A' + preliminaryResult
+    }
+
+    return preliminaryResult
+  }
+
+  private static toMavenArtifactId(input: string): string {
+    return input
+    .replace(/[^A-Za-z0-9- ]/g, '')
+    .split(' ')
+    .map(match => match.toLowerCase())
+    .join('-')
+  }
+}
+TEMPLATE_REGISTRY.registerTemplate(new Java())
+
+/**
  * Based on given language, create function project with specific scaffolding.
  */
 export default class GenerateFunction extends Command {
@@ -191,7 +260,7 @@ export default class GenerateFunction extends Command {
       char: 'n',
     }),
     language: flags.enum({
-      options: ['javascript', 'typescript'],
+      options: ['javascript', 'typescript', 'java'],
       description: 'language',
       char: 'l',
       required: true,

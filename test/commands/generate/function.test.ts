@@ -17,6 +17,7 @@ describe('sf generate:function', () => {
     })
     .stub(fs, 'mkdirpSync', sandbox.stub())
     .stub(fs, 'outputFileSync', sandbox.stub())
+    .stub(fs, 'copySync', sandbox.stub)
     .stub(fs, 'readJSON', () => {
       return {
         features: ['EnableSetPasswordInApi'],
@@ -54,6 +55,18 @@ describe('sf generate:function', () => {
     expect(ctx.stdout).to.contain('Created typescript')
     expect(fs.mkdirpSync).to.be.called
     expect(fs.outputFileSync).to.have.callCount(typescriptBasicTemplateFiles)
+  })
+
+  // Java
+  const javaBasicTemplateFiles = 4
+  const javaRegularFiles = 8
+  testTemplate('java', 'sfdx-project.json')
+  .it('generates a java function', ctx => {
+    expect(ctx.stderr).to.equal('')
+    expect(ctx.stdout).to.contain('Created java')
+    expect(fs.mkdirpSync).to.be.called
+    expect(fs.outputFileSync).to.have.callCount(javaBasicTemplateFiles)
+    expect(fs.copySync).to.have.callCount(javaRegularFiles)
   })
 
   testTemplate('javascript', null)
