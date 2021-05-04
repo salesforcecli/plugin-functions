@@ -2,6 +2,7 @@ import {expect, test} from '@oclif/test'
 import * as fs from 'fs-extra'
 import * as sinon from 'sinon'
 import * as pathUtils from '../../../src/lib/path-utils'
+import * as javaNameUtils from '../../../src/lib/java-name-utils'
 
 describe('sf generate:function', () => {
   const sandbox: sinon.SinonSandbox = sinon.createSandbox()
@@ -84,5 +85,45 @@ describe('sf generate:function', () => {
   .it('generates a function even if called from below the root of a project', () => {
     expect(fs.outputFileSync).to.have.been.calledWith('../../../functions/MyFunction/index.ts')
     expect(fs.writeJSON).to.have.been.calledWith('../../../config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
+  })
+})
+
+describe('toJavaClassName', () => {
+  it('removes illegal characters from the name', () => {
+    expect(javaNameUtils.toJavaClassName('Hello👋')).to.equal('Hello')
+    expect(javaNameUtils.toJavaClassName('FoöBär')).to.equal('FoBr')
+    expect(javaNameUtils.toJavaClassName('FooÄaa')).to.equal('Fooaa')
+  })
+
+  it('removes spaces and capitalizes the next word after a space', () => {
+    expect(javaNameUtils.toJavaClassName('Hello world')).to.equal('HelloWorld')
+  })
+
+  it('does not mangle already camel-cased names', () => {
+    expect(javaNameUtils.toJavaClassName('HelloWorld function')).to.equal('HelloWorldFunction')
+  })
+
+  it('adds a prefix when the first character is not a letter', () => {
+    expect(javaNameUtils.toJavaClassName('99 Red Balloons')).to.equal('A99RedBalloons')
+  })
+})
+
+describe('toMavenArtifactId', () => {
+  it('removes illegal characters from the name', () => {
+    expect(javaNameUtils.toMavenArtifactId('Hello👋')).to.equal('hello')
+    expect(javaNameUtils.toMavenArtifactId('FoöBär')).to.equal('fo-br')
+    expect(javaNameUtils.toMavenArtifactId('FooÄaa')).to.equal('fooaa')
+  })
+
+  it('replaces spaces with dashes', () => {
+    expect(javaNameUtils.toMavenArtifactId('Hello world Function')).to.equal('hello-world-function')
+  })
+
+  it('replaces multiple spaces with only one dash', () => {
+    expect(javaNameUtils.toMavenArtifactId('Hello    world')).to.equal('hello-world')
+  })
+
+  it('does not mangle uppercase names like acronyms', () => {
+    expect(javaNameUtils.toMavenArtifactId('There are too many TLAs')).to.equal('there-are-too-many-tlas')
   })
 })
