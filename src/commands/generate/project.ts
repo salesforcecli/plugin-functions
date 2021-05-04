@@ -38,10 +38,25 @@ export default class GenerateProject extends Command {
     const env = createEnv()
     env.registerStub(ProjectGenerator, 'project-generator')
 
-    await env.run('project-generator', {...options, projectname: flags.name}, err => {
-      if (err) {
-        this.error(err)
+    try {
+      await env.run('project-generator', {...options, projectname: flags.name}, err => {
+        if (err) {
+          this.error(err)
+        }
+      })
+    } catch (error) {
+      // This is an error that is specific to the yeoman-environment package. It comes up whenever
+      // someone has a package.json in the directory they are trying to generate a project in, or
+      // one of its ancestors. The default error message is also complete useless, so we'll catch it
+      // instead of provide useful feedback
+      if (error.message?.includes('A name parameter is required to create a storage')) {
+        this.error(
+          'There was an issue generating the project. Please ensure there are no package.json ' +
+          'files in this directory or any of its parents.',
+        )
       }
-    })
+
+      throw error
+    }
   }
 }
