@@ -3,6 +3,7 @@ import * as fs from 'fs-extra'
 import * as sinon from 'sinon'
 import * as pathUtils from '../../../src/lib/path-utils'
 import * as javaNameUtils from '../../../src/lib/java-name-utils'
+import * as path from 'path'
 
 describe('sf generate:function', () => {
   const sandbox: sinon.SinonSandbox = sinon.createSandbox()
@@ -18,7 +19,6 @@ describe('sf generate:function', () => {
     })
     .stub(fs, 'mkdirpSync', sandbox.stub())
     .stub(fs, 'outputFileSync', sandbox.stub())
-    .stub(fs, 'copySync', sandbox.stub)
     .stub(fs, 'readJSON', () => {
       return {
         features: ['EnableSetPasswordInApi'],
@@ -58,18 +58,6 @@ describe('sf generate:function', () => {
     expect(fs.outputFileSync).to.have.callCount(typescriptBasicTemplateFiles)
   })
 
-  // Java
-  const javaBasicTemplateFiles = 4
-  const javaRegularFiles = 8
-  testTemplate('java', 'sfdx-project.json')
-  .it('generates a java function', ctx => {
-    expect(ctx.stderr).to.equal('')
-    expect(ctx.stdout).to.contain('Created java')
-    expect(fs.mkdirpSync).to.be.called
-    expect(fs.outputFileSync).to.have.callCount(javaBasicTemplateFiles)
-    expect(fs.copySync).to.have.callCount(javaRegularFiles)
-  })
-
   testTemplate('javascript', null)
   .catch(error => {
     expect(error.message).to.contain('sf generate function must be run inside an sfdx project')
@@ -85,6 +73,57 @@ describe('sf generate:function', () => {
   .it('generates a function even if called from below the root of a project', () => {
     expect(fs.outputFileSync).to.have.been.calledWith('../../../functions/MyFunction/index.ts')
     expect(fs.writeJSON).to.have.been.calledWith('../../../config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
+  })
+})
+
+describe('sf generate:function --language java', () => {
+  const sandbox: sinon.SinonSandbox = sinon.createSandbox()
+
+  function testJavaTemplate(sfdxProjectPath: string | null) {
+    return test
+    .stub(pathUtils, 'resolveSfdxProjectPath', () => {
+      if (sfdxProjectPath) {
+        return sfdxProjectPath
+      }
+
+      throw new Error('no project path')
+    })
+    .stub(fs, 'readJSON', () => {
+      return {
+        features: ['EnableSetPasswordInApi'],
+      }
+    })
+    .stub(fs, 'writeJSON', sandbox.stub())
+    .stub(fs, 'mkdirpSync', sandbox.spy())
+    .stub(fs, 'copySync', sandbox.spy())
+    .stub(fs, 'outputFileSync', sandbox.spy())
+    .stdout({print: true})
+    .stderr({print: true})
+    .finally(() => {
+      // We cannot effectively stub all fs calls for Java template tests and we need to clean up after the test
+      if (sfdxProjectPath) {
+        fs.removeSync(path.join(path.dirname(sfdxProjectPath), 'functions', 'MyFunction'))
+      }
+
+      sandbox.restore()
+    })
+    .command([
+      'generate:function',
+      '--name=MyFunction',
+      '--language=java',
+    ])
+  }
+
+  const javaBasicFiles = 7
+  const javaTemplateFiles = 4
+  testJavaTemplate('sfdx-project.json')
+  .it('generates a java function', ctx => {
+    expect(ctx.stderr).to.equal('')
+    expect(ctx.stdout).to.contain('Created java')
+    expect(fs.writeJSON).to.have.been.calledWith('config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
+    expect(fs.mkdirpSync).to.have.been.called
+    expect(fs.copySync).to.have.callCount(javaBasicFiles)
+    expect(fs.outputFileSync).to.have.callCount(javaTemplateFiles)
   })
 })
 
