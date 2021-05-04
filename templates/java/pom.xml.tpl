@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.salesforce.functions</groupId>
             <artifactId>sf-fx-sdk-java</artifactId>
-            <version>0.5.0-ea</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
