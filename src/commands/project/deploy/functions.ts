@@ -43,14 +43,22 @@ export default class ProjectDeployFunctions extends Command {
   }
 
   async gitRemote(app: ComputeEnvironment) {
+    const externalApiKey = process.env.SALESFORCE_FUNCTIONS_API_KEY
+    const url = new URL(app.git_url!)
+
+    if (externalApiKey) {
+      url.password = externalApiKey
+      url.username = ''
+
+      return url.toString()
+    }
+
     const username = this.apiNetrcMachine.get('login')
     const token = this.apiNetrcMachine.get('password')
 
     if (!username || !token) {
       this.error('No login found. Please log in using the `login:functions` command.')
     }
-
-    const url = new URL(app.git_url!)
 
     url.username = username
     url.password = token
