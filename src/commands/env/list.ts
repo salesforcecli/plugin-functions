@@ -30,6 +30,10 @@ export default class EnvList extends Command {
       options: ['org', 'scratchorg', 'compute'],
       multiple: true,
     }),
+    json: flags.boolean({
+      description: 'output list in JSON format',
+      char: 'j',
+    }),
   }
 
   private aliases?: Aliases
@@ -64,7 +68,7 @@ export default class EnvList extends Command {
     }
   }
 
-  private async resolveEnvironments(orgs: Array<ExtendedAuthFields>) {
+  private async resolveEnvironments(orgs: Array<ExtendedAuthFields>): Promise<Array<ComputeEnvironment>> {
     const account = await this.fetchAccount()
 
     const {data: environments} = await this.client.get<Array<ComputeEnvironment>>(`/enterprise-accounts/${account.salesforce_org.owner.id}/apps`, {
@@ -227,24 +231,68 @@ export default class EnvList extends Command {
 
     if (!flags.all) {
       const project = await this.fetchSfdxProject()
-      this.log(`Current environments for project ${project.name}\n`)
+
+      if (!flags.json) {
+        this.log(`Current environments for project ${project.name}\n`)
+      }
 
       if (types.includes('compute')) {
         environments = environments.filter(env => env.sfdx_project_name === project.name)
       }
     }
 
-    const tableLookup = {
-      org: () => this.renderOrgTable(nonScratchOrgs),
-      scratchorg: () => this.renderScratchOrgTable(scratchOrgs),
-      compute: () => this.renderComputeEnvironmentTable(environments),
-    }
+    if (flags.json) {
+      const jsonLookup = {
+        org: () => {
+          return nonScratchOrgs.map(org => ({
+            alias: org.alias || '',
+            username: org.username,
+            orgId: org.orgId,
+            connectedStatus: org.connectedStatus,
+          }))
+        },
+        scratchorg: () => {
+          return scratchOrgs.map(org => ({
+            alias: org.alias || '',
+            username: org.username,
+            orgId: org.orgId,
+            connectedStatus: org.connectedStatus,
+            expirationDate: org.expirationDate,
+          }))
+        },
+        compute: () => {
+          return environments.map(env => ({
+            alias: env.alias,
+            projectName: env.sfdx_project_name,
+            connectedOrgAlias: env.orgAlias,
+            connectedOrgId: env.sales_org_connection?.sales_org_id,
+            name: env.name,
 
-    types.forEach((type, idx) => {
-      tableLookup[type]()
-      if (idx < types.length - 1) {
-        cli.log('=====')
+          }))
+        },
       }
-    })
+
+      type JsonLookup = Record<EnvironmentType, ReturnType<typeof jsonLookup[EnvironmentType]>>
+
+      const output = types.reduce((acc: JsonLookup, type) => {
+        acc[type] = jsonLookup[type]()
+        return acc
+      }, {} as JsonLookup)
+
+      cli.styledJSON(output)
+    } else {
+      const tableLookup = {
+        org: () => this.renderOrgTable(nonScratchOrgs),
+        scratchorg: () => this.renderScratchOrgTable(scratchOrgs),
+        compute: () => this.renderComputeEnvironmentTable(environments),
+      }
+
+      types.forEach((type, idx) => {
+        tableLookup[type]()
+        if (idx < types.length - 1) {
+          cli.log('=====')
+        }
+      })
+    }
   }
 }
