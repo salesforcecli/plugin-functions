@@ -6,6 +6,7 @@ import * as path from 'path'
 import Command from '../../lib/base'
 import {resolveSfdxProjectPath} from '../../lib/path-utils'
 import {retrieveApiVersion} from '../../lib/sfdx-org-resources'
+import * as javaNameUtils from '../../lib/java-name-utils'
 
 const FUNCTIONS_DIR = 'functions'
 const TEMPLATE_DIR = '../../../templates'
@@ -183,8 +184,8 @@ class Java extends Template {
   }
 
   protected writeLanguageFiles(tplConfig: TemplateConfig): void {
-    this.fnNameJavaClass = Java.toJavaClassName(tplConfig.fnName)
-    this.fnNameMavenArtifactId = Java.toMavenArtifactId(tplConfig.fnName)
+    this.fnNameJavaClass = javaNameUtils.toJavaClassName(tplConfig.fnName)
+    this.fnNameMavenArtifactId = javaNameUtils.toMavenArtifactId(tplConfig.fnName)
 
     this.copyRecursivelySync(this.templateDir, tplConfig.fnDir)
   }
@@ -213,28 +214,6 @@ class Java extends Template {
         copySync(fullEntryPath, path.join(targetDir, entry))
       }
     })
-  }
-
-  private static toJavaClassName(input: string): string {
-    const preliminaryResult = input
-    .replace(/[^A-Za-z0-9 ]/g, '')
-    .split(' ')
-    .map(match => match.charAt(0).toUpperCase() + match.toLowerCase().substring(1))
-    .join('')
-
-    if (preliminaryResult.match(/^\d/)) {
-      return 'A' + preliminaryResult
-    }
-
-    return preliminaryResult
-  }
-
-  private static toMavenArtifactId(input: string): string {
-    return input
-    .replace(/[^A-Za-z0-9- ]/g, '')
-    .split(' ')
-    .map(match => match.toLowerCase())
-    .join('-')
   }
 }
 TEMPLATE_REGISTRY.registerTemplate(new Java())
