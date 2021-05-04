@@ -200,6 +200,7 @@ export default class GenerateFunction extends Command {
 
   async run() {
     const {flags} = this.parse(GenerateFunction)
+    let isFirstFunction = false
 
     // Determine if we're in an SFDX project and return the path to sfdx-project.json
     let sfdxProjectPath
@@ -223,6 +224,7 @@ export default class GenerateFunction extends Command {
     const scratchDef = await readJSON(scratchDefPath)
     // Add 'Functions' feature to the project scratch org definition if it doesn't already exist
     if (!scratchDef.features.includes('Functions')) {
+      isFirstFunction = true
       scratchDef.features = [...scratchDef.features, 'Functions']
       await writeJSON(scratchDefPath, scratchDef)
     }
@@ -241,5 +243,14 @@ export default class GenerateFunction extends Command {
     template.write({fnDir: fnDir, fnName: fnName, fnNameCased: fnNameCased, isFunctionBundle: isFunctionBundle})
 
     this.log(`Created ${language} function ${herokuColor.green(fnName)} in ${herokuColor.green(fnDir)}.`)
+    if (isFirstFunction) {
+      this.log('')
+      this.log(
+        'You have just created your first Salesforce Functions module in this project!\n' +
+        'Before creating Scratch Orgs for development, please ensure that:\n' +
+        '1. Functions is enabled in your DevHub org\n' +
+        `2. ${herokuColor.green('"Functions"')} is added to your scratch org definition file ${herokuColor.green('"features"')} list`,
+      )
+    }
   }
 }
