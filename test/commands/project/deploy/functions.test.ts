@@ -326,4 +326,44 @@ describe('sf project deploy functions', () => {
   .it('will not force push when --force is used with a production org', ctx => {
     expect(ctx.execStub).to.not.have.been.called
   })
+
+  // When using API key
+  test
+  .stdout()
+  .stderr()
+  .env({
+    SALESFORCE_FUNCTIONS_API_KEY: '12345',
+  })
+  .do(() => {
+    sandbox.stub(Git.prototype as any, 'hasUnpushedFiles').returns(false)
+    sandbox.stub(Git.prototype, 'status' as any).returns('On branch main')
+    sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK)
+    sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
+
+    const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any)
+    netrcStub.withArgs('login').returns('login')
+    netrcStub.withArgs('password').returns('password')
+
+    sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK)
+  })
+  .add('execStub', () => {
+    const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any)
+    gitExecStub
+    .withArgs(sinon.match.array.startsWith(['push']))
+    .returns({stdout: '', stderr: ''})
+
+    return gitExecStub
+  })
+  .finally(() => {
+    sandbox.restore()
+  })
+  .nock('https://api.heroku.com', api => {
+    api
+    .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
+    .reply(200, ENVIRONMENT_MOCK)
+  })
+  .command(['project:deploy:functions', '--connected-org=my-scratch-org', '-v'])
+  .it('generates the correct remote when passing an API key', ctx => {
+    expect(ctx.execStub).to.have.been.calledWith(['push', 'https://:12345@git.fakeheroku.com/sweet_project', 'main:master'])
+  })
 })
