@@ -2,6 +2,8 @@ import {expect, test} from '@oclif/test'
 import * as fs from 'fs-extra'
 import * as sinon from 'sinon'
 import * as pathUtils from '../../../src/lib/path-utils'
+import * as javaNameUtils from '../../../src/lib/java-name-utils'
+import * as path from 'path'
 
 describe('sf generate:function', () => {
   const sandbox: sinon.SinonSandbox = sinon.createSandbox()
@@ -71,5 +73,96 @@ describe('sf generate:function', () => {
   .it('generates a function even if called from below the root of a project', () => {
     expect(fs.outputFileSync).to.have.been.calledWith('../../../functions/MyFunction/index.ts')
     expect(fs.writeJSON).to.have.been.calledWith('../../../config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
+  })
+})
+
+describe('sf generate:function --language java', () => {
+  const sandbox: sinon.SinonSandbox = sinon.createSandbox()
+
+  function testJavaTemplate(sfdxProjectPath: string | null) {
+    return test
+    .stub(pathUtils, 'resolveSfdxProjectPath', () => {
+      if (sfdxProjectPath) {
+        return sfdxProjectPath
+      }
+
+      throw new Error('no project path')
+    })
+    .stub(fs, 'readJSON', () => {
+      return {
+        features: ['EnableSetPasswordInApi'],
+      }
+    })
+    .stub(fs, 'writeJSON', sandbox.stub())
+    .stub(fs, 'mkdirpSync', sandbox.spy())
+    .stub(fs, 'copySync', sandbox.spy())
+    .stub(fs, 'outputFileSync', sandbox.spy())
+    .stdout({print: true})
+    .stderr({print: true})
+    .finally(() => {
+      // We cannot effectively stub all fs calls for Java template tests and we need to clean up after the test
+      if (sfdxProjectPath) {
+        fs.removeSync(path.join(path.dirname(sfdxProjectPath), 'functions', 'MyFunction'))
+      }
+
+      sandbox.restore()
+    })
+    .command([
+      'generate:function',
+      '--name=MyFunction',
+      '--language=java',
+    ])
+  }
+
+  const javaBasicFiles = 7
+  const javaTemplateFiles = 4
+  testJavaTemplate('sfdx-project.json')
+  .it('generates a java function', ctx => {
+    expect(ctx.stderr).to.equal('')
+    expect(ctx.stdout).to.contain('Created java')
+    expect(fs.writeJSON).to.have.been.calledWith('config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
+    expect(fs.mkdirpSync).to.have.been.called
+    expect(fs.copySync).to.have.callCount(javaBasicFiles)
+    expect(fs.outputFileSync).to.have.callCount(javaTemplateFiles)
+  })
+})
+
+describe('toJavaClassName', () => {
+  it('removes illegal characters from the name', () => {
+    expect(javaNameUtils.toJavaClassName('Hello👋')).to.equal('Hello')
+    expect(javaNameUtils.toJavaClassName('FoöBär')).to.equal('FoBr')
+    expect(javaNameUtils.toJavaClassName('FooÄaa')).to.equal('Fooaa')
+  })
+
+  it('removes spaces and capitalizes the next word after a space', () => {
+    expect(javaNameUtils.toJavaClassName('Hello world')).to.equal('HelloWorld')
+  })
+
+  it('does not mangle already camel-cased names', () => {
+    expect(javaNameUtils.toJavaClassName('HelloWorld function')).to.equal('HelloWorldFunction')
+  })
+
+  it('adds a prefix when the first character is not a letter', () => {
+    expect(javaNameUtils.toJavaClassName('99 Red Balloons')).to.equal('A99RedBalloons')
+  })
+})
+
+describe('toMavenArtifactId', () => {
+  it('removes illegal characters from the name', () => {
+    expect(javaNameUtils.toMavenArtifactId('Hello👋')).to.equal('hello')
+    expect(javaNameUtils.toMavenArtifactId('FoöBär')).to.equal('fo-br')
+    expect(javaNameUtils.toMavenArtifactId('FooÄaa')).to.equal('fooaa')
+  })
+
+  it('replaces spaces with dashes', () => {
+    expect(javaNameUtils.toMavenArtifactId('Hello world Function')).to.equal('hello-world-function')
+  })
+
+  it('replaces multiple spaces with only one dash', () => {
+    expect(javaNameUtils.toMavenArtifactId('Hello    world')).to.equal('hello-world')
+  })
+
+  it('does not mangle uppercase names like acronyms', () => {
+    expect(javaNameUtils.toMavenArtifactId('There are too many TLAs')).to.equal('there-are-too-many-tlas')
   })
 })
