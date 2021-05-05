@@ -249,14 +249,17 @@ export default class GenerateFunction extends Command {
   async run() {
     const {flags} = this.parse(GenerateFunction)
 
-    const functionNameRegex = /^[a-z][a-z0-9]{0,46}$/
+    if (flags.name.length > 47) {
+      this.error('Function names cannot contain more than 47 characters.')
+    }
+
+    const functionNameRegex = /^[a-z][a-z0-9]*$/
 
     if (!functionNameRegex.test(flags.name)) {
       this.error(
         'Function names must:\n' +
         '1. Start with a letter\n' +
-        '2. Contain only lowercase letters and numbers\n' +
-        '3. Be 47 or characters or less',
+        '2. Contain only lowercase letters and numbers',
       )
     }
 

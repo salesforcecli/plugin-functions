@@ -113,7 +113,7 @@ describe('sf generate:function', () => {
   test
   .command(['generate:function', `--name=${'x'.repeat(48)}`, '--language=javascript'])
   .catch(error => {
-    expect(error.message).to.include('Function names must')
+    expect(error.message).to.include('Function names cannot contain more than 47 characters.')
   })
   .it('does not allow a function name that contains more than 47 characters')
 })
