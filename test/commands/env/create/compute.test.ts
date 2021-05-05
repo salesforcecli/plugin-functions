@@ -99,7 +99,7 @@ describe('sf env create compute', () => {
     expect(ctx.stdout).to.contain(`New compute environment created with ID ${APP_MOCK.name}`)
     expect(ctx.stdout).to.contain(`Your compute environment with local alias ${ENVIRONMENT_ALIAS} is ready`)
     expect(orgStub).to.have.been.calledWith({aliasOrUsername: ORG_ALIAS})
-    expect(aliasSetSpy).to.have.been.calledWith(ENVIRONMENT_ALIAS, APP_MOCK.name)
+    expect(aliasSetSpy).to.have.been.calledWith(ENVIRONMENT_ALIAS, APP_MOCK.id)
     expect(aliasWriteSpy).to.have.been.called
   })
 
