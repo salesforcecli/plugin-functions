@@ -41,3 +41,31 @@ export interface FunctionReference {
   description: string;
   permissionSet?: string;
 }
+
+export interface ScratchOrgFields {
+  createdBy: string;
+  createdDate: string;
+  expirationDate: string;
+  orgName: string;
+  status: string;
+  devHubId?: string;
+  edition?: string;
+  namespace?: string;
+  snapshot?: string;
+  lastUsed?: Date;
+}
+
+export interface OrgDisplayReturn extends Partial<ScratchOrgFields> {
+  username: string;
+  id: string;
+  accessToken: string;
+  instanceUrl: string;
+  clientId: string;
+
+  alias?: string;
+  password?: string;
+
+  // non-scratch orgs
+  connectedStatus?: string;
+  sfdxAuthUrl?: string;
+}
