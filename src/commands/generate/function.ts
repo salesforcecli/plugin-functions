@@ -249,6 +249,20 @@ export default class GenerateFunction extends Command {
   async run() {
     const {flags} = this.parse(GenerateFunction)
 
+    if (flags.name.length > 47) {
+      this.error('Function names cannot contain more than 47 characters.')
+    }
+
+    const functionNameRegex = /^[a-z][a-z0-9]*$/
+
+    if (!functionNameRegex.test(flags.name)) {
+      this.error(
+        'Function names must:\n' +
+        '1. Start with a letter\n' +
+        '2. Contain only lowercase letters and numbers',
+      )
+    }
+
     // Determine if we're in an SFDX project and return the path to sfdx-project.json
     let sfdxProjectPath
 

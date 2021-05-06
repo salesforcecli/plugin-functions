@@ -32,7 +32,7 @@ describe('sf generate:function', () => {
     })
     .command([
       'generate:function',
-      '--name=MyFunction',
+      '--name=myfn',
       `--language=${template}`,
     ])
   }
@@ -71,9 +71,51 @@ describe('sf generate:function', () => {
 
   testTemplate('typescript', '../../../sfdx-project.json')
   .it('generates a function even if called from below the root of a project', () => {
-    expect(fs.outputFileSync).to.have.been.calledWith('../../../functions/MyFunction/index.ts')
+    expect(fs.outputFileSync).to.have.been.calledWith('../../../functions/myfn/index.ts')
     expect(fs.writeJSON).to.have.been.calledWith('../../../config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
   })
+
+  test
+  .command(['generate:function', '--name=1fn', '--language=javascript'])
+  .catch(error => {
+    expect(error.message).to.include('Function names must')
+  })
+  .it('does not allow a function name that starts with a number')
+
+  test
+  .command(['generate:function', '--name=fn-1', '--language=javascript'])
+  .catch(error => {
+    expect(error.message).to.include('Function names must')
+  })
+  .it('does not allow a function name that contains a hyphen')
+
+  test
+  .command(['generate:function', '--name=fn_1', '--language=javascript'])
+  .catch(error => {
+    expect(error.message).to.include('Function names must')
+  })
+  .it('does not allow a function name that contains an underscore')
+
+  test
+  .command(['generate:function', '--name=fn_1', '--language=javascript'])
+  .catch(error => {
+    expect(error.message).to.include('Function names must')
+  })
+  .it('does not allow a function name that contains an underscore')
+
+  test
+  .command(['generate:function', '--name=FN', '--language=javascript'])
+  .catch(error => {
+    expect(error.message).to.include('Function names must')
+  })
+  .it('does not allow a function name that contains capital letters')
+
+  test
+  .command(['generate:function', `--name=${'x'.repeat(48)}`, '--language=javascript'])
+  .catch(error => {
+    expect(error.message).to.include('Function names cannot contain more than 47 characters.')
+  })
+  .it('does not allow a function name that contains more than 47 characters')
 })
 
 describe('sf generate:function --language java', () => {
@@ -109,7 +151,7 @@ describe('sf generate:function --language java', () => {
     })
     .command([
       'generate:function',
-      '--name=MyFunction',
+      '--name=myfn',
       '--language=java',
     ])
   }
