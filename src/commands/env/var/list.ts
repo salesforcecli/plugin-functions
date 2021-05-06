@@ -9,7 +9,7 @@ export default class ConfigList extends Command {
   static description = 'list your config vars in a table'
 
   static examples = [
-    '$ sf env var list --environment=my-environment',
+    '$ sfdx env:var:list --environment=my-environment',
   ]
 
   static flags = {

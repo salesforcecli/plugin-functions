@@ -8,7 +8,7 @@ export default class LogDrainRemove extends Command {
   static description = 'Remove log drain from a specified environment.'
 
   static examples = [
-    '$ sf env logdrain remove --environment=billingApp-Sandbox --url=syslog://syslog-a.logdna.com:11137',
+    '$ sfdx env:logdrain:remove --environment=billingApp-Sandbox --url=syslog://syslog-a.logdna.com:11137',
   ]
 
   static flags = {

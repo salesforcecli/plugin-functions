@@ -83,7 +83,7 @@ export default class LogTail extends Command {
   static description = 'stream log output for an environment'
 
   static examples = [
-    'sf env log tail --environment=billingApp-Scratch1',
+    'sfdx env:log:tail --environment=billingApp-Scratch1',
   ]
 
   static flags = {

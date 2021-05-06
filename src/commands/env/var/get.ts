@@ -9,7 +9,7 @@ export default class VarGet extends Command {
   static description = 'display a single config value for an environment'
 
   static examples = [
-    '$ sf env var get foo --environment=my-environment',
+    '$ sfdx env:var:get foo --environment=my-environment',
   ]
 
   static flags = {

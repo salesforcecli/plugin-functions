@@ -7,7 +7,7 @@ export default class LogDrainList extends Command {
   static description = 'List log drains connected to a specified environment'
 
   static examples = [
-    '$ sf env logdrain list --environment=billingApp-Sandbox',
+    '$ sfdx env:logdrain:list --environment=billingApp-Sandbox',
   ]
 
   static flags = {
