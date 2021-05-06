@@ -34,7 +34,7 @@ export async function resolveFunctionsDirectory() {
     return fnPath
   }
 
-  throw new Error('No functions directory found')
+  throw new Error('No functions directory found.')
 }
 
 export async function resolveFunctionsPaths() {
