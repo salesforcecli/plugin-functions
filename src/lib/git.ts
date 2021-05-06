@@ -1,31 +1,32 @@
 import * as execa from 'execa'
 
 export class Git {
-  private async hasGit() {
+  async exec(commands: Array<string>, quiet = false) {
     try {
-      await execa('git', ['--version'])
-      return true
+      const subprocess = execa('git', commands)
+
+      if (!quiet) {
+        subprocess.stdout?.pipe(process.stdout)
+      }
+
+      await subprocess
+
+      if (subprocess.stderr) {
+        subprocess.stderr.pipe(process.stderr)
+      }
+
+      return subprocess
     } catch (error) {
-      return false
+      if (error.code === 'ENOENT') {
+        throw new Error('Git must be installed in order to deploy Salesforce Functions')
+      }
+
+      throw error
     }
-  }
-
-  async checkGit() {
-    try {
-      return this.hasGit()
-    } catch (error) {
-      throw new Error('git must be installed in order to deploy Salesforce Functions')
-    }
-  }
-
-  async exec(commands: Array<string>) {
-    await this.checkGit()
-
-    return execa('git', commands)
   }
 
   async status() {
-    const {stdout} = await this.exec(['status'])
+    const {stdout} = await this.exec(['status'], true)
     return stdout
   }
 

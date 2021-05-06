@@ -132,7 +132,7 @@ describe('sf project deploy functions', () => {
     .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
     .reply(200, ENVIRONMENT_MOCK)
   })
-  .command(['project:deploy:functions', '--connected-org=my-scratch-org', '-v'])
+  .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
   .it('deploys a function', ctx => {
     expect(ctx.stdout).to.include('Reference for sweet_project-fn1 created')
     expect(ctx.stdout).to.include('Reference for sweet_project-fn2 created')
@@ -362,8 +362,42 @@ describe('sf project deploy functions', () => {
     .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
     .reply(200, ENVIRONMENT_MOCK)
   })
-  .command(['project:deploy:functions', '--connected-org=my-scratch-org', '-v'])
+  .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
   .it('generates the correct remote when passing an API key', ctx => {
     expect(ctx.execStub).to.have.been.calledWith(['push', 'https://:12345@git.fakeheroku.com/sweet_project', 'main:master'])
+  })
+
+  // quiet mode
+  test
+  .stdout()
+  .stderr()
+  .do(() => {
+    sandbox.stub(Git.prototype as any, 'hasUnpushedFiles').returns(false)
+    sandbox.stub(Git.prototype, 'status' as any).returns('On branch main')
+    const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any)
+    gitExecStub
+    .withArgs(sinon.match.array.startsWith(['push']))
+    .returns({stdout: 'STDOUT', stderr: 'STDERR'})
+
+    sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK)
+    sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
+
+    const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any)
+    netrcStub.withArgs('login').returns('login')
+    netrcStub.withArgs('password').returns('password')
+
+    sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK)
+  })
+  .finally(() => {
+    sandbox.restore()
+  })
+  .nock('https://api.heroku.com', api => {
+    api
+    .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
+    .reply(200, ENVIRONMENT_MOCK)
+  })
+  .command(['project:deploy:functions', '--connected-org=my-scratch-org', '--quiet'])
+  .it('does not print stdout in quiet mode', ctx => {
+    expect(ctx.stdout).to.not.include('STDOUT')
   })
 })

@@ -30,9 +30,9 @@ export default class ProjectDeployFunctions extends Command {
     force: flags.boolean({
       description: 'ignore warnings and overwrite remote repository (not allowed in production)',
     }),
-    verbose: flags.boolean({
-      description: 'show all deploy output',
-      char: 'v',
+    quiet: flags.boolean({
+      description: 'limit the amount of output displayed from the deploy process',
+      char: 'q',
     }),
   }
 
@@ -131,34 +131,21 @@ export default class ProjectDeployFunctions extends Command {
 
     debug('pushing to git server using remote: ', remote)
 
-    try {
-      const currentBranch = await this.getCurrentBranch()
+    const currentBranch = await this.getCurrentBranch()
 
-      const pushCommand = [
-        'push',
-        remote,
-        `${flags.branch ?? currentBranch}:master`,
-      ]
+    const pushCommand = [
+      'push',
+      remote,
+      `${flags.branch ?? currentBranch}:master`,
+    ]
 
-      // Since we error out if they try to use `--force` with a production org, we don't check for
-      // a production org here since this code would be unreachable in that scenario
-      if (flags.force) {
-        pushCommand.push('--force')
-      }
-
-      const {stdout, stderr} = await this.git.exec(pushCommand)
-      if (flags.verbose) {
-        process.stdout.write(stdout)
-        if (stderr) {
-          process.stderr.write(stderr)
-        }
-      }
-    } catch (error) {
-      this.error('There was a git-related issue when deploying your functions. ' +
-      'This could be caused either by a merge conflict (because someone else has deployed ' +
-      'unmergeable changes to the same environment), or by a project name conflict. If this is ' +
-      'a non-production environment, you may re-run this command with --force to proceed anyway.')
+    // Since we error out if they try to use `--force` with a production org, we don't check for
+    // a production org here since this code would be unreachable in that scenario
+    if (flags.force) {
+      pushCommand.push('--force')
     }
+
+    await this.git.exec(pushCommand, flags.quiet)
 
     debug('pushing function references', references)
 
@@ -173,7 +160,7 @@ export default class ProjectDeployFunctions extends Command {
       return result
     }))
 
-    if (flags.verbose) {
+    if (!flags.quiet) {
       results.forEach(result => {
         this.log(`Reference for ${result.fullName} ${result.created ? herokuColor.cyan('created') : herokuColor.green('updated')}`)
       })
