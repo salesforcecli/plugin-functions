@@ -9,8 +9,8 @@ export default class EnvDelete extends Command {
   static description = 'delete an environment'
 
   static examples = [
-    '$ sf env delete --environment=billingApp-Scratch1',
-    '$ sf env delete --environment=billingApp-Scratch1 --confirm=billingApp-Scratch1',
+    '$ sfdx env:delete --environment=billingApp-Scratch1',
+    '$ sfdx env:delete --environment=billingApp-Scratch1 --confirm=billingApp-Scratch1',
   ]
 
   static flags = {

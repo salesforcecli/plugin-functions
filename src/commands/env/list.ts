@@ -15,9 +15,9 @@ export default class EnvList extends Command {
   static description = 'List all environments by type'
 
   static examples = [
-    '$ sf env list',
-    '$ sf env list --all',
-    '$ sf env list --environment-type org --environment-type compute',
+    '$ sfdx env:list',
+    '$ sfdx env:list --all',
+    '$ sfdx env:list --environment-type org --environment-type compute',
   ]
 
   static flags = {

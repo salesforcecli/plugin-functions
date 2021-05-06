@@ -8,7 +8,7 @@ export default class LogDrainAdd extends Command {
   static description = 'Add log drain to a specified environment'
 
   static examples = [
-    '$ sf env logdrain add --environment=billingApp-Sandbox --url=https://example.com/drain',
+    '$ sfdx env:logdrain:add --environment=billingApp-Sandbox --url=https://example.com/drain',
   ]
 
   static flags = {

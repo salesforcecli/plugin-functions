@@ -10,7 +10,7 @@ export default class ConfigSet extends Command {
   static description = 'sets a single config value for an environment'
 
   static examples = [
-    '$ sf env var set foo=bar --environment=my-environment',
+    '$ sfdx env:var:set foo=bar --environment=my-environment',
   ]
 
   static flags = {

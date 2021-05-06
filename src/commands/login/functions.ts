@@ -7,7 +7,7 @@ export default class Login extends Command {
   static description = 'log into your account'
 
   static examples = [
-    '$ sf login functions',
+    '$ sfdx login:functions',
   ]
 
   async run() {
