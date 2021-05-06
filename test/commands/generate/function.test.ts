@@ -19,14 +19,9 @@ describe('sf generate:function', () => {
     })
     .stub(fs, 'mkdirpSync', sandbox.stub())
     .stub(fs, 'outputFileSync', sandbox.stub())
-    .stub(fs, 'readJSON', () => {
-      return {
-        features: ['EnableSetPasswordInApi'],
-      }
-    })
-    .stub(fs, 'writeJSON', sandbox.stub())
-    .stdout({print: true})
-    .stderr({print: true})
+    .stub(pathUtils, 'resolveFunctionsPaths', sandbox.stub())
+    .stdout()
+    .stderr()
     .finally(() => {
       sandbox.restore()
     })
@@ -45,7 +40,6 @@ describe('sf generate:function', () => {
     expect(ctx.stdout).to.contain('Created javascript')
     expect(fs.mkdirpSync).to.be.called
     expect(fs.outputFileSync).to.have.callCount(javascriptBasicTemplateFiles)
-    expect(fs.writeJSON).to.have.been.calledWith('config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
   })
 
   // Typescript
@@ -72,7 +66,11 @@ describe('sf generate:function', () => {
   testTemplate('typescript', '../../../sfdx-project.json')
   .it('generates a function even if called from below the root of a project', () => {
     expect(fs.outputFileSync).to.have.been.calledWith('../../../functions/myfn/index.ts')
-    expect(fs.writeJSON).to.have.been.calledWith('../../../config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
+  })
+
+  testTemplate('javascript', 'sfdx-project.json')
+  .stub(pathUtils, 'resolveFunctionsPaths', () => {
+    throw new Error('No functions directory found')
   })
 
   test
@@ -116,6 +114,25 @@ describe('sf generate:function', () => {
     expect(error.message).to.include('Function names cannot contain more than 47 characters.')
   })
   .it('does not allow a function name that contains more than 47 characters')
+
+  test
+  .stub(pathUtils, 'resolveSfdxProjectPath', () => 'sfdx-project.json')
+  .stub(fs, 'mkdirpSync', sandbox.stub())
+  .stub(fs, 'outputFileSync', sandbox.stub())
+  .stub(pathUtils, 'resolveFunctionsPaths', sandbox.stub().throws({message: 'No functions directory found.'}))
+  .stdout({print: true})
+  .stderr({print: true})
+  .finally(() => {
+    sandbox.restore()
+  })
+  .command([
+    'generate:function',
+    '--name=myfn',
+    '--language=javascript',
+  ])
+  .it('prints welcome message', ctx => {
+    expect(ctx.stdout).to.contain('Before creating Scratch Orgs for development, please ensure that:')
+  })
 })
 
 describe('sf generate:function --language java', () => {
@@ -130,17 +147,12 @@ describe('sf generate:function --language java', () => {
 
       throw new Error('no project path')
     })
-    .stub(fs, 'readJSON', () => {
-      return {
-        features: ['EnableSetPasswordInApi'],
-      }
-    })
-    .stub(fs, 'writeJSON', sandbox.stub())
     .stub(fs, 'mkdirpSync', sandbox.spy())
     .stub(fs, 'copySync', sandbox.spy())
     .stub(fs, 'outputFileSync', sandbox.spy())
-    .stdout({print: true})
-    .stderr({print: true})
+    .stub(pathUtils, 'resolveFunctionsPaths', sandbox.stub())
+    .stdout()
+    .stderr()
     .finally(() => {
       // We cannot effectively stub all fs calls for Java template tests and we need to clean up after the test
       if (sfdxProjectPath) {
@@ -162,7 +174,6 @@ describe('sf generate:function --language java', () => {
   .it('generates a java function', ctx => {
     expect(ctx.stderr).to.equal('')
     expect(ctx.stdout).to.contain('Created java')
-    expect(fs.writeJSON).to.have.been.calledWith('config/project-scratch-def.json', {features: ['EnableSetPasswordInApi', 'Functions']})
     expect(fs.mkdirpSync).to.have.been.called
     expect(fs.copySync).to.have.callCount(javaBasicFiles)
     expect(fs.outputFileSync).to.have.callCount(javaTemplateFiles)

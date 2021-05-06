@@ -1,12 +1,12 @@
 import herokuColor from '@heroku-cli/color'
 import {flags} from '@oclif/command'
-import {copySync, existsSync, lstatSync, mkdirpSync, outputFileSync, readdirSync, readFileSync, readJSON, writeJSON} from 'fs-extra'
+import {copySync, existsSync, lstatSync, mkdirpSync, outputFileSync, readdirSync, readFileSync} from 'fs-extra'
 import * as Handlebars from 'handlebars'
 import * as path from 'path'
 import Command from '../../lib/base'
-import {resolveSfdxProjectPath} from '../../lib/path-utils'
-import {retrieveApiVersion} from '../../lib/sfdx-org-resources'
 import * as javaNameUtils from '../../lib/java-name-utils'
+import {resolveFunctionsPaths, resolveSfdxProjectPath} from '../../lib/path-utils'
+import {retrieveApiVersion} from '../../lib/sfdx-org-resources'
 
 const FUNCTIONS_DIR = 'functions'
 const TEMPLATE_DIR = '../../../templates'
@@ -246,9 +246,28 @@ export default class GenerateFunction extends Command {
     }),
   }
 
+  async isFirstFunction() {
+    try {
+      // if we're able to actually resolve function paths here, it means that:
+      // 1. a functions directory already exists
+      // 2. it contains at least once function
+      // which means this is definitely is not the first function
+      await resolveFunctionsPaths()
+      return false
+    } catch (error) {
+      // If `resolveFunctionsPaths` errors, it most likely means it IS their first function, but
+      // we verify the error message to be sure
+      if (['No functions directory found.', 'The functions directory does contain any functions.'].includes(error.message)) {
+        return true
+      }
+
+      // If we've made it here, something completely unexpected has happened and we should throw
+      throw error
+    }
+  }
+
   async run() {
     const {flags} = this.parse(GenerateFunction)
-    let isFirstFunction = false
 
     if (flags.name.length > 47) {
       this.error('Function names cannot contain more than 47 characters.')
@@ -282,15 +301,6 @@ export default class GenerateFunction extends Command {
     // new function actually get created in the root
     const fnDir = path.join(sfdxProjectPath.replace(PROJECT_JSON, FUNCTIONS_DIR), fnName)
 
-    const scratchDefPath = path.join(sfdxProjectPath.replace(PROJECT_JSON, 'config'), 'project-scratch-def.json')
-    const scratchDef = await readJSON(scratchDefPath)
-    // Add 'Functions' feature to the project scratch org definition if it doesn't already exist
-    if (!scratchDef.features.includes('Functions')) {
-      isFirstFunction = true
-      scratchDef.features = [...scratchDef.features, 'Functions']
-      await writeJSON(scratchDefPath, scratchDef)
-    }
-
     if (existsSync(fnDir)) {
       this.error(`A function named ${flags.name} already exists.`)
     }
@@ -305,10 +315,10 @@ export default class GenerateFunction extends Command {
     template.write({fnDir: fnDir, fnName: fnName, fnNameCased: fnNameCased, isFunctionBundle: isFunctionBundle})
 
     this.log(`Created ${language} function ${herokuColor.green(fnName)} in ${herokuColor.green(fnDir)}.`)
-    if (isFirstFunction) {
+
+    if (await this.isFirstFunction()) {
       this.log('')
       this.log(
-        'You have just created your first Salesforce Functions module in this project!\n' +
         'Before creating Scratch Orgs for development, please ensure that:\n' +
         '1. Functions is enabled in your DevHub org\n' +
         `2. ${herokuColor.green('"Functions"')} is added to your scratch org definition file ${herokuColor.green('"features"')} list`,
