@@ -259,10 +259,10 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/project-descriptor@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@heroku/project-descriptor/-/project-descriptor-0.0.3.tgz#84597373703c2a779d792437261cc8c2ddc89622"
-  integrity sha512-G2WUDbT0iBV5OCWu5Jd/kSRjnvCqRzyZEzFccQIuw2HUvmg716ZS8q4j0X7UjLTU2hnjNAK/0107mcV49mA1mA==
+"@heroku/project-descriptor@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@heroku/project-descriptor/-/project-descriptor-0.0.4.tgz#1200162433e77d9426036efc4b5b18eca87b6657"
+  integrity sha512-GaIjhPzCdoai3qOPcPnoLbOoc2X7Tj4ugZfmYdgz1tdckVR7OCxIwhUAAui4eydsvbL0HQ0f603wJlbuTHJY6A==
   dependencies:
     ajv "^8.0.0"
     ajv-formats "^2.0.2"
