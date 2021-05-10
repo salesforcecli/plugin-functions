@@ -75,15 +75,15 @@ export default class ProjectDeployFunctions extends Command {
     return Promise.all(fnPaths.map(async fnPath => {
       const projectTomlPath = path.join(fnPath, 'project.toml')
       const projectToml: any = await parseProjectToml(projectTomlPath)
-      const fnName = projectToml.function.name
+      const fnName = projectToml.com.salesforce.name
 
       const fnReference: FunctionReference = {
         fullName: `${project.name}-${fnName}`,
         label: fnName,
-        description: projectToml.function.description,
+        description: projectToml.com.salesforce.description,
       }
 
-      const permissionSet = projectToml.metadata?.permissionSet
+      const permissionSet = projectToml._.metadata?.permissionSet
 
       if (permissionSet) {
         fnReference.permissionSet = permissionSet
