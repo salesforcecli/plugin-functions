@@ -53,8 +53,8 @@ abstract class Template {
     const tplArgs = {name: tplConfig.fnName}
     this.writeFileFromTemplate({
       fnDir: tplConfig.fnDir,
-      toFile: 'function.toml',
-      tplFile: path.join(__dirname, TEMPLATE_DIR, 'function.toml.tpl'),
+      toFile: 'project.toml',
+      tplFile: path.join(__dirname, TEMPLATE_DIR, 'project.toml.tpl'),
       tplArgs,
     })
   }
