@@ -35,6 +35,25 @@ export default class EnvCreateCompute extends Command {
     const org = await this.fetchOrg(flags['connected-org'])
     const orgId = org.getOrgId()
 
+    const conn = org.getConnection()
+
+    // This is a roundabout away of checking if a given org has Functions enabled. If they do NOT have functions enabled,
+    // then querying for FunctionReferences will throw an error which complains about not having access to the
+    // FunctionReference object for the given org.
+    try {
+      await conn.metadata.list({type: 'FunctionReference'})
+    } catch (error) {
+      if (error.name.includes('INVALID_TYPE') || error.message.includes('Cannot use: FunctionReference in this organization')) {
+        this.error(
+          `The org you are attempting to create a compute environment for does not have the ${herokuColor.green('Functions')} feature enabled.\n` +
+          '\n' +
+          'Before you can create a compute environment, please:\n' +
+          '1. Enable Functions in your DevHub org\n' +
+          `2. Add ${herokuColor.green('Functions')} to the "features" list in your scratch org definition JSON file, e.g. "features": ["Functions"]`,
+        )
+      }
+    }
+
     cli.action.start(`Creating compute environment for org ID ${orgId}`)
 
     const project = await this.fetchSfdxProject()
