@@ -9,8 +9,6 @@ export class Git {
         subprocess.stdout?.pipe(process.stdout)
       }
 
-      await subprocess
-
       if (subprocess.stderr) {
         subprocess.stderr.pipe(process.stderr)
       }
