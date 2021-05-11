@@ -246,18 +246,22 @@ export default class GenerateFunction extends Command {
     }),
   }
 
-  async isFirstFunction() {
+  isFirstFunction = false
+
+  async checkFirstFunction() {
     try {
       // if we're able to actually resolve function paths here, it means that:
       // 1. a functions directory already exists
       // 2. it contains at least once function
       // which means this is definitely is not the first function
       await resolveFunctionsPaths()
+      this.isFirstFunction = false
       return false
     } catch (error) {
       // If `resolveFunctionsPaths` errors, it most likely means it IS their first function, but
       // we verify the error message to be sure
       if (['No functions directory found.', 'The functions directory does contain any functions.'].includes(error.message)) {
+        this.isFirstFunction = true
         return true
       }
 
@@ -268,14 +272,15 @@ export default class GenerateFunction extends Command {
 
   async run() {
     const {flags} = this.parse(GenerateFunction)
+    const fnName = flags.name
 
-    if (flags.name.length > 47) {
+    if (fnName.length > 47) {
       this.error('Function names cannot contain more than 47 characters.')
     }
 
     const functionNameRegex = /^[a-z][a-z0-9]*$/
 
-    if (!functionNameRegex.test(flags.name)) {
+    if (!functionNameRegex.test(fnName)) {
       this.error(
         'Function names must:\n' +
         '1. Start with a letter\n' +
@@ -292,7 +297,10 @@ export default class GenerateFunction extends Command {
       this.error(`${herokuColor.cyan('sf generate function')} must be run inside an sfdx project`)
     }
 
-    const fnName = flags.name
+    // before we go any further, check to see if this is the first function generated or not
+    // so that we can tell whether or not to show the welcome text later
+    await this.checkFirstFunction()
+
     const fnNameCased = fnName.charAt(0).toUpperCase() + fnName.slice(1)
 
     // We construct `fnDir` this way because `sfdxProjectPath` will be a relative
@@ -302,7 +310,7 @@ export default class GenerateFunction extends Command {
     const fnDir = path.join(sfdxProjectPath.replace(PROJECT_JSON, FUNCTIONS_DIR), fnName)
 
     if (existsSync(fnDir)) {
-      this.error(`A function named ${flags.name} already exists.`)
+      this.error(`A function named ${fnName} already exists.`)
     }
     const language = flags.language
 
@@ -316,7 +324,7 @@ export default class GenerateFunction extends Command {
 
     this.log(`Created ${language} function ${herokuColor.green(fnName)} in ${herokuColor.green(fnDir)}.`)
 
-    if (await this.isFirstFunction()) {
+    if (this.isFirstFunction) {
       this.log('')
       this.log(
         'Before creating Scratch Orgs for development, please ensure that:\n' +
