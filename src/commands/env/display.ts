@@ -66,8 +66,8 @@ export default class EnvDelete extends Command {
           return this.print(returnValue)
         }
       } catch (error) {
-        // When the user provided a non Salesforce org environment (AuthInfo error),
-        // we want to move on to check for a compute environment
+        // When the user provided a non Salesforce org environment (AuthInfo error), in this
+        // situation we want to move on to check for a compute environment
         if (!error.message.includes('No AuthInfo found')) {
           this.error(error)
         }
@@ -89,9 +89,12 @@ export default class EnvDelete extends Command {
       const fnPaths = await resolveFunctionsPaths()
       const fnNames = fnPaths.map(fnPath => fnPath.split('/')[1]).join('\n')
 
+      const alias = appName === environment ? undefined : environment
+
       const returnValue = {
         // renamed properties
-        alias: environment,
+        alias,
+        environmentName: appName,
         project: project.name,
         createdDate: app.data.created_at,
         functions: fnNames,
@@ -99,7 +102,7 @@ export default class EnvDelete extends Command {
       }
       return this.print(returnValue)
     } catch (error) {
-      if (error.body.message.includes("Couldn't find that app.")) {
+      if (error.body?.message.includes("Couldn't find that app.")) {
         // App with name does not exist
         this.error('Value provided for environment does not match any environment names or aliases.')
       } else {
