@@ -7,7 +7,7 @@ import {difference} from 'lodash'
 import * as path from 'path'
 import {URL} from 'url'
 import Command from '../../../lib/base'
-import {parseFunctionToml} from '../../../lib/function-toml'
+import {parseProjectToml} from '../../../lib/project-toml'
 import Git from '../../../lib/git'
 import {resolveFunctionsPaths} from '../../../lib/path-utils'
 import {ComputeEnvironment, FunctionReference, SfdxProjectConfig} from '../../../lib/sfdc-types'
@@ -73,17 +73,17 @@ export default class ProjectDeployFunctions extends Command {
 
     // Create function reference objects
     return Promise.all(fnPaths.map(async fnPath => {
-      const fnTomlPath = path.join(fnPath, 'function.toml')
-      const fnToml: any = await parseFunctionToml(fnTomlPath)
-      const fnName = fnToml.function.name
+      const projectTomlPath = path.join(fnPath, 'project.toml')
+      const projectToml: any = await parseProjectToml(projectTomlPath)
+      const fnName = projectToml.com.salesforce.id
 
       const fnReference: FunctionReference = {
         fullName: `${project.name}-${fnName}`,
         label: fnName,
-        description: fnToml.function.description,
+        description: projectToml.com.salesforce.description,
       }
 
-      const permissionSet = fnToml.metadata?.permissionSet
+      const permissionSet = projectToml._.metadata?.permissionSet
 
       if (permissionSet) {
         fnReference.permissionSet = permissionSet
