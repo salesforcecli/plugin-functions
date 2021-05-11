@@ -75,7 +75,7 @@ export default class ProjectDeployFunctions extends Command {
     return Promise.all(fnPaths.map(async fnPath => {
       const projectTomlPath = path.join(fnPath, 'project.toml')
       const projectToml: any = await parseProjectToml(projectTomlPath)
-      const fnName = projectToml.com.salesforce.name
+      const fnName = projectToml.com.salesforce.id
 
       const fnReference: FunctionReference = {
         fullName: `${project.name}-${fnName}`,
