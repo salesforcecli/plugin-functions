@@ -246,22 +246,18 @@ export default class GenerateFunction extends Command {
     }),
   }
 
-  isFirstFunction = false
-
-  async checkFirstFunction() {
+  async isFirstFunction() {
     try {
       // if we're able to actually resolve function paths here, it means that:
       // 1. a functions directory already exists
       // 2. it contains at least once function
       // which means this is definitely is not the first function
       await resolveFunctionsPaths()
-      this.isFirstFunction = false
       return false
     } catch (error) {
       // If `resolveFunctionsPaths` errors, it most likely means it IS their first function, but
       // we verify the error message to be sure
       if (['No functions directory found.', 'The functions directory does contain any functions.'].includes(error.message)) {
-        this.isFirstFunction = true
         return true
       }
 
@@ -299,7 +295,7 @@ export default class GenerateFunction extends Command {
 
     // before we go any further, check to see if this is the first function generated or not
     // so that we can tell whether or not to show the welcome text later
-    await this.checkFirstFunction()
+    const isFirstFunction = await this.isFirstFunction()
 
     const fnNameCased = fnName.charAt(0).toUpperCase() + fnName.slice(1)
 
@@ -324,7 +320,7 @@ export default class GenerateFunction extends Command {
 
     this.log(`Created ${language} function ${herokuColor.green(fnName)} in ${herokuColor.green(fnDir)}.`)
 
-    if (this.isFirstFunction) {
+    if (isFirstFunction) {
       this.log('')
       this.log(
         'Before creating Scratch Orgs for development, please ensure that:\n' +
