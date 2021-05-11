@@ -32,45 +32,42 @@ export default class EnvDelete extends Command {
 
     const {environment} = flags
 
-    if (environment) {
-      try {
-        // If we are able to successfully create an org, then we verify that this name does not refer to a compute environment. Regardless of what happens, this block will result in an error.
-        const org: Org = await Org.create({aliasOrUsername: environment})
-        if (org) {
-          const authInfo = await AuthInfo.create({username: org.getUsername()})
-          const fields = authInfo.getFields(true)
+    try {
+      // If we are able to successfully create an org, then we verify that this name does not refer
+      // to a compute environment. Regardless of what happens, this block will result in an error.
+      const org: Org = await Org.create({aliasOrUsername: environment})
+      const authInfo = await AuthInfo.create({username: org.getUsername()})
+      const fields = authInfo.getFields(true)
 
-          const isScratchOrg = fields.devHubUsername
-          const scratchOrgInfo = isScratchOrg && fields.orgId ? await this.getScratchOrgInformation(fields.orgId, org) : {}
+      const isScratchOrg = fields.devHubUsername
+      const scratchOrgInfo = isScratchOrg && fields.orgId ? await this.getScratchOrgInformation(fields.orgId, org) : {}
 
-          const sfdxAuthUrl = flags.verbose && fields.refreshToken ? authInfo.getSfdxAuthUrl() : undefined
-          const alias = fields.username ? await getAliasByUsername(fields.username) : undefined
+      const sfdxAuthUrl = flags.verbose && fields.refreshToken ? authInfo.getSfdxAuthUrl() : undefined
+      const alias = fields.username ? await getAliasByUsername(fields.username) : undefined
 
-          const returnValue = {
-            // renamed properties
-            id: fields.orgId,
-            devHubId: fields.devHubUsername,
+      const returnValue = {
+        // renamed properties
+        id: fields.orgId,
+        devHubId: fields.devHubUsername,
 
-            // copied properties
-            accessToken: fields.accessToken,
-            instanceUrl: fields.instanceUrl,
-            username: fields.username,
-            clientId: fields.clientId,
-            password: fields.password,
-            ...scratchOrgInfo,
+        // copied properties
+        accessToken: fields.accessToken,
+        instanceUrl: fields.instanceUrl,
+        username: fields.username,
+        clientId: fields.clientId,
+        password: fields.password,
+        ...scratchOrgInfo,
 
-            // properties with more complex logic
-            sfdxAuthUrl,
-            alias,
-          }
-          return this.print(returnValue)
-        }
-      } catch (error) {
-        // When the user provided a non Salesforce org environment (AuthInfo error), in this
-        // situation we want to move on to check for a compute environment
-        if (!error.message.includes('No AuthInfo found')) {
-          this.error(error)
-        }
+        // properties with more complex logic
+        sfdxAuthUrl,
+        alias,
+      }
+      return this.print(returnValue)
+    } catch (error) {
+      // When the user provided a non Salesforce org environment (AuthInfo error), in this
+      // situation we want to move on to check for a compute environment
+      if (!error.message.includes('No AuthInfo found')) {
+        this.error(error)
       }
     }
 
@@ -86,8 +83,12 @@ export default class EnvDelete extends Command {
       })
       const project = await this.fetchSfdxProject()
 
-      const fnPaths = await resolveFunctionsPaths()
-      const fnNames = fnPaths.map(fnPath => fnPath.split('/')[1]).join('\n')
+      let fnNames
+
+      try {
+        const fnPaths = await resolveFunctionsPaths()
+        fnNames = fnPaths.map(fnPath => fnPath.split('/')[1]).join('\n')
+      } catch (error) {}
 
       const alias = appName === environment ? undefined : environment
 
@@ -121,11 +122,11 @@ export default class EnvDelete extends Command {
     }))
 
     cli.table<any>(tableRows, {
-      id: {
+      key: {
         header: 'KEY',
         get: row => row.key,
       },
-      url: {
+      value: {
         header: 'VALUE',
         get: row => row.value,
       },
@@ -149,7 +150,8 @@ export default class EnvDelete extends Command {
       status: result.Status,
       expirationDate: result.ExpirationDate,
       createdBy: result.CreatedBy?.Username,
-      edition: result.Edition ?? undefined, // null for snapshot orgs, possibly others.  Marking it undefined keeps it out of json output
+      // edition: null for snapshot orgs, possibly others. Marking it undefined keeps it out of json output
+      edition: result.Edition ?? undefined,
       namespace: result.Namespace ?? undefined, // may be null on server
       orgName: result.OrgName,
       createdDate: result.CreatedDate,
