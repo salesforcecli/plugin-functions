@@ -1,38 +1,37 @@
-const expect = require('chai').expect;
-const sinon = require('sinon');
-const sdk = require('@salesforce/salesforce-sdk');
+const { expect } = require('chai');
+const { createSandbox } = require('sinon');
 
-const execute = require('../');
+const execute = require('../index');
 
 /**
  * {{fnNameCased}} unit tests.
  */
 
- describe('Unit Tests', () => {
+describe('Unit Tests', () => {
 
     let sandbox;
     let mockContext;
     let mockLogger;
+    let accounts;
 
     beforeEach(() => {
-        sandbox = sinon.createSandbox();
-        mockContext = sandbox.createStubInstance(sdk.Context);
-        mockContext.org = sandbox.createStubInstance(sdk.Org);
-        mockContext.org.data = sandbox.createStubInstance(sdk.DataApi);
-        mockLogger = sandbox.createStubInstance(sdk.Logger);
-        mockContext.logger = mockLogger;
-    });
+        mockContext = {
+            org: {
+                dataApi: { query: () => {} }
+            },
+            logger: { info: () => {} }
+        };
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+        mockLogger = mockContext.logger;
+        sandbox = createSandbox();
 
-     it('Invoke {{fnNameCased}}', async () => {
-        // Mock Accounts query
-        const accounts = {
-            'totalSize':3,
-            'done':true,
-            'records':[
+        sandbox.stub(mockContext.org.dataApi, "query");
+        sandbox.stub(mockLogger, "info");
+
+        accounts = {
+            'totalSize': 3,
+            'done': true,
+            'records': [
                 {
                     'attributes':
                         {'type':'Account','url':'/services/data/v48.0/sobjects/Account/001xx000003GYNjAAO'},
@@ -50,15 +49,20 @@ const execute = require('../');
                 }
             ]
         };
-        mockContext.org.data.query.callsFake(() => {
+
+        mockContext.org.dataApi.query.callsFake(() => {
             return Promise.resolve(accounts);
         });
+    });
 
-        // Invoke function
-        const results = await execute({ data: {} }, mockContext, mockLogger)
-        
-        // Validate
-        expect(mockContext.org.data.query.callCount).to.be.eql(1);
+    afterEach(() => {
+        sandbox.restore();
+    });
+
+    it('Invoke {{fnNameCased}}', async () => {
+        const results = await execute({ data: {} }, mockContext, mockLogger);
+
+        expect(mockContext.org.dataApi.query.callCount).to.be.eql(1);
         expect(mockLogger.info.callCount).to.be.eql(2);
         expect(results).to.be.not.undefined;
         expect(results).has.property('totalSize');
