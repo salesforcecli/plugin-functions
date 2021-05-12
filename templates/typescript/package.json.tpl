@@ -9,7 +9,7 @@
     "type": "git"
   },
   "engines": {
-    "node": "^14.0"
+    "node": "^16.0"
   },
   "scripts": {
     "build": "tsc",
@@ -19,23 +19,19 @@
     "watch-node": "nodemon dist/index.js",
     "watch": "tsc -w"
   },
-  "dependencies": {
-    "@salesforce/salesforce-sdk": "{{sfSdkVersion}}"
-  },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/chai-as-promised": "^7.1.0",
-    "@typescript-eslint/eslint-plugin": "^2.23.0",
-    "@typescript-eslint/parser": "^2.23.0",
-    "@types/mocha": "^5.2.5",
-    "@types/node": "^14.0.14",
-    "@types/sinon": "^7.0.4",
-    "chai": "^4.2.0",
-    "eslint": "^6.7.2",
-    "mocha": "^5.2.0",
-    "sinon": "^7.2.3",
-    "ts-node": "^8.7",
-    "tslib": "^1.11.2",
-    "typescript": "^3.8.3"
+    "@types/chai": "^4.2.18",
+    "@types/chai-as-promised": "^7.1.4",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^15.0.2",
+    "@types/sinon": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
+    "chai": "^4.3.4",
+    "eslint": "^6.8.0",
+    "mocha": "^8.4.0",
+    "sinon": "^10.0.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
   }
 }
