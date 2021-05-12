@@ -134,11 +134,16 @@ class Javascript extends Template {
       tplFile: path.join(this.templateDir, '.eslintrc.tpl'),
       tplArgs: {}})
 
+    // mocha config
+    this.writeFileFromTemplate({fnDir: tplConfig.fnDir, toFile: '.mocharc.json',
+      tplFile: path.join(this.templateDir, '.mocharc.json.tpl'),
+      tplArgs: {}})
+
     // Test
     const fnTestDir = path.join(tplConfig.fnDir, 'test')
     mkdirpSync(fnTestDir)
-    this.writeFileFromTemplate({fnDir: fnTestDir, toFile: `unitTests.${this.indexFileExtension}`,
-      tplFile: path.join(this.templateDir, `unitTests.${this.indexFileExtension}.tpl`),
+    this.writeFileFromTemplate({fnDir: fnTestDir, toFile: `index.test.${this.indexFileExtension}`,
+      tplFile: path.join(this.templateDir, `test/index.test.${this.indexFileExtension}.tpl`),
       tplArgs: {fnNameCased: this.fnNameCased}})
   }
 

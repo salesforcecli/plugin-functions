@@ -33,7 +33,7 @@ describe('sf generate:function', () => {
   }
 
   // Javascript
-  const javascriptBasicTemplateFiles = 6
+  const javascriptBasicTemplateFiles = 7
   testTemplate('javascript', 'sfdx-project.json')
   .it('generates a javascript function', ctx => {
     expect(ctx.stderr).to.equal('')
@@ -43,7 +43,7 @@ describe('sf generate:function', () => {
   })
 
   // Typescript
-  const typescriptBasicTemplateFiles = 7
+  const typescriptBasicTemplateFiles = 8
   testTemplate('typescript', 'sfdx-project.json')
   .it('generates a typescript function', ctx => {
     expect(ctx.stderr).to.equal('')

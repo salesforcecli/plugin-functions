@@ -13,20 +13,12 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js --config .eslintrc",
-    "test": "node_modules/mocha/bin/mocha 'test/**/*.js'"
-  },
-  "dependencies": {
-    "@salesforce/salesforce-sdk": "{{sfSdkVersion}}"
+    "test": "mocha"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/chai-as-promised": "^7.1.0",
-    "@types/mocha": "^5.2.5",
-    "@types/node": "^10.12.18",
-    "@types/sinon": "^7.0.4",
-    "chai": "^4.2.0",
-    "eslint": "^6.7.2",
-    "mocha": "^5.2.0",
-    "sinon": "^7.2.3"
+    "chai": "^4.3.4",
+    "eslint": "^6.8.0",
+    "mocha": "^8.4.0",
+    "sinon": "^10.0.0"
   }
 }
