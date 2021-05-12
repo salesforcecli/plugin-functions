@@ -13,10 +13,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js --config .eslintrc",
-    "test": "node_modules/mocha/bin/mocha 'test/**/*.js'"
-  },
-  "dependencies": {
-    "@salesforce/salesforce-sdk": "{{sfSdkVersion}}"
+    "test": "mocha"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
