@@ -137,8 +137,8 @@ class Javascript extends Template {
     // Test
     const fnTestDir = path.join(tplConfig.fnDir, 'test')
     mkdirpSync(fnTestDir)
-    this.writeFileFromTemplate({fnDir: fnTestDir, toFile: `unitTests.${this.indexFileExtension}`,
-      tplFile: path.join(this.templateDir, `unitTests.${this.indexFileExtension}.tpl`),
+    this.writeFileFromTemplate({fnDir: fnTestDir, toFile: `test/index.test.${this.indexFileExtension}`,
+      tplFile: path.join(this.templateDir, `test/index.test.${this.indexFileExtension}.tpl`),
       tplArgs: {fnNameCased: this.fnNameCased}})
   }
 
