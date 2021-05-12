@@ -14,9 +14,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --ext .ts --config .eslintrc",
-    "postinstall": "npm run build",
-    "test": "node_modules/mocha/bin/mocha -r ts-node/register 'test/**/*.ts'",
-    "watch-node": "nodemon dist/index.js",
+    "test": "mocha",
     "watch": "tsc -w"
   },
   "devDependencies": {
