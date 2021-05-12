@@ -2,7 +2,7 @@ import "mocha";
 import { expect } from "chai";
 import { createSandbox, SinonSandbox } from "sinon";
 
-import execute from '../dist';
+import execute from '../index';
 
 /**
  * {{fnNameCased}} unit tests.
