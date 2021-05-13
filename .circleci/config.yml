@@ -67,9 +67,10 @@ workflows:
   version: 2
   "sf-plugin-functions":
     jobs:
-      - node-15
-      - node-14
-      - node-12
+      - node-15: &build
+        - context: functions-cli
+      - node-14: *build
+      - node-12: *build
       - cache:
           filters:
             tags:
