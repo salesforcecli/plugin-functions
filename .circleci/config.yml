@@ -68,7 +68,7 @@ workflows:
   "sf-plugin-functions":
     jobs:
       - node-15: &build
-        - context: functions-cli
+          context: functions-cli
       - node-14: *build
       - node-12: *build
       - cache:
