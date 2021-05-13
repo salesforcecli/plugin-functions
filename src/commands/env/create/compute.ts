@@ -52,6 +52,9 @@ export default class EnvCreateCompute extends Command {
           `2. Add ${herokuColor.green('Functions')} to the "features" list in your scratch org definition JSON file, e.g. "features": ["Functions"]`,
         )
       }
+
+      // If we get here, something very unexpected has happened so just bail
+      throw error
     }
 
     cli.action.start(`Creating compute environment for org ID ${orgId}`)
