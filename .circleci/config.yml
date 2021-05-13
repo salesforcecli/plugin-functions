@@ -78,6 +78,7 @@ workflows:
             branches:
               ignore: /.*/
       - release:
+          *context
           requires:
             - node-15
             - node-14
