@@ -6,7 +6,6 @@ Functions plugin for the SF CLI
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/sf-plugin-functions.svg)](https://npmjs.org/package/sf-plugin-functions)
 [![CircleCI](https://circleci.com/gh/heroku/sf-plugin-functions/tree/master.svg?style=shield)](https://circleci.com/gh/heroku/sf-plugin-functions/tree/master)
-[![Codecov](https://codecov.io/gh/heroku/sf-plugin-functions/branch/master/graph/badge.svg)](https://codecov.io/gh/heroku/sf-plugin-functions)
 [![Downloads/week](https://img.shields.io/npm/dw/sf-plugin-functions.svg)](https://npmjs.org/package/sf-plugin-functions)
 [![License](https://img.shields.io/npm/l/sf-plugin-functions.svg)](https://github.com/heroku/sf-plugin-functions/blob/master/package.json)
 
