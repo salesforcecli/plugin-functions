@@ -79,7 +79,7 @@ workflows:
       - release:
           context: functions-cli
           requires:
-            - node-15
+            - node-16
             - node-14
             - node-12
           filters:
