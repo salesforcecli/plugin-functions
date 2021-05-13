@@ -9,6 +9,12 @@ const APP_MOCK = {
 
 const USERNAME = 'fakeusername@salesforce.com'
 
+const CONN_MOCK = {
+  metadata: {
+    list: sinon.stub(),
+  },
+}
+
 const ORG_MOCK = {
   id: '1',
   getOrgId() {
@@ -16,6 +22,9 @@ const ORG_MOCK = {
   },
   getUsername() {
     return USERNAME
+  },
+  getConnection() {
+    return CONN_MOCK
   },
 }
 
@@ -145,4 +154,22 @@ describe('sf env create compute', () => {
     expect(ctx.stderr).to.contain('error!')
     expect(ctx.stdout).to.contain(`Compute Environment ID: ${APP_MOCK.name}`)
   })
+
+  test
+  .stdout()
+  .stderr()
+  .do(() => {
+    orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
+    sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK)
+    CONN_MOCK.metadata.list = sinon.stub().throws('INVALID_TYPE')
+  })
+  .finally(() => {
+    sandbox.restore()
+    sinon.restore()
+  })
+  .command(['env:create:compute'])
+  .catch(error => {
+    expect(error.message).to.contain('The org you are attempting to create a compute environment for does not have the Functions feature enabled.')
+  })
+  .it('displays an informative error message if the org doesn\'t have functions enabled')
 })

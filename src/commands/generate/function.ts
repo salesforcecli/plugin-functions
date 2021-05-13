@@ -329,8 +329,8 @@ export default class GenerateFunction extends Command {
       this.log('')
       this.log(
         'Before creating Scratch Orgs for development, please ensure that:\n' +
-        '1. Functions is enabled in your DevHub org\n' +
-        `2. ${herokuColor.green('"Functions"')} is added to your scratch org definition file ${herokuColor.green('"features"')} list`,
+        '1. Enable Functions in your DevHub org\n' +
+        `2. Add ${herokuColor.green('Functions')} to the "features" list in your scratch org definition JSON file, e.g. "features": ["Functions"]`,
       )
     }
   }
