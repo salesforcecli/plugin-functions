@@ -78,7 +78,7 @@ workflows:
             branches:
               ignore: /.*/
       - release:
-          *context
+          context: functions-cli
           requires:
             - node-15
             - node-14
