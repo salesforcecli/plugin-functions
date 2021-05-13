@@ -5,6 +5,7 @@ import {Aliases} from '@salesforce/core'
 import {cli} from 'cli-ux'
 import {format} from 'date-fns'
 import Command from '../../../lib/base'
+import {FunctionsFlagBuilder} from '../../../lib/flags'
 
 export default class EnvCreateCompute extends Command {
   static description = 'create a compute environment for use with Salesforce Functions'
@@ -16,7 +17,7 @@ export default class EnvCreateCompute extends Command {
   ]
 
   static flags = {
-    'connected-org': flags.string({
+    'connected-org': FunctionsFlagBuilder.connectedOrg({
       char: 'o',
       description: 'username or alias for the org that the compute environment should be connected to',
     }),

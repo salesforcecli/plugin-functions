@@ -8,6 +8,7 @@ import {sortBy} from 'lodash'
 import Command from '../../lib/base'
 import herokuVariant from '../../lib/heroku-variant'
 import {ComputeEnvironment, Dictionary} from '../../lib/sfdc-types'
+import {FunctionsFlagBuilder} from '../../lib/flags'
 
 type EnvironmentType = 'org' | 'scratchorg' | 'compute'
 
@@ -24,7 +25,7 @@ export default class EnvList extends Command {
     all: flags.boolean({
       description: 'show all available envs instead of scoping to active orgs and their connected compute envs',
     }),
-    'environment-type': flags.string({
+    'environment-type': FunctionsFlagBuilder.environmentType({
       char: 't',
       description: 'filter by one or more environment types (org, scratchorg, compute)',
       options: ['org', 'scratchorg', 'compute'],

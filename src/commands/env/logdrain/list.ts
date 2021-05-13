@@ -1,5 +1,6 @@
 import * as Heroku from '@heroku-cli/schema'
 import {flags} from '@oclif/command'
+import {FunctionsFlagBuilder} from '../../../lib/flags'
 import {cli} from 'cli-ux'
 import Command from '../../../lib/base'
 
@@ -11,7 +12,7 @@ export default class LogDrainList extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
+    environment: FunctionsFlagBuilder.environment({
       required: true,
       char: 'e',
       description: 'environment name, ID, or alias',

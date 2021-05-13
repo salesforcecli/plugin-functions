@@ -1,11 +1,10 @@
-import {flags} from '@oclif/command'
-
 import Command from '../../../lib/base'
 import * as Heroku from '@heroku-cli/schema'
 import axios from 'axios'
 import {cli} from 'cli-ux'
 import * as Stream from 'stream'
 import * as util from 'util'
+import {FunctionsFlagBuilder} from '../../../lib/flags'
 import EventSource = require('@heroku/eventsource')
 
 type EventSourceError = Error & ({
@@ -89,7 +88,7 @@ export default class LogTail extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
+    environment: FunctionsFlagBuilder.environment({
       description: 'environment name to retrieve logs',
       char: 'e',
       required: true,

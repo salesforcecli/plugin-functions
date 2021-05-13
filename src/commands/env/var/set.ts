@@ -1,6 +1,6 @@
 import herokuColor from '@heroku-cli/color'
 import {cli} from 'cli-ux'
-import {flags} from '@oclif/command'
+import {FunctionsFlagBuilder} from '../../../lib/flags'
 
 import Command from '../../../lib/base'
 
@@ -14,7 +14,7 @@ export default class ConfigSet extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
+    environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
   }
