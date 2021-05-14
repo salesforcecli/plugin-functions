@@ -44,31 +44,29 @@ jobs:
             - ~/cli/node_modules
             - /usr/local/share/.cache/yarn
             - /usr/local/share/.config/yarn
-  release:
-    docker:
-      - image: circleci/node:12.10
-    steps:
-      - checkout
-      - restore_cache: *restore_cache
-      - install-sf-release
-      - install-sfdx-trust
-      - run:
-          name: Install plugin dependencies
-          command: yarn
-      - run:
-          name: Install awscli
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y awscli
-      - run:
-          name: Set credentials
-          command: |
-            echo //registry.npmjs.org/:_authToken=${SF_PUBLISH_NPM_TOKEN} > ~/.npmrc
-            echo unsafe-perm = true >> ~/.npmrc
-            echo ${SALESFORCE_KEY} | base64 --decode > ~/salesforce-cli.key
-      - run:
-          name: Sign and publish
-          command: ./bin/publish
+  # release:
+  #   docker:
+  #     - image: circleci/node:12.10
+  #   steps:
+  #     - checkout
+  #     - restore_cache: *restore_cache
+  #     - run:
+  #         name: Install plugin dependencies
+  #         command: yarn
+  #     - run:
+  #         name: Install awscli
+  #         command: |
+  #           sudo apt-get update
+  #           sudo apt-get install -y awscli
+  #     - run:
+  #         name: Set credentials
+  #         command: |
+  #           echo //registry.npmjs.org/:_authToken=${SF_PUBLISH_NPM_TOKEN} > ~/.npmrc
+  #           echo unsafe-perm = true >> ~/.npmrc
+  #           echo ${SALESFORCE_KEY} | base64 --decode > ~/salesforce-cli.key
+  #     - run:
+  #         name: Sign and publish
+  #         command: ./bin/publish
 
 workflows:
   version: 2
@@ -83,9 +81,9 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-  release:
-    context: functions-cli
-    requires:
-      - node-16
-      - node-14
-      - node-12
+      - release-management/release-package:
+          context: functions-cli
+          requires:
+            - node-16
+            - node-14
+            - node-12
