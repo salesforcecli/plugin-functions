@@ -51,10 +51,13 @@ USAGE
 * [`sfdx env:var:list`](#sfdx-envvarlist)
 * [`sfdx env:var:set`](#sfdx-envvarset)
 * [`sfdx env:var:unset`](#sfdx-envvarunset)
+* [`sfdx evergreen:function:build IMAGE`](#sfdx-evergreenfunctionbuild-image)
 * [`sfdx generate:function`](#sfdx-generatefunction)
 * [`sfdx generate:project`](#sfdx-generateproject)
 * [`sfdx login:functions`](#sfdx-loginfunctions)
 * [`sfdx project:deploy:functions`](#sfdx-projectdeployfunctions)
+* [`sfdx run:function`](#sfdx-runfunction)
+* [`sfdx run:function:start`](#sfdx-runfunctionstart)
 
 ## `sfdx env:create:compute`
 
@@ -275,6 +278,49 @@ EXAMPLE
 
 _See code: [src/commands/env/var/unset.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.0.7/src/commands/env/var/unset.ts)_
 
+## `sfdx evergreen:function:build IMAGE`
+
+build function source code into a deployable image
+
+```
+USAGE
+  $ sfdx evergreen:function:build IMAGE
+
+ARGUMENTS
+  IMAGE  image name, must be in all lowercase
+
+OPTIONS
+  -e, --env=env          Build-time environment variable, in the form 'VAR=VALUE'or 'VAR'. When using latter value-less
+                         form, value will be taken from current environment at the time this command is executed. This
+                         flag may occur multiple times if more than one variable is desired.
+
+  -p, --path=path        [default: /Users/adalton/Developer/sf-plugin-functions] path to function dir
+
+  -v, --verbose          output raw build logs
+
+  --buildpack=buildpack  Buildpack ID, path to a Buildpack directory, or path/URL to a Buildpack .tgz file. Repeat for
+                         each buildpack in order.
+
+  --clear-cache          Clear image's associated cache before building.
+
+  --env-file=env-file    Build-time environment variables file comprised of one variable per line, of the form
+                         'VAR=VALUE' or 'VAR' When using latter value-less form, value will be taken from current
+                         environment at the time this command is executed.
+
+  --network=network      Connect and build containers to a network. This can be useful to build containers which require
+                         a local resource.
+
+  --no-pull              Skip pulling builder and run images before use.
+
+EXAMPLE
+
+       $ sfdx evergreen:function:build image-repo/myfunction:dev
+       $ sfdx evergreen:function:build image-repo/myfunction:dev --path /path/to/function/src
+       $ sfdx evergreen:function:build image-repo/myfunction:dev --network host
+```
+
+_See code: [src/commands/evergreen/function/build.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.0.7/src/commands/evergreen/function/build.ts)_
+
 ## `sfdx generate:function`
 
 create a function with basic scaffolding specific to a given language
@@ -336,4 +382,59 @@ OPTIONS
 ```
 
 _See code: [src/commands/project/deploy/functions.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.0.7/src/commands/project/deploy/functions.ts)_
+
+## `sfdx run:function`
+
+send a cloudevent to a function
+
+```
+USAGE
+  $ sfdx run:function
+
+OPTIONS
+  -H, --headers=headers                set headers
+  -p, --payload=payload                set the payload of the cloudevent. also accepts @file.txt format
+  -t, --targetusername=targetusername  username or alias for the target org; overrides default target org
+  -u, --url=url                        (required) url of the function to run
+  --structured                         set the cloudevent to be emitted as a structured cloudevent (json)
+
+EXAMPLE
+
+       $ sfdx run:function -u http://localhost:8080 -p '{"id": 12345}'
+       $ sfdx run:function -u http://localhost:8080 -p '@file.json'
+       $ echo '{"id": 12345}' | sfdx run:function -u http://localhost:8080
+       $ sfdx run:function -u http://localhost:8080 -p '{"id": 12345}' --structured
+```
+
+_See code: [src/commands/run/function.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.0.7/src/commands/run/function.ts)_
+
+## `sfdx run:function:start`
+
+build and run function image locally
+
+```
+USAGE
+  $ sfdx run:function:start
+
+OPTIONS
+  -d, --debug-port=debug-port  [default: 9229] port for remote debugging
+  -e, --env=env                set environment variables (provided during build and run)
+  -p, --port=port              [default: 8080] port for running the function
+  -v, --verbose                output additional logs
+  --builder=builder            set custom builder image
+  --clear-cache                clear associated cache before executing.
+
+  --network=network            Connect and build containers to a network. This can be useful to build containers which
+                               require a local resource.
+
+  --no-pull                    skip pulling builder image before use
+
+EXAMPLE
+
+       $ sfdx run:function:start
+       $ sfdx run:function:start -e VAR=VALUE
+       $ sfdx run:function:start --network host --no-pull --clear-cache --debug-port 9000 --port 5000
+```
+
+_See code: [src/commands/run/function/start.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.0.7/src/commands/run/function/start.ts)_
 <!-- commandsstop -->
