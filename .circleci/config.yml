@@ -75,20 +75,20 @@ workflows:
       - node-16
       - node-14
       - node-12
-      - cache:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
+      # - cache:
+      #     filters:
+      #       tags:
+      #         only: /^v.*/
+      #       branches:
+      #         ignore: /.*/
       - release-management/release-package:
           context: functions-cli
           requires:
             - node-16
             - node-14
             - node-12
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
+          # filters:
+          #   tags:
+          #     only: /^v.*/
+          #   branches:
+          #     ignore: /.*/
