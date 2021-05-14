@@ -87,8 +87,8 @@ workflows:
             - node-16
             - node-14
             - node-12
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
+          # filters:
+          #   tags:
+          #     only: /^v.*/
+          #   branches:
+          #     ignore: /.*/
