@@ -4,7 +4,7 @@ import {Config, Org} from '@salesforce/core'
 // import { stderr } from 'supports-color';
 import * as sinon from 'sinon'
 import * as installBenny from '../../../src/install-benny'
-import {Receiver} from 'cloudevents'
+import {HTTP} from 'cloudevents'
 import * as deepEqual from 'fast-deep-equal/es6'
 
 const $$ = testSetup();
@@ -57,8 +57,8 @@ describe('run:function', () => {
   const matchesStructuredCloudEventDataString = (body: any, shouldMatch: string): boolean => {
     // Make sure we can parse input body as structured json CloudEvent and then match data as *string*
     if (body.specversion && body.source) {
-      const hdrs = {'Content-Type': 'application/cloudevents+json; charset=utf-8'}
-      const ce = Receiver.accept(hdrs, body)
+      const headers = {'Content-Type': 'application/cloudevents+json; charset=utf-8'}
+      const ce = HTTP.toEvent({headers, body})
       return ce.data === shouldMatch
     }
     return false;
@@ -67,8 +67,8 @@ describe('run:function', () => {
   const matchesStructuredCloudEventDataObject = (body: any, shouldMatch: object): boolean => {
     // Make sure we can parse input body as structured json CloudEvent and then deep match data as *object*
     if (body.specversion && body.source) {
-      const hdrs = {'Content-Type': 'application/cloudevents+json; charset=utf-8'}
-      const ce = Receiver.accept(hdrs, body)
+      const headers = {'Content-Type': 'application/cloudevents+json; charset=utf-8'}
+      const ce = HTTP.toEvent({headers, body})
       return deepEqual(shouldMatch, ce.data)
     }
     return false;
@@ -76,11 +76,11 @@ describe('run:function', () => {
 
   const matchesHttpBinaryCloudEventDataObject = (body: any, shouldMatch: object): boolean => {
     // Make sure we can parse input body as structured json CloudEvent and then deep match data as *object*
-    const hdrs = {
+    const headers = {
       'ce-specversion': '1.0', 'ce-id': 'id:12345', 'ce-type': 'com.evergreen.functions.test',
       'ce-source': 'urn:event:from:local', 'Content-Type': 'application/json; charset=utf-8'
     }
-    const ce = Receiver.accept(hdrs, body)
+    const ce = HTTP.toEvent({headers, body})
     return deepEqual(shouldMatch, ce.data)
   }
 
