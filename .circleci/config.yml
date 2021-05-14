@@ -1,4 +1,6 @@
 ---
+orbs:
+  release-management: salesforce/npm-release-management@4.16.1
 version: 2.1
 jobs:
   node-16: &test
@@ -48,6 +50,7 @@ jobs:
     steps:
       - checkout
       - restore_cache: *restore_cache
+      - install-sfdx-trust
       - run:
           name: Install plugin dependencies
           command: yarn
