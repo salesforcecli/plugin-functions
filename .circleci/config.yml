@@ -72,7 +72,7 @@ jobs:
 
 workflows:
   version: 2
-  "sf-plugin-functions":
+  test:
     jobs:
       - node-16
       - node-14
@@ -83,9 +83,9 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-      - release:
-          context: functions-cli
-          requires:
-            - node-16
-            - node-14
-            - node-12
+  release:
+    context: functions-cli
+    requires:
+      - node-16
+      - node-14
+      - node-12
