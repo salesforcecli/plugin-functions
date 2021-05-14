@@ -1,0 +1,10 @@
+{
+  "name": "square",
+  "version": "1.0.0",
+  "main": "square.js",
+  "description": "riff square sample",
+  "scripts": {
+  },
+  "author": "heroku",
+  "license": "MIT"
+}
