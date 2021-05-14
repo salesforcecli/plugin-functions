@@ -50,6 +50,7 @@ jobs:
     steps:
       - checkout
       - restore_cache: *restore_cache
+      - install-sf-release
       - install-sfdx-trust
       - run:
           name: Install plugin dependencies
