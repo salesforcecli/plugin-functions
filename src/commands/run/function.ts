@@ -1,9 +1,9 @@
 import herokuColor from '@heroku-cli/color'
 import {Command, flags} from '@oclif/command'
 import {Config, Connection, Org} from '@salesforce/core'
-import {AxiosResponse} from 'axios'
+import axios, {AxiosResponse} from 'axios'
 import {cli} from 'cli-ux'
-import {CloudEvent, Emitter} from 'cloudevents'
+import {HTTP, CloudEvent} from 'cloudevents'
 import {default as CE_CONSTANTS} from 'cloudevents/dist/constants'
 import * as fs from 'fs'
 import * as getStdin from 'get-stdin'
@@ -154,13 +154,16 @@ export default class Invoke extends Command {
   }
 
   async sendRequest(cloudevent: CloudEvent, url: string, headers: any, structured: boolean): Promise<AxiosResponse> {
-    const sendHeaders = this.buildRequestHeaders(headers, cloudevent.id, structured)
-    const emitter = new Emitter({
-      protocol: structured ? 1 : 0
-    })
-    return emitter.send(cloudevent, {
-      url,
-      headers: sendHeaders
+    const sendHeaders = this.buildRequestHeaders(headers, cloudevent.id, structured) // rm structured?
+    // formerly protocol: structured ? 1 : 0
+    let protocolFn = structured ? HTTP.binary : HTTP.structured
+    const message = protocolFn(cloudevent)
+
+    return axios({
+      method: "post",
+      url: url,
+      data: message.body,
+      headers: sendHeaders, // RFC: use message.headers?
     })
   }
 
@@ -179,7 +182,7 @@ export default class Invoke extends Command {
 
     // set structured cloudevents content-type if needed, should be handled by StructuredEmitter - bug?
     if (structured) {
-      requestHeaders[CE_CONSTANTS.HEADER_CONTENT_TYPE] = CE_CONSTANTS.DEFAULT_CE_CONTENT_TYPE
+      requestHeaders[CE_CONSTANTS.HEADER_CONTENT_TYPE] = CE_CONSTANTS.DEFAULT_CE_CONTENT_TYPE // this is no longer needed in 4.0?
     }
 
     return requestHeaders
