@@ -126,7 +126,7 @@ export default class Benny {
     if (isStream) {
       input.pipe(command.stdin)
     } else {
-      command.stdin.end(input)
+      command.stdin?.end(input)
     }
   }
 
