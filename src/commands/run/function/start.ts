@@ -14,27 +14,26 @@ export default class Start extends Command {
     $ sfdx run:function:start
     $ sfdx run:function:start -e VAR=VALUE
     $ sfdx run:function:start --network host --no-pull --clear-cache --debug-port 9000 --port 5000
-`,
-  ]
+`]
 
   static flags = {
     builder: flags.string({
-      description: 'set custom builder image'
+      description: 'set custom builder image',
     }),
     path: flags.string({
       description: 'path to function dir',
       default: path.resolve('.'),
-      hidden: true
+      hidden: true,
     }),
     port: flags.integer({
       char: 'p',
       description: 'port for running the function',
-      default: 8080
+      default: 8080,
     }),
     'debug-port': flags.integer({
       char: 'd',
       description: 'port for remote debugging',
-      default: 9229
+      default: 9229,
     }),
     'clear-cache': flags.boolean({
       description: 'clear associated cache before executing.',
@@ -44,23 +43,23 @@ export default class Start extends Command {
     }),
     'no-build': flags.boolean({
       description: 'skip building the an image',
-      hidden: true
+      hidden: true,
     }),
     'no-run': flags.boolean({
       description: 'skip running the built image',
-      hidden: true
+      hidden: true,
     }),
     env: flags.string({
       char: 'e',
       description: 'set environment variables (provided during build and run)',
-      multiple: true
+      multiple: true,
     }),
     network: flags.string({
       description: 'Connect and build containers to a network. This can be useful to build containers which require a local resource.',
     }),
     verbose: flags.boolean({
       char: 'v',
-      description: 'output additional logs'
+      description: 'output additional logs',
     }),
     descriptor: flags.string({
       description: 'Path to project descriptor file (project.toml) that contains function and/or bulid configuration',
@@ -70,14 +69,14 @@ export default class Start extends Command {
 
   async run() {
     const {flags} = this.parse(Start)
-    let buildOpts = {
+    const buildOpts = {
       builder: flags.builder,
       'clear-cache': flags['clear-cache'],
       'no-pull': flags['no-pull'],
       network: flags.network,
       env: flags.env,
       descriptor: flags.descriptor ?? path.resolve(flags.path, 'project.toml'),
-      path: flags.path
+      path: flags.path,
     }
 
     const runOpts = {
@@ -97,8 +96,8 @@ export default class Start extends Command {
 
     const benny = new Benny()
 
-    let writeMsg = (msg: {text: string, timestamp: string}) => {
-      let outputMsg = msg.text
+    const writeMsg = (msg: {text: string, timestamp: string}) => {
+      const outputMsg = msg.text
 
       if (outputMsg) {
         cli.info(outputMsg)
