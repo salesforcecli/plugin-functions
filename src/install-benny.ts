@@ -12,6 +12,19 @@ const benny = new Benny()
 process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE = ''
 require('global-agent/bootstrap')
 
+async function streamToFile(res: any, path: string) {
+  return new Promise<void>((resolve, reject) => {
+    if (res.status === 200) {
+      const fileStream = fs.createWriteStream(path)
+      res.body.pipe(fileStream)
+      res.body.on('error', (err: Error) => reject(err))
+      fileStream.on('finish', () => resolve())
+    } else {
+      reject(`Could not download file (${res.status}).`)
+    }
+  })
+}
+
 async function downloadFile(url: string, path: string, contentType: string) {
   const headers = {Accept: contentType}
   const response = await ftch(url, {headers, redirect: 'manual'})
@@ -23,15 +36,27 @@ async function downloadFile(url: string, path: string, contentType: string) {
   return streamToFile(response, path)
 }
 
-async function streamToFile(res: any, path: string) {
-  return new Promise<void>((resolve, reject) => {
+function updateCacheVar(header: any, cache: {[key: string]: any}) {
+  cache.etag = header.get('etag').toString()
+  const maxage = Number(header.get('Cache-Control').toString().split('=')[1])
+  cache.expireAt = Date.now() + (maxage * 1000)
+}
+
+async function streamToLatest(res: any, cache: {[key: string]: any}) {
+  return new Promise((resolve, reject) => {
     if (res.status === 200) {
-      const fileStream = fs.createWriteStream(path)
+      const fileStream = fs.createWriteStream(benny.latestPath)
       res.body.pipe(fileStream)
       res.body.on('error', (err: Error) => reject(err))
-      fileStream.on('finish', () => resolve())
+      fileStream.on('finish', () => {
+        updateCacheVar(res.headers, cache)
+        resolve(res.status)
+      })
+    } else if (res.status === 304) { // not modified
+      updateCacheVar(res.headers, cache)
+      resolve(res.status)
     } else {
-      reject(`Could not download file (${res.status}).`)
+      reject(`Could not download latest file (${res.status}).`)
     }
   })
 }
@@ -55,46 +80,15 @@ async function downloadLatest(cache: {[key: string]: any}) {
   return streamToLatest(response, cache)
 }
 
-async function streamToLatest(res: any, cache: {[key: string]: any}) {
-  return new Promise((resolve, reject) => {
-    if (res.status === 200) {
-      const fileStream = fs.createWriteStream(benny.latestPath)
-      res.body.pipe(fileStream)
-      res.body.on('error', (err: Error) => reject(err))
-      fileStream.on('finish', () => {
-        updateCacheVar(res.headers, cache)
-        resolve(res.status)
-      })
-    } else if (res.status === 304) { // not modified
-      updateCacheVar(res.headers, cache)
-      resolve(res.status)
-    } else {
-      reject(`Could not download latest file (${res.status}).`)
-    }
-  })
-}
-
-function updateCacheVar(header: any, cache: {[key: string]: any}) {
-  cache.etag = header.get('etag').toString()
-  const maxage = Number(header.get('Cache-Control').toString().split('=')[1])
-  cache.expireAt = Date.now() + maxage * 1000
-}
-
 function parseVersion(): string {
-  try {
-    let output = execSync(`${benny.localPath} -version`, {stdio: ['pipe', 'pipe', 'ignore']}).toString()
-    const arr = output.split(' ')
-    output = arr[arr.length - 1].trim()
-    return output
-  } catch (err) {
-    throw err
-  }
+  let output = execSync(`${benny.localPath} -version`, {stdio: ['pipe', 'pipe', 'ignore']}).toString()
+  const arr = output.split(' ')
+  output = arr[arr.length - 1].trim()
+  return output
 }
 
 function handleError(err: string, bennyExists: boolean) {
-  if (bennyExists) {
-
-  } else {
+  if (!bennyExists) {
     cli.error(err)
   }
 }
@@ -231,9 +225,9 @@ async function updateBenny() {
     }
     await downloadFile(benny.latestSigUrl, benny.latestSigPath, 'text/plain')
     await verifyGPG(benny.latestPath, benny.publicKeyPath, benny.latestSigPath)
-  } catch (err) {
+  } catch (error) {
     await deleteLatest()
-    handleError(err, bennyExists)
+    handleError(error, bennyExists)
     return
   }
 
@@ -242,34 +236,36 @@ async function updateBenny() {
   const data = json[benny.majorVersion()][benny.os]
   latestVersion = data.version
 
-  if (latestVersion !== currentVersion) { // current binary is outdated
-    // download new binary from S3 and verify checksum
-    try {
-      const url = data.url
-      if (process.env.DEBUG === '*') {
-        process.stderr.write(`Downloading latest ${benny.name} binary V-${latestVersion} from ${url}\n`)
-      }
-      await downloadFile(url, benny.tmpPath, 'application/octet-stream')
-      const valid = verifyChecksum(benny.tmpPath, data.checksum)
-      if (!valid) {
-        throw new Error('Invalid benny binary checksum')
-      }
-    } catch (err) {
-      await deleteBinary(benny.tmpPath, latestVersion, true)
-      handleError(err, bennyExists)
-      return
-    }
-
-    // delete old binary
-    await deleteBinary(bennyPath, currentVersion, bennyExists)
-    // move new binary
-    fs.renameSync(benny.tmpPath, bennyPath)
-    fs.chmodSync(bennyPath, 0o765)
-    // write etag header and cache only when download successfully
+  if (latestVersion === currentVersion) {
+    // has up-to-date local binary, not modified
     await writeCache(cache)
-  } else {  // has up-to-date local binary, not modified
-    await writeCache(cache)
+    return
   }
+
+  // download new binary from S3 and verify checksum
+  try {
+    const url = data.url
+    if (process.env.DEBUG === '*') {
+      process.stderr.write(`Downloading latest ${benny.name} binary V-${latestVersion} from ${url}\n`)
+    }
+    await downloadFile(url, benny.tmpPath, 'application/octet-stream')
+    const valid = verifyChecksum(benny.tmpPath, data.checksum)
+    if (!valid) {
+      throw new Error('Invalid benny binary checksum')
+    }
+  } catch (error) {
+    await deleteBinary(benny.tmpPath, latestVersion, true)
+    handleError(error, bennyExists)
+    return
+  }
+
+  // delete old binary
+  await deleteBinary(bennyPath, currentVersion, bennyExists)
+  // move new binary
+  fs.renameSync(benny.tmpPath, bennyPath)
+  fs.chmodSync(bennyPath, 0o765)
+  // write etag header and cache only when download successfully
+  await writeCache(cache)
 }
 
 export {updateBenny}

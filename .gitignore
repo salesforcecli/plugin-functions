@@ -14,3 +14,6 @@ oclif.manifest.json
 *.tgz
 *.sig
 package.json.bak
+
+# ignore downloaded benny binary
+/bin/benny-*

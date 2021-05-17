@@ -87,8 +87,8 @@ export default class Start extends Command {
     let descriptor
     try {
       descriptor = await Util.getProjectDescriptor(buildOpts.descriptor)
-    } catch (e) {
-      cli.error(e)
+    } catch (error) {
+      cli.error(error)
     }
     await updateBenny()
 
@@ -96,7 +96,10 @@ export default class Start extends Command {
 
     const benny = new Benny()
 
-    const writeMsg = (msg: {text: string, timestamp: string}) => {
+    const writeMsg = (msg: {
+        text: string;
+        timestamp: string;
+    }) => {
       const outputMsg = msg.text
 
       if (outputMsg) {
@@ -109,14 +112,14 @@ export default class Start extends Command {
 
     benny.on('error', msg => {
       this.error(msg.text, {exit: false})
-      process.exit(1)
+      process.exit(1) // eslint-disable-line no-process-exit,unicorn/no-process-exit
     })
 
     benny.on('log', msg => {
       if (msg.level === 'debug' && !flags.verbose) return
       if (msg.level === 'error') {
-        cli.error(`failed to ${herokuColor.cyan(functionName)}`, {exit: false})
-        process.exit(1)
+        cli.error(`failed to build ${herokuColor.cyan(functionName)}`, {exit: false})
+        process.exit(1) // eslint-disable-line no-process-exit,unicorn/no-process-exit
       }
 
       if (msg.text) {
