@@ -19,9 +19,8 @@ async function downloadFile(url: string, path: string, contentType: string) {
     const redirectUrl = response.headers.get('location')
     const redirectResponse = await ftch(redirectUrl)
     return streamToFile(redirectResponse, path)
-  } else {
-    return streamToFile(response, path)
   }
+  return streamToFile(response, path)
 }
 
 async function streamToFile(res: any, path: string) {
@@ -42,7 +41,7 @@ async function downloadLatest(cache: {[key: string]: any}) {
   if (process.env.DEBUG === '*') {
     process.stderr.write(`Downloading latest file from ${url}\n`)
   }
-  let headers: {[key: string]: string} = {}
+  const headers: {[key: string]: string} = {}
   headers.Accept = 'application/json'
   if (cache.etag !== '') {
     headers['If-None-Match'] = cache.etag
@@ -52,9 +51,8 @@ async function downloadLatest(cache: {[key: string]: any}) {
     const redirectUrl = response.headers.get('location')
     const redirectResponse = await ftch(redirectUrl)
     return streamToLatest(redirectResponse, cache)
-  } else {
-    return streamToLatest(response, cache)
   }
+  return streamToLatest(response, cache)
 }
 
 async function streamToLatest(res: any, cache: {[key: string]: any}) {
@@ -78,7 +76,7 @@ async function streamToLatest(res: any, cache: {[key: string]: any}) {
 
 function updateCacheVar(header: any, cache: {[key: string]: any}) {
   cache.etag = header.get('etag').toString()
-  let maxage = Number(header.get('Cache-Control').toString().split('=')[1])
+  const maxage = Number(header.get('Cache-Control').toString().split('=')[1])
   cache.expireAt = Date.now() + maxage * 1000
 }
 
@@ -95,7 +93,7 @@ function parseVersion(): string {
 
 function handleError(err: string, bennyExists: boolean) {
   if (bennyExists) {
-    return
+
   } else {
     cli.error(err)
   }
@@ -156,24 +154,24 @@ async function deleteLatest() {
 }
 
 async function verifyGPG(msgPath: string, keyPath: string, sigPath: string) {
-  let publicKeyArmored = fs.readFileSync(keyPath, 'utf8')
-  let detachedSignature = fs.readFileSync(sigPath, 'utf8')
-  let messageBinary = fs.readFileSync(msgPath)
+  const publicKeyArmored = fs.readFileSync(keyPath, 'utf8')
+  const detachedSignature = fs.readFileSync(sigPath, 'utf8')
+  const messageBinary = fs.readFileSync(msgPath)
   return new Promise<void>((resolve, reject) => {
     kbpgp.KeyManager.import_from_armored_pgp({
-      armored: publicKeyArmored
+      armored: publicKeyArmored,
     }, function (err: Error, km: any) {
       if (err) {
         reject('Failed to load public key')
       } else {
-        let ring = new kbpgp.keyring.KeyRing()
+        const ring = new kbpgp.keyring.KeyRing()
         ring.add_key_manager(km)
         // verify detached signature
         kbpgp.unbox({
-          strict : false,
+          strict: false,
           armored: detachedSignature,
           data: messageBinary,
-          keyfetch: ring
+          keyfetch: ring,
         }, (err: Error) => {
           if (err) {
             reject('Invalid latest file signature\n' + err)
@@ -192,9 +190,9 @@ function verifyChecksum(filepath: string, sha: string) {
 }
 
 async function updateBenny() {
-  let cache: {[key: string]: any} = {
+  const cache: {[key: string]: any} = {
     etag: '',
-    expireAt: 0
+    expireAt: 0,
   }
   let latestVersion = ''
   let currentVersion = ''
