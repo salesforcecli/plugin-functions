@@ -5,7 +5,7 @@ import {createInterface} from 'readline'
 
 import JSBenny = require('../benny.js')
 
-const debug = DebugFactory('evergreen:benny:message')
+const debug = DebugFactory('evergreen:benny:message') // eslint-disable-line new-cap
 
 export default class Benny {
   private readonly binPath: string
