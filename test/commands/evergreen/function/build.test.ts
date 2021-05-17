@@ -43,7 +43,7 @@ describe('evergreen:function:build', () => {
 
     test
     .command(['evergreen:function:build', 'heRoKu/service:test'])
-    .catch(err => expect(err.message).to.equal('image name heRoKu/service:test must be in all lowercase'))
+    .catch(error => expect(error.message).to.equal('image name heRoKu/service:test must be in all lowercase'))
     .it('should fail for upper case image names')
   })
 
