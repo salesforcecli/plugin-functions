@@ -80,8 +80,8 @@ export default class Build extends Command {
 
     try {
       await Util.getProjectDescriptor(opts.descriptor)
-    } catch (e) {
-      cli.error(e)
+    } catch (error) {
+      cli.error(error)
     }
 
     if (args.image !== args.image.toLowerCase()) {
@@ -96,7 +96,6 @@ export default class Build extends Command {
 
     benny.on('error', msg => {
       this.error(msg.text, {exit: false})
-      process.exit(1)
     })
 
     benny.on('message', msg => {
@@ -117,7 +116,7 @@ export default class Build extends Command {
         rawLogs.forEach(log => {
           cli.error(log, {exit: false})
         })
-        process.exit(1)
+        cli.exit(1)
       } else if (msg.text) {
         cli.action.status = msg.text
       }
