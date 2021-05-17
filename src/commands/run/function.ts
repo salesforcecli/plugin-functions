@@ -6,7 +6,7 @@ import {cli} from 'cli-ux'
 import {HTTP, CloudEvent} from 'cloudevents'
 import {default as CE_CONSTANTS} from 'cloudevents/dist/constants'
 import * as fs from 'fs'
-import * as getStdin from 'get-stdin'
+import getStdin from '../../../src/lib/get-stdin'
 import {v4 as uuid} from 'uuid'
 
 import {updateBenny} from '../../install-benny'
