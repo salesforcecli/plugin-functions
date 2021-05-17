@@ -20,7 +20,7 @@ async function streamToFile(res: any, path: string) {
       res.body.on('error', (err: Error) => reject(err))
       fileStream.on('finish', () => resolve())
     } else {
-      reject(`Could not download file (${res.status}).`)
+      reject(new Error(`Could not download file (${res.status}).`))
     }
   })
 }
@@ -56,7 +56,7 @@ async function streamToLatest(res: any, cache: {[key: string]: any}) {
       updateCacheVar(res.headers, cache)
       resolve(res.status)
     } else {
-      reject(`Could not download latest file (${res.status}).`)
+      reject(new Error(`Could not download latest file (${res.status}).`))
     }
   })
 }
@@ -156,7 +156,7 @@ async function verifyGPG(msgPath: string, keyPath: string, sigPath: string) {
       armored: publicKeyArmored,
     }, function (err: Error, km: any) {
       if (err) {
-        reject('Failed to load public key')
+        reject(new Error('Failed to load public key'))
       } else {
         const ring = new kbpgp.keyring.KeyRing()
         ring.add_key_manager(km)
@@ -168,7 +168,7 @@ async function verifyGPG(msgPath: string, keyPath: string, sigPath: string) {
           keyfetch: ring,
         }, (err: Error) => {
           if (err) {
-            reject('Invalid latest file signature\n' + err)
+            reject(new Error('Invalid latest file signature\n' + err))
           } else {
             resolve()
           }
