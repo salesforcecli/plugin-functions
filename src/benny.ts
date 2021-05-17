@@ -9,6 +9,7 @@ const debug = DebugFactory('evergreen:benny:message')
 
 export default class Benny {
   private readonly binPath: string
+
   private readonly emitter: events.EventEmitter
 
   constructor() {
@@ -23,7 +24,7 @@ export default class Benny {
   build(image: string, options: {[key: string]: any}) {
     const buildArgs: Array<string> = [
       'build',
-      image
+      image,
     ]
 
     Object.entries(options).forEach(([flagName, flagVal]) => {
@@ -52,7 +53,7 @@ export default class Benny {
   }) {
     const runArgs = [
       'run',
-      containerName
+      containerName,
     ]
     if (flags.port) {
       runArgs.push('--port')
@@ -92,7 +93,7 @@ export default class Benny {
 
     const rl = createInterface({
       input: cmd.stdout,
-      crlfDelay: Infinity
+      crlfDelay: Infinity,
     })
 
     rl.on('line', (line: any) => {
