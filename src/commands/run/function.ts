@@ -64,15 +64,15 @@ export default class Invoke extends Command {
       const response = await this.sendRequest(cloudevent, flags.url, flags.headers, flags.structured)
       cli.action.stop(herokuColor.greenBright(response.status.toString()))
       this.writeResponse(response)
-    } catch (err) {
-      this.debug(err)
-      if (err.response) {
-        cli.action.stop(herokuColor.redBright(`${err.response.status} ${err.response.statusText}`))
-        this.debug(err.response)
-        this.error(err.response.data)
+    } catch (error) {
+      this.debug(error)
+      if (error.response) {
+        cli.action.stop(herokuColor.redBright(`${error.response.status} ${error.response.statusText}`))
+        this.debug(error.response)
+        this.error(error.response.data)
       } else {
         cli.action.stop(herokuColor.redBright('Error'))
-        this.error(err)
+        this.error(error)
       }
     }
   }
@@ -115,12 +115,12 @@ export default class Invoke extends Command {
       })).toString('base64')
 
       return {sfcontext, sffncontext}
-    } catch (err) {
-      if (err.name === 'AuthInfoCreationError' || err.name === 'NoUsername') {
+    } catch (error) {
+      if (error.name === 'AuthInfoCreationError' || error.name === 'NoUsername') {
         this.warn('No -t targetusername or defaultusername found, context will be partially initialized')
         return {}
       }
-      throw err
+      throw error
     }
   }
 
@@ -204,8 +204,7 @@ export default class Invoke extends Command {
     let eventData: Buffer | string | object
     try {
       const parsedData = JSON.parse(userdata)
-      // tslint:disable-next-line:triple-equals
-      if (typeof parsedData === 'object' && parsedData != null) {
+      if (typeof parsedData === 'object' && parsedData !== null) {
         // successfully parsed as js object that will be serialized properly as cloudevents data
         eventData = parsedData
       } else if (typeof parsedData === 'string') {
@@ -216,8 +215,8 @@ export default class Invoke extends Command {
         this.debug(`payload data not string|object (${typeof parsedData}), treating as string`)
         eventData = this.bufferIfHttpBinary(userdata, structured, true)
       }
-    } catch (parseErr) {
-      this.debug(`payload data not parseable as json, treating as string: ${parseErr}`)
+    } catch (error) {
+      this.debug(`payload data not parseable as json, treating as string: ${error}`)
       // If given a raw string that was not json, escape/buffer if necessary
       eventData = this.bufferIfHttpBinary(userdata, structured, true)
     }
