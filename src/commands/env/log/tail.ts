@@ -80,6 +80,8 @@ function eventSourceStream(url: string, eventSourceOptions: EventSourceOptions, 
 }
 
 export default class LogTail extends Command {
+  static hidden = true
+
   static description = 'stream log output for an environment'
 
   static examples = [
