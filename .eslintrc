@@ -5,6 +5,7 @@
   ],
   "rules": {
     "unicorn/explicit-length-check": "off", // we like to use .length for truthy evaluation
-    "camelcase": off
+    "camelcase": "off"
+ 
   }
 }
