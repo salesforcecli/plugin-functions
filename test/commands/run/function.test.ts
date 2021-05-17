@@ -6,9 +6,8 @@ import * as deepEqual from 'fast-deep-equal/es6'
 import * as sinon from 'sinon'
 import * as installBenny from '../../../src/install-benny'
 
-const $$ = testSetup()
-
 describe('run:function', () => {
+  const $$ = testSetup()
   const targetUrl = 'http://localhost'
   const userpayload = '{"id":654321,"field1":"somefield"}'
   let testData: MockTestOrgData
