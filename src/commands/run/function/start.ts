@@ -111,15 +111,13 @@ export default class Start extends Command {
     benny.on('container', writeMsg)
 
     benny.on('error', msg => {
-      this.error(msg.text, {exit: false})
-      process.exit(1) // eslint-disable-line no-process-exit,unicorn/no-process-exit
+      cli.error(msg.text, {exit: false})
     })
 
     benny.on('log', msg => {
       if (msg.level === 'debug' && !flags.verbose) return
       if (msg.level === 'error') {
-        cli.error(`failed to build ${herokuColor.cyan(functionName)}`, {exit: false})
-        process.exit(1) // eslint-disable-line no-process-exit,unicorn/no-process-exit
+        cli.exit()
       }
 
       if (msg.text) {
