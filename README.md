@@ -9,34 +9,22 @@ Functions plugin for the SF CLI
 [![Downloads/week](https://img.shields.io/npm/dw/sf-plugin-functions.svg)](https://npmjs.org/package/sf-plugin-functions)
 [![License](https://img.shields.io/npm/l/sf-plugin-functions.svg)](https://github.com/heroku/sf-plugin-functions/blob/master/package.json)
 
-# To install and run locally
-
-- `git clone https://github.com/heroku/sf-plugin-functions.git`
-- `cd sf-plugin-functions`
-- `yarn`
-- `sfdx plugins:link`
-
-Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx login:functions`
-
 <!-- toc -->
-* [To install and run locally](#to-install-and-run-locally)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
 # Usage
-<!-- usage -->
+
+1. Install the SFDX CLI: [Install instructions](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)
+2. Then run `sfdx plugins:install @salesforce/plugin-functions`:
+
 ```sh-session
-$ npm install -g @salesforce/plugin-functions
-$ sfdx COMMAND
+$ sfdx plugins:install @salesforce/plugin-functions
 running command...
-$ sfdx (-v|--version|version)
-@salesforce/plugin-functions/0.0.7 darwin-x64 node-v14.17.0
-$ sfdx --help [COMMAND]
-USAGE
-  $ sfdx COMMAND
-...
 ```
-<!-- usagestop -->
+
+Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx login:functions`
+
 # Commands
 <!-- commands -->
 * [`sfdx env:create:compute`](#sfdx-envcreatecompute)
