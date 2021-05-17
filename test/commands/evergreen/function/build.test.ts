@@ -20,43 +20,43 @@ describe('evergreen:function:build', () => {
 
   context('with a project.toml and com.salesforce.id', () => {
     beforeEach(() => {
-      sandbox.stub(ProjectDescriptor.prototype, 'parseFile').returns(Promise.resolve({com: { salesforce: {id: 'allthethingsfunction'}}}))
+      sandbox.stub(ProjectDescriptor.prototype, 'parseFile').returns(Promise.resolve({com: {salesforce: {id: 'allthethingsfunction'}}}))
     })
 
     test
-      .command(['evergreen:function:build', 'heroku/function:test'])
-      .it('should attempt to update benny to the latest version', () => {
-        sinon.assert.calledOnce(bennyStub)
-      })
+    .command(['evergreen:function:build', 'heroku/function:test'])
+    .it('should attempt to update benny to the latest version', () => {
+      sinon.assert.calledOnce(bennyStub)
+    })
 
     test
-      .command(['evergreen:function:build', 'heroku/function:test'])
-      .it('should build the image', () => {
-        expect(buildStub.calledWith('heroku/function:test')).to.be.true
-      })
+    .command(['evergreen:function:build', 'heroku/function:test'])
+    .it('should build the image', () => {
+      expect(buildStub.calledWith('heroku/function:test')).to.be.true
+    })
 
     test
-      .command(['evergreen:function:build', 'heroku/function:test'])
-      .it('should build the image with the alias', () => {
-        expect(buildStub.calledWith('heroku/function:test')).to.be.true
-      })
+    .command(['evergreen:function:build', 'heroku/function:test'])
+    .it('should build the image with the alias', () => {
+      expect(buildStub.calledWith('heroku/function:test')).to.be.true
+    })
 
     test
-      .command(['evergreen:function:build', 'heRoKu/service:test'])
-      .catch(err => expect(err.message).to.equal('image name heRoKu/service:test must be in all lowercase'))
-      .it('should fail for upper case image names')
+    .command(['evergreen:function:build', 'heRoKu/service:test'])
+    .catch(err => expect(err.message).to.equal('image name heRoKu/service:test must be in all lowercase'))
+    .it('should fail for upper case image names')
   })
 
   context('without an image', () => {
     test
-      .command(['evergreen:function:build'])
-      .exit(2)
-      .it('should exit with an error code')
+    .command(['evergreen:function:build'])
+    .exit(2)
+    .it('should exit with an error code')
 
     test
-      .command(['evergreen:function:build'])
-      .catch(/image/)
-      .it('should mention the missing image')
+    .command(['evergreen:function:build'])
+    .catch(/image/)
+    .it('should mention the missing image')
   })
 
   context('without a function.toml', () => {
@@ -65,13 +65,13 @@ describe('evergreen:function:build', () => {
     })
 
     test
-      .command(['evergreen:function:build', 'foo'])
-      .exit(2)
-      .it('should exit with an error code')
+    .command(['evergreen:function:build', 'foo'])
+    .exit(2)
+    .it('should exit with an error code')
 
     test
-      .command(['evergreen:function:build', 'foo'])
-      .catch(/File Not Found/)
-      .it('should mention the error')
+    .command(['evergreen:function:build', 'foo'])
+    .catch(/File Not Found/)
+    .it('should mention the error')
   })
 })

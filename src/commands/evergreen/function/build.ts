@@ -9,12 +9,12 @@ import Util from '../../../util'
 
 export default class Build extends Command {
   static description = 'build function source code into a deployable image'
+
   static examples = [`
     $ sfdx evergreen:function:build image-repo/myfunction:dev
     $ sfdx evergreen:function:build image-repo/myfunction:dev --path /path/to/function/src
     $ sfdx evergreen:function:build image-repo/myfunction:dev --network host
-`,
-  ]
+`]
 
   static args = [
     {
@@ -28,17 +28,17 @@ export default class Build extends Command {
     path: flags.string({
       char: 'p',
       description: 'path to function dir',
-      default: path.resolve('.')
+      default: path.resolve('.'),
     }),
     'no-pull': flags.boolean({
-      description: 'Skip pulling builder and run images before use.'
+      description: 'Skip pulling builder and run images before use.',
     }),
     verbose: flags.boolean({
       char: 'v',
-      description: 'output raw build logs'
+      description: 'output raw build logs',
     }),
     'clear-cache': flags.boolean({
-      description: "Clear image's associated cache before building."
+      description: "Clear image's associated cache before building.",
     }),
     env: flags.string({
       char: 'e',
@@ -47,13 +47,13 @@ export default class Build extends Command {
         'from current environment at the time this command is executed. ' +
         'This flag may occur multiple times if more than one variable is ' +
         'desired.',
-      multiple: true
+      multiple: true,
     }),
     'env-file': flags.string({
       description: 'Build-time environment variables file comprised of one ' +
         "variable per line, of the form 'VAR=VALUE' or 'VAR' When using " +
         'latter value-less form, value will be taken from current ' +
-        'environment at the time this command is executed.'
+        'environment at the time this command is executed.',
     }),
     builder: flags.string({
       description: 'Builder image',
@@ -61,7 +61,7 @@ export default class Build extends Command {
     }),
     buildpack: flags.string({
       description: 'Buildpack ID, path to a Buildpack directory, or path/URL to a Buildpack .tgz file. Repeat for each buildpack in order.',
-      multiple: true
+      multiple: true,
     }),
     network: flags.string({
       description: 'Connect and build containers to a network. This can be useful to build containers which require a local resource.',
