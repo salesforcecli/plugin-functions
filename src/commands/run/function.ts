@@ -156,7 +156,7 @@ export default class Invoke extends Command {
   async sendRequest(cloudevent: CloudEvent, url: string, headers: any, structured: boolean): Promise<AxiosResponse> {
     const sendHeaders = this.buildRequestHeaders(headers, cloudevent.id, structured) // rm structured?
     // formerly protocol: structured ? 1 : 0
-    let protocolFn = structured ? HTTP.binary : HTTP.structured
+    let protocolFn = structured ? HTTP.structured : HTTP.binary
     const message = protocolFn(cloudevent)
 
     return axios({
