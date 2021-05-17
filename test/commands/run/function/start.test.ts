@@ -144,7 +144,7 @@ describe('function:start', () => {
 
     test
     .stderr()
-    .stub(process, 'exit', () => {})
+    .stub(process, 'exit', () => '')
     .command(['run:function:start'])
     .it('should exit with failure', ctx => {
       emitter.emit('error', {
