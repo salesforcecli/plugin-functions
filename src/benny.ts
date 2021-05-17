@@ -110,10 +110,10 @@ export default class Benny {
     return new Promise(function (resolve, reject) {
       cmd.addListener('error', reject)
       cmd.addListener('exit', code => {
-        if (code !== 0) {
-          reject(new Error('Build exited with: ' + cmd.stderr.read()))
-        } else {
+        if (code === 0) {
           resolve(code)
+        } else {
+          reject(new Error('Build exited with: ' + cmd.stderr.read()))
         }
       })
     })
