@@ -5,7 +5,7 @@
   ],
   "rules": {
     "unicorn/explicit-length-check": "off", // we like to use .length for truthy evaluation
+    "@typescript-eslint/explicit-module-boundary-types": "off",
     "camelcase": "off"
- 
   }
 }
