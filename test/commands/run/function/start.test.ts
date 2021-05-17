@@ -15,9 +15,9 @@ describe('function:start', () => {
   }], Promise<unknown>>
   let buildStub: any
   beforeEach(() => {
-    sandbox = sinon.createSandbox(),
-    buildStub = sandbox.stub(Benny.prototype, 'build'),
-    runStub = sandbox.stub(Benny.prototype, 'run'),
+    sandbox = sinon.createSandbox()
+    buildStub = sandbox.stub(Benny.prototype, 'build')
+    runStub = sandbox.stub(Benny.prototype, 'run')
     bennyStub = sandbox.stub(installBenny, 'updateBenny')
   })
 
