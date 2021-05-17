@@ -19,30 +19,29 @@ export default class Invoke extends Command {
     $ sfdx run:function -u http://localhost:8080 -p '@file.json'
     $ echo '{"id": 12345}' | sfdx run:function -u http://localhost:8080
     $ sfdx run:function -u http://localhost:8080 -p '{"id": 12345}' --structured
-`,
-  ]
+`]
 
   static flags = {
     url: flags.string({
       char: 'u',
       description: 'url of the function to run',
-      required: true
+      required: true,
     }),
     headers: flags.string({
       char: 'H',
       description: 'set headers',
-      multiple: true
+      multiple: true,
     }),
     payload: flags.string({
       char: 'p',
-      description: 'set the payload of the cloudevent. also accepts @file.txt format'
+      description: 'set the payload of the cloudevent. also accepts @file.txt format',
     }),
     structured: flags.boolean({
-      description: 'set the cloudevent to be emitted as a structured cloudevent (json)'
+      description: 'set the cloudevent to be emitted as a structured cloudevent (json)',
     }),
     targetusername: flags.string({
       char: 't',
-      description: 'username or alias for the target org; overrides default target org'
+      description: 'username or alias for the target org; overrides default target org',
     }),
   }
 
@@ -82,7 +81,7 @@ export default class Invoke extends Command {
     try {
       // auth to scratch org using targetusername
       const org: Org = await Org.create({
-        aliasOrUsername: targetusername
+        aliasOrUsername: targetusername,
       })
 
       const aliasOrUser = targetusername || `defaultusername ${org.getConfigAggregator().getInfo(Config.DEFAULT_USERNAME).value}`
@@ -101,18 +100,18 @@ export default class Invoke extends Command {
         orgDomainUrl: connection.instanceUrl,
         username: orgusername || '',
         userId: connection.getAuthInfoFields().userId || '',     // userId may not be set
-        onBehalfOfUserId: ''    // onBehalfOfUserId not set
+        onBehalfOfUserId: '',    // onBehalfOfUserId not set
       }
 
       const sfcontext = Buffer.from(JSON.stringify({
         apiVersion: connection.version,
         payloadVersion: 'invoke-v0.1',
-        userContext
+        userContext,
       })).toString('base64')
 
       const sffncontext = Buffer.from(JSON.stringify({
         accessToken: connection.accessToken,
-        requestId
+        requestId,
       })).toString('base64')
 
       return {sfcontext, sffncontext}
@@ -128,14 +127,13 @@ export default class Invoke extends Command {
   async getPayloadData(payload: string | undefined): Promise<string | undefined> {
     if (payload && payload.startsWith('@')) {
       return fs.readFileSync(payload.slice(1), 'utf8')
-    } else {
-      return payload || getStdin()
     }
+    return payload || getStdin()
   }
 
   async buildCloudevent(userdata: string, targetusername: string | undefined, structured: boolean): Promise<CloudEvent> {
-    let requestId: string = uuid()
-    let data: Buffer | string | object = this.toCloudEventData(userdata, structured)
+    const requestId: string = uuid()
+    const data: Buffer | string | object = this.toCloudEventData(userdata, structured)
 
     // Base64(JSON) encoded `sfcontext` and `sffncontext` keys/values if possible.  Empty object otherwise.
     const contexts: {} = await this.buildSfContexts(targetusername, requestId)
@@ -149,21 +147,24 @@ export default class Invoke extends Command {
       subject: 'test-subject',
       datacontenttype: 'application/json; charset=utf-8',
       ...contexts,
-      data
+      data,
     })
   }
 
   async sendRequest(cloudevent: CloudEvent, url: string, headers: any, structured: boolean): Promise<AxiosResponse> {
     const sendHeaders = this.buildRequestHeaders(headers, cloudevent.id, structured) // rm structured?
     // formerly protocol: structured ? 1 : 0
-    let protocolFn = structured ? HTTP.structured : HTTP.binary
+    const protocolFn = structured ? HTTP.structured : HTTP.binary
     const message = protocolFn(cloudevent)
 
     return axios({
-      method: "post",
+      method: 'post',
       url: url,
       data: message.body,
-      headers: sendHeaders, // RFC: use message.headers?
+      headers: {
+        ...sendHeaders,
+        ...message.headers,
+      },
     })
   }
 
