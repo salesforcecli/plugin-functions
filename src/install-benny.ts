@@ -2,9 +2,9 @@ const Benny = require('../benny.js')
 import {execSync} from 'child_process'
 import {cli} from 'cli-ux'
 import * as fs from 'fs'
-const ftch = require('node-fetch')
+import fetch from 'node-fetch'
 const kbpgp = require('kbpgp')
-const sha256File = require('sha256-file')
+import sha256File = require('sha256-file')
 const util = require('util')
 const benny = new Benny()
 
@@ -27,11 +27,13 @@ async function streamToFile(res: any, path: string) {
 
 async function downloadFile(url: string, path: string, contentType: string) {
   const headers = {Accept: contentType}
-  const response = await ftch(url, {headers, redirect: 'manual'})
+  const response = await fetch(url, {headers, redirect: 'manual'})
   if (response.status === 302 || response.status === 301) {
     const redirectUrl = response.headers.get('location')
-    const redirectResponse = await ftch(redirectUrl)
-    return streamToFile(redirectResponse, path)
+    if (redirectUrl) {
+      const redirectResponse = await fetch(redirectUrl)
+      return streamToFile(redirectResponse, path)
+    }
   }
   return streamToFile(response, path)
 }
@@ -71,11 +73,13 @@ async function downloadLatest(cache: {[key: string]: any}) {
   if (cache.etag !== '') {
     headers['If-None-Match'] = cache.etag
   }
-  const response = await ftch(url, {headers, redirect: 'manual'})
+  const response = await fetch(url, {headers, redirect: 'manual'})
   if (response.status === 302 || response.status === 301) {
     const redirectUrl = response.headers.get('location')
-    const redirectResponse = await ftch(redirectUrl)
-    return streamToLatest(redirectResponse, cache)
+    if (redirectUrl) {
+      const redirectResponse = await fetch(redirectUrl)
+      return streamToLatest(redirectResponse, cache)
+    }
   }
   return streamToLatest(response, cache)
 }
