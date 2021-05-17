@@ -1,11 +1,11 @@
 import {ChildProcess, spawn} from 'child_process'
-import DebugFactory from 'debug'
+import debugFactory from 'debug'
 import * as events from 'events'
 import {createInterface} from 'readline'
 
 import JSBenny = require('../benny.js')
 
-const debug = DebugFactory('evergreen:benny:message') // eslint-disable-line new-cap
+const debug = debugFactory('evergreen:benny:message')
 
 export default class Benny {
   private readonly binPath: string
