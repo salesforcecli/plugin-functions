@@ -12,11 +12,11 @@ namespace Util {
     const projectTOML = new ProjectDescriptor()
     try {
       return await projectTOML.parseFile(path)
-    } catch (e) {
-      if (e.message.includes('File Not Found')) {
-        throw new Error(e.message + '\n Hint: Are you in the correct working directory?')
+    } catch (error) {
+      if (error.message.includes('File Not Found')) {
+        throw new Error(error.message + '\n Hint: Are you in the correct working directory?')
       } else {
-        throw e
+        throw error
       }
     }
   }
