@@ -1,11 +1,10 @@
 import {expect, test} from '@oclif/test'
+import {Config} from '@salesforce/core'
 import {MockTestOrgData, testSetup} from '@salesforce/core/lib/testSetup'
-import {Config, Org} from '@salesforce/core'
-// import { stderr } from 'supports-color';
-import * as sinon from 'sinon'
-import * as installBenny from '../../../src/install-benny'
 import {HTTP} from 'cloudevents'
 import * as deepEqual from 'fast-deep-equal/es6'
+import * as sinon from 'sinon'
+import * as installBenny from '../../../src/install-benny'
 
 const $$ = testSetup();
 
@@ -225,30 +224,36 @@ describe('run:function', () => {
       })
 
     test
-      .nock(targetUrl, fn => fn
-        .post('/', Buffer.from('" 12345"', 'utf-8'))  /* should be JSON-quoted to preserve space */
-        .matchHeader('content-type', 'application/json; charset=utf-8')
-        .reply(200, {result: true})
-      )
-      .stdout()
-      .command(['run:function', '-u', targetUrl, '-p 12345'])
-      .it('should send string " 12345" as body with HTTPBinary transport', ctx => {
-        // nock will not match the request if the headers are not correct
-        expect(ctx.stdout).to.contain('"result": true')
-      })
+    .nock(targetUrl, fn => fn
+    .post('/', body => {
+      // cloud events returns an object containing `type: "Buffer"` and a data field containing the
+      // actual buffer value, so we have to convert it back and compare here
+      return Buffer.from('" 12345"').equals(Buffer.from(body.data))
+    })  /* should be JSON-quoted to preserve space */
+    .matchHeader('content-type', 'application/json; charset=utf-8')
+    .reply(200, {result: true}),
+    )
+    .stdout()
+    .command(['run:function', '-u', targetUrl, '-p 12345'])
+    .it('should send string " 12345" as body with HTTPBinary transport', ctx => {
+      // nock will not match the request if the headers are not correct
+      expect(ctx.stdout).to.contain('"result": true')
+    })
 
     test
-      .nock(targetUrl, fn => fn
-        .post('/', Buffer.from('" [not really json"'))  /* should be JSON-quoted to preserve space/backslash */
-        .matchHeader('content-type', 'application/json; charset=utf-8')
-        .reply(200, {result: true})
-      )
-      .stdout()
-      .command(['run:function', '-u', targetUrl, '-p [not really json'])
-      .it('should send string " [not really json" with HTTPBinary transport', ctx => {
-        // nock will not match the request if the headers are not correct
-        expect(ctx.stdout).to.contain('"result": true')
-      })
+    .nock(targetUrl, fn => fn
+    .post('/', body => {
+      return Buffer.from('" [not really json"').equals(Buffer.from(body.data))
+    })  /* should be JSON-quoted to preserve space/backslash */
+    .matchHeader('content-type', 'application/json; charset=utf-8')
+    .reply(200, {result: true}),
+    )
+    .stdout()
+    .command(['run:function', '-u', targetUrl, '-p [not really json'])
+    .it('should send string " [not really json" with HTTPBinary transport', ctx => {
+      // nock will not match the request if the headers are not correct
+      expect(ctx.stdout).to.contain('"result": true')
+    })
 
     test
       .nock(targetUrl, fn => fn
