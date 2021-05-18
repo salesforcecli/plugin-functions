@@ -118,7 +118,28 @@ export default class Invoke extends Command {
     } catch (error) {
       if (error.name === 'AuthInfoCreationError' || error.name === 'NoUsername') {
         this.warn('No -t targetusername or defaultusername found, context will be partially initialized')
-        return {}
+        const fakeUserContext = {
+          orgId: '000000000000000000',
+          orgDomainUrl: '',
+          salesforceBaseUrl: '',
+          username: '',
+          userId: '',
+          onBehalfOfUserId: '',
+        }
+        const fakeSFcontext = Buffer.from(JSON.stringify({
+          payloadVersion: 'invoke-v0.1',
+          userContext: fakeUserContext,
+        })).toString('base64')
+
+        const fakeSFFNContext = Buffer.from(JSON.stringify({
+          accessToken: '',
+          requestId,
+        })).toString('base64')
+
+        return {
+          sfcontext: fakeSFcontext,
+          sffncontext: fakeSFFNContext,
+        }
       }
       throw error
     }
