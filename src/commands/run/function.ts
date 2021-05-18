@@ -204,7 +204,7 @@ export default class Invoke extends Command {
 
     // set structured cloudevents content-type if needed, should be handled by StructuredEmitter - bug?
     if (structured) {
-      requestHeaders[CE_CONSTANTS.HEADER_CONTENT_TYPE] = CE_CONSTANTS.DEFAULT_CE_CONTENT_TYPE // this is no longer needed in 4.0?
+      requestHeaders[CE_CONSTANTS.HEADER_CONTENT_TYPE] = CE_CONSTANTS.DEFAULT_CE_CONTENT_TYPE
     }
 
     return requestHeaders
