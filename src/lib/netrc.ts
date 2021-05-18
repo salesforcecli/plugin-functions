@@ -16,7 +16,10 @@ export default class NetrcMachine {
   }
 
   async set(key: string, value?: string) {
-    console.log(`setting ${key} to ${value} on ${this.machine}`)
+    if (key !== 'password') {
+      console.log(`setting ${key} to ${value} on ${this.machine}`)
+    }
+
     const machineData = this.loadMachine()
 
     const machinePayload = {
