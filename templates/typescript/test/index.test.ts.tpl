@@ -34,19 +34,16 @@ describe('Unit Tests', () => {
             'done': true,
             'records': [
                 {
-                    'attributes':
-                        {'type':'Account','url':'/services/data/v48.0/sobjects/Account/001xx000003GYNjAAO'},
-                        'Name':'Global Media'
+                    'type': 'Account',
+                    'fields': { 'Name': 'Global Media' }
                 },
                 {
-                    'attributes':
-                        {'type':'Account','url':'/services/data/v48.0/sobjects/Account/001xx000003GYNkAAO'},
-                        'Name':'Acme'
+                    'type': 'Account',
+                    'fields': { 'Name': 'Acme' }
                 },
                 {
-                    'attributes':
-                    {'type':'Account','url':'/services/data/v48.0/sobjects/Account/001xx000003GYNlAAO'},
-                    'Name':'salesforce.com'
+                    'type': 'Account',
+                    'fields': { 'Name': 'salesforce.com' }
                 }
             ]
         };
