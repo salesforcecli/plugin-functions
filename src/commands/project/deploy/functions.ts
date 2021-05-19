@@ -108,6 +108,8 @@ export default class ProjectDeployFunctions extends Command {
     }
   }
 
+  // This method generates a list of functions to remove *specific to this project*. We use this
+  // so we don't accidentally delete references from other projects that point to the same org
   private filterProjectReferencesToRemove(
     allReferences: Array<FullNameReference>,
     successfulReferences: Array<FullNameReference>,
