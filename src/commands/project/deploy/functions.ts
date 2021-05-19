@@ -218,8 +218,6 @@ export default class ProjectDeployFunctions extends Command {
       },
       [],
     )
-    console.log('successful references', successfulReferences)
-
     let refList = await connection.metadata.list({type: 'FunctionReference'})
     if (refList && !Array.isArray(refList)) {
       refList = [refList]
@@ -233,8 +231,6 @@ export default class ProjectDeployFunctions extends Command {
       },
       [],
     )
-
-    console.log('all references', allReferences)
 
     const referencesToRemove = this.filterProjectReferencesToRemove(allReferences, successfulReferences, project.name)
 
