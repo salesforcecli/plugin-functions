@@ -347,7 +347,6 @@ OPTIONS
   -e, --env=env                set environment variables (provided during build and run)
   -p, --port=port              [default: 8080] port for running the function
   -v, --verbose                output additional logs
-  --builder=builder            set custom builder image
   --clear-cache                clear associated cache before executing.
 
   --network=network            Connect and build containers to a network. This can be useful to build containers which

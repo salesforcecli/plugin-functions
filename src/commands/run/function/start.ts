@@ -19,6 +19,7 @@ export default class Start extends Command {
   static flags = {
     builder: flags.string({
       description: 'set custom builder image',
+      hidden: true,
     }),
     path: flags.string({
       description: 'path to function dir',
