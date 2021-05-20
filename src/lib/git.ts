@@ -1,16 +1,21 @@
 import * as execa from 'execa'
+import Redactor from './redactor'
 
 export class Git {
+  redacted: Array<string>
+
+  constructor(redacted: Array<string> = []) {
+    this.redacted = redacted
+  }
+
   async exec(commands: Array<string>, quiet = false) {
     try {
       const subprocess = execa('git', commands)
 
       if (!quiet) {
-        subprocess.stdout?.pipe(process.stdout)
-      }
-
-      if (subprocess.stderr) {
-        subprocess.stderr.pipe(process.stderr)
+        // for some reason execa pipes everything to stderr as it's happening instead of stdout, so
+        // we use subprocess.stderr for streaming the server output
+        subprocess.stderr?.pipe(new Redactor(this.redacted)).pipe(process.stderr)
       }
 
       return subprocess

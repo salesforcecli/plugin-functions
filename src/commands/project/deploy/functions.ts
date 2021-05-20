@@ -3,16 +3,21 @@ import {flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 import debugFactory from 'debug'
 import {UpsertResult} from 'jsforce'
-import {difference} from 'lodash'
+import {differenceWith, isEqual} from 'lodash'
 import * as path from 'path'
 import {URL} from 'url'
 import Command from '../../../lib/base'
-import {parseProjectToml} from '../../../lib/project-toml'
 import Git from '../../../lib/git'
 import {resolveFunctionsPaths} from '../../../lib/path-utils'
+import {parseProjectToml} from '../../../lib/project-toml'
 import {ComputeEnvironment, FunctionReference, SfdxProjectConfig} from '../../../lib/sfdc-types'
 
 const debug = debugFactory('project:deploy:functions')
+
+interface FullNameReference {
+  project: string;
+  fn: string;
+}
 
 export default class ProjectDeployFunctions extends Command {
   private git?: Git
@@ -72,30 +77,55 @@ export default class ProjectDeployFunctions extends Command {
     const fnPaths = await resolveFunctionsPaths()
 
     // Create function reference objects
-    return Promise.all(fnPaths.map(async fnPath => {
-      const projectTomlPath = path.join(fnPath, 'project.toml')
-      const projectToml: any = await parseProjectToml(projectTomlPath)
-      const fnName = projectToml.com.salesforce.id
+    return Promise.all(
+      fnPaths.map(async fnPath => {
+        const projectTomlPath = path.join(fnPath, 'project.toml')
+        const projectToml: any = await parseProjectToml(projectTomlPath)
+        const fnName = projectToml.com.salesforce.id
 
-      const fnReference: FunctionReference = {
-        fullName: `${project.name}-${fnName}`,
-        label: fnName,
-        description: projectToml.com.salesforce.description,
-      }
+        const fnReference: FunctionReference = {
+          fullName: `${project.name}-${fnName}`,
+          label: fnName,
+          description: projectToml.com.salesforce.description,
+        }
 
-      const permissionSet = projectToml._.metadata?.permissionSet
+        const permissionSet = projectToml._.metadata?.permissionSet
 
-      if (permissionSet) {
-        fnReference.permissionSet = permissionSet
-      }
+        if (permissionSet) {
+          fnReference.permissionSet = permissionSet
+        }
 
-      return fnReference
-    }))
+        return fnReference
+      }),
+    )
+  }
+
+  private splitFullName(fullName: string): FullNameReference {
+    const [project, fn] = fullName.split('-')
+    return {
+      project,
+      fn,
+    }
+  }
+
+  // This method generates a list of functions to remove *specific to this project*. We use this
+  // so we don't accidentally delete references from other projects that point to the same org
+  private filterProjectReferencesToRemove(
+    allReferences: Array<FullNameReference>,
+    successfulReferences: Array<FullNameReference>,
+    projectName: string,
+  ) {
+    const filtered = allReferences.filter(ref => ref.project === projectName)
+    return differenceWith(filtered, successfulReferences, isEqual).map(ref => `${ref.project}-${ref.fn}`)
   }
 
   async run() {
     const {flags} = this.parse(ProjectDeployFunctions)
-    this.git = new Git()
+
+    // We pass the api token value to the Git constructor so that it will redact it from any of
+    // the server logs
+    const redactedToken = process.env.SALESFORCE_FUNCTIONS_API_KEY ?? this.apiNetrcMachine.get('password')
+    this.git = new Git([redactedToken ?? ''])
 
     // We don't want to deploy anything if they've got work that hasn't been committed yet because
     // it could end up being really confusing since the user isn't calling git directly
@@ -107,6 +137,7 @@ export default class ProjectDeployFunctions extends Command {
     cli.action.start('Pushing changes to functions')
     const org = await this.fetchOrg(flags['connected-org'])
     const project = await this.fetchSfdxProject()
+
     // FunctionReferences: create function reference using info from function.toml and project info
     // we do this early on because we don't want to bother with anything else if it turns out
     // there are no functions to deploy
@@ -129,7 +160,7 @@ export default class ProjectDeployFunctions extends Command {
 
     const remote = await this.gitRemote(app)
 
-    debug('pushing to git server using remote: ', remote)
+    debug('pushing to git server')
 
     const currentBranch = await this.getCurrentBranch()
 
@@ -145,7 +176,19 @@ export default class ProjectDeployFunctions extends Command {
       pushCommand.push('--force')
     }
 
-    await this.git.exec(pushCommand, flags.quiet)
+    try {
+      await this.git.exec(pushCommand, flags.quiet)
+    } catch (error) {
+      // if they've passed `--quiet` we don't want to show any build server output *unless* there's
+      // an error, in which case we want to show all of it
+      if (flags.quiet) {
+        this.error(error.message.replace(redactedToken, '<REDACTED>'))
+      }
+
+      // In this case, they have not passed `--quiet`, in which case we have already streamed
+      // the entirety of the build server output and don't need to show it again
+      this.error('There was an issue when deploying your functions.')
+    }
 
     debug('pushing function references', references)
 
@@ -167,26 +210,31 @@ export default class ProjectDeployFunctions extends Command {
     }
 
     // Remove any function references for functions that no longer exist
-    const successfulReferences = results.reduce((acc: Array<string>, result) => {
-      if (result.success) {
-        acc.push(result.fullName)
-      }
+    const successfulReferences = results.reduce(
+      (acc: Array<FullNameReference>, result) => {
+        if (result.success) {
+          acc.push(this.splitFullName(result.fullName))
+        }
 
-      return acc
-    }, [])
-
+        return acc
+      },
+      [],
+    )
     let refList = await connection.metadata.list({type: 'FunctionReference'})
     if (refList && !Array.isArray(refList)) {
       refList = [refList]
     }
 
-    const allReferences = refList.reduce((acc: Array<string>, ref) => {
-      acc.push(ref.fullName)
+    const allReferences = refList.reduce(
+      (acc: Array<FullNameReference>, ref) => {
+        acc.push(this.splitFullName(ref.fullName))
 
-      return acc
-    }, [])
+        return acc
+      },
+      [],
+    )
 
-    const referencesToRemove = difference(allReferences, successfulReferences)
+    const referencesToRemove = this.filterProjectReferencesToRemove(allReferences, successfulReferences, project.name)
 
     if (referencesToRemove.length) {
       this.log('Removing the following functions that were deleted locally:')

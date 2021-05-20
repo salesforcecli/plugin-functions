@@ -81,7 +81,10 @@ ORG_MOCK_WITH_DELETED_FUNCTION.getConnection = function () {
             }
           }),
           {
-            fullName: 'extra-fn-that-has-been-deleted',
+            fullName: 'sweet_project-fn2bedeleted',
+          },
+          {
+            fullName: 'other_sweet_project-fn1',
           },
         ]
       },
@@ -209,7 +212,10 @@ describe('sf project deploy functions', () => {
   .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
   .it('clears function references when it finds that a function has been deleted locally', ctx => {
     expect(ctx.stdout).to.contain('Removing the following functions that were deleted locally:')
-    expect(ctx.stdout).to.contain('extra-fn-that-has-been-deleted')
+    expect(ctx.stdout).to.contain('sweet_project-fn2bedeleted')
+
+    // Verify that we do not delete function references that belong to other projects
+    expect(ctx.stdout).to.not.contain('other_sweet_project-fn1')
   })
 
   // when there is no login
