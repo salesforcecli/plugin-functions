@@ -35,7 +35,7 @@ export default class Benny {
           buildArgs.push(`--${flagName}`)
           buildArgs.push(arrVal)
         })
-      } else if (flagVal) {
+      } else if (flagVal === true) {
         buildArgs.push(`--${flagName}`)
       } else {
         buildArgs.push(`--${flagName}`)
