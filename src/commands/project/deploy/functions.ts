@@ -20,8 +20,6 @@ export default class ProjectDeployFunctions extends Command {
 
   static flags = {
     'connected-org': FunctionsFlagBuilder.connectedOrg({
-      char: 'o',
-      description: 'deployment org username or alias',
       required: true,
     }),
     branch: flags.string({

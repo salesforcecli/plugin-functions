@@ -4,6 +4,7 @@ import {cli} from 'cli-ux'
 import Command from '../../lib/base'
 import {resolveFunctionsPaths} from '../../lib/path-utils'
 import {ComputeEnvironment} from '../../lib/sfdc-types'
+import {FunctionsFlagBuilder} from '../../lib/flags'
 import herokuVariant from '../../lib/heroku-variant'
 import {OrgListUtil} from '@salesforce/plugin-org/lib/shared/orgListUtil'
 import {getAliasByUsername} from '@salesforce/plugin-org/lib/shared/utils'
@@ -17,11 +18,7 @@ export default class EnvDelete extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
-      char: 'e',
-      description: 'environment name or alias',
-      required: true,
-    }),
+    environment: FunctionsFlagBuilder.environment(),
     verbose: flags.boolean({
       description: 'verbose display output',
     }),
@@ -72,7 +69,7 @@ export default class EnvDelete extends Command {
     }
 
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-    const appName = await this.resolveAppNameForEnvironment(environment)
+    const appName = await this.resolveAppNameForEnvironment(environment!)
 
     try {
       // If app exists, environment details will be displayed

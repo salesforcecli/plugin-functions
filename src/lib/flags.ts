@@ -9,19 +9,19 @@ export namespace FunctionsFlagBuilder {
     required: true,
   })
 
-  export const environmentType = flags.build({
-    char: 't',
-    description: 'filter by one or more environment types (org, scratchorg, compute)',
-    options: ['org', 'scratchorg', 'compute'],
-    multiple: true,
-  })
-
   export const connectedOrg = flags.build({
     char: 'o',
     description: 'username or alias for the org that the compute environment should be connected to',
     required: false,
   })
 }
+
+export const environmentType = flags.string({
+  char: 't',
+  description: 'filter by one or more environment types (org, scratchorg, compute)',
+  options: ['org', 'scratchorg', 'compute'],
+  multiple: true,
+})
 
 export const confirmationFlag = flags.string({
   char: 'c',

@@ -13,11 +13,7 @@ export default class LogDrainRemove extends Command {
   ]
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
-      required: true,
-      char: 'e',
-      description: 'environment name, ID, or alias',
-    }),
+    environment: FunctionsFlagBuilder.environment(),
     url: flags.string({
       required: true,
       char: 'u',
@@ -29,9 +25,9 @@ export default class LogDrainRemove extends Command {
     const {flags} = this.parse(LogDrainRemove)
     const {environment} = flags
 
-    const appName = await this.resolveAppNameForEnvironment(environment)
+    const appName = await this.resolveAppNameForEnvironment(environment!)
 
-    cli.action.start(`Deleting drain for environment ${herokuColor.app(environment)}`)
+    cli.action.start(`Deleting drain for environment ${herokuColor.app(environment!)}`)
 
     await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(flags.url)}`)
 

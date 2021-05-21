@@ -14,11 +14,7 @@ export default class EnvDelete extends Command {
   ]
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
-      char: 'e',
-      description: 'environment name or alias',
-      required: true,
-    }),
+    environment: FunctionsFlagBuilder.environment(),
     confirm: confirmationFlag,
   }
 
@@ -27,7 +23,7 @@ export default class EnvDelete extends Command {
 
     const {environment} = flags
 
-    await this.confirmRemovePrompt('environment', environment, flags.confirm)
+    await this.confirmRemovePrompt('environment', environment!, flags.confirm)
 
     cli.action.start(`Deleting environment ${environment}`)
 
@@ -47,7 +43,7 @@ export default class EnvDelete extends Command {
     }
 
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-    const appName = await this.resolveAppNameForEnvironment(environment)
+    const appName = await this.resolveAppNameForEnvironment(environment!)
 
     try {
       // If app exists, it will be deleted

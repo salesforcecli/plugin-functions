@@ -12,16 +12,14 @@ export default class ConfigList extends Command {
   ]
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
-      required: true,
-    }),
+    environment: FunctionsFlagBuilder.environment(),
   }
 
   async run() {
     const {flags} = this.parse(ConfigList)
     const {environment} = flags
 
-    const appName = await this.resolveAppNameForEnvironment(environment)
+    const appName = await this.resolveAppNameForEnvironment(environment!)
 
     const {data: config} = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`)
 

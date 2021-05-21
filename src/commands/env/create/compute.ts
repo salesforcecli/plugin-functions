@@ -17,10 +17,7 @@ export default class EnvCreateCompute extends Command {
   ]
 
   static flags = {
-    'connected-org': FunctionsFlagBuilder.connectedOrg({
-      char: 'o',
-      description: 'username or alias for the org that the compute environment should be connected to',
-    }),
+    'connected-org': FunctionsFlagBuilder.connectedOrg(),
     setalias: flags.string({
       char: 'a',
       description: 'alias for the created environment',

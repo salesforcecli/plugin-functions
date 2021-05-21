@@ -12,11 +12,7 @@ export default class LogDrainList extends Command {
   ]
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
-      required: true,
-      char: 'e',
-      description: 'environment name, ID, or alias',
-    }),
+    environment: FunctionsFlagBuilder.environment(),
     json: flags.boolean({
       description: 'output result in json',
     }),
@@ -26,7 +22,7 @@ export default class LogDrainList extends Command {
     const {flags} = this.parse(LogDrainList)
     const {environment} = flags
 
-    const appName = await this.resolveAppNameForEnvironment(environment)
+    const appName = await this.resolveAppNameForEnvironment(environment!)
 
     const {data: drains} = await this.client.get<Array<Heroku.LogDrain>>(`apps/${appName}/log-drains`)
 

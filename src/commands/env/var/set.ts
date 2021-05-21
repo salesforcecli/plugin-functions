@@ -14,9 +14,7 @@ export default class ConfigSet extends Command {
   ]
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
-      required: true,
-    }),
+    environment: FunctionsFlagBuilder.environment(),
   }
 
   parseKeyValuePairs(pairs: Array<string>) {
@@ -37,10 +35,10 @@ export default class ConfigSet extends Command {
     const {flags, argv} = this.parse(ConfigSet)
     const {environment} = flags
 
-    const appName = await this.resolveAppNameForEnvironment(environment)
+    const appName = await this.resolveAppNameForEnvironment(environment!)
     const configPairs = this.parseKeyValuePairs(argv)
 
-    cli.action.start(`Setting ${Object.keys(configPairs).map(key => herokuColor.configVar(key)).join(', ')} and restarting ${herokuColor.app(environment)}`)
+    cli.action.start(`Setting ${Object.keys(configPairs).map(key => herokuColor.configVar(key)).join(', ')} and restarting ${herokuColor.app(environment!)}`)
 
     await this.client.patch(`/apps/${appName}/config-vars`, {
       data: configPairs,

@@ -12,9 +12,7 @@ export default class VarGet extends Command {
   ]
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
-      required: true,
-    }),
+    environment: FunctionsFlagBuilder.environment(),
   }
 
   static args = [
@@ -28,14 +26,14 @@ export default class VarGet extends Command {
     const {flags, args} = this.parse(VarGet)
     const {environment} = flags
 
-    const appName = await this.resolveAppNameForEnvironment(environment)
+    const appName = await this.resolveAppNameForEnvironment(environment!)
 
     const {data: config} = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`)
 
     const value = config[args.key]
 
     if (!value) {
-      this.warn(`No config var named ${herokuColor.cyan(args.key)} found for environment ${herokuColor.cyan(environment)}`)
+      this.warn(`No config var named ${herokuColor.cyan(args.key)} found for environment ${herokuColor.cyan(environment!)}`)
     }
 
     this.log(value)
