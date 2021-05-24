@@ -2,18 +2,33 @@ import {flags} from '@oclif/command'
 import {CLIError} from '@oclif/errors'
 import {IBooleanFlag} from '@oclif/parser/lib/flags'
 import {cli} from 'cli-ux'
-export namespace FunctionsFlagBuilder {
-  export const environment = flags.build({
+
+export const FunctionsFlagBuilder = {
+  environment: flags.build({
     char: 'e',
     description: 'environment name',
-    required: true,
-  })
+    required: false,
+  }),
 
-  export const connectedOrg = flags.build({
+  connectedOrg: flags.build({
     char: 'o',
     description: 'username or alias for the org that the compute environment should be connected to',
     required: false,
-  })
+  }),
+
+  keyValueFlag: flags.build({
+    description: 'key-value pair (i.e. mykey=somevalue)',
+    parse(input) {
+      const [key, ...rest] = input.split('=')
+      const value = rest.join('=')
+
+      if (!value) {
+        throw new CLIError(`--${this.name}=${input} must be a valid key-value pair (i.e. mykey=somevalue)`)
+      }
+
+      return {key, value}
+    },
+  }),
 }
 
 export const environmentType = flags.string({
@@ -25,31 +40,16 @@ export const environmentType = flags.string({
 
 export const confirmationFlag = flags.string({
   char: 'c',
-  required: false,
   description: 'confirmation name',
   helpValue: 'name',
   multiple: true,
-}) as flags.IOptionFlag<string[]>
+})
 
 export const waitFlag = flags.boolean({
   char: 'w',
   required: false,
   description: 'wait until complete to exit',
 }) as IBooleanFlag<'boolean'>
-
-export const keyValueFlag = flags.build({
-  description: 'key-value pair (i.e. mykey=somevalue)',
-  parse(input) {
-    const [key, ...rest] = input.split('=')
-    const value = rest.join('=')
-
-    if (!value) {
-      throw new CLIError(`--${this.name}=${input} must be a valid key-value pair (i.e. mykey=somevalue)`)
-    }
-
-    return {key, value}
-  },
-})
 
 export const FunctionsTableFlags: flags.Input<any> = {
   // only let supertable alternatively

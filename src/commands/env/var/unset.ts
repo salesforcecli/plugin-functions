@@ -13,14 +13,16 @@ export default class ConfigUnset extends Command {
   ]
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment(),
+    environment: FunctionsFlagBuilder.environment({
+      required: true,
+    }),
   }
 
   async run() {
     const {flags, argv} = this.parse(ConfigUnset)
     const {environment} = flags
 
-    const appName = await this.resolveAppNameForEnvironment(environment!)
+    const appName = await this.resolveAppNameForEnvironment(environment)
 
     const configPairs = argv.reduce((acc, elem) => {
       return {
@@ -29,7 +31,7 @@ export default class ConfigUnset extends Command {
       }
     }, {})
 
-    cli.action.start(`Unsetting ${Object.keys(configPairs).map(key => herokuColor.configVar(key)).join(', ')} and restarting ${herokuColor.app(environment!)}`)
+    cli.action.start(`Unsetting ${Object.keys(configPairs).map(key => herokuColor.configVar(key)).join(', ')} and restarting ${herokuColor.app(environment)}`)
 
     await this.client.patch(`/apps/${appName}/config-vars`, {
       data: configPairs,

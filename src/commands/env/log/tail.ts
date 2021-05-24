@@ -90,6 +90,7 @@ export default class LogTail extends Command {
   static flags = {
     environment: FunctionsFlagBuilder.environment({
       description: 'environment name to retrieve logs',
+      required: true,
     }),
   }
 
@@ -97,7 +98,7 @@ export default class LogTail extends Command {
     const {flags} = this.parse(LogTail)
     const {environment} = flags
 
-    const appName = await this.resolveAppNameForEnvironment(environment!)
+    const appName = await this.resolveAppNameForEnvironment(environment)
 
     const response = await this.client.post<Heroku.LogSession>(`/apps/${appName}/log-sessions`, {
       data: {

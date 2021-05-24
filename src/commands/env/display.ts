@@ -18,7 +18,9 @@ export default class EnvDelete extends Command {
   ]
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment(),
+    environment: FunctionsFlagBuilder.environment({
+      required: true,
+    }),
     verbose: flags.boolean({
       description: 'verbose display output',
     }),
@@ -69,7 +71,7 @@ export default class EnvDelete extends Command {
     }
 
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-    const appName = await this.resolveAppNameForEnvironment(environment!)
+    const appName = await this.resolveAppNameForEnvironment(environment)
 
     try {
       // If app exists, environment details will be displayed
