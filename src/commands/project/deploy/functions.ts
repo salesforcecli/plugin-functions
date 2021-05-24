@@ -11,6 +11,7 @@ import Git from '../../../lib/git'
 import {resolveFunctionsPaths} from '../../../lib/path-utils'
 import {parseProjectToml} from '../../../lib/project-toml'
 import {ComputeEnvironment, FunctionReference, SfdxProjectConfig} from '../../../lib/sfdc-types'
+import {FunctionsFlagBuilder} from '../../../lib/flags'
 
 const debug = debugFactory('project:deploy:functions')
 
@@ -23,9 +24,7 @@ export default class ProjectDeployFunctions extends Command {
   private git?: Git
 
   static flags = {
-    'connected-org': flags.string({
-      char: 'o',
-      description: 'deployment org username or alias',
+    'connected-org': FunctionsFlagBuilder.connectedOrg({
       required: true,
     }),
     branch: flags.string({

@@ -1,8 +1,7 @@
 import * as Heroku from '@heroku-cli/schema'
 import {cli} from 'cli-ux'
 import {flatMap} from 'lodash'
-import {flags} from '@oclif/command'
-
+import {FunctionsFlagBuilder} from '../../../lib/flags'
 import Command from '../../../lib/base'
 
 export default class ConfigList extends Command {
@@ -13,7 +12,7 @@ export default class ConfigList extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
+    environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
   }

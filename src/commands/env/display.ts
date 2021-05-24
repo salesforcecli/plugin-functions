@@ -4,6 +4,7 @@ import {cli} from 'cli-ux'
 import Command from '../../lib/base'
 import {resolveFunctionsPaths} from '../../lib/path-utils'
 import {ComputeEnvironment} from '../../lib/sfdc-types'
+import {FunctionsFlagBuilder} from '../../lib/flags'
 import herokuVariant from '../../lib/heroku-variant'
 import {OrgListUtil} from '@salesforce/plugin-org/lib/shared/orgListUtil'
 import {getAliasByUsername} from '@salesforce/plugin-org/lib/shared/utils'
@@ -17,9 +18,7 @@ export default class EnvDelete extends Command {
   ]
 
   static flags = {
-    environment: flags.string({
-      char: 'e',
-      description: 'environment name or alias',
+    environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
     verbose: flags.boolean({
