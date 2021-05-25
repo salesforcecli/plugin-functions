@@ -42,6 +42,8 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 * [`sfdx generate:project`](#sfdx-generateproject)
 * [`sfdx login:functions`](#sfdx-loginfunctions)
 * [`sfdx project:deploy:functions`](#sfdx-projectdeployfunctions)
+* [`sfdx run:function`](#sfdx-runfunction)
+* [`sfdx run:function:start`](#sfdx-runfunctionstart)
 
 ## `sfdx env:create:compute`
 
@@ -306,4 +308,58 @@ OPTIONS
 ```
 
 _See code: [src/commands/project/deploy/functions.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.0.8/src/commands/project/deploy/functions.ts)_
+
+## `sfdx run:function`
+
+send a cloudevent to a function
+
+```
+USAGE
+  $ sfdx run:function
+
+OPTIONS
+  -H, --headers=headers                set headers
+  -p, --payload=payload                set the payload of the cloudevent. also accepts @file.txt format
+  -t, --targetusername=targetusername  username or alias for the target org; overrides default target org
+  -u, --url=url                        (required) url of the function to run
+  --structured                         set the cloudevent to be emitted as a structured cloudevent (json)
+
+EXAMPLE
+
+       $ sfdx run:function -u http://localhost:8080 -p '{"id": 12345}'
+       $ sfdx run:function -u http://localhost:8080 -p '@file.json'
+       $ echo '{"id": 12345}' | sfdx run:function -u http://localhost:8080
+       $ sfdx run:function -u http://localhost:8080 -p '{"id": 12345}' --structured
+```
+
+_See code: [src/commands/run/function.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.0.8/src/commands/run/function.ts)_
+
+## `sfdx run:function:start`
+
+build and run function image locally
+
+```
+USAGE
+  $ sfdx run:function:start
+
+OPTIONS
+  -d, --debug-port=debug-port  [default: 9229] port for remote debugging
+  -e, --env=env                set environment variables (provided during build and run)
+  -p, --port=port              [default: 8080] port for running the function
+  -v, --verbose                output additional logs
+  --clear-cache                clear associated cache before executing.
+
+  --network=network            Connect and build containers to a network. This can be useful to build containers which
+                               require a local resource.
+
+  --no-pull                    skip pulling builder image before use
+
+EXAMPLE
+
+       $ sfdx run:function:start
+       $ sfdx run:function:start -e VAR=VALUE
+       $ sfdx run:function:start --network host --no-pull --clear-cache --debug-port 9000 --port 5000
+```
+
+_See code: [src/commands/run/function/start.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.0.8/src/commands/run/function/start.ts)_
 <!-- commandsstop -->
