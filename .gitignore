@@ -7,13 +7,8 @@
 /tmp
 node_modules
 oclif.manifest.json
-.DS_Store
-.vscode
 
 # Adding for sfdx trust signing
 *.tgz
 *.sig
 package.json.bak
-
-# ignore downloaded benny binary
-/bin/benny-*
