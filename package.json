@@ -83,7 +83,8 @@
     "/bin",
     "/lib",
     "/templates",
-    "/oclif.manifest.json"
+    "/oclif.manifest.json",
+    "/priv/public.key"
   ],
   "homepage": "https://github.com/heroku/sf-plugin-functions",
   "keywords": [
