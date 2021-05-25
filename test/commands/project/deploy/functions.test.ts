@@ -1,4 +1,5 @@
 import {expect, test} from '@oclif/test'
+import {CLIError} from '@oclif/errors'
 import {Org, SfdxProject} from '@salesforce/core'
 import * as sinon from 'sinon'
 import ProjectDeployFunctions from '../../../../src/commands/project/deploy/functions'
@@ -34,6 +35,12 @@ const USERNAME = 'fakeusername@salesforce.com'
 
 const METADATA_MOCK = {
   upsert: (type: string, ref: any) => {
+    if (ref.fullName.includes('error')) {
+      return {
+        fullName: ref.fullName,
+        success: false,
+      }
+    }
     return {
       fullName: ref.fullName,
       success: true,
@@ -405,5 +412,52 @@ describe('sf project deploy functions', () => {
   .command(['project:deploy:functions', '--connected-org=my-scratch-org', '--quiet'])
   .it('does not print stdout in quiet mode', ctx => {
     expect(ctx.stdout).to.not.include('STDOUT')
+  })
+
+  // With errors
+  test
+  .stdout()
+  .stderr()
+  .do(() => {
+    sandbox.stub(Git.prototype as any, 'hasUnpushedFiles').returns(false)
+    sandbox.stub(Git.prototype, 'status' as any).returns('On branch main')
+    const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any)
+    gitExecStub
+    .withArgs(sinon.match.array.startsWith(['push']))
+    .returns({stdout: '', stderr: ''})
+
+    sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK)
+    sandbox.stub(Org, 'create' as any).returns(ORG_MOCK)
+
+    const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any)
+    netrcStub.withArgs('login').returns('login')
+    netrcStub.withArgs('password').returns('password')
+
+    sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns([
+      ...FUNCTION_REFS_MOCK,
+      {
+        fullName: 'sweet_project-fnerror',
+        label: 'fnerror',
+        description: 'description',
+      },
+    ])
+  })
+  .finally(() => {
+    sandbox.restore()
+  })
+  .nock('https://api.heroku.com', api => {
+    api
+    .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
+    .reply(200, ENVIRONMENT_MOCK)
+  })
+  .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
+  .catch(error => {
+    expect((error as CLIError).oclif.exit).to.equal(1)
+  })
+  .it('exits non-zero but continues deploying when one of your function references fails', ctx => {
+    expect(ctx.stdout).to.include('Reference for sweet_project-fn1 created')
+    expect(ctx.stdout).to.include('Reference for sweet_project-fn2 created')
+    expect(ctx.stderr).to.include('Unable to deploy FunctionReference for sweet_project-fnerror.')
+    expect(ctx.stderr).to.not.include('Reference for sweet_project-fnerror created')
   })
 })
