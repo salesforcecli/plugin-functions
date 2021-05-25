@@ -63,7 +63,7 @@ EXAMPLES
   $ sfdx env:create:compute --connected-org my-scratch-org
 ```
 
-_See code: [src/commands/env/create/compute.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/create/compute.ts)_
+_See code: [src/commands/env/create/compute.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/create/compute.ts)_
 
 ## `sfdx env:delete`
 
@@ -82,7 +82,7 @@ EXAMPLES
   $ sfdx env:delete --environment=billingApp-Scratch1 --confirm=billingApp-Scratch1
 ```
 
-_See code: [src/commands/env/delete.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/delete.ts)_
+_See code: [src/commands/env/delete.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/delete.ts)_
 
 ## `sfdx env:display`
 
@@ -100,7 +100,7 @@ EXAMPLE
   $ sfdx env:display --environment=billingApp-Scratch1
 ```
 
-_See code: [src/commands/env/display.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/display.ts)_
+_See code: [src/commands/env/display.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/display.ts)_
 
 ## `sfdx env:list`
 
@@ -123,7 +123,7 @@ EXAMPLES
   $ sfdx env:list --environment-type org --environment-type compute
 ```
 
-_See code: [src/commands/env/list.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/list.ts)_
+_See code: [src/commands/env/list.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/list.ts)_
 
 ## `sfdx env:logdrain:add`
 
@@ -141,7 +141,7 @@ EXAMPLE
   $ sfdx env:logdrain:add --environment=billingApp-Sandbox --url=https://example.com/drain
 ```
 
-_See code: [src/commands/env/logdrain/add.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/logdrain/add.ts)_
+_See code: [src/commands/env/logdrain/add.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/logdrain/add.ts)_
 
 ## `sfdx env:logdrain:list`
 
@@ -159,7 +159,7 @@ EXAMPLE
   $ sfdx env:logdrain:list --environment=billingApp-Sandbox
 ```
 
-_See code: [src/commands/env/logdrain/list.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/logdrain/list.ts)_
+_See code: [src/commands/env/logdrain/list.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/logdrain/list.ts)_
 
 ## `sfdx env:logdrain:remove`
 
@@ -177,7 +177,7 @@ EXAMPLE
   $ sfdx env:logdrain:remove --environment=billingApp-Sandbox --url=syslog://syslog-a.logdna.com:11137
 ```
 
-_See code: [src/commands/env/logdrain/remove.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/logdrain/remove.ts)_
+_See code: [src/commands/env/logdrain/remove.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/logdrain/remove.ts)_
 
 ## `sfdx env:var:get KEY`
 
@@ -194,7 +194,7 @@ EXAMPLE
   $ sfdx env:var:get foo --environment=my-environment
 ```
 
-_See code: [src/commands/env/var/get.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/var/get.ts)_
+_See code: [src/commands/env/var/get.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/var/get.ts)_
 
 ## `sfdx env:var:list`
 
@@ -211,7 +211,7 @@ EXAMPLE
   $ sfdx env:var:list --environment=my-environment
 ```
 
-_See code: [src/commands/env/var/list.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/var/list.ts)_
+_See code: [src/commands/env/var/list.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/var/list.ts)_
 
 ## `sfdx env:var:set`
 
@@ -228,7 +228,7 @@ EXAMPLE
   $ sfdx env:var:set foo=bar --environment=my-environment
 ```
 
-_See code: [src/commands/env/var/set.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/var/set.ts)_
+_See code: [src/commands/env/var/set.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/var/set.ts)_
 
 ## `sfdx env:var:unset`
 
@@ -245,7 +245,7 @@ EXAMPLE
   $ sfdx env:var:unset foo --environment=my-environment
 ```
 
-_See code: [src/commands/env/var/unset.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/env/var/unset.ts)_
+_See code: [src/commands/env/var/unset.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/env/var/unset.ts)_
 
 ## `sfdx generate:function`
 
@@ -266,7 +266,7 @@ EXAMPLE
   $ sfdx evergreen:function:create MyFunction --language=javascript
 ```
 
-_See code: [src/commands/generate/function.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/generate/function.ts)_
+_See code: [src/commands/generate/function.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/generate/function.ts)_
 
 ## `sfdx generate:project`
 
@@ -278,7 +278,7 @@ OPTIONS
   -n, --name=name  (required) name of the generated project
 ```
 
-_See code: [src/commands/generate/project.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/generate/project.ts)_
+_See code: [src/commands/generate/project.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/generate/project.ts)_
 
 ## `sfdx login:functions`
 
@@ -292,7 +292,7 @@ EXAMPLE
   $ sfdx login:functions
 ```
 
-_See code: [src/commands/login/functions.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/login/functions.ts)_
+_See code: [src/commands/login/functions.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/login/functions.ts)_
 
 ## `sfdx project:deploy:functions`
 
@@ -311,7 +311,7 @@ OPTIONS
   --force                            ignore warnings and overwrite remote repository (not allowed in production)
 ```
 
-_See code: [src/commands/project/deploy/functions.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/project/deploy/functions.ts)_
+_See code: [src/commands/project/deploy/functions.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/project/deploy/functions.ts)_
 
 ## `sfdx run:function`
 
@@ -336,7 +336,7 @@ EXAMPLE
        $ sfdx run:function -u http://localhost:8080 -p '{"id": 12345}' --structured
 ```
 
-_See code: [src/commands/run/function.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/run/function.ts)_
+_See code: [src/commands/run/function.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/run/function.ts)_
 
 ## `sfdx run:function:start`
 
@@ -365,5 +365,5 @@ EXAMPLE
        $ sfdx run:function:start --network host --no-pull --clear-cache --debug-port 9000 --port 5000
 ```
 
-_See code: [src/commands/run/function/start.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.2/src/commands/run/function/start.ts)_
+_See code: [src/commands/run/function/start.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.3/src/commands/run/function/start.ts)_
 <!-- commandsstop -->
