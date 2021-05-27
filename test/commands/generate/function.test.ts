@@ -120,8 +120,8 @@ describe('sf generate:function', () => {
   .stub(fs, 'mkdirpSync', sandbox.stub())
   .stub(fs, 'outputFileSync', sandbox.stub())
   .stub(pathUtils, 'resolveFunctionsPaths', sandbox.stub().throws({message: 'No functions directory found.'}))
-  .stdout({print: true})
-  .stderr({print: true})
+  .stdout()
+  .stderr()
   .finally(() => {
     sandbox.restore()
   })
