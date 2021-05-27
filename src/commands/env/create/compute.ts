@@ -6,6 +6,13 @@ import {cli} from 'cli-ux'
 import {format} from 'date-fns'
 import Command from '../../../lib/base'
 import {FunctionsFlagBuilder} from '../../../lib/flags'
+import pollForResult from '../../../lib/poll-for-result'
+
+interface SfFunctionsConnectionRecord {
+  Id: string;
+  Status: 'TrustedUniDirection' | 'TrustedBiDirection';
+  Error?: string;
+}
 
 export default class EnvCreateCompute extends Command {
   static description = 'create a compute environment for use with Salesforce Functions'
@@ -51,6 +58,45 @@ export default class EnvCreateCompute extends Command {
     if (!projectName) {
       this.error('No project name found in sfdx-project.json.')
     }
+
+    const connection = org.getConnection()
+
+    await pollForResult(async () => {
+      // This query allows us to verify that the org connection has actually been created before
+      // attempting to create a compute environment. If we don't wait for this to happen, environment
+      // creation will fail since Heroku doesn't yet know about the org
+      const response = await connection.query<SfFunctionsConnectionRecord>(`SELECT
+        Id,
+        Status,
+        Error
+        FROM SfFunctionsConnection`,
+      )
+
+      // If it's a newly created org, we likely won't get anything back for the first few iterations,
+      // we keep polling
+      if (!response.records.length) {
+        return false
+      }
+
+      const record: SfFunctionsConnectionRecord = response.records[0]
+
+      // This error is also expected when working with a newly created org. This error just means
+      // that the devhub hasn't yet enabled functions on the new org (this is an automated async process
+      // so it takes a bit of time)
+      if (record.Error === 'Enable Salesforce Functions from Setup Page') {
+        return false
+      }
+
+      // If there is any other error besides the one mentioned above, something is actually wrong
+      // and we should bail
+      if (record.Error) {
+        this.error(record.Error)
+      }
+
+      // This is the go signal. Once we have this status it means that the connection is fully up
+      // and running, and we are good to create a compute environment.
+      return record.Status === 'TrustedBiDirection'
+    })
 
     try {
       const {data: app} = await this.client.post<Heroku.App>(`/sales-org-connections/${orgId}/apps`, {
