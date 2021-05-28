@@ -1,11 +1,8 @@
-import herokuColor from '@heroku-cli/color'
 import {Command, flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 import * as path from 'path'
 
-import Benny from '../../../benny'
-import {updateBenny} from '../../../install-benny'
-import Util from '../../../util'
+import {OutputEvent, StartFunction} from '@salesforce/functions-core'
 
 export default class Start extends Command {
   static description = 'build and run function image locally'
@@ -70,76 +67,28 @@ export default class Start extends Command {
 
   async run() {
     const {flags} = this.parse(Start)
-    const buildOpts = {
-      builder: flags.builder,
-      'clear-cache': flags['clear-cache'],
-      'no-pull': flags['no-pull'],
-      network: flags.network,
-      env: flags.env,
-      descriptor: flags.descriptor ?? path.resolve(flags.path, 'project.toml'),
-      path: flags.path,
-    }
+    const startFunction = new StartFunction()
 
-    const runOpts = {
-      port: flags.port,
-      'debug-port': flags['debug-port'],
-      env: flags.env,
-    }
-    let descriptor
-    try {
-      descriptor = await Util.getProjectDescriptor(buildOpts.descriptor)
-    } catch (error) {
-      cli.error(error)
-    }
-    await updateBenny()
-
-    const functionName = descriptor.com.salesforce.id
-
-    const benny = new Benny()
-
-    const writeMsg = (msg: {
-        text: string;
-        timestamp: string;
-    }) => {
-      const outputMsg = msg.text
-
-      if (outputMsg) {
-        cli.info(outputMsg)
-      }
-    }
-
-    benny.on('pack', writeMsg)
-    benny.on('container', writeMsg)
-
-    benny.on('error', msg => {
-      cli.error(msg.text, {exit: false})
+    const types: string[] = ['error', 'warn', 'debug', 'log']
+    types.forEach((event:string) => {
+      startFunction.on(event as OutputEvent, (data:string) => {
+        // Have to reassign cli to the type of any to dodge TypeScript errors
+        const cliA:any = cli
+        // Calls cli.debug, cli.error, cli.warn etc accordingly
+        cliA[event](data)
+      })
+    })
+    startFunction.on('json', (data:string) => {
+      cli.styledJSON(data)
+    })
+    startFunction.on('start_action', (data:string) => {
+      cli.action.start(data)
     })
 
-    benny.on('log', msg => {
-      if (msg.level === 'debug' && !flags.verbose) return
-      if (msg.level === 'error') {
-        cli.exit()
-      }
-
-      if (msg.text) {
-        cli.info(msg.text)
-      }
-
-      // evergreen:benny:message {"type":"log","timestamp":"2021-05-10T10:00:27.953248-05:00","level":"info","fields":{"debugPort":"9229","localImageName":"jvm-fn-init","network":"","port":"8080"}} +21ms
-      if (msg.fields && msg.fields.localImageName) {
-        this.log(`${herokuColor.magenta('Running on port')} :${herokuColor.cyan(msg.fields.port)}`)
-        this.log(`${herokuColor.magenta('Debugger running on port')} :${herokuColor.cyan(msg.fields.debugPort)}`)
-      }
+    startFunction.on('stop_action', (data:string) => {
+      cli.action.stop(data)
     })
-
-    if (!flags['no-build']) {
-      this.log(`${herokuColor.magenta('Building')} ${herokuColor.cyan(functionName)}`)
-      await benny.build(functionName, buildOpts)
-    }
-
-    if (!flags['no-run']) {
-      this.log(`${herokuColor.magenta('Starting')} ${herokuColor.cyan(functionName)}`)
-      await benny.run(functionName, runOpts)
-    }
+    // TODO: Maybe specify the flag type?
+    startFunction.execute(flags as any)
   }
 }
