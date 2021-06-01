@@ -1,9 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import {cli} from 'cli-ux'
 import * as fs from 'fs'
 import getStdin from '../../lib/get-stdin'
-import {OutputEvent, RunFunction, RunFunctionOptions} from '@salesforce/functions-core'
-
+import {RunFunction, RunFunctionOptions} from '@salesforce/functions-core'
+import Util from '../../util'
 export default class Invoke extends Command {
   static description = 'send a cloudevent to a function'
 
@@ -47,25 +46,8 @@ export default class Invoke extends Command {
 
     const runFunction = new RunFunction()
 
-    const types: string[] = ['error', 'warn', 'debug', 'log']
-    types.forEach((event:string) => {
-      runFunction.on(event as OutputEvent, (data:string) => {
-        // Have to reassign cli to the type of any to dodge TypeScript errors
-        const cliA:any = cli
-        // Calls cli.debug, cli.error, cli.warn etc accordingly
-        cliA[event](data)
-      })
-    })
-    runFunction.on('json', (data:string) => {
-      cli.styledJSON(data)
-    })
-    runFunction.on('start_action', (data:string) => {
-      cli.action.start(data)
-    })
+    Util.outputSfFunctionCommandEvents(runFunction)
 
-    runFunction.on('stop_action', (data:string) => {
-      cli.action.stop(data)
-    })
     runFunction.execute(flags as RunFunctionOptions)
   }
 

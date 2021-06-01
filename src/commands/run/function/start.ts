@@ -1,9 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import {cli} from 'cli-ux'
 import * as path from 'path'
 
-import {OutputEvent, StartFunction} from '@salesforce/functions-core'
-
+import {StartFunction} from '@salesforce/functions-core'
+import Util from '../../../util'
 export default class Start extends Command {
   static description = 'build and run function image locally'
 
@@ -69,26 +68,8 @@ export default class Start extends Command {
     const {flags} = this.parse(Start)
     const startFunction = new StartFunction()
 
-    const types: string[] = ['error', 'warn', 'debug', 'log']
-    types.forEach((event:string) => {
-      startFunction.on(event as OutputEvent, (data:string) => {
-        // Have to reassign cli to the type of any to dodge TypeScript errors
-        const cliA:any = cli
-        // Calls cli.debug, cli.error, cli.warn etc accordingly
-        cliA[event](data)
-      })
-    })
-    startFunction.on('json', (data:string) => {
-      cli.styledJSON(data)
-    })
-    startFunction.on('start_action', (data:string) => {
-      cli.action.start(data)
-    })
+    Util.outputSfFunctionCommandEvents(startFunction)
 
-    startFunction.on('stop_action', (data:string) => {
-      cli.action.stop(data)
-    })
-    // TODO: Maybe specify the flag type?
     startFunction.execute(flags as any)
   }
 }
