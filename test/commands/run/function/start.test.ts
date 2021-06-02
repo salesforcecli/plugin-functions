@@ -1,156 +1,76 @@
-import {ProjectDescriptor} from '@heroku/project-descriptor'
 import {expect, test} from '@oclif/test'
 import * as events from 'events'
 import * as sinon from 'sinon'
-import * as installBenny from '../../../../src/install-benny'
-import Benny from '../../../../src/benny'
+
+import {OutputEvent, StartFunction} from '@salesforce/functions-core'
 
 describe('function:start', () => {
   let sandbox: sinon.SinonSandbox
-  let bennyStub: any
-  let runStub: sinon.SinonStub<[string, {
-    port: number | undefined;
-    'debug-port': number | undefined;
-    env: string[];
-  }], Promise<unknown>>
-  let buildStub: any
+  let startFunctionStub: sinon.SinonStub
+  let startFunctionOutputStub: sinon.SinonStub
   beforeEach(() => {
     sandbox = sinon.createSandbox()
-    buildStub = sandbox.stub(Benny.prototype, 'build')
-    runStub = sandbox.stub(Benny.prototype, 'run')
-    bennyStub = sandbox.stub(installBenny, 'updateBenny')
+    startFunctionStub = sandbox.stub(StartFunction.prototype, 'execute')
+    startFunctionOutputStub = sandbox.stub(StartFunction.prototype, 'on')
+    startFunctionStub.returns(true)
   })
 
   afterEach(() => {
     sandbox.restore()
   })
 
-  context('with a builder name and a project.toml', () => {
-    beforeEach(() => {
-      sandbox.stub(ProjectDescriptor.prototype, 'parseFile').returns(Promise.resolve({com: {salesforce: {id: 'allthethingsfunction'}}}))
-    })
+  test
+  .command(['run:function:start'])
+  .it('Should call the library', async () => {
+    sinon.assert.calledOnce(startFunctionStub)
+  })
 
+  context('with arguments', () => {
     test
-    .command(['run:function:start', '--builder=heroku/function:test'])
-    .it('should call the run command correctly', () => {
-      sinon.assert.calledOnce(runStub)
+    .command(['run:function:start', '-v', '--no-pull', '--clear-cache'])
+    .it('Should call the library with flags as arguments', async () => {
+      sinon.assert.calledWith(startFunctionStub,
+        sinon.match.has('verbose')
+        .and(sinon.match.has('no-pull'))
+        .and(sinon.match.has('clear-cache')))
     })
-
     test
-    .command(['run:function:start', '--builder=heroku/function:test'])
-    .it('should call the build command correctly', () => { // WIP
-      expect(buildStub.calledWith(sinon.match.string, sinon.match.has('builder', 'heroku/function:test'))).to.be.true
-    })
-
-    test
-    .command(['run:function:start', '--builder=heroku/function:test'])
-    .it('should attempt to update benny to the latest version', () => {
-      sinon.assert.calledOnce(bennyStub)
+    .command(['run:function:start', '--debug-port=5001', '--port=5000', '--builder=heroku/function:test'])
+    .it('Should call the library with custom port and builder', async () => {
+      sinon.assert.calledWith(startFunctionStub, sinon.match({port: 5000, 'debug-port': 5001, builder: 'heroku/function:test'}))
     })
   })
 
-  context('with a network name', () => {
-    beforeEach(() => {
-      sandbox.stub(ProjectDescriptor.prototype, 'parseFile').returns(Promise.resolve({com: {salesforce: {id: 'allthethingsfunction'}}}))
-    })
-
-    test
-    .command(['run:function:start', '--network=host'])
-    .it('should call the build command correctly', () => {
-      sinon.assert.calledOnce(runStub)
-    })
-
-    test
-    .command(['run:function:start', '--network=host'])
-    .it('should call the run command correctly', () => {
-      expect(buildStub.calledWith(sinon.match.any, sinon.match.has('network', 'host'))).to.be.true
-    })
-
-    test
-    .command(['run:function:start', '--network=host'])
-    .it('should attempt to update benny to the latest version', () => {
-      sinon.assert.calledOnce(bennyStub)
-    })
-  })
-
-  context('with env set', () => {
-    beforeEach(() => {
-      sandbox.stub(ProjectDescriptor.prototype, 'parseFile').returns(Promise.resolve({com: {salesforce: {id: 'allthethingsfunction'}}}))
-    })
-
-    test
-    .command(['run:function:start', '-eVAL=1'])
-    .it('should call benny correctly with env', () => {
-      expect(runStub.calledWith(sinon.match.string, sinon.match.has('env', ['VAL=1']))).to.be.true
-    })
-  })
-
-  context('with a bunch of flags', () => {
-    beforeEach(() => {
-      sandbox.stub(ProjectDescriptor.prototype, 'parseFile').returns(Promise.resolve({com: {salesforce: {id: 'allthethingsfunction'}}}))
-    })
-
-    test
-    .command(['run:function:start', '--clear-cache', '--no-pull', '--port=5000', '--debug-port=5001'])
-    .it('should call the run command correctly', () => {
-      sinon.assert.calledWith(buildStub, sinon.match.string, sinon.match({
-        'clear-cache': true,
-        'no-pull': true,
-      }))
-      sinon.assert.calledWith(runStub, sinon.match.string, sinon.match({
-        'debug-port': 5001,
-        port: 5000,
-      }))
-    })
-
-    test
-    .command(['run:function:start', '-eVAL=1'])
-    .it('should attempt to update benny to the latest version', () => {
-      sinon.assert.calledOnce(bennyStub)
-    })
-  })
-
-  context('without a project.toml', () => {
-    beforeEach(() => {
-      sandbox.stub(ProjectDescriptor.prototype, 'parseFile').rejects(new Error('File Not Found'))
-    })
-
-    test
-    .command(['run:function:start', '--builder=heroku/function:test'])
-    .exit(2)
-    .it('should exit with an error code')
-
-    test
-    .command(['run:function:start', '--builder=heroku/function:test'])
-    .catch(/File Not Found/)
-    .it('should mention the error')
-  })
-
-  context('output', () => {
+  context('with output', () => {
+    process.stderr.isTTY = true
     let emitter: events.EventEmitter
-    beforeEach(() => {
+    beforeEach(async () => {
       emitter = new events.EventEmitter()
-      const emitterStub = sandbox.stub(Benny.prototype, 'getEmitter' as any)
-      emitterStub.returns(emitter)
-      sandbox.stub(ProjectDescriptor.prototype, 'parseFile').returns(Promise.resolve({com: {salesforce: {id: 'allthethingsfunction'}}}))
+      startFunctionOutputStub.callsFake((event: OutputEvent | symbol, listener: (...args: any[]) => void) => {
+        return emitter.on(event, listener)
+      })
     })
 
     test
     .stdout()
     .command(['run:function:start'])
-    .it('should attempt to update benny to the latest version', () => {
-      sinon.assert.calledOnce(bennyStub)
+    .it('Should log output', async ctx => {
+      emitter.emit('log', 'Something happened!')
+      expect(ctx.stdout).to.contain('Something happened!')
     })
 
     test
     .stderr()
-    .stub(process, 'exit', () => '')
     .command(['run:function:start'])
-    .it('should exit with failure', ctx => {
-      emitter.emit('error', {
-        text: 'fail!',
-      })
-      expect(ctx.stderr).to.contain('Error: fail!')
+    .it('Should log warnings', async ctx => {
+      emitter.emit('warn', 'Something went wrong!')
+      expect(ctx.stderr).to.contain('Warning: Something went wrong!')
+    })
+
+    test
+    .command(['run:function:start'])
+    .it('Should have all listeners set', () => {
+      expect(emitter.eventNames()).to.include.members(['error', 'log', 'warn', 'start_action', 'stop_action', 'debug', 'json'])
     })
   })
 })
