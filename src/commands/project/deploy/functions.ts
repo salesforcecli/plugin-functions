@@ -195,20 +195,20 @@ export default class ProjectDeployFunctions extends Command {
 
     let shouldExitNonZero = false
 
-    const results = await Promise.all(references.map(async reference => {
-      const result = await connection.metadata.upsert('FunctionReference', reference) as UpsertResult
+    const results = await connection.metadata.upsert('FunctionReference', references) as UpsertResult[]
+    results.forEach(result => {
+      console.log(result)
       if (!result.success) {
         shouldExitNonZero = true
-        cli.error(`Unable to deploy FunctionReference for ${reference.fullName}.`, {exit: false})
-        return result
+        cli.error(`Unable to deploy FunctionReference ${result.fullName}.`, {exit: false})
       }
 
       if (!flags.quiet) {
         this.log(`Reference for ${result.fullName} ${result.created ? herokuColor.cyan('created') : herokuColor.green('updated')}`)
       }
+    })
 
-      return result
-    }))
+    console.log(results)
 
     // Remove any function references for functions that no longer exist
     const successfulReferences = results.reduce(
