@@ -74,20 +74,12 @@
   "engines": {
     "node": ">=10.0.0"
   },
-  "benny": {
-    "name": "benny",
-    "bucket": "heroku-build-artifacts",
-    "major-version": "2"
-  },
   "files": [
-    "benny.d.ts",
-    "benny.js",
     "/bin",
     "/lib",
     "/templates",
-    "/oclif.manifest.json",
-    "/priv/public.key"
-  ],
+    "/oclif.manifest.json"
+    ],
   "homepage": "https://github.com/heroku/sf-plugin-functions",
   "keywords": [
     "oclif-plugin"
