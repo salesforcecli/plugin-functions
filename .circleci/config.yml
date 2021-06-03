@@ -1,9 +1,12 @@
 ---
 version: 2.1
 jobs:
-  node-16: &test
+  node:
+    parameters:
+      node-version:
+        type: string
     docker:
-      - image: node:16
+      - image: node:<< parameters.node-version >>
     working_directory: ~/cli
     steps:
       - checkout
@@ -18,16 +21,9 @@ jobs:
       - run:
           name: Testing
           command: yarn test
-  node-12:
-    <<: *test
-    docker:
-      - image: node:12
-  node-14:
-    <<: *test
-    docker:
-      - image: node:14
   cache:
-    <<: *test
+    docker:
+      - image: node:16
     steps:
       - checkout
       - run:
@@ -67,21 +63,26 @@ workflows:
   version: 2
   "sf-plugin-functions":
     jobs:
-      - node-16
-      - node-14
-      - node-12
-      - cache:
-          filters:
+      - node:
+          matrix:
+            parameters:
+              node-version:
+                - "12"
+                - "14"
+                - "16"
+          filters: &always_run
             tags:
-              only: /^v.*/
+              only: /.*/
             branches:
-              ignore: /.*/
+              only: /.*/
+          requires:
+            - cache
+      - cache:
+          filters: *always_run
       - release:
           context: functions-cli
           requires:
-            - node-16
-            - node-14
-            - node-12
+            - node
           filters:
             tags:
               only: /^v.*/
