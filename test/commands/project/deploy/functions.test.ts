@@ -34,18 +34,20 @@ const FUNCTION_REFS_MOCK = [
 const USERNAME = 'fakeusername@salesforce.com'
 
 const METADATA_MOCK = {
-  upsert: (type: string, ref: any) => {
-    if (ref.fullName.includes('error')) {
+  upsert: (type: string, refs: any[]) => {
+    return refs.map(ref => {
+      if (ref.fullName.includes('error')) {
+        return {
+          fullName: ref.fullName,
+          success: false,
+        }
+      }
       return {
         fullName: ref.fullName,
-        success: false,
+        success: true,
+        created: true,
       }
-    }
-    return {
-      fullName: ref.fullName,
-      success: true,
-      created: true,
-    }
+    })
   },
   list: () => {
     return FUNCTION_REFS_MOCK.map(ref => {
