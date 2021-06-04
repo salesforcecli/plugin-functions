@@ -57,8 +57,10 @@ jobs:
             echo unsafe-perm = true >> ~/.npmrc
             echo ${SALESFORCE_KEY} | base64 --decode > ~/salesforce-cli.key
       - run:
-          name: Sign and publish
-          command: ./bin/publish
+          # name: Sign and publish
+          # command: ./bin/publish
+          name: Publish unsigned
+          command: npm publish
 
 workflows:
   version: 2
