@@ -1,5 +1,11 @@
-import * as Heroku from '@heroku-cli/schema'
-import {JsonMap} from '@salesforce/ts-types'
+/*
+ * Copyright (c) 2020, salesforce.com, inc.
+ * All rights reserved.
+ * Licensed under the BSD 3-Clause license.
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+import * as Heroku from '@heroku-cli/schema';
+import { JsonMap } from '@salesforce/ts-types';
 
 export interface SfdcAccount extends Heroku.Account {
   salesforce_org: {
@@ -28,9 +34,9 @@ export interface ComputeEnvironment extends Heroku.App {
 
 export type Dictionary<T> = {
   [key: string]: T;
-}
+};
 
-export interface SfdxProjectConfig extends JsonMap{
+export interface SfdxProjectConfig extends JsonMap {
   name: string;
   namespace: string;
 }

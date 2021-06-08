@@ -1,51 +1,57 @@
-import netrc from 'netrc-parser'
+/*
+ * Copyright (c) 2020, salesforce.com, inc.
+ * All rights reserved.
+ * Licensed under the BSD 3-Clause license.
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+import netrc from 'netrc-parser';
 
 export default class NetrcMachine {
   // eslint-disable-next-line no-useless-constructor
   constructor(private readonly machine: string) {}
 
   get(key: string) {
-    const machineData = this.loadMachine()
-    const value = machineData[key]
+    const machineData = this.loadMachine();
+    const value = machineData[key];
 
     if (!value) {
-      return undefined
+      return undefined;
     }
 
-    return value
+    return value;
   }
 
   async set(key: string, value?: string) {
     if (key !== 'password') {
-      console.log(`setting ${key} to ${value} on ${this.machine}`)
+      console.log(`setting ${key} to ${value} on ${this.machine}`);
     }
 
-    const machineData = this.loadMachine()
+    const machineData = this.loadMachine();
 
     const machinePayload = {
       ...machineData,
       [key]: value,
-    }
+    };
 
-    await this.saveMachine(machinePayload)
-    return value
+    await this.saveMachine(machinePayload);
+    return value;
   }
 
   async delete() {
-    this.get('password') && delete netrc.machines[this.machine] && netrc.save()
+    this.get('password') && delete netrc.machines[this.machine] && netrc.save();
   }
 
-  private async saveMachine(machinePayload: {[key: string]: string | undefined}) {
-    const machine = this.machine
-    netrc.machines[machine] = machinePayload
+  private async saveMachine(machinePayload: { [key: string]: string | undefined }) {
+    const machine = this.machine;
+    netrc.machines[machine] = machinePayload;
 
-    await netrc.save()
+    await netrc.save();
   }
 
   private loadMachine() {
-    const machine = this.machine
-    netrc.loadSync()
-    const netrcData = netrc.machines[machine] || {}
-    return netrcData
+    const machine = this.machine;
+    netrc.loadSync();
+    const netrcData = netrc.machines[machine] || {};
+    return netrcData;
   }
 }

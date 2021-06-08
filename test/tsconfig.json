@@ -1,9 +1,8 @@
 {
-  "extends": "../tsconfig",
+  "extends": "@salesforce/dev-config/tsconfig-test",
+  "include": ["./**/*.ts"],
   "compilerOptions": {
-    "noEmit": true
-  },
-  "references": [
-    {"path": ".."}
-  ]
+    "noEmit": true,
+    "skipLibCheck": true
+  }
 }
