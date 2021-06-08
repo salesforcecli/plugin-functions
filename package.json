@@ -6,7 +6,7 @@
   "bin": {
     "functions": "./bin/run"
   },
-  "bugs": "https://github.com/heroku/sf-plugin-functions/issues",
+  "bugs": "https://github.com/salesforcecli/plugin-functions/issues",
   "dependencies": {
     "@heroku-cli/color": "^1.1.14",
     "@heroku-cli/schema": "^1.0.25",
@@ -88,7 +88,7 @@
     "/oclif.manifest.json",
     "/priv/public.key"
   ],
-  "homepage": "https://github.com/heroku/sf-plugin-functions",
+  "homepage": "https://github.com/salesforcecli/plugin-functions",
   "keywords": [
     "oclif-plugin"
   ],
@@ -104,7 +104,7 @@
       "@oclif/plugin-which"
     ]
   },
-  "repository": "heroku/sf-plugin-functions",
+  "repository": "salesforcecli/plugin-functions",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
