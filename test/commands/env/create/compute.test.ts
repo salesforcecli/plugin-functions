@@ -13,6 +13,13 @@ const CONN_MOCK = {
   metadata: {
     list: sinon.stub(),
   },
+  query: sinon.stub().returns({
+    records: [
+      {
+        Status: 'TrustedBiDirection',
+      },
+    ],
+  }),
 }
 
 const ORG_MOCK = {
