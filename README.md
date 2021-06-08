@@ -31,6 +31,7 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 * [`sfdx env:delete`](#sfdx-envdelete)
 * [`sfdx env:display`](#sfdx-envdisplay)
 * [`sfdx env:list`](#sfdx-envlist)
+* [`sfdx env:log:tail`](#sfdx-envlogtail)
 * [`sfdx env:logdrain:add`](#sfdx-envlogdrainadd)
 * [`sfdx env:logdrain:list`](#sfdx-envlogdrainlist)
 * [`sfdx env:logdrain:remove`](#sfdx-envlogdrainremove)
@@ -124,6 +125,23 @@ EXAMPLES
 ```
 
 _See code: [src/commands/env/list.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.5/src/commands/env/list.ts)_
+
+## `sfdx env:log:tail`
+
+stream log output for an environment
+
+```
+USAGE
+  $ sfdx env:log:tail
+
+OPTIONS
+  -e, --environment=environment  (required) environment name to retrieve logs
+
+EXAMPLE
+  sfdx env:log:tail --environment=billingApp-Scratch1
+```
+
+_See code: [src/commands/env/log/tail.ts](https://github.com/heroku/sf-plugin-functions/blob/v0.1.5/src/commands/env/log/tail.ts)_
 
 ## `sfdx env:logdrain:add`
 
