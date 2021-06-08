@@ -114,7 +114,7 @@ export default class EnvList extends Command {
     return Promise.all(envs.map(async env => {
       return {
         ...env,
-        alias: await this.resolveAliasForValue(env.name!),
+        alias: await this.resolveAliasForValue(env.id!),
       }
     }))
   }
