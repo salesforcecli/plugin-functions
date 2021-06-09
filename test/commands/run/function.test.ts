@@ -103,7 +103,7 @@ describe('run:function', () => {
     sandbox.restore();
   });
 
-  context.skip('without a url', () => {
+  context('without a url', () => {
     test.command(['run:function']).exit(2).it('should exit with an error code');
 
     test.command(['run:function']).catch(/url/).it('should mention the missing argument');
