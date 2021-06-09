@@ -63,10 +63,11 @@ describe('sf generate:function', () => {
       expect(fs.outputFileSync).to.not.have.been.called;
     });
 
-  testTemplate('typescript', '../../../sfdx-project.json').it(
+  testTemplate('typescript', path.join('..', '..', '..', 'sfdx-project.json')).it(
     'generates a function even if called from below the root of a project',
     () => {
-      expect(fs.outputFileSync).to.have.been.calledWith('../../../functions/myfn/index.ts');
+      const expectedPath = path.join('..', '..', '..', 'functions', 'myfn', 'index.ts');
+      expect(fs.outputFileSync).to.have.been.calledWith(expectedPath);
     }
   );
 

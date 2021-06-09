@@ -27,6 +27,6 @@ describe('sf env:var:get', () => {
     .nock('https://api.heroku.com', (api) => api.get('/apps/my-environment/config-vars').reply(200, {}))
     .command(['env:var:get', 'foo', '--environment', 'my-environment'])
     .it('shows a message when the config var is not defined', (ctx) => {
-      expect(ctx.stderr).to.include(' ›   Warning: No config var named foo found for environment my-environment\n');
+      expect(ctx.stderr).to.include('Warning: No config var named foo found for environment my-environment');
     });
 });
