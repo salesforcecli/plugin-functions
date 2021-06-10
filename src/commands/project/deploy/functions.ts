@@ -10,7 +10,6 @@ import herokuColor from '@heroku-cli/color';
 import { flags } from '@oclif/command';
 import { cli } from 'cli-ux';
 import debugFactory from 'debug';
-import { UpsertResult } from 'jsforce';
 import { differenceWith, isEqual } from 'lodash';
 import Command from '../../../lib/base';
 import Git from '../../../lib/git';
@@ -201,7 +200,15 @@ export default class ProjectDeployFunctions extends Command {
 
     let shouldExitNonZero = false;
 
-    const results = (await connection.metadata.upsert('FunctionReference', references)) as UpsertResult[];
+    let results = await connection.metadata.upsert('FunctionReference', references);
+
+    if (!Array.isArray(results)) {
+      // We do this because the salesforce returns a single object instead of an array even if you
+      // passed an array in. Rather than forking all the following code to work for both cases,
+      // we simply put the one result into an array and proceed like normal.
+      results = [results];
+    }
+
     results.forEach((result) => {
       if (!result.success) {
         shouldExitNonZero = true;
