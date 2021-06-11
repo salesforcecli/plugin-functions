@@ -1,18 +1,16 @@
-sf-plugin-functions
-===================
+# plugin-functions
 
 Functions plugin for the SF CLI
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/sf-plugin-functions.svg)](https://npmjs.org/package/sf-plugin-functions)
-[![CircleCI](https://circleci.com/gh/salesforcecli/plugin-functions/tree/master.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-functions/tree/master)
-[![Downloads/week](https://img.shields.io/npm/dw/sf-plugin-functions.svg)](https://npmjs.org/package/sf-plugin-functions)
-[![License](https://img.shields.io/npm/l/sf-plugin-functions.svg)](https://github.com/heroku/sf-plugin-functions/blob/master/package.json)
+[![NPM](https://img.shields.io/npm/v/@salesforce/plugin-functions.svg?label=@salesforce/functions)](https://www.npmjs.com/package/@salesforce/functions) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-functions.svg)](https://npmjs.org/package/@salesforce/plugin-functions) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-functions/main/LICENSE.txt)
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
+
 # Usage
 
 1. Install the SFDX CLI: [Install instructions](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)
@@ -26,25 +24,30 @@ running command...
 Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx login:functions`
 
 # Commands
+
 <!-- commands -->
-* [`sf env:create:compute`](#sf-envcreatecompute)
-* [`sf env:delete`](#sf-envdelete)
-* [`sf env:display`](#sf-envdisplay)
-* [`sf env:list`](#sf-envlist)
-* [`sf env:log:tail`](#sf-envlogtail)
-* [`sf env:logdrain:add`](#sf-envlogdrainadd)
-* [`sf env:logdrain:list`](#sf-envlogdrainlist)
-* [`sf env:logdrain:remove`](#sf-envlogdrainremove)
-* [`sf env:var:get KEY`](#sf-envvarget-key)
-* [`sf env:var:list`](#sf-envvarlist)
-* [`sf env:var:set`](#sf-envvarset)
-* [`sf env:var:unset`](#sf-envvarunset)
-* [`sf generate:function`](#sf-generatefunction)
-* [`sf generate:project`](#sf-generateproject)
-* [`sf login:functions`](#sf-loginfunctions)
-* [`sf project:deploy:functions`](#sf-projectdeployfunctions)
-* [`sf run:function`](#sf-runfunction)
-* [`sf run:function:start`](#sf-runfunctionstart)
+
+- [plugin-functions](#plugin-functions)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`sf env:create:compute`](#sf-envcreatecompute)
+  - [`sf env:delete`](#sf-envdelete)
+  - [`sf env:display`](#sf-envdisplay)
+  - [`sf env:list`](#sf-envlist)
+  - [`sf env:log:tail`](#sf-envlogtail)
+  - [`sf env:logdrain:add`](#sf-envlogdrainadd)
+  - [`sf env:logdrain:list`](#sf-envlogdrainlist)
+  - [`sf env:logdrain:remove`](#sf-envlogdrainremove)
+  - [`sf env:var:get KEY`](#sf-envvarget-key)
+  - [`sf env:var:list`](#sf-envvarlist)
+  - [`sf env:var:set`](#sf-envvarset)
+  - [`sf env:var:unset`](#sf-envvarunset)
+  - [`sf generate:function`](#sf-generatefunction)
+  - [`sf generate:project`](#sf-generateproject)
+  - [`sf login:functions`](#sf-loginfunctions)
+  - [`sf project:deploy:functions`](#sf-projectdeployfunctions)
+  - [`sf run:function`](#sf-runfunction)
+  - [`sf run:function:start`](#sf-runfunctionstart)
 
 ## `sf env:create:compute`
 
@@ -384,4 +387,5 @@ EXAMPLE
 ```
 
 _See code: [src/commands/run/function/start.ts](https://github.com/salesforcecli/plugin-functions/blob/v0.2.2/src/commands/run/function/start.ts)_
+
 <!-- commandsstop -->
