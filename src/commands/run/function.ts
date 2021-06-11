@@ -22,16 +22,16 @@ export default class Invoke extends Command {
 
   static examples = [
     `
-    $ sfdx run:function -u http://localhost:8080 -p '{"id": 12345}'
-    $ sfdx run:function -u http://localhost:8080 -p '@file.json'
-    $ echo '{"id": 12345}' | sfdx run:function -u http://localhost:8080
-    $ sfdx run:function -u http://localhost:8080 -p '{"id": 12345}' --structured
+    $ sfdx run:function -l http://localhost:8080 -p '{"id": 12345}'
+    $ sfdx run:function -l http://localhost:8080 -p '@file.json'
+    $ echo '{"id": 12345}' | sfdx run:function -l http://localhost:8080
+    $ sfdx run:function -l http://localhost:8080 -p '{"id": 12345}' --structured
 `,
   ];
 
   static flags = {
     url: flags.string({
-      char: 'u',
+      char: 'l',
       description: 'url of the function to run',
       required: true,
     }),
@@ -45,10 +45,11 @@ export default class Invoke extends Command {
       description: 'set the payload of the cloudevent. also accepts @file.txt format',
     }),
     structured: flags.boolean({
+      char: 's',
       description: 'set the cloudevent to be emitted as a structured cloudevent (json)',
     }),
-    targetusername: flags.string({
-      char: 't',
+    'connected-org': flags.string({
+      char: 'o',
       description: 'username or alias for the target org; overrides default target org',
     }),
   };
@@ -68,7 +69,7 @@ export default class Invoke extends Command {
 
     try {
       cli.action.start(`${herokuColor.cyanBright('POST')} ${flags.url}`);
-      const cloudevent = await this.buildCloudevent(data, flags.targetusername, flags.structured);
+      const cloudevent = await this.buildCloudevent(data, flags['connected-org'], flags.structured);
       const response = await this.sendRequest(cloudevent, flags.url, flags.headers, flags.structured);
       cli.action.stop(herokuColor.greenBright(response.status.toString()));
       this.writeResponse(response);
@@ -130,7 +131,7 @@ export default class Invoke extends Command {
       return { sfcontext, sffncontext };
     } catch (error) {
       if (error.name === 'AuthInfoCreationError' || error.name === 'NoUsername') {
-        this.warn('No -t targetusername or defaultusername found, context will be partially initialized');
+        this.warn('No -o connected org or defaultusername found, context will be partially initialized');
         const fakeUserContext = {
           orgId: '000000000000000000',
           orgDomainUrl: '',

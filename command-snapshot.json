@@ -82,7 +82,7 @@
   {
     "command": "run:function",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["headers", "payload", "structured", "targetusername", "url"]
+    "flags": ["connected-org", "headers", "payload", "structured", "url"]
   },
   {
     "command": "run:function:start",
