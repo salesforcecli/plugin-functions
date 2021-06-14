@@ -2,8 +2,8 @@ import {expect, test} from '@oclif/test'
 import * as events from 'events'
 import * as sinon from 'sinon'
 
-import {getBenny, Benny, getProjectDescriptor} from '@salesforce/functions-core'
 import * as library from '@salesforce/functions-core'
+import {Benny} from '@salesforce/functions-core'
 
 describe('function:start', () => {
   let sandbox: sinon.SinonSandbox
@@ -26,7 +26,8 @@ describe('function:start', () => {
 
   test
   .command(['run:function:start'])
-  .it('Should call the library', async () => {
+  .it('Should call the library methods', async () => {
+    sinon.assert.calledOnce(bennyBuildStub)
     sinon.assert.calledOnce(bennyRunStub)
   })
 

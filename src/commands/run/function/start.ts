@@ -2,7 +2,7 @@ import {Command, flags} from '@oclif/command'
 import * as path from 'path'
 import herokuColor from '@heroku-cli/color';
 
-import {getBenny, getProjectDescriptor} from '@salesforce/functions-core'
+import {getFunctionsBinary, getProjectDescriptor} from '@salesforce/functions-core'
 import {cli} from 'cli-ux'
 
 export default class Start extends Command {
@@ -93,7 +93,7 @@ export default class Start extends Command {
     }
     const functionName = descriptor.com.salesforce.id
 
-    const benny = await getBenny()
+    const benny = await getFunctionsBinary()
 
     const writeMsg = (msg: { text: string; timestamp: string }) => {
       const outputMsg = msg.text
