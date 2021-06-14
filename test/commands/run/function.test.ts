@@ -1,9 +1,9 @@
 import {expect, test} from '@oclif/test'
 import {Config} from '@salesforce/core'
 import {MockTestOrgData, testSetup} from '@salesforce/core/lib/testSetup'
-import {OutputEvent, RunFunction} from '@salesforce/functions-core'
-import * as events from 'events'
 import * as sinon from 'sinon'
+
+import * as library from '@salesforce/functions-core'
 
 describe('run:function', () => {
   const $$ = testSetup()
@@ -12,11 +12,10 @@ describe('run:function', () => {
   let testData: MockTestOrgData
   let sandbox: sinon.SinonSandbox
   let runFunctionStub: sinon.SinonStub
-  let runFunctionOutputStub: sinon.SinonStub
   beforeEach(() => {
     sandbox = sinon.createSandbox()
-    runFunctionStub = sandbox.stub(RunFunction.prototype, 'execute')
-    runFunctionOutputStub = sandbox.stub(RunFunction.prototype, 'on')
+    runFunctionStub = sandbox.stub(library, 'runFunction')
+    runFunctionStub.returns({headers: {'content-type': 'application/json; charset=utf-8'},  data: 'Something happened!'})
   })
 
   afterEach(() => {
@@ -55,47 +54,38 @@ describe('run:function', () => {
     test
     .command(['run:function', '-u', targetUrl, '-p', userpayload])
     .it(`Should call the library with payload ${userpayload}`, async () => {
-      runFunctionStub.returns(true)
       sinon.assert.calledWith(runFunctionStub, {payload: userpayload, url: targetUrl})
     })
     test
     .command(['run:function', '-u', targetUrl, '-p', userpayload, '-H', 'TestHeader', '--structured', '-t', Config.DEFAULT_USERNAME])
     .it('Should call the library with all arguments', async () => {
-      runFunctionStub.returns(true)
       sinon.assert.calledWith(runFunctionStub, {payload: userpayload, url: targetUrl, headers: ['TestHeader'], structured: true, targetusername: Config.DEFAULT_USERNAME})
     })
-  })
-  context('with output', () => {
-    process.stderr.isTTY = true
-    let emitter: events.EventEmitter
-    beforeEach(async () => {
-      runFunctionStub.returns(true)
-      emitter = new events.EventEmitter()
-      runFunctionOutputStub.callsFake((event: OutputEvent | symbol, listener: (...args: any[]) => void) => {
-        return emitter.on(event, listener)
-      })
+    test
+    .stdout()
+    .command(['run:function', '-u', targetUrl, '-p', userpayload])
+    .it('Should log default username', async ctx => {
+      expect(ctx.stdout).to.contain(`Using defaultusername ${testData.username} login credential`)
     })
 
     test
     .stdout()
     .command(['run:function', '-u', targetUrl, '-p', userpayload])
-    .it('Should log output', async ctx => {
-      emitter.emit('log', 'Something happened!')
+    .it('Should log response', async ctx => {
       expect(ctx.stdout).to.contain('Something happened!')
     })
+  })
+  context('without org or defaultuser', () => {
+    process.stdout.isTTY = true
+    process.stderr.isTTY = true
 
     test
+    .stdout()
     .stderr()
-    .command(['run:function', '-u', targetUrl, '-p', userpayload])
-    .it('Should log warnings', async ctx => {
-      emitter.emit('warn', 'Something went wrong!')
-      expect(ctx.stderr).to.contain('Warning: Something went wrong!')
-    })
-
-    test
-    .command(['run:function', '-u', targetUrl, '-p', userpayload])
-    .it('Should have all listeners set', () => {
-      expect(emitter.eventNames()).to.include.members(['error', 'log', 'warn', 'start_action', 'stop_action', 'debug', 'json'])
+    .command(['run:function', '-u', targetUrl, '-p {"id":12345}'])
+    .it('should output the response from the server', ctx => {
+      expect(ctx.stdout).to.contain('Something happened!')
+      expect(ctx.stderr).to.contain('Warning: No -t targetusername or defaultusername found')
     })
   })
 })
