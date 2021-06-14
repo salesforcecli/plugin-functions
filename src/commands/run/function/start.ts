@@ -1,8 +1,10 @@
 import {Command, flags} from '@oclif/command'
 import * as path from 'path'
+import herokuColor from '@heroku-cli/color';
 
-import {StartFunction} from '@salesforce/functions-core'
-import Util from '../../../util'
+import {getBenny, getProjectDescriptor} from '@salesforce/functions-core'
+import {cli} from 'cli-ux'
+
 export default class Start extends Command {
   static description = 'build and run function image locally'
 
@@ -66,10 +68,72 @@ export default class Start extends Command {
 
   async run() {
     const {flags} = this.parse(Start)
-    const startFunction = new StartFunction()
 
-    Util.outputSfFunctionCommandEvents(startFunction)
+    const buildOpts = {
+      builder: flags.builder,
+      'clear-cache': flags['clear-cache'],
+      'no-pull': flags['no-pull'],
+      network: flags.network,
+      env: flags.env,
+      descriptor: flags.descriptor ?? path.resolve(flags.path, 'project.toml'),
+      path: flags.path,
+    }
 
-    startFunction.execute(flags as any)
+    const runOpts = {
+      port: flags.port,
+      'debug-port': flags['debug-port'],
+      env: flags.env,
+    }
+
+    let descriptor
+    try {
+      descriptor = await getProjectDescriptor(buildOpts.descriptor)
+    } catch (error) {
+      cli.error(error)
+    }
+    const functionName = descriptor.com.salesforce.id
+
+    const benny = await getBenny()
+
+    const writeMsg = (msg: { text: string; timestamp: string }) => {
+      const outputMsg = msg.text
+
+      if (outputMsg) {
+        cli.info(outputMsg)
+      }
+    }
+    benny.on('pack', writeMsg)
+    benny.on('container', writeMsg)
+
+    benny.on('error', (msg: any) => {
+      cli.error(msg.text, {exit: false})
+    })
+
+    benny.on('log', (msg: any) => {
+      if (msg.level === 'debug' && !flags.verbose) return
+      if (msg.level === 'error') {
+        cli.exit()
+      }
+
+      if (msg.text) {
+        cli.info(msg.text)
+      }
+
+      // evergreen:benny:message {"type":"log","timestamp":"2021-05-10T10:00:27.953248-05:00","level":"info","fields":{"debugPort":"9229","localImageName":"jvm-fn-init","network":"","port":"8080"}} +21ms
+      if (msg.fields && msg.fields.localImageName) {
+        this.log(`${herokuColor.magenta('Running on port')} :${herokuColor.cyan(msg.fields.port)}`)
+        this.log(`${herokuColor.magenta('Debugger running on port')} :${herokuColor.cyan(msg.fields.debugPort)}`)
+      }
+    })
+
+    if (!flags['no-build']) {
+      this.log(`${herokuColor.magenta('Building')} ${herokuColor.cyan(functionName)}`)
+      await benny.build(functionName, buildOpts)
+    }
+
+    if (!flags['no-run']) {
+      this.log(`${herokuColor.magenta('Starting')} ${herokuColor.cyan(functionName)}`)
+      await benny.run(functionName, runOpts)
+    }
   }
 }

@@ -48,7 +48,7 @@ export default class Invoke extends Command {
       this.error('no payload provided (provide via stdin or -p)')
     }
     const aggregator = await ConfigAggregator.create()
-    const defaultusername = aggregator.getPropertyValue('defaultusername');
+    const defaultusername = aggregator.getPropertyValue('defaultusername')
     if (!flags.targetusername && !defaultusername) {
       this.warn('No -t targetusername or defaultusername found, context will be partially initialized')
     }
