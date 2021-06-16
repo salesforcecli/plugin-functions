@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/salesforcecli/plugin-functions/compare/v0.2.3...v0.2.4) (2021-06-16)
+
+
+### Bug Fixes
+
+* update run:function flags to match PRD ([#88](https://github.com/salesforcecli/plugin-functions/issues/88)) ([5fc61b5](https://github.com/salesforcecli/plugin-functions/commit/5fc61b5e5786c316a8957849b7aa829bd886570b))
+
 ### [0.2.3](https://github.com/salesforcecli/plugin-functions/compare/v0.2.2...v0.2.3) (2021-06-10)
 
 

@@ -6,10 +6,9 @@ Functions plugin for the SF CLI
 [![NPM](https://img.shields.io/npm/v/@salesforce/plugin-functions.svg?label=@salesforce/functions)](https://www.npmjs.com/package/@salesforce/functions) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-functions.svg)](https://npmjs.org/package/@salesforce/plugin-functions) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-functions/main/LICENSE.txt)
 
 <!-- toc -->
-
-- [plugin-functions](#plugin-functions)
-- [Usage](#usage)
-- [Commands](#commands)
+* [plugin-functions](#plugin-functions)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
@@ -27,25 +26,24 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 # Commands
 
 <!-- commands -->
-
-- [`sf env:create:compute`](#sf-envcreatecompute)
-- [`sf env:delete`](#sf-envdelete)
-- [`sf env:display`](#sf-envdisplay)
-- [`sf env:list`](#sf-envlist)
-- [`sf env:log:tail`](#sf-envlogtail)
-- [`sf env:logdrain:add`](#sf-envlogdrainadd)
-- [`sf env:logdrain:list`](#sf-envlogdrainlist)
-- [`sf env:logdrain:remove`](#sf-envlogdrainremove)
-- [`sf env:var:get KEY`](#sf-envvarget-key)
-- [`sf env:var:list`](#sf-envvarlist)
-- [`sf env:var:set`](#sf-envvarset)
-- [`sf env:var:unset`](#sf-envvarunset)
-- [`sf generate:function`](#sf-generatefunction)
-- [`sf generate:project`](#sf-generateproject)
-- [`sf login:functions`](#sf-loginfunctions)
-- [`sf project:deploy:functions`](#sf-projectdeployfunctions)
-- [`sf run:function`](#sf-runfunction)
-- [`sf run:function:start`](#sf-runfunctionstart)
+* [`sf env:create:compute`](#sf-envcreatecompute)
+* [`sf env:delete`](#sf-envdelete)
+* [`sf env:display`](#sf-envdisplay)
+* [`sf env:list`](#sf-envlist)
+* [`sf env:log:tail`](#sf-envlogtail)
+* [`sf env:logdrain:add`](#sf-envlogdrainadd)
+* [`sf env:logdrain:list`](#sf-envlogdrainlist)
+* [`sf env:logdrain:remove`](#sf-envlogdrainremove)
+* [`sf env:var:get KEY`](#sf-envvarget-key)
+* [`sf env:var:list`](#sf-envvarlist)
+* [`sf env:var:set`](#sf-envvarset)
+* [`sf env:var:unset`](#sf-envvarunset)
+* [`sf generate:function`](#sf-generatefunction)
+* [`sf generate:project`](#sf-generateproject)
+* [`sf login:functions`](#sf-loginfunctions)
+* [`sf project:deploy:functions`](#sf-projectdeployfunctions)
+* [`sf run:function`](#sf-runfunction)
+* [`sf run:function:start`](#sf-runfunctionstart)
 
 ## `sf env:create:compute`
 
@@ -385,5 +383,4 @@ EXAMPLE
 ```
 
 _See code: [src/commands/run/function/start.ts](https://github.com/salesforcecli/plugin-functions/blob/v0.2.3/src/commands/run/function/start.ts)_
-
 <!-- commandsstop -->
