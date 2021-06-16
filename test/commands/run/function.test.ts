@@ -106,7 +106,7 @@ describe('run:function', () => {
   context('without payload', () => {
     process.stdin.isTTY = true;
     test
-      .command(['run:function', '-u', targetUrl])
+      .command(['run:function', '-l', targetUrl])
       .catch(/payload/)
       .it('should mention the missing payload');
   });
@@ -123,13 +123,13 @@ describe('run:function', () => {
 
     test
       .nock(targetUrl, (fn) => fn.post('/').reply(200, { result: true }))
-      .command(['run:function', '-u', targetUrl, '-p {"id":12345}'])
+      .command(['run:function', '-l', targetUrl, '-p {"id":12345}'])
       .it('should run successfully');
 
     test
       .nock(targetUrl, (fn) => fn.post('/').reply(200, { result: true }))
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p {"id":12345}'])
+      .command(['run:function', '-l', targetUrl, '-p {"id":12345}'])
       .it('should attempt to update benny to the latest version', () => {
         sinon.assert.calledOnce(bennyStub);
       });
@@ -137,7 +137,7 @@ describe('run:function', () => {
     test
       .nock(targetUrl, (fn) => fn.post('/').reply(200, { result: true }))
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p {"id":12345}'])
+      .command(['run:function', '-l', targetUrl, '-p {"id":12345}'])
       .it('should output the response from the server', (ctx) => {
         expect(ctx.stdout).to.contain('"result": true');
         expect(ctx.stdout).to.contain(`Using defaultusername ${testData.username} login credential`);
@@ -148,7 +148,7 @@ describe('run:function', () => {
         fn.post('/').matchHeader('requestid', '1234').matchHeader('fail', 'true').reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p hi', '-Hrequestid:1234', '-Hfail:true'])
+      .command(['run:function', '-l', targetUrl, '-p hi', '-Hrequestid:1234', '-Hfail:true'])
       .it('should forward custom headers', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -168,7 +168,7 @@ describe('run:function', () => {
           .reply(200, { result: true });
       })
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p hi'])
+      .command(['run:function', '-l', targetUrl, '-p hi'])
       .it('should have cloudevent headers', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -182,7 +182,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p 12345', '--structured'])
+      .command(['run:function', '-l', targetUrl, '-p 12345', '--structured'])
       .it('should send string " 12345" as application/cloudevents+json', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -196,7 +196,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p [not really json', '--structured'])
+      .command(['run:function', '-l', targetUrl, '-p [not really json', '--structured'])
       .it('should send string " [not really json" as application/cloudevents+json', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -210,7 +210,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p {"a":1,"b":"x"}', '--structured'])
+      .command(['run:function', '-l', targetUrl, '-p {"a":1,"b":"x"}', '--structured'])
       .it('should send object as application/cloudevents+json', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -228,7 +228,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p 12345'])
+      .command(['run:function', '-l', targetUrl, '-p 12345'])
       .it('should send string " 12345" as body with HTTPBinary transport', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -244,7 +244,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p [not really json'])
+      .command(['run:function', '-l', targetUrl, '-p [not really json'])
       .it('should send string " [not really json" with HTTPBinary transport', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -258,7 +258,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p {"a":1,"b":"x"}'])
+      .command(['run:function', '-l', targetUrl, '-p {"a":1,"b":"x"}'])
       .it('should send object with HTTPBinary transport', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -273,7 +273,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, '-p hi'])
+      .command(['run:function', '-l', targetUrl, '-p hi'])
       .it('should have X-Request-Id header', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -288,10 +288,10 @@ describe('run:function', () => {
       .nock(targetUrl, (fn) => fn.post('/').reply(200, { result: true }))
       .stdout()
       .stderr()
-      .command(['run:function', '-u', targetUrl, '-p {"id":12345}'])
+      .command(['run:function', '-l', targetUrl, '-p {"id":12345}'])
       .it('should output the response from the server', (ctx) => {
         expect(ctx.stdout).to.contain('"result": true');
-        expect(ctx.stderr).to.contain('Warning: No -t targetusername or defaultusername found');
+        expect(ctx.stderr).to.contain('Warning: No -o connected org or defaultusername found');
       });
   });
 
@@ -310,7 +310,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, `-p ${userpayload}`, '-t', 'sorg1', '--structured'])
+      .command(['run:function', '-l', targetUrl, `-p ${userpayload}`, '-o', 'sorg1', '--structured'])
       .it('cloudEvent body should have sfdc fields set --structured', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -328,7 +328,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, `-p ${userpayload}`, '-t sorg1'])
+      .command(['run:function', '-l', targetUrl, `-p ${userpayload}`, '-o sorg1'])
       .it('cloudEvent body and ce-sf*context headers should have sfdc fields set', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -345,7 +345,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-u', targetUrl, `-p ${userpayload}`, '-t sorg1'])
+      .command(['run:function', '-l', targetUrl, `-p ${userpayload}`, '-o sorg1'])
       .it('should attempt to update benny to the latest version', () => {
         sinon.assert.calledOnce(bennyStub);
       });
