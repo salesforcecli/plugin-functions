@@ -52,7 +52,6 @@
     "@salesforce/sfdx-trust": "^3.2.1",
     "@salesforce/ts-types": "^1.5.5",
     "@types/fs-extra": "^9.0.8",
-    "@types/mocha": "^8.2.2",
     "@types/node-fetch": "^2.5.10",
     "@types/nodegit": "^0.26.15",
     "@types/sha256-file": "^1.0.0",
