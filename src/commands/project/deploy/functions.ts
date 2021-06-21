@@ -10,20 +10,20 @@ import herokuColor from '@heroku-cli/color';
 import { flags } from '@oclif/command';
 import { cli } from 'cli-ux';
 import debugFactory from 'debug';
-import { differenceWith, isEqual } from 'lodash';
 import Command from '../../../lib/base';
 import Git from '../../../lib/git';
 import { resolveFunctionsPaths } from '../../../lib/path-utils';
 import { parseProjectToml } from '../../../lib/project-toml';
 import { ComputeEnvironment, FunctionReference, SfdxProjectConfig } from '../../../lib/sfdc-types';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
+import {
+  filterProjectReferencesToRemove,
+  splitFullName,
+  FullNameReference,
+  ensureArray,
+} from '../../../lib/function-reference-utils';
 
 const debug = debugFactory('project:deploy:functions');
-
-interface FullNameReference {
-  project: string;
-  fn: string;
-}
 
 export default class ProjectDeployFunctions extends Command {
   private git?: Git;
@@ -104,25 +104,6 @@ export default class ProjectDeployFunctions extends Command {
     );
   }
 
-  private splitFullName(fullName: string): FullNameReference {
-    const [project, fn] = fullName.split('-');
-    return {
-      project,
-      fn,
-    };
-  }
-
-  // This method generates a list of functions to remove *specific to this project*. We use this
-  // so we don't accidentally delete references from other projects that point to the same org
-  private filterProjectReferencesToRemove(
-    allReferences: FullNameReference[],
-    successfulReferences: FullNameReference[],
-    projectName: string
-  ) {
-    const filtered = allReferences.filter((ref) => ref.project === projectName);
-    return differenceWith(filtered, successfulReferences, isEqual).map((ref) => `${ref.project}-${ref.fn}`);
-  }
-
   async run() {
     const { flags } = this.parse(ProjectDeployFunctions);
 
@@ -201,13 +182,7 @@ export default class ProjectDeployFunctions extends Command {
     let shouldExitNonZero = false;
 
     let results = await connection.metadata.upsert('FunctionReference', references);
-
-    if (!Array.isArray(results)) {
-      // We do this because the salesforce returns a single object instead of an array even if you
-      // passed an array in. Rather than forking all the following code to work for both cases,
-      // we simply put the one result into an array and proceed like normal.
-      results = [results];
-    }
+    results = ensureArray(results);
 
     results.forEach((result) => {
       if (!result.success) {
@@ -227,23 +202,21 @@ export default class ProjectDeployFunctions extends Command {
     // Remove any function references for functions that no longer exist
     const successfulReferences = results.reduce((acc: FullNameReference[], result) => {
       if (result.success) {
-        acc.push(this.splitFullName(result.fullName));
+        acc.push(splitFullName(result.fullName));
       }
 
       return acc;
     }, []);
     let refList = await connection.metadata.list({ type: 'FunctionReference' });
-    if (refList && !Array.isArray(refList)) {
-      refList = [refList];
-    }
+    refList = ensureArray(refList);
 
     const allReferences = refList.reduce((acc: FullNameReference[], ref) => {
-      acc.push(this.splitFullName(ref.fullName));
+      acc.push(splitFullName(ref.fullName));
 
       return acc;
     }, []);
 
-    const referencesToRemove = this.filterProjectReferencesToRemove(allReferences, successfulReferences, project.name);
+    const referencesToRemove = filterProjectReferencesToRemove(allReferences, successfulReferences, project.name);
 
     if (referencesToRemove.length) {
       this.log('Removing the following functions that were deleted locally:');

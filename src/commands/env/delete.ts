@@ -6,8 +6,16 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Org } from '@salesforce/core';
+import { AuthInfo, Org } from '@salesforce/core';
 import { cli } from 'cli-ux';
+import { sortBy } from 'lodash';
+import { OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
+import {
+  filterProjectReferencesToRemove,
+  splitFullName,
+  FullNameReference,
+  ensureArray,
+} from '../../lib/function-reference-utils';
 import { FunctionsFlagBuilder, confirmationFlag } from '../../lib/flags';
 import Command from '../../lib/base';
 
@@ -25,6 +33,25 @@ export default class EnvDelete extends Command {
     }),
     confirm: confirmationFlag,
   };
+
+  async resolveScratchOrg(scratchOrgId: string) {
+    // adapted from https://github.com/salesforcecli/plugin-org/blob/3012cc04a670e4bf71e75a02e2f0981a71eb4e0d/src/commands/force/org/list.ts#L44-L90
+    let fileNames: string[] = [];
+    try {
+      fileNames = await AuthInfo.listAllAuthFiles();
+    } catch (error) {
+      if (error.name === 'NoAuthInfoFound') {
+        this.error('No orgs found');
+      } else {
+        throw error;
+      }
+    }
+
+    const metaConfigs = await OrgListUtil.readLocallyValidatedMetaConfigsGroupedByOrgType(fileNames, {});
+
+    const scratchOrgs = sortBy(metaConfigs.scratchOrgs, (v) => [v.alias, v.username]);
+    return scratchOrgs.find((org) => org.orgId === scratchOrgId);
+  }
 
   async run() {
     const { flags } = this.parse(EnvDelete);
@@ -59,6 +86,31 @@ export default class EnvDelete extends Command {
 
     try {
       // If app exists, it will be deleted
+      const app = await this.client.get<Heroku.App>(`/apps/${appName}`, {
+        headers: {
+          Accept: 'application/vnd.heroku+json; version=3.evergreen',
+        },
+      });
+
+      // Find and delete all connected function references if they exist
+      const connectedOrg = await this.resolveScratchOrg(app.data.sales_org_connection?.sales_org_id);
+      const connectedOrgAlias = connectedOrg?.alias;
+      const project = await this.fetchSfdxProject();
+      const org = await this.fetchOrg(connectedOrgAlias);
+      const connection = org.getConnection();
+      let refList = await connection.metadata.list({ type: 'FunctionReference' });
+      refList = ensureArray(refList);
+
+      if (refList) {
+        const allReferences = refList.reduce((acc: FullNameReference[], ref) => {
+          acc.push(splitFullName(ref.fullName));
+          return acc;
+        }, []);
+        const referencesToRemove = filterProjectReferencesToRemove(allReferences, [], project.name);
+        await connection.metadata.delete('FunctionReference', referencesToRemove);
+      }
+
+      // Delete the application
       await this.client.delete<Heroku.App>(`/apps/${appName}`, {
         headers: {
           Accept: 'application/vnd.heroku+json; version=3.evergreen',
