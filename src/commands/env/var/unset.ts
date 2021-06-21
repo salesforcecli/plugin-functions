@@ -23,7 +23,7 @@ export default class ConfigUnset extends Command {
   };
 
   async run() {
-    const { flags, argv } = this.parse(ConfigUnset);
+    const { flags, argv } = await this.parse(ConfigUnset);
     const { environment } = flags;
 
     const appName = await this.resolveAppNameForEnvironment(environment);
