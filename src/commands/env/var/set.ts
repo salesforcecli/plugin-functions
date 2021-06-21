@@ -1,51 +1,59 @@
-import herokuColor from '@heroku-cli/color'
-import {cli} from 'cli-ux'
-import {FunctionsFlagBuilder} from '../../../lib/flags'
+/*
+ * Copyright (c) 2020, salesforce.com, inc.
+ * All rights reserved.
+ * Licensed under the BSD 3-Clause license.
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+import herokuColor from '@heroku-cli/color';
+import { cli } from 'cli-ux';
+import { FunctionsFlagBuilder } from '../../../lib/flags';
 
-import Command from '../../../lib/base'
+import Command from '../../../lib/base';
 
 export default class ConfigSet extends Command {
-  static strict = false
+  static strict = false;
 
-  static description = 'sets a single config value for an environment'
+  static description = 'sets a single config value for an environment';
 
-  static examples = [
-    '$ sfdx env:var:set foo=bar --environment=my-environment',
-  ]
+  static examples = ['$ sfdx env:var:set foo=bar --environment=my-environment'];
 
   static flags = {
     environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
-  }
+  };
 
-  parseKeyValuePairs(pairs: Array<string>) {
+  parseKeyValuePairs(pairs: string[]) {
     if (pairs.length === 0) {
-      this.error('Usage: sfdx env:var:set KEY1=VALUE1 [KEY2=VALUE2 ...]\nMust specify KEY and VALUE to set.')
+      this.error('Usage: sfdx env:var:set KEY1=VALUE1 [KEY2=VALUE2 ...]\nMust specify KEY and VALUE to set.');
     }
 
     return pairs.reduce((acc, elem) => {
       if (elem.indexOf('=') === -1) {
-        this.error(`${herokuColor.cyan(elem)} is invalid. Please use the format ${herokuColor.cyan('key=value')}`)
+        this.error(`${herokuColor.cyan(elem)} is invalid. Please use the format ${herokuColor.cyan('key=value')}`);
       }
-      const [key, value] = elem.split('=')
-      return {...acc, [key]: value}
-    }, {})
+      const [key, value] = elem.split('=');
+      return { ...acc, [key]: value };
+    }, {});
   }
 
   async run() {
-    const {flags, argv} = this.parse(ConfigSet)
-    const {environment} = flags
+    const { flags, argv } = this.parse(ConfigSet);
+    const { environment } = flags;
 
-    const appName = await this.resolveAppNameForEnvironment(environment)
-    const configPairs = this.parseKeyValuePairs(argv)
+    const appName = await this.resolveAppNameForEnvironment(environment);
+    const configPairs = this.parseKeyValuePairs(argv);
 
-    cli.action.start(`Setting ${Object.keys(configPairs).map(key => herokuColor.configVar(key)).join(', ')} and restarting ${herokuColor.app(environment)}`)
+    cli.action.start(
+      `Setting ${Object.keys(configPairs)
+        .map((key) => herokuColor.configVar(key))
+        .join(', ')} and restarting ${herokuColor.app(environment)}`
+    );
 
     await this.client.patch(`/apps/${appName}/config-vars`, {
       data: configPairs,
-    })
+    });
 
-    cli.action.stop()
+    cli.action.stop();
   }
 }

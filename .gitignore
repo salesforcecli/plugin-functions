@@ -1,19 +1,39 @@
-*-debug.log
-*-error.log
-/.nyc_output
-/dist
-/lib
-/package-lock.json
-/tmp
-node_modules
-oclif.manifest.json
-.DS_Store
-.vscode
+# -- CLEAN
 
-# Adding for sfdx trust signing
-*.tgz
-*.sig
-package.json.bak
+# use yarn by default, so ignore npm
+package-lock.json
+
+# never checkin npm config
+.npmrc
+
+# debug logs
+npm-error.log
+yarn-error.log
+lerna-debug.log
+
+# compile source
+lib
+
+# test artifacts
+*xunit.xml
+*checkstyle.xml
+*unitcoverage
+.nyc_output
+coverage
+tmp/
+
+# generated docs
+docs
+
+# -- CLEAN ALL
+node_modules
+
+# --
+# put files here you don't want cleaned with sf-clean
+
+# os specific files
+.DS_Store
+.idea
 
 # ignore downloaded benny binary
 /bin/benny-*

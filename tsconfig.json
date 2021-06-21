@@ -7,10 +7,9 @@
     "rootDir": "src",
     "strict": true,
     "target": "es2017",
+    "skipLibCheck": true
   },
-  "include": [
-    "src/**/*",
-  ],
+  "include": ["src/**/*"],
   "ts-node": {
     "files": true
   }

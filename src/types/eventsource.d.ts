@@ -1,4 +1,9 @@
-// https://developer.mozilla.org/en-US/docs/Web/API/EventSource/EventSource#parameters
+/*
+ * Copyright (c) 2020, salesforce.com, inc.
+ * All rights reserved.
+ * Licensed under the BSD 3-Clause license.
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 declare interface EventSourceOptions {
   withCredentials?: boolean;
 }
@@ -12,5 +17,5 @@ declare module '@heroku/eventsource' {
     close(): void;
   }
 
-  export = EventSource
+  export = EventSource;
 }
