@@ -12,6 +12,7 @@
     "@heroku-cli/schema": "^1.0.25",
     "@heroku/eventsource": "^1.0.7",
     "@heroku/function-toml": "^0.0.3",
+    "@heroku/functions-core": "0.0.2",
     "@heroku/project-descriptor": "0.0.5",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
