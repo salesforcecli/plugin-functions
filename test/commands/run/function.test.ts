@@ -3,7 +3,7 @@ import {Config} from '@salesforce/core'
 import {MockTestOrgData, testSetup} from '@salesforce/core/lib/testSetup'
 import * as sinon from 'sinon'
 
-import * as library from '@salesforce/functions-core'
+import * as library from '@heroku/functions-core'
 
 describe('run:function', () => {
   const $$ = testSetup()

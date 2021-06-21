@@ -1,7 +1,7 @@
 import {Command, flags} from '@oclif/command'
 import * as fs from 'fs'
 import getStdin from '../../lib/get-stdin'
-import {runFunction, RunFunctionOptions} from '@salesforce/functions-core'
+import {runFunction, RunFunctionOptions} from '@heroku/functions-core'
 import {cli} from 'cli-ux'
 import herokuColor from '@heroku-cli/color'
 import {AxiosResponse} from 'axios'

@@ -2,7 +2,7 @@ import {Command, flags} from '@oclif/command'
 import * as path from 'path'
 import herokuColor from '@heroku-cli/color';
 
-import {getFunctionsBinary, getProjectDescriptor} from '@salesforce/functions-core'
+import {getFunctionsBinary, getProjectDescriptor} from '@heroku/functions-core'
 import {cli} from 'cli-ux'
 
 export default class Start extends Command {
