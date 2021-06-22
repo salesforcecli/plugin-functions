@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-functions",
   "description": "Functions plugin for the SF CLI",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "author": "heroku-front-end@salesforce.com",
   "bin": {
     "functions": "./bin/run"
@@ -141,5 +141,12 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "sf-husky-commit-msg",
+      "pre-commit": "sf-husky-pre-commit",
+      "pre-push": "sf-husky-pre-push"
+    }
   }
 }
