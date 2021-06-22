@@ -28,7 +28,13 @@ export function splitFullName(fullName: string): FullNameReference {
   };
 }
 
-export function ensureArray<T>(refList: T | T[]): T[] {
+export function ensureArray<T>(refList?: T | T[]): T[] {
+  if (!refList) {
+    // Since the metadata API can sometimes return `undefined` rather than an empty array if no
+    // records are found, we cast it into an empty array to avoid any weird "cannot read property
+    // foo of undefined" errors further down
+    return [];
+  }
   if (!Array.isArray(refList)) {
     refList = [refList];
   }
