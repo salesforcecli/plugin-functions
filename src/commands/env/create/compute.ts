@@ -126,7 +126,7 @@ export default class EnvCreateCompute extends Command {
       if (alias) {
         const aliases = await Aliases.create({});
 
-        aliases.set(alias, app.id);
+        aliases.set(alias, app.id!);
 
         await aliases.write();
       }
