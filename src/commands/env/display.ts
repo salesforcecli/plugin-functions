@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { Flags } from '@oclif/core';
+import { flags } from '@oclif/command';
 import { AuthInfo, Org, sfdc } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import { OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
@@ -25,13 +25,13 @@ export default class EnvDelete extends Command {
     environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
-    verbose: Flags.boolean({
+    verbose: flags.boolean({
       description: 'verbose display output',
     }),
   };
 
   async run() {
-    const { flags } = await this.parse(EnvDelete);
+    const { flags } = this.parse(EnvDelete);
 
     const { environment } = flags;
 
@@ -137,8 +137,8 @@ export default class EnvDelete extends Command {
         },
       },
       {
-        printLine: this.log.bind(this),
-        ...Flags,
+        printLine: this.log,
+        ...flags,
       }
     );
   }

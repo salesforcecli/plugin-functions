@@ -5,7 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { URL } from 'url';
-import { Interfaces, Errors } from '@oclif/core';
+import * as Config from '@oclif/config';
+import { CLIError } from '@oclif/errors';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as axiosDebugger from 'axios-debug-log';
 
@@ -22,7 +23,7 @@ export interface HerokuAPIErrorOptions {
   url?: string;
 }
 
-export class APIError extends Errors.CLIError {
+export class APIError extends CLIError {
   http: AxiosError;
 
   body: HerokuAPIErrorOptions;
@@ -49,7 +50,7 @@ export default class APIClient {
 
   private apiUrl: URL;
 
-  constructor(protected config: Interfaces.Config, options: APIClientConfig) {
+  constructor(protected config: Config.IConfig, options: APIClientConfig) {
     this.auth = options.auth;
     this.apiUrl = options.apiUrl;
 

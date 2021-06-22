@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
-import { Flags } from '@oclif/core';
+import { flags } from '@oclif/command';
 import ProjectGenerator from '@salesforce/templates/lib/generators/projectGenerator';
 import * as fs from 'fs-extra';
 import { createEnv } from 'yeoman-environment';
@@ -21,7 +21,7 @@ const options = {
 
 export default class GenerateProject extends Command {
   static flags = {
-    name: Flags.string({
+    name: flags.string({
       description: 'name of the generated project',
       char: 'n',
       required: true,
@@ -29,7 +29,7 @@ export default class GenerateProject extends Command {
   };
 
   async run() {
-    const { flags } = await this.parse(GenerateProject);
+    const { flags } = this.parse(GenerateProject);
 
     if (flags.name.includes('-')) {
       this.error('Project names may not include hyphens, please either remove them or use underscores.');

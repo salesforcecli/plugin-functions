@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { URL } from 'url';
-import { Command as Base } from '@oclif/core';
+import { Command as Base } from '@oclif/command';
 import { Aliases, Org, SfdxProject } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import APIClient from './api-client';

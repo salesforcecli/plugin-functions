@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import herokuColor from '@heroku-cli/color';
-import { Flags } from '@oclif/core';
+import { flags } from '@oclif/command';
 import { Aliases, AuthInfo } from '@salesforce/core';
 import { identifyActiveOrgByStatus, OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
 import { ExtendedAuthFields } from '@salesforce/plugin-org/lib/shared/orgTypes';
@@ -28,11 +28,11 @@ export default class EnvList extends Command {
   ];
 
   static flags = {
-    all: Flags.boolean({
+    all: flags.boolean({
       description: 'show all available envs instead of scoping to active orgs and their connected compute envs',
     }),
     'environment-type': environmentType,
-    json: Flags.boolean({
+    json: flags.boolean({
       description: 'output list in JSON format',
       char: 'j',
     }),
@@ -230,7 +230,7 @@ export default class EnvList extends Command {
   }
 
   async run() {
-    const { flags } = await this.parse(EnvList);
+    const { flags } = this.parse(EnvList);
     const { nonScratchOrgs, scratchOrgs } = await this.resolveOrgs(flags.all);
     const orgs = [...nonScratchOrgs, ...scratchOrgs];
     let environments = await this.resolveEnvironments(orgs);
