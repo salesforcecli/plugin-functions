@@ -9,7 +9,6 @@ import { SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
 import { Aliases, AuthInfo, Org } from '@salesforce/core';
 import EnvList from '../../../src/commands/env/list';
-import * as pathUtils from '../../../src/lib/path-utils';
 import EnvDisplay from '../../../src/commands/env/display';
 
 export const PROJECT_CONFIG_MOCK = {
@@ -89,6 +88,19 @@ const ORG_ENV_NAME = 'my-org-env';
 const COMPUTE_ENV_NAME = 'my-compute-env';
 const COMPUTE_ENV_ALIAS = 'my-compute-alias';
 
+const ORG_MOCK = {
+  getUsername: () => 'fakeUsername',
+  getConnection: () => {
+    return {
+      metadata: {
+        list: () => {
+          return [{ fullName: 'functions-fn1' }, { fullName: 'functions-fn2' }];
+        },
+      },
+    };
+  },
+};
+
 describe('sf env display', () => {
   const sandbox = sinon.createSandbox();
 
@@ -156,8 +168,12 @@ describe('sf env display', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
       const error = new Error('No AuthInfo found');
-      sandbox.stub(Org, 'create' as any).throws(error);
-      sandbox.stub(pathUtils, 'resolveFunctionsPaths' as any).returns(['functions/fn1', 'functions/fn2']);
+      sandbox
+        .stub(Org, 'create' as any)
+        .onCall(0)
+        .throws(error);
+      sandbox.stub(EnvDisplay.prototype, 'resolveScratchOrg' as any).returns({});
+      sandbox.stub(EnvDisplay.prototype, 'fetchOrg' as any).returns(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -183,8 +199,12 @@ describe('sf env display', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
       const error = new Error('No AuthInfo found');
-      sandbox.stub(Org, 'create' as any).throws(error);
-      sandbox.stub(pathUtils, 'resolveFunctionsPaths' as any).returns(['functions/fn1', 'functions/fn2']);
+      sandbox
+        .stub(Org, 'create' as any)
+        .onCall(0)
+        .throws(error);
+      sandbox.stub(EnvDisplay.prototype, 'resolveScratchOrg' as any).returns({});
+      sandbox.stub(EnvDisplay.prototype, 'fetchOrg' as any).returns(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();
