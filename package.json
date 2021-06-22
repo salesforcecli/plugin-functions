@@ -13,7 +13,8 @@
     "@heroku/eventsource": "^1.0.7",
     "@heroku/function-toml": "^0.0.3",
     "@heroku/project-descriptor": "^0.0.5",
-    "@oclif/core": "^0.5.14",
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
     "@oclif/plugin-not-found": "^1.2.4",
     "@salesforce/core": "^2.20.5",
     "@salesforce/plugin-org": "^1.6.7",
@@ -134,18 +135,11 @@
     "prepare": "sf-install && husky install",
     "pretest": "sf-compile-test",
     "test": "sf-test",
-    "test:command-reference": "./bin/dev commandreference:generate --erroronwarnings",
-    "test:deprecation-policy": "./bin/dev snapshot:compare",
+    "test:command-reference": "./bin/run commandreference:generate --erroronwarnings",
+    "test:deprecation-policy": "./bin/run snapshot:compare",
     "version": "oclif-dev readme"
   },
   "publishConfig": {
     "access": "public"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "sf-husky-commit-msg",
-      "pre-commit": "sf-husky-pre-commit",
-      "pre-push": "sf-husky-pre-push"
-    }
   }
 }

@@ -54,7 +54,7 @@ export default class EnvDelete extends Command {
   }
 
   async run() {
-    const { flags } = await this.parse(EnvDelete);
+    const { flags } = this.parse(EnvDelete);
 
     const { environment } = flags;
 

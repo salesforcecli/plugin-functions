@@ -38,7 +38,7 @@ export default class ConfigSet extends Command {
   }
 
   async run() {
-    const { flags, argv } = await this.parse(ConfigSet);
+    const { flags, argv } = this.parse(ConfigSet);
     const { environment } = flags;
 
     const appName = await this.resolveAppNameForEnvironment(environment);

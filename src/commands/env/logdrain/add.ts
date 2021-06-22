@@ -6,7 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Flags } from '@oclif/core';
+import { flags } from '@oclif/command';
 import { cli } from 'cli-ux';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
@@ -20,7 +20,7 @@ export default class LogDrainAdd extends Command {
     environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
-    url: Flags.string({
+    url: flags.string({
       required: true,
       char: 'u',
       description: 'endpoint that will receive sent logs',
@@ -28,7 +28,7 @@ export default class LogDrainAdd extends Command {
   };
 
   async run() {
-    const { flags } = await this.parse(LogDrainAdd);
+    const { flags } = this.parse(LogDrainAdd);
     const { environment } = flags;
 
     const appName = await this.resolveAppNameForEnvironment(environment);

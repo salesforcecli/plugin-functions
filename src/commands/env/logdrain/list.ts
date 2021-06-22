@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as Heroku from '@heroku-cli/schema';
-import { Flags } from '@oclif/core';
+import { flags } from '@oclif/command';
 import { cli } from 'cli-ux';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
@@ -19,13 +19,13 @@ export default class LogDrainList extends Command {
     environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
-    json: Flags.boolean({
+    json: flags.boolean({
       description: 'output result in json',
     }),
   };
 
   async run() {
-    const { flags } = await this.parse(LogDrainList);
+    const { flags } = this.parse(LogDrainList);
     const { environment } = flags;
 
     const appName = await this.resolveAppNameForEnvironment(environment);
@@ -55,7 +55,7 @@ export default class LogDrainList extends Command {
         },
       },
       {
-        printLine: this.log.bind(this),
+        printLine: this.log,
         ...flags,
       }
     );

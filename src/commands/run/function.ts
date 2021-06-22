@@ -6,7 +6,7 @@
  */
 import * as fs from 'fs';
 import herokuColor from '@heroku-cli/color';
-import { Command, Flags } from '@oclif/core';
+import { Command, flags } from '@oclif/command';
 import { Config, Connection, Org } from '@salesforce/core';
 import axios, { AxiosResponse } from 'axios';
 import { cli } from 'cli-ux';
@@ -30,25 +30,25 @@ export default class Invoke extends Command {
   ];
 
   static flags = {
-    url: Flags.string({
+    url: flags.string({
       char: 'l',
       description: 'url of the function to run',
       required: true,
     }),
-    headers: Flags.string({
+    headers: flags.string({
       char: 'H',
       description: 'set headers',
       multiple: true,
     }),
-    payload: Flags.string({
+    payload: flags.string({
       char: 'p',
       description: 'set the payload of the cloudevent. also accepts @file.txt format',
     }),
-    structured: Flags.boolean({
+    structured: flags.boolean({
       char: 's',
       description: 'set the cloudevent to be emitted as a structured cloudevent (json)',
     }),
-    'connected-org': Flags.string({
+    'connected-org': flags.string({
       char: 'o',
       description: 'username or alias for the target org; overrides default target org',
     }),
@@ -57,7 +57,7 @@ export default class Invoke extends Command {
   private static readonly HEADER_REQUEST = 'X-Request-Id';
 
   async run() {
-    const { flags } = await this.parse(Invoke);
+    const { flags } = this.parse(Invoke);
 
     const data = await this.getPayloadData(flags.payload);
     if (!data) {

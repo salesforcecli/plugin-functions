@@ -6,7 +6,7 @@
  */
 import * as path from 'path';
 import herokuColor from '@heroku-cli/color';
-import { Flags } from '@oclif/core';
+import { flags } from '@oclif/command';
 import { copySync, existsSync, lstatSync, mkdirpSync, outputFileSync, readdirSync, readFileSync } from 'fs-extra';
 import * as Handlebars from 'handlebars';
 import Command from '../../lib/base';
@@ -262,12 +262,12 @@ export default class GenerateFunction extends Command {
   static examples = ['$ sfdx evergreen:function:create MyFunction --language=javascript'];
 
   static flags = {
-    name: Flags.string({
+    name: flags.string({
       required: true,
       description: 'function name',
       char: 'n',
     }),
-    language: Flags.enum({
+    language: flags.enum({
       options: ['javascript', 'typescript', 'java'],
       description: 'language',
       char: 'l',
@@ -298,7 +298,7 @@ export default class GenerateFunction extends Command {
   }
 
   async run() {
-    const { flags } = await this.parse(GenerateFunction);
+    const { flags } = this.parse(GenerateFunction);
     const fnName = flags.name;
 
     if (fnName.length > 47) {
