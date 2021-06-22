@@ -30,6 +30,7 @@ describe('sf env logdrain list', () => {
       expect(vacuum(ctx.stdout)).to.contain(
         vacuum(`
     ID URL
+    ── ───────────────────────
     1  https://logs-r-us.com/1
     2  https://logs-r-us.com/2
     `)

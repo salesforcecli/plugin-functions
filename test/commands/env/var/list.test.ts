@@ -23,6 +23,7 @@ describe('sf env:var:list', () => {
       expect(vacuum(ctx.stdout)).to.contain(
         vacuum(`
       Key Value
+      ─── ─────
       foo bar
       baz baq
     `)
