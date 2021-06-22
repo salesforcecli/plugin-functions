@@ -79,8 +79,7 @@ describe('env:delete', () => {
 
   test
     .stderr()
-    .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
-    .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(404))
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(404))
     .do(() => {
       sandbox.stub(EnvDelete.prototype, 'resolveScratchOrg' as any).returns({});
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
