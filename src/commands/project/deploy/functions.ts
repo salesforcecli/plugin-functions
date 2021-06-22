@@ -7,7 +7,7 @@
 import * as path from 'path';
 import { URL } from 'url';
 import herokuColor from '@heroku-cli/color';
-import { flags } from '@oclif/command';
+import { Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
 import debugFactory from 'debug';
 import Command from '../../../lib/base';
@@ -32,14 +32,14 @@ export default class ProjectDeployFunctions extends Command {
     'connected-org': FunctionsFlagBuilder.connectedOrg({
       required: true,
     }),
-    branch: flags.string({
+    branch: Flags.string({
       char: 'b',
       description: 'deploy the latest commit from a branch different from the currently active branch',
     }),
-    force: flags.boolean({
+    force: Flags.boolean({
       description: 'ignore warnings and overwrite remote repository (not allowed in production)',
     }),
-    quiet: flags.boolean({
+    quiet: Flags.boolean({
       description: 'limit the amount of output displayed from the deploy process',
       char: 'q',
     }),
@@ -105,7 +105,7 @@ export default class ProjectDeployFunctions extends Command {
   }
 
   async run() {
-    const { flags } = this.parse(ProjectDeployFunctions);
+    const { flags } = await this.parse(ProjectDeployFunctions);
 
     // We pass the api token value to the Git constructor so that it will redact it from any of
     // the server logs
