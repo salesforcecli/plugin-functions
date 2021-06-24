@@ -18,6 +18,7 @@ import {
 } from '../../lib/function-reference-utils';
 import { FunctionsFlagBuilder, confirmationFlag } from '../../lib/flags';
 import Command from '../../lib/base';
+import batchCall from '../../lib/batch-call';
 
 export default class EnvDelete extends Command {
   static description = 'delete an environment';
@@ -115,7 +116,7 @@ export default class EnvDelete extends Command {
         return acc;
       }, []);
       const referencesToRemove = filterProjectReferencesToRemove(allReferences, [], project.name);
-      await connection.metadata.delete('FunctionReference', referencesToRemove);
+      await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
     }
 
     // Delete the application
