@@ -10,11 +10,12 @@ import { cli } from 'cli-ux';
 import { OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
 import { getAliasByUsername } from '@salesforce/plugin-org/lib/shared/utils';
 import { getStyledValue } from '@salesforce/plugin-org/lib/shared/orgHighlighter';
+import { sortBy } from 'lodash';
 import Command from '../../lib/base';
-import { resolveFunctionsPaths } from '../../lib/path-utils';
 import { ComputeEnvironment } from '../../lib/sfdc-types';
 import { FunctionsFlagBuilder } from '../../lib/flags';
 import herokuVariant from '../../lib/heroku-variant';
+import { ensureArray } from '../../lib/function-reference-utils';
 
 export default class EnvDelete extends Command {
   static description = 'display details for an environment';
@@ -29,6 +30,25 @@ export default class EnvDelete extends Command {
       description: 'verbose display output',
     }),
   };
+
+  async resolveScratchOrg(scratchOrgId: string) {
+    // adapted from https://github.com/salesforcecli/plugin-org/blob/3012cc04a670e4bf71e75a02e2f0981a71eb4e0d/src/commands/force/org/list.ts#L44-L90
+    let fileNames: string[] = [];
+    try {
+      fileNames = await AuthInfo.listAllAuthFiles();
+    } catch (error) {
+      if (error.name === 'NoAuthInfoFound') {
+        this.error('No orgs found');
+      } else {
+        throw error;
+      }
+    }
+
+    const metaConfigs = await OrgListUtil.readLocallyValidatedMetaConfigsGroupedByOrgType(fileNames, {});
+
+    const scratchOrgs = sortBy(metaConfigs.scratchOrgs, (v) => [v.alias, v.username]);
+    return scratchOrgs.find((org) => org.orgId === scratchOrgId);
+  }
 
   async run() {
     const { flags } = this.parse(EnvDelete);
@@ -84,14 +104,15 @@ export default class EnvDelete extends Command {
           ...herokuVariant('evergreen'),
         },
       });
+      const salesOrgId = app.data.sales_org_connection?.sales_org_id;
+      const connectedOrg = salesOrgId ? await this.resolveScratchOrg(salesOrgId) : undefined;
+      const connectedOrgAlias = connectedOrg?.alias;
       const project = await this.fetchSfdxProject();
+      const org = await this.fetchOrg(connectedOrgAlias);
+      const connection = org.getConnection();
 
-      let fnNames;
-
-      try {
-        const fnPaths = await resolveFunctionsPaths();
-        fnNames = fnPaths.map((fnPath) => fnPath.split('/')[1]).join('\n');
-      } catch (error) {}
+      const refList = await connection.metadata.list({ type: 'FunctionReference' });
+      const fnNames = ensureArray(refList).map((ref) => ref.fullName.split('-')[1]);
 
       const alias = appName === environment ? undefined : environment;
 
@@ -101,8 +122,8 @@ export default class EnvDelete extends Command {
         environmentName: appName,
         project: project.name,
         createdDate: app.data.created_at,
-        functions: fnNames,
-        connectedOrgs: app.data.sales_org_connection?.sales_org_id,
+        functions: fnNames?.join('\n'),
+        connectedOrgs: salesOrgId,
       };
       return this.print(returnValue);
     } catch (error) {
