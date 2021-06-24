@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.13](https://github.com/salesforcecli/plugin-functions/compare/v0.2.12...v0.2.13) (2021-06-24)
+
+### Bug Fixes
+
+- add --extended hidden flag for debugging ([#96](https://github.com/salesforcecli/plugin-functions/issues/96)) ([ff187b8](https://github.com/salesforcecli/plugin-functions/commit/ff187b8bbf82c4acd849878152b0e2ba12258426))
+
 ### [0.2.12](https://github.com/salesforcecli/plugin-functions/compare/v0.2.11...v0.2.12) (2021-06-24)
 
 ### Bug Fixes
