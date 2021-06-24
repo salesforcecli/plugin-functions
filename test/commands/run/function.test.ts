@@ -24,6 +24,7 @@ describe('run:function', () => {
     runFunctionStub.returns({
       headers: { 'content-type': 'application/json; charset=utf-8' },
       data: 'Something happened!',
+      status: 200,
     });
   });
 
