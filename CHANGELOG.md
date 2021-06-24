@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9](https://github.com/salesforcecli/plugin-functions/compare/v0.2.8...v0.2.9) (2021-06-24)
+
+### Bug Fixes
+
+- upsert function references sequentially ([#94](https://github.com/salesforcecli/plugin-functions/issues/94)) ([1970264](https://github.com/salesforcecli/plugin-functions/commit/1970264a6be0514ed5cb93a02c9ff10cffc39dc9))
+
 ### [0.2.8](https://github.com/salesforcecli/plugin-functions/compare/v0.2.7...v0.2.8) (2021-06-22)
 
 ### Bug Fixes
