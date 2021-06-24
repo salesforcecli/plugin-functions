@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.12](https://github.com/salesforcecli/plugin-functions/compare/v0.2.11...v0.2.12) (2021-06-24)
+
+### Bug Fixes
+
+- In run function, stop the cli action on a successful request ([#97](https://github.com/salesforcecli/plugin-functions/issues/97)) ([463d111](https://github.com/salesforcecli/plugin-functions/commit/463d111cf1f5e5978bf78b9774a1801d204f256b))
+
 ### [0.2.11](https://github.com/salesforcecli/plugin-functions/compare/v0.2.10...v0.2.11) (2021-06-24)
 
 ### [0.2.10](https://github.com/salesforcecli/plugin-functions/compare/v0.2.9...v0.2.10) (2021-06-24)
