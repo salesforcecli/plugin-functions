@@ -67,6 +67,7 @@ export default class Invoke extends Command {
     cli.action.start(`${herokuColor.cyanBright('POST')} ${flags.url}`);
     try {
       const response = await runFunction(runFunctionOptions as RunFunctionOptions);
+      cli.action.stop(herokuColor.greenBright(response.status.toString()));
       this.writeResponse(response);
     } catch (error) {
       cli.debug(error);
