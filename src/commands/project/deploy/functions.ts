@@ -10,18 +10,20 @@ import herokuColor from '@heroku-cli/color';
 import { flags } from '@oclif/command';
 import { cli } from 'cli-ux';
 import debugFactory from 'debug';
+import { UpsertResult } from 'jsforce';
 import Command from '../../../lib/base';
+import batchCall from '../../../lib/batch-call';
+import { FunctionsFlagBuilder } from '../../../lib/flags';
+import {
+  ensureArray,
+  filterProjectReferencesToRemove,
+  FullNameReference,
+  splitFullName,
+} from '../../../lib/function-reference-utils';
 import Git from '../../../lib/git';
 import { resolveFunctionsPaths } from '../../../lib/path-utils';
 import { parseProjectToml } from '../../../lib/project-toml';
 import { ComputeEnvironment, FunctionReference, SfdxProjectConfig } from '../../../lib/sfdc-types';
-import { FunctionsFlagBuilder } from '../../../lib/flags';
-import {
-  filterProjectReferencesToRemove,
-  splitFullName,
-  FullNameReference,
-  ensureArray,
-} from '../../../lib/function-reference-utils';
 
 const debug = debugFactory('project:deploy:functions');
 
@@ -181,8 +183,12 @@ export default class ProjectDeployFunctions extends Command {
 
     let shouldExitNonZero = false;
 
-    let results = await connection.metadata.upsert('FunctionReference', references);
-    results = ensureArray(results);
+    // Since the metadata upsert API can only handle 10 records at a time AND needs to run in sequence, we need to
+    // make sure that we're only submitting 10 records at once and then waiting for that batch to complete before
+    // submitting more
+    const results = await batchCall<FunctionReference, UpsertResult>(references, (chunk) =>
+      connection.metadata.upsert('FunctionReference', chunk)
+    );
 
     results.forEach((result) => {
       if (!result.success) {
@@ -223,7 +229,7 @@ export default class ProjectDeployFunctions extends Command {
       referencesToRemove.forEach((ref) => {
         this.log(ref);
       });
-      await connection.metadata.delete('FunctionReference', referencesToRemove);
+      await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
     }
 
     cli.action.stop();

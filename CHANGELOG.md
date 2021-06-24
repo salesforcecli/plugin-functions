@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/salesforcecli/plugin-functions/compare/v0.2.9...v0.2.10) (2021-06-24)
+
+### Bug Fixes
+
+- **cli:** use function references for env:display function list rather than local filesystem ([#93](https://github.com/salesforcecli/plugin-functions/issues/93)) ([9558779](https://github.com/salesforcecli/plugin-functions/commit/9558779a02c653c5e00d486bed9e0f0b5fdb17ef))
+
+### [0.2.9](https://github.com/salesforcecli/plugin-functions/compare/v0.2.8...v0.2.9) (2021-06-24)
+
+### Bug Fixes
+
+- upsert function references sequentially ([#94](https://github.com/salesforcecli/plugin-functions/issues/94)) ([1970264](https://github.com/salesforcecli/plugin-functions/commit/1970264a6be0514ed5cb93a02c9ff10cffc39dc9))
+
 ### [0.2.8](https://github.com/salesforcecli/plugin-functions/compare/v0.2.7...v0.2.8) (2021-06-22)
 
 ### Bug Fixes
