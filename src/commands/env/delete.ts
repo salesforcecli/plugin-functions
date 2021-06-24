@@ -8,8 +8,6 @@ import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { AuthInfo, Org } from '@salesforce/core';
 import { cli } from 'cli-ux';
-import { sortBy } from 'lodash';
-import { OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
 import {
   filterProjectReferencesToRemove,
   splitFullName,
@@ -34,23 +32,19 @@ export default class EnvDelete extends Command {
     confirm: confirmationFlag,
   };
 
-  async resolveScratchOrg(scratchOrgId: string) {
-    // adapted from https://github.com/salesforcecli/plugin-org/blob/3012cc04a670e4bf71e75a02e2f0981a71eb4e0d/src/commands/force/org/list.ts#L44-L90
-    let fileNames: string[] = [];
-    try {
-      fileNames = await AuthInfo.listAllAuthFiles();
-    } catch (error) {
-      if (error.name === 'NoAuthInfoFound') {
-        this.error('No orgs found');
-      } else {
-        throw error;
+  async resolveScratchOrg(scratchOrgId: string): Promise<Org> {
+    const infos = await AuthInfo.listAllAuthorizations();
+
+    if (infos.length === 0) throw new Error('No connected orgs found');
+
+    for (const info of infos) {
+      if (info.orgId === scratchOrgId) {
+        const org = await Org.create({ aliasOrUsername: info.username });
+        return (await org.determineIfScratch()) ? org : Org.create();
       }
     }
 
-    const metaConfigs = await OrgListUtil.readLocallyValidatedMetaConfigsGroupedByOrgType(fileNames, {});
-
-    const scratchOrgs = sortBy(metaConfigs.scratchOrgs, (v) => [v.alias, v.username]);
-    return scratchOrgs.find((org) => org.orgId === scratchOrgId);
+    return Org.create();
   }
 
   async run() {
@@ -101,10 +95,8 @@ export default class EnvDelete extends Command {
     }
 
     // Find and delete all connected function references if they exist
-    const connectedOrg = await this.resolveScratchOrg(app.data.sales_org_connection?.sales_org_id);
-    const connectedOrgAlias = connectedOrg?.alias;
+    const org = await this.resolveScratchOrg(app.data.sales_org_connection?.sales_org_id);
     const project = await this.fetchSfdxProject();
-    const org = await this.fetchOrg(connectedOrgAlias);
     const connection = org.getConnection();
     let refList = await connection.metadata.list({ type: 'FunctionReference' });
     refList = ensureArray(refList);

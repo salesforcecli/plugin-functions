@@ -62,8 +62,8 @@ export default class ProjectDeployFunctions extends Command {
       return url.toString();
     }
 
-    const username = this.apiNetrcMachine.get('login');
-    const token = this.apiNetrcMachine.get('password');
+    const username = this.username;
+    const token = this.auth;
 
     if (!username || !token) {
       this.error('No login found. Please log in using the `login:functions` command.');
@@ -109,7 +109,7 @@ export default class ProjectDeployFunctions extends Command {
 
     // We pass the api token value to the Git constructor so that it will redact it from any of
     // the server logs
-    const redactedToken = process.env.SALESFORCE_FUNCTIONS_API_KEY ?? this.apiNetrcMachine.get('password');
+    const redactedToken = this.auth;
     this.git = new Git([redactedToken ?? '']);
 
     // We don't want to deploy anything if they've got work that hasn't been committed yet because

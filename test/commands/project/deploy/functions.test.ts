@@ -10,7 +10,7 @@ import { Org, SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
 import ProjectDeployFunctions from '../../../../src/commands/project/deploy/functions';
 import Git from '../../../../src/lib/git';
-import NetRcMachine from '../../../../src/lib/netrc';
+import { AuthStubs } from '../../../helpers/auth';
 
 const sandbox = sinon.createSandbox();
 
@@ -134,10 +134,6 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
-      const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any);
-      netrcStub.withArgs('login').returns('login');
-      netrcStub.withArgs('password').returns('password');
-
       sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .finally(() => {
@@ -153,6 +149,39 @@ describe('sf project deploy functions', () => {
       expect(ctx.stdout).to.not.include('Removing the following functions that were deleted locally:');
     });
 
+  // Falls back to netrs
+  test
+    .stdout()
+    .stderr()
+    .do(() => {
+      sandbox.stub(Git.prototype as any, 'hasUnpushedFiles').returns(false);
+      sandbox.stub(Git.prototype, 'status' as any).returns('On branch main');
+      const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any);
+      gitExecStub.withArgs(sinon.match.array.startsWith(['push'])).returns({ stdout: '', stderr: '' });
+
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
+
+      // Falls back to netrc
+      AuthStubs.getToken.returns(undefined);
+      AuthStubs.netrc.withArgs('login').returns('login');
+      AuthStubs.netrc.withArgs('password').returns('password');
+
+      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .nock('https://api.heroku.com', (api) => {
+      api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
+    })
+    .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
+    .it('deploys a function using netrc', (ctx) => {
+      expect(ctx.stdout).to.include('Reference for sweet_project-fn1 created');
+      expect(ctx.stdout).to.include('Reference for sweet_project-fn2 created');
+      expect(ctx.stdout).to.not.include('Removing the following functions that were deleted locally:');
+    });
+
   // When specifying another branch
   test
     .stdout()
@@ -163,10 +192,6 @@ describe('sf project deploy functions', () => {
 
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK_WITH_DELETED_FUNCTION);
-
-      const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any);
-      netrcStub.withArgs('login').returns('login');
-      netrcStub.withArgs('password').returns('password');
 
       sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
@@ -204,10 +229,6 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK_WITH_DELETED_FUNCTION);
 
-      const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any);
-      netrcStub.withArgs('login').returns('login');
-      netrcStub.withArgs('password').returns('password');
-
       sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .finally(() => {
@@ -235,9 +256,8 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
-      const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any);
-      netrcStub.withArgs('login').returns('');
-      netrcStub.withArgs('password').returns('');
+      AuthStubs.getToken.returns(undefined);
+
       sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .add('execStub', () => {
@@ -248,7 +268,7 @@ describe('sf project deploy functions', () => {
     })
     .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
     .catch((error) => {
-      expect(error.message).to.include('please login with sf login functions');
+      expect(error.message).to.include('Please login with `sf login functions`');
     })
     .it('errors when there is no login in netrc', (ctx) => {
       expect(ctx.execStub).to.not.have.been.called;
@@ -267,10 +287,6 @@ describe('sf project deploy functions', () => {
 
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-
-      const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any);
-      netrcStub.withArgs('login').returns('login');
-      netrcStub.withArgs('password').returns('password');
 
       sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
@@ -313,10 +329,6 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
-      const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any);
-      netrcStub.withArgs('login').returns('login');
-      netrcStub.withArgs('password').returns('password');
-
       sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .add('execStub', () => {
@@ -348,10 +360,6 @@ describe('sf project deploy functions', () => {
       sandbox.stub(Git.prototype, 'status' as any).returns('On branch main');
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-
-      const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any);
-      netrcStub.withArgs('login').returns('login');
-      netrcStub.withArgs('password').returns('password');
 
       sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
@@ -389,10 +397,6 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
-      const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any);
-      netrcStub.withArgs('login').returns('login');
-      netrcStub.withArgs('password').returns('password');
-
       sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .finally(() => {
@@ -418,10 +422,6 @@ describe('sf project deploy functions', () => {
 
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-
-      const netrcStub = sandbox.stub(NetRcMachine.prototype, 'get' as any);
-      netrcStub.withArgs('login').returns('login');
-      netrcStub.withArgs('password').returns('password');
 
       sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns([
         ...FUNCTION_REFS_MOCK,
