@@ -2,7 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/salesforcecli/plugin-functions/compare/v0.2.7...v0.2.8) (2021-06-22)
+
+### Bug Fixes
+
+- guard against undefined in metadata list in `env:delete` command ([#91](https://github.com/salesforcecli/plugin-functions/issues/91)) ([f9e3ba6](https://github.com/salesforcecli/plugin-functions/commit/f9e3ba64703c68e2eb3a86a505c2549b88f53d12))
+
+### [0.2.7](https://github.com/salesforcecli/plugin-functions/compare/v0.2.6...v0.2.7) (2021-06-22)
+
+# <<<<<<< HEAD
+
+### [0.2.6](https://github.com/salesforcecli/plugin-functions/compare/v0.2.5...v0.2.6) (2021-06-22)
+
+### [0.2.5](https://github.com/salesforcecli/plugin-functions/compare/v0.2.4...v0.2.5) (2021-06-21)
+
 ### [0.2.4](https://github.com/salesforcecli/plugin-functions/compare/v0.2.3...v0.2.4) (2021-06-16)
+
+> > > > > > > 4a8a4c42536a18318eff50300b583674174f81d1
 
 ### Bug Fixes
 
