@@ -77,16 +77,22 @@ const GROUPED_ORGS_MOCK = {
   ],
 };
 
+const ORG_ENV_NAME = 'my-org-env';
+
+const COMPUTE_ENV_NAME = 'my-compute-env';
+const COMPUTE_ENV_ALIAS = 'my-compute-alias';
+
 const APP_MOCK = {
+  id: 'app-id',
+  space: {
+    id: 'space-id',
+  },
+  name: COMPUTE_ENV_NAME,
   created_at: '2021-05-05T21:57:37Z',
   sales_org_connection: {
     sales_org_id: '00D9A0000009JGUUA2',
   },
 };
-const ORG_ENV_NAME = 'my-org-env';
-
-const COMPUTE_ENV_NAME = 'my-compute-env';
-const COMPUTE_ENV_ALIAS = 'my-compute-alias';
 
 const ORG_MOCK = {
   getUsername: () => 'fakeUsername',
@@ -186,6 +192,30 @@ describe('sf env display', () => {
       expect(ctx.stdout).to.include(APP_MOCK.created_at);
       expect(ctx.stdout).to.include('fn1');
       expect(ctx.stdout).to.include('fn2');
+    });
+
+  test
+    .stderr()
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200, APP_MOCK))
+    .stdout()
+    .do(() => {
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
+      const error = new Error('No AuthInfo found');
+      sandbox
+        .stub(Org, 'create' as any)
+        .onCall(0)
+        .throws(error);
+      sandbox.stub(EnvDisplay.prototype, 'resolveScratchOrg' as any).returns({});
+      sandbox.stub(EnvDisplay.prototype, 'fetchOrg' as any).returns(ORG_MOCK);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .command(['env:display', `--environment=${COMPUTE_ENV_NAME}`, '--extended'])
+    .it('lists app id and space id when -x flag is passed along with a compute environment', (ctx) => {
+      expect(ctx.stdout).to.include('App Id');
+      expect(ctx.stdout).to.include('Space Id');
     });
 
   test
