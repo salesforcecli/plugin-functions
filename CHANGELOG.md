@@ -10,15 +10,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.2.7](https://github.com/salesforcecli/plugin-functions/compare/v0.2.6...v0.2.7) (2021-06-22)
 
-# <<<<<<< HEAD
-
 ### [0.2.6](https://github.com/salesforcecli/plugin-functions/compare/v0.2.5...v0.2.6) (2021-06-22)
 
 ### [0.2.5](https://github.com/salesforcecli/plugin-functions/compare/v0.2.4...v0.2.5) (2021-06-21)
 
 ### [0.2.4](https://github.com/salesforcecli/plugin-functions/compare/v0.2.3...v0.2.4) (2021-06-16)
-
-> > > > > > > 4a8a4c42536a18318eff50300b583674174f81d1
 
 ### Bug Fixes
 

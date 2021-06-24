@@ -384,11 +384,6 @@ EXAMPLE
        $ sfdx run:function:start --network host --no-pull --clear-cache --debug-port 9000 --port 5000
 ```
 
-<<<<<<< HEAD
-_See code: [src/commands/run/function/start.ts](https://github.com/salesforcecli/plugin-functions/blob/v0.2.3/src/commands/run/function/start.ts)_
-=======
 _See code: [src/commands/run/function/start.ts](https://github.com/salesforcecli/plugin-functions/blob/v0.2.7/src/commands/run/function/start.ts)_
-
-> > > > > > > 4a8a4c42536a18318eff50300b583674174f81d1
 
 <!-- commandsstop -->
