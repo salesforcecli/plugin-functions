@@ -5,13 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
-import herokuColor from '@heroku-cli/color';
 import { Command, flags } from '@oclif/command';
-import { cli } from 'cli-ux';
+import herokuColor from '@heroku-cli/color';
 
-import Benny from '../../../benny';
-import { updateBenny } from '../../../install-benny';
-import Util from '../../../util';
+import { getFunctionsBinary, getProjectDescriptor } from '@heroku/functions-core';
+import { cli } from 'cli-ux';
 
 export default class Start extends Command {
   static description = 'build and run function image locally';
@@ -79,6 +77,7 @@ export default class Start extends Command {
 
   async run() {
     const { flags } = this.parse(Start);
+
     const buildOpts = {
       builder: flags.builder,
       'clear-cache': flags['clear-cache'],
@@ -94,17 +93,16 @@ export default class Start extends Command {
       'debug-port': flags['debug-port'],
       env: flags.env,
     };
+
     let descriptor;
     try {
-      descriptor = await Util.getProjectDescriptor(buildOpts.descriptor);
+      descriptor = await getProjectDescriptor(buildOpts.descriptor);
     } catch (error) {
       cli.error(error);
     }
-    await updateBenny();
-
     const functionName = descriptor.com.salesforce.id;
 
-    const benny = new Benny();
+    const benny = await getFunctionsBinary();
 
     const writeMsg = (msg: { text: string; timestamp: string }) => {
       const outputMsg = msg.text;
@@ -113,15 +111,14 @@ export default class Start extends Command {
         cli.info(outputMsg);
       }
     };
-
     benny.on('pack', writeMsg);
     benny.on('container', writeMsg);
 
-    benny.on('error', (msg) => {
+    benny.on('error', (msg: any) => {
       cli.error(msg.text, { exit: false });
     });
 
-    benny.on('log', (msg) => {
+    benny.on('log', (msg: any) => {
       if (msg.level === 'debug' && !flags.verbose) return;
       if (msg.level === 'error') {
         cli.exit();

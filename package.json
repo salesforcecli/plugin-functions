@@ -12,9 +12,11 @@
     "@heroku-cli/schema": "^1.0.25",
     "@heroku/eventsource": "^1.0.7",
     "@heroku/function-toml": "^0.0.3",
-    "@heroku/project-descriptor": "^0.0.5",
+    "@heroku/functions-core": "0.0.2",
+    "@heroku/project-descriptor": "0.0.5",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
+    "@oclif/errors": "^1.3.4",
     "@oclif/plugin-not-found": "^1.2.4",
     "@salesforce/core": "^2.20.5",
     "@salesforce/plugin-org": "^1.6.7",
@@ -86,20 +88,12 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "benny": {
-    "name": "benny",
-    "bucket": "heroku-build-artifacts",
-    "major-version": "2"
-  },
   "files": [
-    "benny.d.ts",
-    "benny.js",
     "/bin",
     "/lib",
     "/messages",
     "/templates",
-    "/oclif.manifest.json",
-    "/priv/public.key"
+    "/oclif.manifest.json"
   ],
   "homepage": "https://github.com/salesforcecli/plugin-functions",
   "keywords": [

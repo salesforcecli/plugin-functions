@@ -5,17 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as fs from 'fs';
-import herokuColor from '@heroku-cli/color';
 import { Command, flags } from '@oclif/command';
-import { Config, Connection, Org } from '@salesforce/core';
-import axios, { AxiosResponse } from 'axios';
+import { runFunction, RunFunctionOptions } from '@heroku/functions-core';
 import { cli } from 'cli-ux';
-import { HTTP, CloudEvent } from 'cloudevents';
-import { default as CE_CONSTANTS } from 'cloudevents/dist/constants';
-import { v4 as uuid } from 'uuid';
+import herokuColor from '@heroku-cli/color';
+import { AxiosResponse } from 'axios';
+import { ConfigAggregator } from '@salesforce/core';
 import getStdin from '../../lib/get-stdin';
-
-import { updateBenny } from '../../install-benny';
 
 export default class Invoke extends Command {
   static description = 'send a cloudevent to a function';
@@ -54,27 +50,26 @@ export default class Invoke extends Command {
     }),
   };
 
-  private static readonly HEADER_REQUEST = 'X-Request-Id';
-
   async run() {
     const { flags } = this.parse(Invoke);
-
-    const data = await this.getPayloadData(flags.payload);
-    if (!data) {
+    flags.payload = await this.getPayloadData(flags.payload);
+    if (!flags.payload) {
       this.error('no payload provided (provide via stdin or -p)');
-      return;
     }
-
-    await updateBenny();
-
+    const aggregator = await ConfigAggregator.create();
+    const defaultusername = aggregator.getPropertyValue('defaultusername');
+    if (!flags['connected-org'] && !defaultusername) {
+      this.warn('No -o connected org or defaultusername found, context will be partially initialized');
+    }
+    const aliasOrUser = flags['connected-org'] || `defaultusername ${defaultusername}`;
+    this.log(`Using ${aliasOrUser} login credential to initialize context`);
+    const runFunctionOptions = { ...flags, targetusername: flags['connected-org'] ?? defaultusername };
+    cli.action.start(`${herokuColor.cyanBright('POST')} ${flags.url}`);
     try {
-      cli.action.start(`${herokuColor.cyanBright('POST')} ${flags.url}`);
-      const cloudevent = await this.buildCloudevent(data, flags['connected-org'], flags.structured);
-      const response = await this.sendRequest(cloudevent, flags.url, flags.headers, flags.structured);
-      cli.action.stop(herokuColor.greenBright(response.status.toString()));
+      const response = await runFunction(runFunctionOptions as RunFunctionOptions);
       this.writeResponse(response);
     } catch (error) {
-      this.debug(error);
+      cli.debug(error);
       if (error.response) {
         cli.action.stop(herokuColor.redBright(`${error.response.status} ${error.response.statusText}`));
         this.debug(error.response);
@@ -86,184 +81,11 @@ export default class Invoke extends Command {
     }
   }
 
-  async buildSfContexts(targetusername: string | undefined, requestId: string): Promise<object> {
-    try {
-      // auth to scratch org using targetusername
-      const org: Org = await Org.create({
-        aliasOrUsername: targetusername,
-      });
-
-      const aliasOrUser =
-        targetusername || `defaultusername ${org.getConfigAggregator().getInfo(Config.DEFAULT_USERNAME).value}`;
-      this.log(`Using ${aliasOrUser} login credential to initialize context`);
-
-      // refresh to get the access Token
-      await org.refreshAuth();
-
-      const orgusername = org.getUsername();
-      const orgId18 = org.getOrgId().slice(0, 18);
-      const connection: Connection = org.getConnection();
-
-      const userContext = {
-        salesforceBaseUrl: connection.instanceUrl,
-        orgId: orgId18,
-        orgDomainUrl: connection.instanceUrl,
-        username: orgusername || '',
-        userId: connection.getAuthInfoFields().userId || '', // userId may not be set
-        onBehalfOfUserId: '', // onBehalfOfUserId not set
-      };
-
-      const sfcontext = Buffer.from(
-        JSON.stringify({
-          apiVersion: connection.version,
-          payloadVersion: 'invoke-v0.1',
-          userContext,
-        })
-      ).toString('base64');
-
-      const sffncontext = Buffer.from(
-        JSON.stringify({
-          accessToken: connection.accessToken,
-          requestId,
-        })
-      ).toString('base64');
-
-      return { sfcontext, sffncontext };
-    } catch (error) {
-      if (error.name === 'AuthInfoCreationError' || error.name === 'NoUsername') {
-        this.warn('No -o connected org or defaultusername found, context will be partially initialized');
-        const fakeUserContext = {
-          orgId: '000000000000000000',
-          orgDomainUrl: '',
-          salesforceBaseUrl: '',
-          username: '',
-          userId: '',
-          onBehalfOfUserId: '',
-        };
-        const fakeSFcontext = Buffer.from(
-          JSON.stringify({
-            payloadVersion: 'invoke-v0.1',
-            userContext: fakeUserContext,
-          })
-        ).toString('base64');
-
-        const fakeSFFNContext = Buffer.from(
-          JSON.stringify({
-            accessToken: '',
-            requestId,
-          })
-        ).toString('base64');
-
-        return {
-          sfcontext: fakeSFcontext,
-          sffncontext: fakeSFFNContext,
-        };
-      }
-      throw error;
-    }
-  }
-
   async getPayloadData(payload: string | undefined): Promise<string | undefined> {
     if (payload && payload.startsWith('@')) {
       return fs.readFileSync(payload.slice(1), 'utf8');
     }
     return payload || getStdin();
-  }
-
-  async buildCloudevent(
-    userdata: string,
-    targetusername: string | undefined,
-    structured: boolean
-  ): Promise<CloudEvent> {
-    const requestId: string = uuid();
-    const data: Buffer | string | object = this.toCloudEventData(userdata, structured);
-
-    // Base64(JSON) encoded `sfcontext` and `sffncontext` keys/values if possible.  Empty object otherwise.
-    const contexts: {} = await this.buildSfContexts(targetusername, requestId);
-
-    // Create a Cloudevent 1.0-compliant object with sfcontext and sffncontext extensions
-    return new CloudEvent({
-      id: requestId,
-      specversion: '1.0',
-      source: 'urn:event:from:local',
-      type: 'com.evergreen.functions.test',
-      subject: 'test-subject',
-      datacontenttype: 'application/json; charset=utf-8',
-      ...contexts,
-      data,
-    });
-  }
-
-  async sendRequest(cloudevent: CloudEvent, url: string, headers: any, structured: boolean): Promise<AxiosResponse> {
-    const sendHeaders = this.buildRequestHeaders(headers, cloudevent.id, structured); // rm structured?
-    // formerly protocol: structured ? 1 : 0
-    const protocolFn = structured ? HTTP.structured : HTTP.binary;
-    const message = protocolFn(cloudevent);
-
-    return axios({
-      method: 'post',
-      url,
-      data: message.body,
-      headers: {
-        ...sendHeaders,
-        ...message.headers,
-      },
-    });
-  }
-
-  buildRequestHeaders(headers: any, requestId: string, structured: boolean): any {
-    const requestHeaders = {} as any;
-
-    if (headers) {
-      headers.forEach((h: any) => {
-        const headerSplits = h.split(':');
-        requestHeaders[headerSplits[0]] = headerSplits[1];
-      });
-    }
-
-    // set the request id header to be used by function logger initialization
-    requestHeaders[Invoke.HEADER_REQUEST] = requestId;
-
-    // set structured cloudevents content-type if needed, should be handled by StructuredEmitter - bug?
-    if (structured) {
-      requestHeaders[CE_CONSTANTS.HEADER_CONTENT_TYPE] = CE_CONSTANTS.DEFAULT_CE_CONTENT_TYPE;
-    }
-
-    return requestHeaders;
-  }
-
-  // wrap userdata as a Buffer if sending via HttpBinary (!structured), optionally json-
-  // escaping before wrapping.
-  bufferIfHttpBinary(userdata: string, structured: boolean, escape: boolean): Buffer | string {
-    return structured ? userdata : Buffer.from(escape ? JSON.stringify(userdata) : userdata, 'utf-8');
-  }
-
-  // CloudEvents 1.0 data element must be either a well-formed JSON `object` or a properly-
-  // quoted JSON `string`.  Try to parse into JSON object first - if parsing fails or we
-  // get an unsupported type (boolean or number), return as a properly-escaped string.
-  // When sending via HTTPBinary (!structure), that properly-escaped string must be in a Buffer
-  // to be posted without modification by the cloudevents http binary emitter.
-  toCloudEventData(userdata: string, structured: boolean): Buffer | string | object {
-    let eventData: Buffer | string | object;
-    try {
-      const parsedData = JSON.parse(userdata);
-      if (typeof parsedData === 'object' && parsedData !== null) {
-        // successfully parsed as js object that will be serialized properly as cloudevents data
-        eventData = parsedData;
-      } else if (typeof parsedData === 'string') {
-        // successfully parsed a json-quoted string, wrap original userdata string w/buffer
-        eventData = this.bufferIfHttpBinary(userdata, structured, false);
-      } else {
-        // other types like boolean or number should be json-escaped
-        this.debug(`payload data not string|object (${typeof parsedData}), treating as string`);
-        eventData = this.bufferIfHttpBinary(userdata, structured, true);
-      }
-    } catch (error) {
-      this.debug(`payload data not parseable as json, treating as string: ${error}`);
-      // If given a raw string that was not json, escape/buffer if necessary
-      eventData = this.bufferIfHttpBinary(userdata, structured, true);
-    }
-    return eventData;
   }
 
   writeResponse(response: AxiosResponse) {
