@@ -130,9 +130,9 @@ export default abstract class Command extends Base {
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
     const aliases = await Aliases.create({});
     const matchingAlias = aliases.get(appNameOrAlias);
-    let appName;
+    let appName: string;
     if (matchingAlias) {
-      appName = matchingAlias;
+      appName = matchingAlias as string;
     } else {
       appName = appNameOrAlias;
     }
