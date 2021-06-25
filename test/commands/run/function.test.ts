@@ -12,7 +12,6 @@ import { MockTestOrgData, testSetup } from '@salesforce/core/lib/testSetup';
 import * as sinon from 'sinon';
 
 import * as library from '@heroku/functions-core';
-import Sinon = require('sinon');
 
 describe('run:function', () => {
   const $$ = testSetup();
@@ -21,7 +20,7 @@ describe('run:function', () => {
   let testData: MockTestOrgData;
   let sandbox: sinon.SinonSandbox;
   let runFunctionStub: sinon.SinonStub;
-  let stopActionSub: Sinon.SinonStub;
+  let stopActionSub: sinon.SinonStub;
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     runFunctionStub = sandbox.stub(library, 'runFunction');
