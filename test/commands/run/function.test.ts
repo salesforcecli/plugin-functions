@@ -6,10 +6,13 @@
  */
 import { expect, test } from '@oclif/test';
 import { Config } from '@salesforce/core';
+import { cli } from 'cli-ux';
+
 import { MockTestOrgData, testSetup } from '@salesforce/core/lib/testSetup';
 import * as sinon from 'sinon';
 
 import * as library from '@heroku/functions-core';
+import Sinon = require('sinon');
 
 describe('run:function', () => {
   const $$ = testSetup();
@@ -18,6 +21,7 @@ describe('run:function', () => {
   let testData: MockTestOrgData;
   let sandbox: sinon.SinonSandbox;
   let runFunctionStub: sinon.SinonStub;
+  let stopActionSub: Sinon.SinonStub;
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     runFunctionStub = sandbox.stub(library, 'runFunction');
@@ -26,6 +30,7 @@ describe('run:function', () => {
       data: 'Something happened!',
       status: 200,
     });
+    stopActionSub = sandbox.stub(cli.action, 'stop');
   });
 
   afterEach(() => {
@@ -94,7 +99,50 @@ describe('run:function', () => {
       .it('Should log response', async (ctx) => {
         expect(ctx.stdout).to.contain('Something happened!');
       });
+    test
+      .command(['run:function', '-l', targetUrl, '-p', userpayload])
+      .it('Should stop spinner and display status code', async () => {
+        sinon.assert.calledWith(stopActionSub, sinon.match('200'));
+      });
   });
+
+  context('with failed response', () => {
+    beforeEach(async () => {
+      runFunctionStub.rejects({
+        response: {
+          headers: { 'content-type': 'application/json; charset=utf-8' },
+          data: 'Something bad happened!',
+          status: 500,
+        },
+      });
+    });
+
+    test
+      .stub(process, 'exit', () => '')
+      .command(['run:function', '-l', targetUrl, '-p', userpayload])
+      .catch((error) => expect(error.message).to.contain('Something bad happened!'))
+      .finally(() => {
+        sinon.assert.calledWith(stopActionSub, sinon.match('500'));
+      })
+      .it('Should log response and stop spinner with status code');
+  });
+
+  context('with failure and no response', () => {
+    const errorMessage = 'Something unknown happened';
+    beforeEach(async () => {
+      runFunctionStub.rejects(new Error(errorMessage));
+    });
+
+    test
+      .stub(process, 'exit', () => '')
+      .command(['run:function', '-l', targetUrl, '-p', userpayload])
+      .catch((error) => expect(error.message).to.contain(errorMessage))
+      .finally(() => {
+        sinon.assert.calledWith(stopActionSub, sinon.match('Error'));
+      })
+      .it('Should log error and stop spinner with status code');
+  });
+
   context('without org or defaultuser', () => {
     process.stdout.isTTY = true;
     process.stderr.isTTY = true;
