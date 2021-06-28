@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9-ga.1](https://github.com/salesforcecli/plugin-functions/compare/v0.2.9-ga.0...v0.2.9-ga.1) (2021-06-28)
+
+### Features
+
+- add findDeployers hook ([#101](https://github.com/salesforcecli/plugin-functions/issues/101)) ([e434a5e](https://github.com/salesforcecli/plugin-functions/commit/e434a5e07ff2bcd9811b347ae855fbc5eca55b21))
+
 ### [0.2.9-ga.0](https://github.com/salesforcecli/plugin-functions/compare/v0.2.8...v0.2.9-ga.0) (2021-06-22)
 
 ### [0.2.8](https://github.com/salesforcecli/plugin-functions/compare/v0.2.7...v0.2.8) (2021-06-22)
