@@ -17,12 +17,12 @@ export type FunctionsDir = {
 };
 
 export class FunctionsDeployable extends Deployable {
-  public constructor(public functionDir: FunctionsDir, private parent: Deployer) {
+  public constructor(public functionsDir: string, private parent: Deployer) {
     super();
   }
 
   public getAppName(): string {
-    return this.functionDir.name;
+    return basename(this.functionsDir);
   }
 
   public getAppType(): string {
@@ -30,7 +30,7 @@ export class FunctionsDeployable extends Deployable {
   }
 
   public getAppPath(): string {
-    return basename(this.functionDir.fullPath);
+    return basename(this.functionsDir);
   }
 
   public getEnvType(): string {
@@ -43,9 +43,9 @@ export class FunctionsDeployable extends Deployable {
 }
 
 export class FunctionsDeployer extends Deployer {
-  public constructor(private fn: FunctionsDir, protected options: Options) {
+  public constructor(private functionsDir: string, protected options: Options) {
     super();
-    this.deployables = [new FunctionsDeployable(fn, this)];
+    this.deployables = [new FunctionsDeployable(functionsDir, this)];
   }
 
   public async setup(preferences: Preferences): Promise<Dictionary<string>> {
@@ -57,18 +57,14 @@ export class FunctionsDeployer extends Deployer {
 
   public async deploy(): Promise<void> {
     this.log();
-    this.log(`Deploying ${cyan.bold(this.fn.name)}`);
+    this.log(`Deploying ${cyan.bold(basename(this.functionsDir))}`);
   }
 }
 
 const hook = async function (options: Options): Promise<Deployer[]> {
   const project = await SfdxProject.resolve();
-  const functionsDir = join(project.getPath(), 'functions');
-  const deployers = (await fs.readdir(functionsDir)).map((f) => {
-    const functionDir = { name: f, fullPath: join(functionsDir, f) };
-    return new FunctionsDeployer(functionDir, options);
-  });
-  return deployers;
+  const functionsPath = join(project.getPath(), 'functions');
+  return [new FunctionsDeployer(functionsPath, options)];
 };
 
 export default hook;
