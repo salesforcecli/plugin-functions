@@ -114,9 +114,9 @@ describe('run:function', () => {
   context('with payload', () => {
     beforeEach(async () => {
       testData = new MockTestOrgData();
-      $$.configStubs.AuthInfoConfig = { contents: await testData.getConfig() };
+      $$.configStubs.GlobalInfo = { contents: { orgs: { [testData.username]: await testData.getConfig() } } };
 
-      const config: Config = await Config.create(Config.getDefaultOptions(true));
+      const config = await Config.create(Config.getDefaultOptions(true));
       await config.set(Config.DEFAULT_USERNAME, testData.username);
       await config.write();
     });
@@ -298,7 +298,8 @@ describe('run:function', () => {
   context('with targetuser for scratch org', () => {
     beforeEach(async () => {
       testData = new MockTestOrgData();
-      $$.configStubs.AuthInfoConfig = { contents: await testData.getConfig() };
+      $$.configStubs.GlobalInfo = { contents: { orgs: { [testData.username]: await testData.getConfig() } } };
+      $$.configStubs.Aliases = { contents: { orgs: { sorg1: testData.username } } };
     });
 
     test
@@ -328,7 +329,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-l', targetUrl, `-p ${userpayload}`, '-o sorg1'])
+      .command(['run:function', '-l', targetUrl, '-p', userpayload, '-o', 'sorg1'])
       .it('cloudEvent body and ce-sf*context headers should have sfdc fields set', (ctx) => {
         // nock will not match the request if the headers are not correct
         expect(ctx.stdout).to.contain('"result": true');
@@ -345,7 +346,7 @@ describe('run:function', () => {
           .reply(200, { result: true })
       )
       .stdout()
-      .command(['run:function', '-l', targetUrl, `-p ${userpayload}`, '-o sorg1'])
+      .command(['run:function', '-l', targetUrl, '-p', userpayload, '-o', 'sorg1'])
       .it('should attempt to update benny to the latest version', () => {
         sinon.assert.calledOnce(bennyStub);
       });
