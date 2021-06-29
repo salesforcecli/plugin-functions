@@ -98,16 +98,6 @@ workflows:
           filters:
             branches:
               only: main
-      - release-management/release-package:
-          sign: true
-          github-release: false
-          requires:
-            - release-management/test-package
-          tag: ga
-          prerelease: true
-          filters:
-            branches:
-              only: ga
   test-ts-update:
     triggers:
       - schedule:
