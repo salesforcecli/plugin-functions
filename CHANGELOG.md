@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9-ga.2](https://github.com/salesforcecli/plugin-functions/compare/v0.2.9-ga.1...v0.2.9-ga.2) (2021-06-29)
+
+### Features
+
+- use core to store creds ([#95](https://github.com/salesforcecli/plugin-functions/issues/95)) ([517f0d3](https://github.com/salesforcecli/plugin-functions/commit/517f0d3952a6a4a4f34d87402e4dedb9403b326d))
+
 ### [0.2.9-ga.1](https://github.com/salesforcecli/plugin-functions/compare/v0.2.9-ga.0...v0.2.9-ga.1) (2021-06-28)
 
 ### Features
