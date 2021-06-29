@@ -6,7 +6,7 @@
  */
 import { URL } from 'url';
 import { Command as Base } from '@oclif/core';
-import { Aliases, GlobalInfo, Org, SfdxProject } from '@salesforce/core';
+import { Aliases, AuthInfo, GlobalInfo, Org, SfdxProject } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import APIClient from './api-client';
 import herokuVariant from './heroku-variant';
@@ -130,6 +130,22 @@ export default abstract class Command extends Base {
     return org.getOrgId();
   }
 
+  protected async resolveOrg(orgId?: string): Promise<Org> {
+    const infos = await AuthInfo.listAllAuthorizations();
+
+    if (infos.length === 0) throw new Error('No connected orgs found');
+
+    if (orgId) {
+      for (const info of infos) {
+        if (info.orgId === orgId) {
+          return await Org.create({ aliasOrUsername: info.username });
+        }
+      }
+    }
+
+    return Org.create();
+  }
+
   protected async fetchSfdxProject() {
     const project = await SfdxProject.resolve();
 
@@ -152,13 +168,13 @@ export default abstract class Command extends Base {
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
     const aliases = await Aliases.create({});
     const matchingAlias = aliases.get(appNameOrAlias);
-    let appName;
+    let appName: string;
     if (matchingAlias) {
-      appName = matchingAlias;
+      appName = matchingAlias as string;
     } else {
       appName = appNameOrAlias;
     }
-    return appName as string;
+    return appName;
   }
 
   protected async isFunctionsEnabled(org: Org) {

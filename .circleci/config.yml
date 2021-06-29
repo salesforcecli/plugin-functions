@@ -1,6 +1,26 @@
 version: 2.1
 orbs:
   release-management: salesforce/npm-release-management@4
+jobs:
+  canaries:
+    docker:
+      - image: circleci/golang:1.14
+
+    steps:
+      - setup_remote_docker
+      - run:
+          name: Run canaries
+          command: |
+            TOKEN=$(curl -f -X POST $RUNTIME_ID_SERVICETOKEN_ENDPOINT -d "{\"username\":\"$RUNTIME_ID_SERVICE_USERNAME\", \"password\":\"$RUNTIME_ID_SERVICE_PASSWORD\"}" -s --retry 3 | jq -r ".raw_id_token")
+            echo "$TOKEN" | docker login $RUNTIME_REGISTRY -u x-runtime-id --password-stdin
+
+            echo "running canary"
+            docker run -e HEROKU_API_TOKEN=$HEROKU_API_TOKEN \
+              -e CIRCLECI_API_TOKEN=$CIRCLECI_API_TOKEN \
+              runtime-registry.herokai.com/s/heroku/evergreen-canary-keeper/cli:v1.7.0 \
+              evergreen-canary-keeper -run \
+              -name eg-canary-function-cli \
+              sfdx-cli-plugins="@salesforce/plugin-functions@prerelease"
 parameters:
   run-auto-workflows:
     description: >
@@ -58,8 +78,23 @@ workflows:
       - release-management/release-package:
           sign: true
           github-release: true
+          tag: prerelease
           requires:
             - release-management/test-package
+          filters:
+            branches:
+              only: main
+      - release-management/promote-package:
+          target: latest
+          candidate: prerelease
+          requires:
+            - release-management/test-package
+          filters:
+            branches:
+              only: release
+      - canaries:
+          requires:
+            - release-management/release-package
           filters:
             branches:
               only: main

@@ -6,7 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { AuthInfo, Org } from '@salesforce/core';
+import { Org } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import {
   filterProjectReferencesToRemove,
@@ -16,6 +16,7 @@ import {
 } from '../../lib/function-reference-utils';
 import { FunctionsFlagBuilder, confirmationFlag } from '../../lib/flags';
 import Command from '../../lib/base';
+import batchCall from '../../lib/batch-call';
 
 export default class EnvDelete extends Command {
   static description = 'delete an environment';
@@ -31,20 +32,6 @@ export default class EnvDelete extends Command {
     }),
     confirm: confirmationFlag,
   };
-
-  async resolveOrg(orgId: string): Promise<Org> {
-    const infos = await AuthInfo.listAllAuthorizations();
-
-    if (infos.length === 0) throw new Error('No connected orgs found');
-
-    for (const info of infos) {
-      if (info.orgId === orgId) {
-        return await Org.create({ aliasOrUsername: info.username });
-      }
-    }
-
-    return Org.create();
-  }
 
   async run() {
     const { flags } = await this.parse(EnvDelete);
@@ -106,7 +93,7 @@ export default class EnvDelete extends Command {
         return acc;
       }, []);
       const referencesToRemove = filterProjectReferencesToRemove(allReferences, [], project.name);
-      await connection.metadata.delete('FunctionReference', referencesToRemove);
+      await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
     }
 
     // Delete the application

@@ -9,7 +9,6 @@ import { SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
 import { Aliases, AuthInfo, Org } from '@salesforce/core';
 import EnvList from '../../../src/commands/env/list';
-import * as pathUtils from '../../../src/lib/path-utils';
 import EnvDisplay from '../../../src/commands/env/display';
 
 export const PROJECT_CONFIG_MOCK = {
@@ -78,16 +77,35 @@ const GROUPED_ORGS_MOCK = {
   ],
 };
 
+const ORG_ENV_NAME = 'my-org-env';
+
+const COMPUTE_ENV_NAME = 'my-compute-env';
+const COMPUTE_ENV_ALIAS = 'my-compute-alias';
+
 const APP_MOCK = {
+  id: 'app-id',
+  space: {
+    id: 'space-id',
+  },
+  name: COMPUTE_ENV_NAME,
   created_at: '2021-05-05T21:57:37Z',
   sales_org_connection: {
     sales_org_id: '00D9A0000009JGUUA2',
   },
 };
-const ORG_ENV_NAME = 'my-org-env';
 
-const COMPUTE_ENV_NAME = 'my-compute-env';
-const COMPUTE_ENV_ALIAS = 'my-compute-alias';
+const ORG_MOCK = {
+  getUsername: () => 'fakeUsername',
+  getConnection: () => {
+    return {
+      metadata: {
+        list: () => {
+          return [{ fullName: 'functions-fn1' }, { fullName: 'functions-fn2' }];
+        },
+      },
+    };
+  },
+};
 
 describe('sf env display', () => {
   const sandbox = sinon.createSandbox();
@@ -156,8 +174,11 @@ describe('sf env display', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
       const error = new Error('No AuthInfo found');
-      sandbox.stub(Org, 'create' as any).throws(error);
-      sandbox.stub(pathUtils, 'resolveFunctionsPaths' as any).returns(['functions/fn1', 'functions/fn2']);
+      sandbox
+        .stub(Org, 'create' as any)
+        .onCall(0)
+        .throws(error);
+      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -177,14 +198,40 @@ describe('sf env display', () => {
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200, APP_MOCK))
     .stdout()
     .do(() => {
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
+      const error = new Error('No AuthInfo found');
+      sandbox
+        .stub(Org, 'create' as any)
+        .onCall(0)
+        .throws(error);
+      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .command(['env:display', `--environment=${COMPUTE_ENV_NAME}`, '--extended'])
+    .it('lists app id and space id when -x flag is passed along with a compute environment', (ctx) => {
+      expect(ctx.stdout).to.include('App Id');
+      expect(ctx.stdout).to.include('Space Id');
+    });
+
+  test
+    .stderr()
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200, APP_MOCK))
+    .stdout()
+    .do(() => {
       sandbox.stub(Aliases, 'create' as any).returns({
         get: () => COMPUTE_ENV_NAME,
       });
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
       const error = new Error('No AuthInfo found');
-      sandbox.stub(Org, 'create' as any).throws(error);
-      sandbox.stub(pathUtils, 'resolveFunctionsPaths' as any).returns(['functions/fn1', 'functions/fn2']);
+      sandbox
+        .stub(Org, 'create' as any)
+        .onCall(0)
+        .throws(error);
+      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();

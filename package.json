@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-functions",
   "description": "Functions plugin for the SF CLI",
-  "version": "0.2.9-ga.1",
+  "version": "0.2.14",
   "author": "heroku-front-end@salesforce.com",
   "bin": {
     "functions": "./bin/run"
@@ -12,7 +12,8 @@
     "@heroku-cli/schema": "^1.0.25",
     "@heroku/eventsource": "^1.0.7",
     "@heroku/function-toml": "^0.0.3",
-    "@heroku/project-descriptor": "^0.0.5",
+    "@heroku/functions-core": "0.0.2",
+    "@heroku/project-descriptor": "0.0.5",
     "@oclif/core": "^0.5.17",
     "@oclif/plugin-not-found": "^1.2.4",
     "@salesforce/core": "^3.1.1-v3.2",
@@ -86,20 +87,12 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "benny": {
-    "name": "benny",
-    "bucket": "heroku-build-artifacts",
-    "major-version": "2"
-  },
   "files": [
-    "benny.d.ts",
-    "benny.js",
     "/bin",
     "/lib",
     "/messages",
     "/templates",
-    "/oclif.manifest.json",
-    "/priv/public.key"
+    "/oclif.manifest.json"
   ],
   "homepage": "https://github.com/salesforcecli/plugin-functions",
   "keywords": [

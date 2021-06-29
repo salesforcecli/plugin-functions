@@ -11,12 +11,23 @@ import { OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
 import { getAliasByUsername } from '@salesforce/plugin-org/lib/shared/utils';
 import { getStyledValue } from '@salesforce/plugin-org/lib/shared/orgHighlighter';
 import Command from '../../lib/base';
-import { resolveFunctionsPaths } from '../../lib/path-utils';
 import { ComputeEnvironment } from '../../lib/sfdc-types';
 import { FunctionsFlagBuilder } from '../../lib/flags';
 import herokuVariant from '../../lib/heroku-variant';
+import { ensureArray } from '../../lib/function-reference-utils';
 
-export default class EnvDelete extends Command {
+interface EnvDisplayTable {
+  alias?: string;
+  environmentName: string;
+  project: string;
+  createdDate?: string;
+  functions?: string;
+  connectedOrgs?: string;
+  appId?: string;
+  spaceId?: string;
+}
+
+export default class EnvDisplay extends Command {
   static description = 'display details for an environment';
 
   static examples = ['$ sfdx env:display --environment=billingApp-Scratch1'];
@@ -28,10 +39,14 @@ export default class EnvDelete extends Command {
     verbose: Flags.boolean({
       description: 'verbose display output',
     }),
+    extended: Flags.boolean({
+      char: 'x',
+      hidden: true,
+    }),
   };
 
   async run() {
-    const { flags } = await this.parse(EnvDelete);
+    const { flags } = await this.parse(EnvDisplay);
 
     const { environment } = flags;
 
@@ -79,31 +94,35 @@ export default class EnvDelete extends Command {
 
     try {
       // If app exists, environment details will be displayed
-      const app = await this.client.get<ComputeEnvironment>(`/apps/${appName}`, {
+      const { data: app } = await this.client.get<ComputeEnvironment>(`/apps/${appName}`, {
         headers: {
           ...herokuVariant('evergreen'),
         },
       });
+      const salesOrgId = app.sales_org_connection?.sales_org_id;
+      const org = await this.resolveOrg(salesOrgId);
       const project = await this.fetchSfdxProject();
+      const connection = org.getConnection();
 
-      let fnNames;
-
-      try {
-        const fnPaths = await resolveFunctionsPaths();
-        fnNames = fnPaths.map((fnPath) => fnPath.split('/')[1]).join('\n');
-      } catch (error) {}
+      const refList = await connection.metadata.list({ type: 'FunctionReference' });
+      const fnNames = ensureArray(refList).map((ref) => ref.fullName.split('-')[1]);
 
       const alias = appName === environment ? undefined : environment;
 
-      const returnValue = {
+      const returnValue: EnvDisplayTable = {
         // renamed properties
         alias,
-        environmentName: appName,
+        environmentName: app.name!,
         project: project.name,
-        createdDate: app.data.created_at,
-        functions: fnNames,
-        connectedOrgs: app.data.sales_org_connection?.sales_org_id,
+        createdDate: app.created_at,
+        functions: fnNames.length ? fnNames?.join('\n') : undefined,
+        connectedOrgs: salesOrgId,
       };
+
+      if (flags.extended) {
+        returnValue.appId = app.id;
+        returnValue.spaceId = app.space?.id;
+      }
       return this.print(returnValue);
     } catch (error) {
       if (error.body?.message.includes("Couldn't find that app.")) {
@@ -116,13 +135,20 @@ export default class EnvDelete extends Command {
   }
 
   private print(result: any): void {
-    const tableRows = Object.keys(result)
-      .filter((key) => result[key] !== undefined && result[key] !== null) // some values won't exist
-      .sort() // this command always alphabetizes the table rows
-      .map((key) => ({
-        key: this.camelCaseToTitleCase(key),
-        value: getStyledValue(key, result[key]),
-      }));
+    const tableRowKeys = Object.keys(result)
+      // some values won't exist, and we want to ensure functions is at the end
+      .filter((key) => result[key] !== undefined && result[key] !== null && key !== 'functions')
+      .sort();
+
+    // If the environment has functions, we want to display them but make sure they're listed at the end
+    if (result.functions?.length) {
+      tableRowKeys.push('functions');
+    }
+
+    const tableRows = tableRowKeys.map((key) => ({
+      key: this.camelCaseToTitleCase(key),
+      value: getStyledValue(key, result[key]),
+    }));
 
     cli.table<any>(
       tableRows,
