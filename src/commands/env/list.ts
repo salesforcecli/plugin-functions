@@ -42,9 +42,6 @@ export default class EnvList extends Command {
 
   async resolveOrgs(all = false) {
     const infos = await AuthInfo.listAllAuthorizations();
-
-    // const metaConfigs = await OrgListUtil.readLocallyValidatedMetaConfigsGroupedByOrgType(fileNames, {});
-
     const nonScratchOrgs: SfOrg[] = [];
     const scratchOrgs: SfOrg[] = [];
 
@@ -249,14 +246,18 @@ export default class EnvList extends Command {
     const types = (flags['environment-type'] as EnvironmentType[]) ?? ['org', 'scratchorg', 'compute'];
 
     if (!flags.all) {
-      const project = await this.fetchSfdxProject();
+      try {
+        const project = await this.fetchSfdxProject();
 
-      if (!flags.json) {
-        this.log(`Current environments for project ${project.name}\n`);
-      }
+        if (!flags.json) {
+          this.log(`Current environments for project ${project.name}\n`);
+        }
 
-      if (types.includes('compute')) {
-        environments = environments.filter((env) => env.sfdx_project_name === project.name);
+        if (types.includes('compute')) {
+          environments = environments.filter((env) => env.sfdx_project_name === project.name);
+        }
+      } catch (error) {
+        /* We still need to show env regardless of project */
       }
     }
 

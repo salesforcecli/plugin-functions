@@ -13,6 +13,7 @@ import herokuVariant from './heroku-variant';
 import NetrcMachine from './netrc';
 import { ComputeEnvironment, SfdcAccount, SfdxProjectConfig } from './sfdc-types';
 
+// Creds are no longer stored in netrc, but check for backwards compatibility
 function checkNetRcForAuth(name = 'password') {
   const key = new URL('https://sfdx-functions-netrc-key-only.com');
   const netrcMachine: NetrcMachine = new NetrcMachine(key.hostname);

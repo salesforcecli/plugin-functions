@@ -108,6 +108,7 @@
   "oclif": {
     "commands": "./lib/commands",
     "bin": "sf",
+    "topicSeparator": " ",
     "plugins": [
       "@oclif/plugin-not-found"
     ],
