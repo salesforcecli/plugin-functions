@@ -149,7 +149,7 @@ describe('sf project deploy functions', () => {
       expect(ctx.stdout).to.not.include('Removing the following functions that were deleted locally:');
     });
 
-  // Falls back to netrs
+  // Falls back to netrc
   test
     .stdout()
     .stderr()
