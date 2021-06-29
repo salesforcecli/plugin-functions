@@ -5,13 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
-import { GlobalInfo, SfTokens } from '@salesforce/core';
+import type { GlobalInfo, SfTokens } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import * as sinon from 'sinon';
 import { AuthStubs } from '../../helpers/auth';
 
 describe('sf login functions', () => {
-  const sandbox = sinon.createSandbox();
   let windowOpenStub: any;
   let contents: SfTokens;
 
@@ -21,10 +20,6 @@ describe('sf login functions', () => {
       contents = this.getTokens(true);
       return this.getContents();
     });
-  });
-
-  afterEach(() => {
-    sandbox.restore();
   });
 
   test

@@ -129,10 +129,6 @@ const EXPECTED_JSON_OUTPUT = {
 describe('sf env list', () => {
   const sandbox = sinon.createSandbox();
 
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   test
     .stderr()
     .stdout()

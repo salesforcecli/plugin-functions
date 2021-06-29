@@ -38,10 +38,6 @@ const ORG_MOCK = {
 describe('env:delete', () => {
   const sandbox = sinon.createSandbox();
 
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   test
     .stderr()
     .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
@@ -49,6 +45,9 @@ describe('env:delete', () => {
     .do(() => {
       sandbox.stub(EnvDelete.prototype, 'resolveOrg' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+    })
+    .finally(() => {
+      sandbox.restore();
     })
     .command(['env:delete', `--environment=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .it('deletes an environment when providing the name of the compute environment', (ctx) => {
@@ -64,6 +63,9 @@ describe('env:delete', () => {
       sandbox.stub(Aliases, 'create' as any).returns({
         get: () => COMPUTE_ENV_NAME,
       });
+    })
+    .finally(() => {
+      sandbox.restore();
     })
     .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
@@ -81,6 +83,9 @@ describe('env:delete', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(EnvDelete.prototype, 'fetchOrg' as any).returns(ORG_MOCK);
     })
+    .finally(() => {
+      sandbox.restore();
+    })
     .command(['env:delete', `--environment=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .catch((error) => {
       expect(error.message).to.contain(
@@ -96,6 +101,9 @@ describe('env:delete', () => {
     .stderr()
     .do(() => {
       sandbox.stub(Org, 'create' as any).returns({ name: true });
+    })
+    .finally(() => {
+      sandbox.restore();
     })
     .command(['env:delete', `--environment=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .catch((error) => {

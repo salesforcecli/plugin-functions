@@ -92,10 +92,6 @@ const COMPUTE_ENV_ALIAS = 'my-compute-alias';
 describe('sf env display', () => {
   const sandbox = sinon.createSandbox();
 
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   test
     .stderr()
     .do(() => {
@@ -108,6 +104,9 @@ describe('sf env display', () => {
         },
       });
       sandbox.stub(EnvDisplay.prototype, 'getScratchOrgInformation' as any).returns({});
+    })
+    .finally(() => {
+      sandbox.restore();
     })
     .stdout()
     .command(['env:display', `--environment=${ORG_ENV_NAME}`])
@@ -134,6 +133,9 @@ describe('sf env display', () => {
       });
       sandbox.stub(EnvDisplay.prototype, 'getScratchOrgInformation' as any).returns(SCRATCH_ORG_MOCK);
     })
+    .finally(() => {
+      sandbox.restore();
+    })
     .stdout()
     .command(['env:display', `--environment=${ORG_ENV_NAME}`])
     .it('list org environment details when a scratch org environment is provided', (ctx) => {
@@ -156,6 +158,9 @@ describe('sf env display', () => {
       const error = new Error('No AuthInfo found');
       sandbox.stub(Org, 'create' as any).throws(error);
       sandbox.stub(pathUtils, 'resolveFunctionsPaths' as any).returns(['functions/fn1', 'functions/fn2']);
+    })
+    .finally(() => {
+      sandbox.restore();
     })
     .command(['env:display', `--environment=${COMPUTE_ENV_NAME}`])
     .it('list compute environment details when a compute environment is provided', (ctx) => {
@@ -180,6 +185,9 @@ describe('sf env display', () => {
       const error = new Error('No AuthInfo found');
       sandbox.stub(Org, 'create' as any).throws(error);
       sandbox.stub(pathUtils, 'resolveFunctionsPaths' as any).returns(['functions/fn1', 'functions/fn2']);
+    })
+    .finally(() => {
+      sandbox.restore();
     })
     .command(['env:display', `--environment=${COMPUTE_ENV_ALIAS}`])
     .it('list compute environment details when a compute environment alias is provided', (ctx) => {
