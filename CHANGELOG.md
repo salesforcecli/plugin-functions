@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.14](https://github.com/salesforcecli/plugin-functions/compare/v0.2.12...v0.2.14) (2021-06-29)
+
+### Bug Fixes
+
+- add --extended hidden flag for debugging ([#96](https://github.com/salesforcecli/plugin-functions/issues/96)) ([ff187b8](https://github.com/salesforcecli/plugin-functions/commit/ff187b8bbf82c4acd849878152b0e2ba12258426))
+- batch reference deletion in env:delete ([#98](https://github.com/salesforcecli/plugin-functions/issues/98)) ([7f4fb6a](https://github.com/salesforcecli/plugin-functions/commit/7f4fb6a2195ee34e93ddbe327ddd80dd8ea3097f))
+
 ### [0.2.13](https://github.com/salesforcecli/plugin-functions/compare/v0.2.12...v0.2.13) (2021-06-24)
 
 ### Bug Fixes
