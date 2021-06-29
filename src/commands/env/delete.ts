@@ -32,15 +32,14 @@ export default class EnvDelete extends Command {
     confirm: confirmationFlag,
   };
 
-  async resolveScratchOrg(scratchOrgId: string): Promise<Org> {
+  async resolveOrg(orgId: string): Promise<Org> {
     const infos = await AuthInfo.listAllAuthorizations();
 
     if (infos.length === 0) throw new Error('No connected orgs found');
 
     for (const info of infos) {
-      if (info.orgId === scratchOrgId) {
-        const org = await Org.create({ aliasOrUsername: info.username });
-        return (await org.determineIfScratch()) ? org : Org.create();
+      if (info.orgId === orgId) {
+        return await Org.create({ aliasOrUsername: info.username });
       }
     }
 
@@ -95,7 +94,7 @@ export default class EnvDelete extends Command {
     }
 
     // Find and delete all connected function references if they exist
-    const org = await this.resolveScratchOrg(app.data.sales_org_connection?.sales_org_id);
+    const org = await this.resolveOrg(app.data.sales_org_connection?.sales_org_id);
     const project = await this.fetchSfdxProject();
     const connection = org.getConnection();
     let refList = await connection.metadata.list({ type: 'FunctionReference' });
