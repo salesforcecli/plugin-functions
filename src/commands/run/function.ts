@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as fs from 'fs';
-import { Command, flags } from '@oclif/command';
+import { Command, Flags } from '@oclif/core';
 import { runFunction, RunFunctionOptions } from '@heroku/functions-core';
 import { cli } from 'cli-ux';
 import herokuColor from '@heroku-cli/color';
@@ -26,32 +26,32 @@ export default class Invoke extends Command {
   ];
 
   static flags = {
-    url: flags.string({
+    url: Flags.string({
       char: 'l',
       description: 'url of the function to run',
       required: true,
     }),
-    headers: flags.string({
+    headers: Flags.string({
       char: 'H',
       description: 'set headers',
       multiple: true,
     }),
-    payload: flags.string({
+    payload: Flags.string({
       char: 'p',
       description: 'set the payload of the cloudevent. also accepts @file.txt format',
     }),
-    structured: flags.boolean({
+    structured: Flags.boolean({
       char: 's',
       description: 'set the cloudevent to be emitted as a structured cloudevent (json)',
     }),
-    'connected-org': flags.string({
+    'connected-org': Flags.string({
       char: 'o',
       description: 'username or alias for the target org; overrides default target org',
     }),
   };
 
   async run() {
-    const { flags } = this.parse(Invoke);
+    const { flags } = await this.parse(Invoke);
     flags.payload = await this.getPayloadData(flags.payload);
     if (!flags.payload) {
       this.error('no payload provided (provide via stdin or -p)');

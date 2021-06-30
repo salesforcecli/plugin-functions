@@ -5,31 +5,40 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { URL } from 'url';
-import { Command as Base } from '@oclif/command';
-import { Aliases, Org, SfdxProject } from '@salesforce/core';
+import { Command as Base } from '@oclif/core';
+import { Aliases, AuthInfo, GlobalInfo, Org, SfdxProject } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import APIClient from './api-client';
 import herokuVariant from './heroku-variant';
 import NetrcMachine from './netrc';
 import { ComputeEnvironment, SfdcAccount, SfdxProjectConfig } from './sfdc-types';
 
+// Creds are no longer stored in netrc, but check for backwards compatibility
+function checkNetRcForAuth(name = 'password') {
+  const key = new URL('https://sfdx-functions-netrc-key-only.com');
+  const netrcMachine: NetrcMachine = new NetrcMachine(key.hostname);
+  return netrcMachine.get(name);
+}
 export default abstract class Command extends Base {
+  protected static TOKEN_BEARER_KEY = 'functions-bearer';
+  protected static TOKEN_REFRESH_KEY = 'functions-refresh';
+
+  protected info!: GlobalInfo;
+
   private _client!: APIClient;
 
   private _auth?: string;
+
+  protected async init(): Promise<void> {
+    await super.init();
+    this.info = await GlobalInfo.getInstance();
+  }
 
   protected get apiUrl(): URL {
     const defaultUrl = 'https://api.heroku.com';
     const envVarURL = process.env.SALESFORCE_FUNCTIONS_API;
     const apiURL = new URL(envVarURL || defaultUrl);
     return apiURL;
-  }
-
-  // This is a hack that lets us store credentials in netrc without clobbering existing heroku creds.
-  // In the longer term, we don't want to store creds in netrc *at all*, so we'll eventually be
-  // able to remove all this netrc stuff, including the very fake URL
-  protected get apiNetRcUrl(): URL {
-    return new URL('https://sfdx-functions-netrc-key-only.com');
   }
 
   protected get identityUrl(): URL {
@@ -39,23 +48,36 @@ export default abstract class Command extends Base {
     return identityUrl;
   }
 
-  protected get identityNetRcUrl(): URL {
-    return new URL('https://sfdx-identity-netrc-key-only.com');
+  protected get username(): string {
+    let user = this.info.getToken(Command.TOKEN_BEARER_KEY)?.user;
+
+    if (!user) {
+      // backwards compatibility - use netrc token
+      user = checkNetRcForAuth('login');
+    }
+
+    if (!user) throw new Error('no username found');
+
+    return user;
   }
 
-  protected apiNetrcMachine: NetrcMachine = new NetrcMachine(this.apiNetRcUrl.hostname);
-
-  protected identityNetrcMachine: NetrcMachine = new NetrcMachine(this.identityNetRcUrl.hostname);
-
-  get auth(): string | undefined {
+  protected get auth(): string {
     if (!this._auth) {
       const apiKey = process.env.SALESFORCE_FUNCTIONS_API_KEY;
 
       if (apiKey) {
         this._auth = apiKey;
       } else {
-        // what do we do if we get here and this value is empty? trigger login workflow I guess?
-        this._auth = this.apiNetrcMachine.get('password');
+        let token = this.info.getToken(Command.TOKEN_BEARER_KEY, true)?.token;
+
+        if (!token) {
+          // backwards compatibility - use netrc token
+          token = checkNetRcForAuth();
+        }
+        if (!token) {
+          throw new Error(`Not authenticated. Please login with \`${this.config.bin} login functions\`.`);
+        }
+        this._auth = token;
       }
     }
     return this._auth;
@@ -67,7 +89,7 @@ export default abstract class Command extends Base {
     }
 
     const options = {
-      auth: this.auth!,
+      auth: this.auth,
       apiUrl: this.apiUrl,
     };
 
@@ -108,6 +130,22 @@ export default abstract class Command extends Base {
     return org.getOrgId();
   }
 
+  protected async resolveOrg(orgId?: string): Promise<Org> {
+    const infos = await AuthInfo.listAllAuthorizations();
+
+    if (infos.length === 0) throw new Error('No connected orgs found');
+
+    if (orgId) {
+      for (const info of infos) {
+        if (info.orgId === orgId) {
+          return await Org.create({ aliasOrUsername: info.username });
+        }
+      }
+    }
+
+    return Org.create();
+  }
+
   protected async fetchSfdxProject() {
     const project = await SfdxProject.resolve();
 
@@ -126,7 +164,7 @@ export default abstract class Command extends Base {
     return data;
   }
 
-  protected async resolveAppNameForEnvironment(appNameOrAlias: string) {
+  protected async resolveAppNameForEnvironment(appNameOrAlias: string): Promise<string> {
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
     const aliases = await Aliases.create({});
     const matchingAlias = aliases.get(appNameOrAlias);

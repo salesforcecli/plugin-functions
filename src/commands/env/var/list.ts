@@ -22,7 +22,7 @@ export default class ConfigList extends Command {
   };
 
   async run() {
-    const { flags } = this.parse(ConfigList);
+    const { flags } = await this.parse(ConfigList);
     const { environment } = flags;
 
     const appName = await this.resolveAppNameForEnvironment(environment);
@@ -54,7 +54,7 @@ export default class ConfigList extends Command {
         },
       },
       {
-        printLine: this.log,
+        printLine: this.log.bind(this),
         ...flags,
       }
     );

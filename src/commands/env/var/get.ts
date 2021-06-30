@@ -29,7 +29,7 @@ export default class VarGet extends Command {
   ];
 
   async run() {
-    const { flags, args } = this.parse(VarGet);
+    const { flags, args } = await this.parse(VarGet);
     const { environment } = flags;
 
     const appName = await this.resolveAppNameForEnvironment(environment);

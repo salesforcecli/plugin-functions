@@ -2,17 +2,17 @@
   {
     "command": "env:create:compute",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["connected-org", "setalias"]
+    "flags": ["connected-org", "json", "setalias"]
   },
   {
     "command": "env:delete",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["confirm", "environment"]
+    "flags": ["confirm", "environment", "json"]
   },
   {
     "command": "env:display",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "extended", "verbose"]
+    "flags": ["environment", "extended", "json", "verbose"]
   },
   {
     "command": "env:list",
@@ -22,12 +22,12 @@
   {
     "command": "env:log:tail",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment"]
+    "flags": ["environment", "json"]
   },
   {
     "command": "env:logdrain:add",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "url"]
+    "flags": ["environment", "json", "url"]
   },
   {
     "command": "env:logdrain:list",
@@ -37,37 +37,37 @@
   {
     "command": "env:logdrain:remove",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "url"]
+    "flags": ["environment", "json", "url"]
   },
   {
     "command": "env:var:get",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment"]
+    "flags": ["environment", "json"]
   },
   {
     "command": "env:var:list",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment"]
+    "flags": ["environment", "json"]
   },
   {
     "command": "env:var:set",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment"]
+    "flags": ["environment", "json"]
   },
   {
     "command": "env:var:unset",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment"]
+    "flags": ["environment", "json"]
   },
   {
     "command": "generate:function",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["language", "name"]
+    "flags": ["json", "language", "name"]
   },
   {
     "command": "generate:project",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["name"]
+    "flags": ["json", "name"]
   },
   {
     "command": "login:functions",
@@ -77,12 +77,12 @@
   {
     "command": "project:deploy:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["branch", "connected-org", "force", "quiet"]
+    "flags": ["branch", "connected-org", "force", "json", "quiet"]
   },
   {
     "command": "run:function",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["connected-org", "headers", "payload", "structured", "url"]
+    "flags": ["connected-org", "headers", "json", "payload", "structured", "url"]
   },
   {
     "command": "run:function:start",
@@ -93,6 +93,7 @@
       "debug-port",
       "descriptor",
       "env",
+      "json",
       "network",
       "no-build",
       "no-pull",
@@ -101,5 +102,10 @@
       "port",
       "verbose"
     ]
+  },
+  {
+    "command": "whoami:functions",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["json", "show-token"]
   }
 ]

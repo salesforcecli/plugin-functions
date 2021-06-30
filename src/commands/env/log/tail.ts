@@ -99,7 +99,7 @@ export default class LogTail extends Command {
   };
 
   async run() {
-    const { flags } = this.parse(LogTail);
+    const { flags } = await this.parse(LogTail);
     const { environment } = flags;
 
     const appName = await this.resolveAppNameForEnvironment(environment);
