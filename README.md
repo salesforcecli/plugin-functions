@@ -30,6 +30,7 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 
 - [`sf env:create:compute`](#sf-envcreatecompute)
 - [`sf env:delete`](#sf-envdelete)
+- [`sf env:display`](#sf-envdisplay)
 - [`sf env:list`](#sf-envlist)
 - [`sf env:log:tail`](#sf-envlogtail)
 - [`sf env:logdrain:add`](#sf-envlogdrainadd)
@@ -45,6 +46,7 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 - [`sf project:deploy:functions`](#sf-projectdeployfunctions)
 - [`sf run:function`](#sf-runfunction)
 - [`sf run:function:start`](#sf-runfunctionstart)
+- [`sf whoami:functions`](#sf-whoamifunctions)
 
 ## `sf env:create:compute`
 
@@ -86,6 +88,25 @@ EXAMPLES
 ```
 
 _See code: [src/commands/env/delete.ts](https://github.com/salesforcecli/plugin-functions/blob/v0.2.14/src/commands/env/delete.ts)_
+
+## `sf env:display`
+
+display details for an environment
+
+```
+USAGE
+  $ sf env:display
+
+OPTIONS
+  -e, --environment=environment  (required) environment name
+  --json                         format output as json
+  --verbose                      verbose display output
+
+EXAMPLE
+  $ sfdx env:display --environment=billingApp-Scratch1
+```
+
+_See code: [src/commands/env/display.ts](https://github.com/salesforcecli/plugin-functions/blob/v0.2.14/src/commands/env/display.ts)_
 
 ## `sf env:list`
 
@@ -381,5 +402,22 @@ EXAMPLE
 ```
 
 _See code: [src/commands/run/function/start.ts](https://github.com/salesforcecli/plugin-functions/blob/v0.2.14/src/commands/run/function/start.ts)_
+
+## `sf whoami:functions`
+
+show information on your account
+
+```
+USAGE
+  $ sf whoami:functions
+
+OPTIONS
+  --json  format output as json
+
+EXAMPLE
+  $ sf whoami:functions
+```
+
+_See code: [src/commands/whoami/functions.ts](https://github.com/salesforcecli/plugin-functions/blob/v0.2.14/src/commands/whoami/functions.ts)_
 
 <!-- commandsstop -->

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.15](https://github.com/salesforcecli/plugin-functions/compare/v0.2.14...v0.2.15) (2021-06-30)
+
+### Features
+
+- use oclif/core, @salesforce/cor@3, and whoami ([#102](https://github.com/salesforcecli/plugin-functions/issues/102)) ([edd8c17](https://github.com/salesforcecli/plugin-functions/commit/edd8c17cf4d40aac173dabafe9f7cc1c48affd59)), closes [#90](https://github.com/salesforcecli/plugin-functions/issues/90) [#101](https://github.com/salesforcecli/plugin-functions/issues/101) [#95](https://github.com/salesforcecli/plugin-functions/issues/95)
+
 ### [0.2.14](https://github.com/salesforcecli/plugin-functions/compare/v0.2.12...v0.2.14) (2021-06-29)
 
 ### Bug Fixes
