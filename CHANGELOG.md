@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.16](https://github.com/salesforcecli/plugin-functions/compare/v0.2.15...v0.2.16) (2021-07-06)
+
+### Bug Fixes
+
+- lock yeoman-env version to patch releases ([#107](https://github.com/salesforcecli/plugin-functions/issues/107)) ([1fbab67](https://github.com/salesforcecli/plugin-functions/commit/1fbab6763631d5be13723b19957c5b16b1296ac5))
+
 ### [0.2.15](https://github.com/salesforcecli/plugin-functions/compare/v0.2.14...v0.2.15) (2021-06-30)
 
 ### Features
