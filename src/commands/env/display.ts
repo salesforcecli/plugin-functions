@@ -4,12 +4,13 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { Flags } from '@oclif/core';
+import { flags } from '@oclif/command';
 import { AuthInfo, Org, sfdc } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import { OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
 import { getAliasByUsername } from '@salesforce/plugin-org/lib/shared/utils';
 import { getStyledValue } from '@salesforce/plugin-org/lib/shared/orgHighlighter';
+import { sortBy } from 'lodash';
 import Command from '../../lib/base';
 import { ComputeEnvironment } from '../../lib/sfdc-types';
 import { FunctionsFlagBuilder } from '../../lib/flags';
@@ -27,7 +28,7 @@ interface EnvDisplayTable {
   spaceId?: string;
 }
 
-export default class EnvDisplay extends Command {
+export default class EnvDelete extends Command {
   static description = 'display details for an environment';
 
   static examples = ['$ sfdx env:display --environment=billingApp-Scratch1'];
@@ -36,17 +37,36 @@ export default class EnvDisplay extends Command {
     environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
-    verbose: Flags.boolean({
+    verbose: flags.boolean({
       description: 'verbose display output',
     }),
-    extended: Flags.boolean({
+    extended: flags.boolean({
       char: 'x',
       hidden: true,
     }),
   };
 
+  async resolveScratchOrg(scratchOrgId: string) {
+    // adapted from https://github.com/salesforcecli/plugin-org/blob/3012cc04a670e4bf71e75a02e2f0981a71eb4e0d/src/commands/force/org/list.ts#L44-L90
+    let fileNames: string[] = [];
+    try {
+      fileNames = await AuthInfo.listAllAuthFiles();
+    } catch (error) {
+      if (error.name === 'NoAuthInfoFound') {
+        this.error('No orgs found');
+      } else {
+        throw error;
+      }
+    }
+
+    const metaConfigs = await OrgListUtil.readLocallyValidatedMetaConfigsGroupedByOrgType(fileNames, {});
+
+    const scratchOrgs = sortBy(metaConfigs.scratchOrgs, (v) => [v.alias, v.username]);
+    return scratchOrgs.find((org) => org.orgId === scratchOrgId);
+  }
+
   async run() {
-    const { flags } = await this.parse(EnvDisplay);
+    const { flags } = this.parse(EnvDelete);
 
     const { environment } = flags;
 
@@ -100,8 +120,10 @@ export default class EnvDisplay extends Command {
         },
       });
       const salesOrgId = app.sales_org_connection?.sales_org_id;
-      const org = await this.resolveOrg(salesOrgId);
+      const connectedOrg = salesOrgId ? await this.resolveScratchOrg(salesOrgId) : undefined;
+      const connectedOrgAlias = connectedOrg?.alias;
       const project = await this.fetchSfdxProject();
+      const org = await this.fetchOrg(connectedOrgAlias);
       const connection = org.getConnection();
 
       const refList = await connection.metadata.list({ type: 'FunctionReference' });
@@ -163,8 +185,8 @@ export default class EnvDisplay extends Command {
         },
       },
       {
-        printLine: this.log.bind(this),
-        ...Flags,
+        printLine: this.log,
+        ...flags,
       }
     );
   }

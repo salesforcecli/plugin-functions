@@ -5,8 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import herokuColor from '@heroku-cli/color';
-import { Flags } from '@oclif/core';
-import { Aliases, AuthInfo, Org, SfOrg } from '@salesforce/core';
+import { flags } from '@oclif/command';
+import { Aliases, AuthInfo } from '@salesforce/core';
+import { identifyActiveOrgByStatus, OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
+import { ExtendedAuthFields } from '@salesforce/plugin-org/lib/shared/orgTypes';
 import { cli } from 'cli-ux';
 import { sortBy } from 'lodash';
 import Command from '../../lib/base';
@@ -26,11 +28,11 @@ export default class EnvList extends Command {
   ];
 
   static flags = {
-    all: Flags.boolean({
+    all: flags.boolean({
       description: 'show all available envs instead of scoping to active orgs and their connected compute envs',
     }),
     'environment-type': environmentType,
-    json: Flags.boolean({
+    json: flags.boolean({
       description: 'output list in JSON format',
       char: 'j',
     }),
@@ -41,45 +43,34 @@ export default class EnvList extends Command {
   private aliasReverseLookup?: Dictionary<string>;
 
   async resolveOrgs(all = false) {
-    const infos = await AuthInfo.listAllAuthorizations();
-    const nonScratchOrgs: SfOrg[] = [];
-    const scratchOrgs: SfOrg[] = [];
-
-    for (const info of infos) {
-      const org = await Org.create({ aliasOrUsername: info.username });
-      try {
-        await org.refreshAuth();
-        info.status = 'Active';
-        info.connectionStatus = 'Connected';
-      } catch (error) {
-        info.status = 'Deleted';
-        info.connectionStatus = 'Unknown';
-      }
-      try {
-        if (await org.determineIfScratch()) {
-          scratchOrgs.push(info);
-        } else {
-          nonScratchOrgs.push(info);
-        }
-      } catch (e) {
-        nonScratchOrgs.push(info);
+    // adapted from https://github.com/salesforcecli/plugin-org/blob/3012cc04a670e4bf71e75a02e2f0981a71eb4e0d/src/commands/force/org/list.ts#L44-L90
+    let fileNames: string[] = [];
+    try {
+      fileNames = await AuthInfo.listAllAuthFiles();
+    } catch (error) {
+      if (error.name === 'NoAuthInfoFound') {
+        this.error('No orgs found');
+      } else {
+        throw error;
       }
     }
 
+    const metaConfigs = await OrgListUtil.readLocallyValidatedMetaConfigsGroupedByOrgType(fileNames, {});
+
     const groupedSortedOrgs = {
-      nonScratchOrgs: sortBy(nonScratchOrgs, (v) => [v.alias, v.username]),
-      scratchOrgs: sortBy(scratchOrgs, (v) => [v.alias, v.username]),
+      nonScratchOrgs: sortBy(metaConfigs.nonScratchOrgs, (v) => [v.alias, v.username]),
+      scratchOrgs: sortBy(metaConfigs.scratchOrgs, (v) => [v.alias, v.username]),
     };
 
     return {
       nonScratchOrgs: groupedSortedOrgs.nonScratchOrgs,
       scratchOrgs: all
         ? groupedSortedOrgs.scratchOrgs
-        : groupedSortedOrgs.scratchOrgs.filter((org) => org.status === 'Active'),
+        : groupedSortedOrgs.scratchOrgs.filter(identifyActiveOrgByStatus),
     };
   }
 
-  private async resolveEnvironments(orgs: SfOrg[]): Promise<ComputeEnvironment[]> {
+  private async resolveEnvironments(orgs: ExtendedAuthFields[]): Promise<ComputeEnvironment[]> {
     const account = await this.fetchAccount();
 
     const { data: environments } = await this.client.get<ComputeEnvironment[]>(
@@ -139,7 +130,7 @@ export default class EnvList extends Command {
     );
   }
 
-  private resolveAliasesForConnectedOrg(envs: ComputeEnvironment[], orgs: SfOrg[]) {
+  private resolveAliasesForConnectedOrg(envs: ComputeEnvironment[], orgs: ExtendedAuthFields[]) {
     return envs.map((env) => {
       const orgId = env.sales_org_connection?.sales_org_id;
 
@@ -158,7 +149,7 @@ export default class EnvList extends Command {
     });
   }
 
-  renderOrgTable(orgs: SfOrg[]) {
+  renderOrgTable(orgs: ExtendedAuthFields[]) {
     cli.log(herokuColor.bold(`Type: ${herokuColor.cyan('Salesforce Org')}`));
 
     if (!orgs.length) {
@@ -179,12 +170,12 @@ export default class EnvList extends Command {
       },
       connectedStatus: {
         header: 'STATUS',
-        get: (row) => herokuColor.green((row.connectedStatus as string) ?? ''),
+        get: (row) => herokuColor.green(row.connectedStatus ?? ''),
       },
     });
   }
 
-  renderScratchOrgTable(orgs: SfOrg[]) {
+  renderScratchOrgTable(orgs: ExtendedAuthFields[]) {
     cli.log(herokuColor.bold(`Type: ${herokuColor.cyan('Scratch Org')}`));
 
     if (!orgs.length) {
@@ -239,25 +230,21 @@ export default class EnvList extends Command {
   }
 
   async run() {
-    const { flags } = await this.parse(EnvList);
+    const { flags } = this.parse(EnvList);
     const { nonScratchOrgs, scratchOrgs } = await this.resolveOrgs(flags.all);
     const orgs = [...nonScratchOrgs, ...scratchOrgs];
     let environments = await this.resolveEnvironments(orgs);
     const types = (flags['environment-type'] as EnvironmentType[]) ?? ['org', 'scratchorg', 'compute'];
 
     if (!flags.all) {
-      try {
-        const project = await this.fetchSfdxProject();
+      const project = await this.fetchSfdxProject();
 
-        if (!flags.json) {
-          this.log(`Current environments for project ${project.name}\n`);
-        }
+      if (!flags.json) {
+        this.log(`Current environments for project ${project.name}\n`);
+      }
 
-        if (types.includes('compute')) {
-          environments = environments.filter((env) => env.sfdx_project_name === project.name);
-        }
-      } catch (error) {
-        /* We still need to show env regardless of project */
+      if (types.includes('compute')) {
+        environments = environments.filter((env) => env.sfdx_project_name === project.name);
       }
     }
 

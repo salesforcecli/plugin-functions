@@ -6,7 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Flags } from '@oclif/core';
+import { flags } from '@oclif/command';
 import { Aliases } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import { format } from 'date-fns';
@@ -31,14 +31,14 @@ export default class EnvCreateCompute extends Command {
 
   static flags = {
     'connected-org': FunctionsFlagBuilder.connectedOrg(),
-    setalias: Flags.string({
+    setalias: flags.string({
       char: 'a',
       description: 'alias for the created environment',
     }),
   };
 
   async run() {
-    const { flags } = await this.parse(EnvCreateCompute);
+    const { flags } = this.parse(EnvCreateCompute);
 
     const alias = flags.setalias;
 
@@ -126,7 +126,7 @@ export default class EnvCreateCompute extends Command {
       if (alias) {
         const aliases = await Aliases.create({});
 
-        aliases.set(alias, app.id);
+        aliases.set(alias, app.id!);
 
         await aliases.write();
       }

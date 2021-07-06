@@ -24,6 +24,11 @@ export default class Login extends Command {
     const { browser_url, cli_url, token } = body;
     const browserUrl = identityUrl + browser_url;
     const cliUrl = identityUrl + cli_url;
+    const machine = this.apiUrl.hostname;
+
+    if (!machine) {
+      return this.error('Error reading SALESFORCE_FUNCTIONS_API env var. Check that it is set correctly.');
+    }
 
     this.log(`Opening browser to ${browserUrl}\n`);
 
@@ -44,21 +49,15 @@ export default class Login extends Command {
 
     const refreshToken = response.data.refresh_token;
 
-    this.info.setToken(Command.TOKEN_BEARER_KEY, { token: bearerToken, url: this.identityUrl.toString() });
+    await this.apiNetrcMachine.set('password', bearerToken);
 
     const account = await this.fetchAccount();
 
-    this.info.updateToken(Command.TOKEN_BEARER_KEY, { user: account.salesforce_username });
+    await this.apiNetrcMachine.set('login', account.salesforce_username);
 
     if (refreshToken) {
-      this.info.setToken(Command.TOKEN_REFRESH_KEY, {
-        token: refreshToken,
-        url: this.identityUrl.toString(),
-        user: account.salesforce_username,
-      });
+      await this.identityNetrcMachine.set('password', refreshToken);
     }
-
-    await this.info.write();
 
     cli.action.stop();
   }

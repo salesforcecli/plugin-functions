@@ -5,8 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
+import { Command, flags } from '@oclif/command';
 import herokuColor from '@heroku-cli/color';
-import { Command, Flags } from '@oclif/core';
+
 import { getFunctionsBinary, getProjectDescriptor } from '@heroku/functions-core';
 import { cli } from 'cli-ux';
 
@@ -22,60 +23,60 @@ export default class Start extends Command {
   ];
 
   static flags = {
-    builder: Flags.string({
+    builder: flags.string({
       description: 'set custom builder image',
       hidden: true,
     }),
-    path: Flags.string({
+    path: flags.string({
       description: 'path to function dir',
       default: path.resolve('.'),
       hidden: true,
     }),
-    port: Flags.integer({
+    port: flags.integer({
       char: 'p',
       description: 'port for running the function',
       default: 8080,
     }),
-    'debug-port': Flags.integer({
+    'debug-port': flags.integer({
       char: 'd',
       description: 'port for remote debugging',
       default: 9229,
     }),
-    'clear-cache': Flags.boolean({
+    'clear-cache': flags.boolean({
       description: 'clear associated cache before executing.',
     }),
-    'no-pull': Flags.boolean({
+    'no-pull': flags.boolean({
       description: 'skip pulling builder image before use',
     }),
-    'no-build': Flags.boolean({
+    'no-build': flags.boolean({
       description: 'skip building the an image',
       hidden: true,
     }),
-    'no-run': Flags.boolean({
+    'no-run': flags.boolean({
       description: 'skip running the built image',
       hidden: true,
     }),
-    env: Flags.string({
+    env: flags.string({
       char: 'e',
       description: 'set environment variables (provided during build and run)',
       multiple: true,
     }),
-    network: Flags.string({
+    network: flags.string({
       description:
         'Connect and build containers to a network. This can be useful to build containers which require a local resource.',
     }),
-    verbose: Flags.boolean({
+    verbose: flags.boolean({
       char: 'v',
       description: 'output additional logs',
     }),
-    descriptor: Flags.string({
+    descriptor: flags.string({
       description: 'Path to project descriptor file (project.toml) that contains function and/or bulid configuration',
       hidden: true,
     }),
   };
 
   async run() {
-    const { flags } = await this.parse(Start);
+    const { flags } = this.parse(Start);
 
     const buildOpts = {
       builder: flags.builder,

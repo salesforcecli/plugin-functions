@@ -123,10 +123,10 @@ describe('sf env display', () => {
       });
       sandbox.stub(EnvDisplay.prototype, 'getScratchOrgInformation' as any).returns({});
     })
+    .stdout()
     .finally(() => {
       sandbox.restore();
     })
-    .stdout()
     .command(['env:display', `--environment=${ORG_ENV_NAME}`])
     .it('list org environment details when a non-scratch org environment is provided', (ctx) => {
       expect(ctx.stdout).not.to.include(SCRATCH_ORG_MOCK.status);
@@ -151,10 +151,10 @@ describe('sf env display', () => {
       });
       sandbox.stub(EnvDisplay.prototype, 'getScratchOrgInformation' as any).returns(SCRATCH_ORG_MOCK);
     })
+    .stdout()
     .finally(() => {
       sandbox.restore();
     })
-    .stdout()
     .command(['env:display', `--environment=${ORG_ENV_NAME}`])
     .it('list org environment details when a scratch org environment is provided', (ctx) => {
       expect(ctx.stdout).to.include(SCRATCH_ORG_MOCK.status);
@@ -178,7 +178,8 @@ describe('sf env display', () => {
         .stub(Org, 'create' as any)
         .onCall(0)
         .throws(error);
-      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
+      sandbox.stub(EnvDisplay.prototype, 'resolveScratchOrg' as any).returns({});
+      sandbox.stub(EnvDisplay.prototype, 'fetchOrg' as any).returns(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -205,7 +206,8 @@ describe('sf env display', () => {
         .stub(Org, 'create' as any)
         .onCall(0)
         .throws(error);
-      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
+      sandbox.stub(EnvDisplay.prototype, 'resolveScratchOrg' as any).returns({});
+      sandbox.stub(EnvDisplay.prototype, 'fetchOrg' as any).returns(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -231,7 +233,8 @@ describe('sf env display', () => {
         .stub(Org, 'create' as any)
         .onCall(0)
         .throws(error);
-      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
+      sandbox.stub(EnvDisplay.prototype, 'resolveScratchOrg' as any).returns({});
+      sandbox.stub(EnvDisplay.prototype, 'fetchOrg' as any).returns(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();

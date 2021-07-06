@@ -7,7 +7,7 @@
 import * as path from 'path';
 import { URL } from 'url';
 import herokuColor from '@heroku-cli/color';
-import { Flags } from '@oclif/core';
+import { flags } from '@oclif/command';
 import { cli } from 'cli-ux';
 import debugFactory from 'debug';
 import { UpsertResult } from 'jsforce';
@@ -34,14 +34,14 @@ export default class ProjectDeployFunctions extends Command {
     'connected-org': FunctionsFlagBuilder.connectedOrg({
       required: true,
     }),
-    branch: Flags.string({
+    branch: flags.string({
       char: 'b',
       description: 'deploy the latest commit from a branch different from the currently active branch',
     }),
-    force: Flags.boolean({
+    force: flags.boolean({
       description: 'ignore warnings and overwrite remote repository (not allowed in production)',
     }),
-    quiet: Flags.boolean({
+    quiet: flags.boolean({
       description: 'limit the amount of output displayed from the deploy process',
       char: 'q',
     }),
@@ -64,8 +64,8 @@ export default class ProjectDeployFunctions extends Command {
       return url.toString();
     }
 
-    const username = this.username;
-    const token = this.auth;
+    const username = this.apiNetrcMachine.get('login');
+    const token = this.apiNetrcMachine.get('password');
 
     if (!username || !token) {
       this.error('No login found. Please log in using the `login:functions` command.');
@@ -107,11 +107,11 @@ export default class ProjectDeployFunctions extends Command {
   }
 
   async run() {
-    const { flags } = await this.parse(ProjectDeployFunctions);
+    const { flags } = this.parse(ProjectDeployFunctions);
 
     // We pass the api token value to the Git constructor so that it will redact it from any of
     // the server logs
-    const redactedToken = this.auth;
+    const redactedToken = process.env.SALESFORCE_FUNCTIONS_API_KEY ?? this.apiNetrcMachine.get('password');
     this.git = new Git([redactedToken ?? '']);
 
     // We don't want to deploy anything if they've got work that hasn't been committed yet because
