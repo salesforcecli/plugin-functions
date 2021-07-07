@@ -52,6 +52,7 @@ parameters:
     description: "The tag of the module repo to checkout, '' defaults to branch/PR"
     default: ''
     type: string
+
 workflows:
   test-and-release:
     when: << pipeline.parameters.run-auto-workflows >>
@@ -75,6 +76,8 @@ workflows:
                 node_version: lts
               - os: windows
                 node_version: maintenance
+      - release-management/test-plugin-inclusion:
+          target_cli: sf
       - release-management/release-package:
           sign: true
           github-release: true
