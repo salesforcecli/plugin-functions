@@ -8,13 +8,14 @@ import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Flags } from '@oclif/core';
 import { Aliases } from '@salesforce/core';
+import { QueryResult } from 'jsforce';
 import { cli } from 'cli-ux';
 import { format } from 'date-fns';
 import Command from '../../../lib/base';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import pollForResult from '../../../lib/poll-for-result';
 
-interface SfFunctionsConnectionRecord {
+interface FunctionConnectionRecord {
   Id: string;
   Status: 'TrustedUniDirection' | 'TrustedBiDirection';
   Error?: string;
@@ -75,11 +76,27 @@ export default class EnvCreateCompute extends Command {
       // This query allows us to verify that the org connection has actually been created before
       // attempting to create a compute environment. If we don't wait for this to happen, environment
       // creation will fail since Heroku doesn't yet know about the org
-      const response = await connection.query<SfFunctionsConnectionRecord>(`SELECT
-        Id,
-        Status,
-        Error
-        FROM SfFunctionsConnection`);
+      let response: QueryResult<FunctionConnectionRecord>;
+
+      try {
+        response = await connection.query<FunctionConnectionRecord>(`SELECT
+          Id,
+          Status,
+          Error
+          FROM SfFunctionsConnection`);
+      } catch (error: any) {
+        // This is obviously heinous, but should only exist short-term until the move from `SfFunctionsConnection`
+        // to `FunctionConnection` is complete. Once that's done, we can remove this and go back to a simple
+        // query against `FunctionConnection`
+        if (!error.message.includes("sObject type 'SfFunctionsConnection' is not supported.")) {
+          this.error(error);
+        }
+        response = await connection.query<FunctionConnectionRecord>(`SELECT
+            Id,
+            Status,
+            Error
+            FROM FunctionConnection`);
+      }
 
       // If it's a newly created org, we likely won't get anything back for the first few iterations,
       // we keep polling
@@ -87,7 +104,7 @@ export default class EnvCreateCompute extends Command {
         return false;
       }
 
-      const record: SfFunctionsConnectionRecord = response.records[0];
+      const record: FunctionConnectionRecord = response.records[0];
 
       // This error is also expected when working with a newly created org. This error just means
       // that the devhub hasn't yet enabled functions on the new org (this is an automated async process
