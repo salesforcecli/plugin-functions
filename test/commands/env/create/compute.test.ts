@@ -169,6 +169,68 @@ describe('sf env create compute', () => {
     });
 
   test
+    .stdout({ print: true })
+    .stderr({ print: true })
+    .retries(3)
+    .do(() => {
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(Aliases, 'create' as any).returns({
+        set: aliasSetSpy,
+        write: aliasWriteSpy,
+      });
+    })
+    .add('queryStub', () => {
+      const queryStub = sinon.stub();
+      queryStub
+        .withArgs(sinon.match('SfFunctionsConnection'))
+        .throws({ message: "sObject type 'SfFunctionsConnection' is not supported." });
+
+      queryStub.withArgs(sinon.match('FunctionConnection')).returns({
+        records: [
+          {
+            Status: 'TrustedBiDirection',
+          },
+        ],
+      });
+      orgStub = sandbox.stub(Org, 'create' as any).returns({
+        ...ORG_MOCK,
+        getConnection() {
+          return {
+            metadata: {
+              list: sinon.stub(),
+            },
+            query: queryStub,
+          };
+        },
+      });
+
+      return queryStub;
+    })
+    .finally(() => {
+      sinon.restore();
+      sandbox.restore();
+    })
+    .nock('https://api.heroku.com', (api) => {
+      api
+        .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
+          sfdx_project_name: PROJECT_CONFIG_MOCK.name,
+        })
+        .reply(200, APP_MOCK);
+    })
+    .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`])
+    .it('still creates a compute env even if SfFunctionsConnection is not supported', (ctx) => {
+      expect(ctx.stderr).to.contain(`Creating compute environment for org ID ${ORG_MOCK.id}`);
+      expect(ctx.stdout).to.contain(`New compute environment created with ID ${APP_MOCK.name}`);
+      expect(ctx.stdout).to.contain(`Your compute environment with local alias ${ENVIRONMENT_ALIAS} is ready`);
+      expect(orgStub).to.have.been.calledWith({ aliasOrUsername: ORG_ALIAS });
+      expect(aliasSetSpy).to.have.been.calledWith(ENVIRONMENT_ALIAS, APP_MOCK.id);
+      expect(aliasWriteSpy).to.have.been.called;
+      // This is the assertion we rally care about for this test. We want to verify that everything proceeds
+      // as normal even if the first query errors because we're using the old object type
+      expect(ctx.queryStub).to.have.been.calledTwice;
+    });
+
+  test
     .stdout()
     .stderr()
     .do(() => {
