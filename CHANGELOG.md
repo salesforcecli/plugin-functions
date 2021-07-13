@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.20](https://github.com/salesforcecli/plugin-functions/compare/v0.2.19...v0.2.20) (2021-07-13)
+
+### Bug Fixes
+
+- support old and new function connection object ([#110](https://github.com/salesforcecli/plugin-functions/issues/110)) ([282505d](https://github.com/salesforcecli/plugin-functions/commit/282505dba6173f571521e305a07f40b967bd83f9))
+
 ### [0.2.19](https://github.com/salesforcecli/plugin-functions/compare/v0.2.18...v0.2.19) (2021-07-12)
 
 ### [0.2.18](https://github.com/salesforcecli/plugin-functions/compare/v0.2.17...v0.2.18) (2021-07-09)
