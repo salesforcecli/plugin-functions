@@ -25,7 +25,7 @@ export default abstract class Command extends Base {
 
   protected info!: GlobalInfo;
 
-  private _client!: APIClient;
+  private _client?: APIClient;
 
   private _auth?: string;
 
@@ -59,6 +59,11 @@ export default abstract class Command extends Base {
     if (!user) throw new Error('no username found');
 
     return user;
+  }
+
+  protected resetClientAuth() {
+    delete this._auth;
+    delete this._client;
   }
 
   protected get auth(): string {
