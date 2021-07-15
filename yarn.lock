@@ -875,6 +875,26 @@
     mkdirp "1.0.4"
     sfdx-faye "^1.0.9"
 
+"@salesforce/core@3.1.1-v3.2":
+  version "3.1.1-v3.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.1.1-v3.2.tgz#75665c66b51564312108238e6c1c20c8d815d339"
+  integrity sha512-eKWMPEgL85iP/z89rDWktJVdl6YOWO/YE5mxRumHoewog7x9ErAl3FMsTkfROyAQIsalig9VMtz169QLpPawOg==
+  dependencies:
+    "@salesforce/bunyan" "^2.0.0"
+    "@salesforce/kit" "^1.5.8"
+    "@salesforce/schemas" "^1.0.1"
+    "@salesforce/ts-types" "^1.5.13"
+    "@types/graceful-fs" "^4.1.3"
+    "@types/jsforce" "1.9.23"
+    "@types/mkdirp" "1.0.0"
+    debug "^3.1.0"
+    graceful-fs "^4.2.4"
+    jsen "0.6.6"
+    jsforce "^1.10.1"
+    jsonwebtoken "8.5.0"
+    mkdirp "1.0.4"
+    sfdx-faye "^1.0.9"
+
 "@salesforce/core@^2.17.0", "@salesforce/core@^2.2.0", "@salesforce/core@^2.20.10", "@salesforce/core@^2.23.4":
   version "2.24.2"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.24.2.tgz#d699af286bcf00051a85c63a9c60aa8146fd8b5f"
@@ -895,26 +915,6 @@
     mkdirp "1.0.4"
     sfdx-faye "^1.0.9"
     ts-retry-promise "^0.6.0"
-
-"@salesforce/core@^3.1.1-v3.2":
-  version "3.1.1-v3.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.1.1-v3.2.tgz#75665c66b51564312108238e6c1c20c8d815d339"
-  integrity sha512-eKWMPEgL85iP/z89rDWktJVdl6YOWO/YE5mxRumHoewog7x9ErAl3FMsTkfROyAQIsalig9VMtz169QLpPawOg==
-  dependencies:
-    "@salesforce/bunyan" "^2.0.0"
-    "@salesforce/kit" "^1.5.8"
-    "@salesforce/schemas" "^1.0.1"
-    "@salesforce/ts-types" "^1.5.13"
-    "@types/graceful-fs" "^4.1.3"
-    "@types/jsforce" "1.9.23"
-    "@types/mkdirp" "1.0.0"
-    debug "^3.1.0"
-    graceful-fs "^4.2.4"
-    jsen "0.6.6"
-    jsforce "^1.10.1"
-    jsonwebtoken "8.5.0"
-    mkdirp "1.0.4"
-    sfdx-faye "^1.0.9"
 
 "@salesforce/dev-config@^2.1.2":
   version "2.1.2"
