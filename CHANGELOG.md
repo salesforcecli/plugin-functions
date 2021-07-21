@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.22](https://github.com/salesforcecli/plugin-functions/compare/v0.2.21...v0.2.22) (2021-07-21)
+
+### Bug Fixes
+
+- add release-management and pin deps ([#121](https://github.com/salesforcecli/plugin-functions/issues/121)) ([4490111](https://github.com/salesforcecli/plugin-functions/commit/4490111efd150fc6563524756b224cc6ffded899))
+
 ### [0.2.21](https://github.com/salesforcecli/plugin-functions/compare/v0.2.20...v0.2.21) (2021-07-15)
 
 ### Bug Fixes
