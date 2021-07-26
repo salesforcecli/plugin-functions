@@ -251,4 +251,32 @@ describe('sf env display', () => {
       );
     })
     .it('errors out when an invalid environment name is provided');
+
+  test
+    .stdout()
+    .stderr()
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200, APP_MOCK))
+    .do(() => {
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
+      const error = new Error('No AuthInfo found');
+      sandbox
+        .stub(Org, 'create' as any)
+        .onCall(0)
+        .throws(error);
+      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .command(['env:display', `--environment=${COMPUTE_ENV_NAME}`, '--json'])
+    .it('outputs JSON when the --json flag is used', (ctx) => {
+      expect(JSON.parse(ctx.stdout)).to.deep.equal({
+        connectedOrgs: '00D9A0000009JGUUA2',
+        createdDate: '2021-05-05T21:57:37Z',
+        environmentName: 'my-compute-env',
+        project: 'sweet_project',
+        functions: ['fn1', 'fn2'],
+      });
+    });
 });

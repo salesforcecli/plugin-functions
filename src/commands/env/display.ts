@@ -11,7 +11,7 @@ import { OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
 import { getAliasByUsername } from '@salesforce/plugin-org/lib/shared/utils';
 import { getStyledValue } from '@salesforce/plugin-org/lib/shared/orgHighlighter';
 import Command from '../../lib/base';
-import { ComputeEnvironment } from '../../lib/sfdc-types';
+import { ComputeEnvironment, Dictionary } from '../../lib/sfdc-types';
 import { FunctionsFlagBuilder } from '../../lib/flags';
 import herokuVariant from '../../lib/heroku-variant';
 import { ensureArray } from '../../lib/function-reference-utils';
@@ -21,7 +21,7 @@ interface EnvDisplayTable {
   environmentName: string;
   project: string;
   createdDate?: string;
-  functions?: string;
+  functions?: string[];
   connectedOrgs?: string;
   appId?: string;
   spaceId?: string;
@@ -115,7 +115,7 @@ export default class EnvDisplay extends Command {
         environmentName: app.name!,
         project: project.name,
         createdDate: app.created_at,
-        functions: fnNames.length ? fnNames?.join('\n') : undefined,
+        functions: fnNames.length ? fnNames : undefined,
         connectedOrgs: salesOrgId,
       };
 
@@ -123,7 +123,7 @@ export default class EnvDisplay extends Command {
         returnValue.appId = app.id;
         returnValue.spaceId = app.space?.id;
       }
-      return this.print(returnValue);
+      return this.print(returnValue, flags.json);
     } catch (error) {
       if (error.body?.message.includes("Couldn't find that app.")) {
         // App with name does not exist
@@ -134,7 +134,7 @@ export default class EnvDisplay extends Command {
     }
   }
 
-  private print(result: any): void {
+  private print(result: any, json = false): void {
     const tableRowKeys = Object.keys(result)
       // some values won't exist, and we want to ensure functions is at the end
       .filter((key) => result[key] !== undefined && result[key] !== null && key !== 'functions')
@@ -145,10 +145,27 @@ export default class EnvDisplay extends Command {
       tableRowKeys.push('functions');
     }
 
-    const tableRows = tableRowKeys.map((key) => ({
-      key: this.camelCaseToTitleCase(key),
-      value: getStyledValue(key, result[key]),
-    }));
+    if (json) {
+      const jsonOutput = tableRowKeys.reduce((acc: Dictionary<string>, elem) => {
+        acc[elem] = result[elem];
+        return acc;
+      }, {});
+
+      cli.styledJSON(jsonOutput);
+      return;
+    }
+
+    const tableRows = tableRowKeys.map((key) => {
+      let value = result[key];
+      if (key === 'functions') {
+        value = value.join('\n');
+      }
+
+      return {
+        key: this.camelCaseToTitleCase(key),
+        value: getStyledValue(key, value),
+      };
+    });
 
     cli.table<any>(
       tableRows,
