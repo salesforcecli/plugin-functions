@@ -75,6 +75,11 @@
     "flags": []
   },
   {
+    "command": "login:functions:jwt",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["clientid", "json", "keyfile", "username"]
+  },
+  {
     "command": "project:deploy:functions",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["branch", "connected-org", "force", "json", "quiet"]
