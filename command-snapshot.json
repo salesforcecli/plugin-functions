@@ -12,7 +12,7 @@
   {
     "command": "env:display",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "extended", "json", "verbose"]
+    "flags": ["environment", "extended", "json"]
   },
   {
     "command": "env:list",
