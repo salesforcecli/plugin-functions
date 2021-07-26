@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.24](https://github.com/salesforcecli/plugin-functions/compare/v0.2.23...v0.2.24) (2021-07-26)
+
+### Features
+
+- add `login:functions:jwt` command ([#113](https://github.com/salesforcecli/plugin-functions/issues/113)) ([8feb20f](https://github.com/salesforcecli/plugin-functions/commit/8feb20fb27b94fb961848f0afa3dba38800d70e3))
+
 ### [0.2.23](https://github.com/salesforcecli/plugin-functions/compare/v0.2.22...v0.2.23) (2021-07-26)
 
 ### Bug Fixes
