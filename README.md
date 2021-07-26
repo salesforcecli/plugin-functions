@@ -104,11 +104,10 @@ display details for an environment
 
 ```
 USAGE
-  $ sf env display -e <value> [--json] [--verbose]
+  $ sf env display -e <value> [--json]
 
 FLAGS
   -e, --environment=<value>  (required) environment name
-  --verbose                  verbose display output
 
 GLOBAL FLAGS
   --json  format output as json

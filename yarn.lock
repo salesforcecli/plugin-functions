@@ -400,10 +400,10 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.0.3.tgz#a9e254c9fe8bee377e824de6e67bb08054f35df2"
-  integrity sha512-8l6CbGdGahfUggWVBv2Cw+buhHXzzdimnc6vzWe+2pPNpTLPSxrJrBE5VGFyBQd50GqjYpM4Wm1MDQxhKndgGg==
+"@heroku/functions-core@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.0.5.tgz#ac3dcef1d866105d5858001a9c98df329a8ecbc7"
+  integrity sha512-Ycq/ey1Xj4Q0S0PtQZbaE7ok4A1wuiEs7A6L5uanx1UnK5G7ufjl51U1SEkCIq6cWOya9iGxm5aOciXp9ORDHg==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku/project-descriptor" "0.0.5"
@@ -413,6 +413,7 @@
     axios "^0.21.1"
     cloudevents "^4.0.2"
     fs-extra "^9.1.0"
+    global-agent "^2.1.8"
     handlebars "^4.7.7"
     kbpgp "^2.1.15"
     mem-fs "^1.2.0 || ^2.0.0"
@@ -4723,7 +4724,7 @@ glob@^6.0.1:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-global-agent@^2.2.0:
+global-agent@^2.1.8, global-agent@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/global-agent/-/global-agent-2.2.0.tgz#566331b0646e6bf79429a16877685c4a1fbf76dc"
   integrity sha512-+20KpaW6DDLqhG7JDiJpD1JvNvb8ts+TNl7BPOYcURqCrXqnN1Vf+XVOrkKJAFPqfX+oEhsdzOj1hLWkBTdNJg==
