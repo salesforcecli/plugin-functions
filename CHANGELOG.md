@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.23](https://github.com/salesforcecli/plugin-functions/compare/v0.2.22...v0.2.23) (2021-07-26)
+
+### Bug Fixes
+
+- make `env:display` actually output json and remove `--verbose` flag ([#123](https://github.com/salesforcecli/plugin-functions/issues/123)) ([c257337](https://github.com/salesforcecli/plugin-functions/commit/c257337846e90749c748b355a9d8f8429d5730d1))
+
 ### [0.2.22](https://github.com/salesforcecli/plugin-functions/compare/v0.2.21...v0.2.22) (2021-07-21)
 
 ### Bug Fixes
