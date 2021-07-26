@@ -36,9 +36,6 @@ export default class EnvDisplay extends Command {
     environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
-    verbose: Flags.boolean({
-      description: 'verbose display output',
-    }),
     extended: Flags.boolean({
       char: 'x',
       hidden: true,
@@ -60,7 +57,7 @@ export default class EnvDisplay extends Command {
       const isScratchOrg = fields.devHubUsername;
       const scratchOrgInfo = isScratchOrg && fields.orgId ? await this.getScratchOrgInformation(fields.orgId, org) : {};
 
-      const sfdxAuthUrl = flags.verbose && fields.refreshToken ? authInfo.getSfdxAuthUrl() : undefined;
+      const sfdxAuthUrl = fields.refreshToken ? authInfo.getSfdxAuthUrl() : undefined;
       const alias = fields.username ? await getAliasByUsername(fields.username) : undefined;
 
       const returnValue = {
