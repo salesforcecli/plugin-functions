@@ -43,6 +43,7 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 - [`sf generate function`](#sf-generate-function)
 - [`sf generate project`](#sf-generate-project)
 - [`sf login functions`](#sf-login-functions)
+- [`sf login functions jwt`](#sf-login-functions-jwt)
 - [`sf project deploy functions`](#sf-project-deploy-functions)
 - [`sf run function`](#sf-run-function)
 - [`sf run function start`](#sf-run-function-start)
@@ -366,6 +367,29 @@ DESCRIPTION
 
 EXAMPLES
   $ sfdx login:functions
+```
+
+## `sf login functions jwt`
+
+login using JWT instead of default web-based flow
+
+```
+USAGE
+  $ sf login functions jwt -u <value> -f <value> -i <value> [--json]
+
+FLAGS
+  -f, --keyfile=<value>   (required) path to JWT keyfile
+  -i, --clientid=<value>  (required) OAuth client ID
+  -u, --username=<value>  (required) authentication username
+
+GLOBAL FLAGS
+  --json  format output as json
+
+DESCRIPTION
+  login using JWT instead of default web-based flow
+
+EXAMPLES
+  $ sfdx login:functions:jwt --username testuser@mycompany.org --keyfile file.key --clientid 123456
 ```
 
 ## `sf project deploy functions`
