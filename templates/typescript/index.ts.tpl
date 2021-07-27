@@ -1,4 +1,4 @@
-import { InvocationEvent, Context, Logger, RecordQueryResult } from "sf-fx-sdk-nodejs"
+import { InvocationEvent, Context, Logger, RecordQueryResult } from "sf-fx-sdk-nodejs";
 /**
  * Describe {{fnNameCased}} here.
  *

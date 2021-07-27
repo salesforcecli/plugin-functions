@@ -13,7 +13,7 @@ describe('Unit Tests', () => {
     let sandbox: SinonSandbox;
     let mockContext;
     let mockLogger;
-    let mockEvent
+    let mockEvent;
     let accounts;
 
     beforeEach(() => {
