@@ -400,10 +400,10 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.0.5.tgz#ac3dcef1d866105d5858001a9c98df329a8ecbc7"
-  integrity sha512-Ycq/ey1Xj4Q0S0PtQZbaE7ok4A1wuiEs7A6L5uanx1UnK5G7ufjl51U1SEkCIq6cWOya9iGxm5aOciXp9ORDHg==
+"@heroku/functions-core@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.0.6.tgz#88e48b2df600546bb1ce8abca019bbd91e50ed5e"
+  integrity sha512-k8fgkyaC7BJIi5zUkXbNG8jafsB69zrIOH9QIYaRrudcUgxw5JI4xmjT07fymTKVmnV3/FVeQtseWmbbDFtSkg==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku/project-descriptor" "0.0.5"
@@ -972,10 +972,31 @@
     mkdirp "1.0.4"
     sfdx-faye "^1.0.9"
 
-"@salesforce/core@^2.17.0", "@salesforce/core@^2.2.0", "@salesforce/core@^2.20.10", "@salesforce/core@^2.23.4":
+"@salesforce/core@^2.17.0", "@salesforce/core@^2.2.0", "@salesforce/core@^2.23.4":
   version "2.24.2"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.24.2.tgz#d699af286bcf00051a85c63a9c60aa8146fd8b5f"
   integrity sha512-J5fPpHOKVsliQe0tH6IsSt71VLAP7vuStimxdixI4k2JBkyrGFvvJ8+O8qFQ1Je0037A0xN0haT+ky2QivAZPg==
+  dependencies:
+    "@salesforce/bunyan" "^2.0.0"
+    "@salesforce/kit" "^1.5.0"
+    "@salesforce/schemas" "^1.0.1"
+    "@salesforce/ts-types" "^1.5.13"
+    "@types/graceful-fs" "^4.1.5"
+    "@types/jsforce" "^1.9.29"
+    "@types/mkdirp" "^1.0.1"
+    debug "^3.1.0"
+    graceful-fs "^4.2.4"
+    jsen "0.6.6"
+    jsforce "^1.10.1"
+    jsonwebtoken "8.5.0"
+    mkdirp "1.0.4"
+    sfdx-faye "^1.0.9"
+    ts-retry-promise "^0.6.0"
+
+"@salesforce/core@^2.20.10":
+  version "2.26.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.26.0.tgz#230724a7cb61909b2697b32a6da209c965a955ae"
+  integrity sha512-iZsPQ4WerrKTHtq577G5DjiGEipDWYwkFzHWpGt3UOuy11PP5hzs11YKZ1UknTRs4dQcy7J47piI6NJjVZnYEg==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
     "@salesforce/kit" "^1.5.0"
@@ -1152,7 +1173,7 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.1.0.tgz#bbf94a11ee036f2b0ec6ba82306cd9565a6ba26b"
   integrity sha512-6D7DvE6nFxpLyyTnrOIbbAeCJw2r/EpinFAcMh6gU0gA/CGfSbwV/8uR3uHLYL2zCyCZLH8jJ4dZ3BzCMqc+Eg==
 
-"@salesforce/templates@52.1.0", "@salesforce/templates@^52.0.0":
+"@salesforce/templates@^52.0.0":
   version "52.1.0"
   resolved "https://registry.yarnpkg.com/@salesforce/templates/-/templates-52.1.0.tgz#d37377e93ccb5486136ac8aab976ffd3360fc3a2"
   integrity sha512-hkjv9kjVNI47c51bIjRE1Ti2yD74uaQtSGUEi9bNJb/ifel+dvTfiIZI2A3gdqz/f1A30AgJIiiB8VWWWMQQrg==
@@ -1163,7 +1184,16 @@
     yeoman-environment "2.4.0"
     yeoman-generator "4.0.1"
 
-"@salesforce/ts-sinon@^1.3.12", "@salesforce/ts-sinon@^1.3.18":
+"@salesforce/ts-sinon@^1.3.12":
+  version "1.3.21"
+  resolved "https://registry.yarnpkg.com/@salesforce/ts-sinon/-/ts-sinon-1.3.21.tgz#e8aaac2a80a9e802337d08080714ed76f452cacd"
+  integrity sha512-sb0Ii3utcuNSh5fjsAyyXhnANKD0D0LHiLME1gAz/2bLhPLA5+l6PtAYZbLZxl2V3zXux8He53aiz8Kc6ApKEg==
+  dependencies:
+    "@salesforce/ts-types" "^1.5.20"
+    sinon "^5.1.1"
+    tslib "^2.2.0"
+
+"@salesforce/ts-sinon@^1.3.18":
   version "1.3.18"
   resolved "https://registry.yarnpkg.com/@salesforce/ts-sinon/-/ts-sinon-1.3.18.tgz#e8706100ece4cfdf02e6fb2745818b030dfe4b2e"
   integrity sha512-Gu2yNN3OIRN//fzA5tl5FBzGguN/cgE36LW9qpVc9dX5xvT7A1EndbjCsMjIZG878W7Ea2pemCv1I/260QwBaw==
@@ -1306,20 +1336,10 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.19.tgz#80f286b515897413c7a35bdda069cc80f2344233"
   integrity sha512-jRJgpRBuY+7izT7/WNXP/LsMO9YonsstuL+xuvycDyESpoDoIAsMd7suwpB4h9oEWB+ZlPTqJJ8EHomzNhwTPQ==
 
-"@types/debug@*", "@types/debug@^4.0.0":
+"@types/debug@^4.0.0":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.5.tgz#b14efa8852b7768d898906613c23f688713e02cd"
   integrity sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ==
-
-"@types/diff@*":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@types/diff/-/diff-5.0.0.tgz#eb71e94feae62548282c4889308a3dfb57e36020"
-  integrity sha512-jrm2K65CokCCX4NmowtA+MfXyuprZC13jbRuwprs6/04z/EcFg/MCwYdsHn+zgV4CQBiATiI7AEq7y1sZCtWKA==
-
-"@types/ejs@*":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-3.0.6.tgz#aca442289df623bfa8e47c23961f0357847b83fe"
-  integrity sha512-fj1hi+ZSW0xPLrJJD+YNwIh9GZbyaIepG26E/gXvp8nCa2pYokxUYO1sK9qjGxp2g8ryZYuon7wmjpwE2cyASQ==
 
 "@types/expect@^1.20.4":
   version "1.20.4"
@@ -1333,7 +1353,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/glob@*", "@types/glob@^7.1.1":
+"@types/glob@^7.1.1":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.1.3.tgz#e6ba80f36b7daad2c685acd9266382e68985c183"
   integrity sha512-SEYeGAIQIQX8NN6LDKprLjbrd5dARM5EXsd8GI/A5l0apYI1fGMWgPHSe4ZKL4eozlAyI+doUE9XbYS4xCkQ1w==
@@ -1347,19 +1367,6 @@
   integrity sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==
   dependencies:
     "@types/node" "*"
-
-"@types/http-cache-semantics@*":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz#0ea7b61496902b95890dc4c3a116b60cb8dae812"
-  integrity sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==
-
-"@types/inquirer@*":
-  version "7.3.2"
-  resolved "https://registry.yarnpkg.com/@types/inquirer/-/inquirer-7.3.2.tgz#35d2ef4d98dd42feeb4e1256cdeb9f13f457d420"
-  integrity sha512-EkeX/hU0SWinA2c7Qu/+6+7KbepFPYJcjankUgtA/VSY6BlVHybL0Cgyey9PDbXwhNXnNGBLU3t+MORp23RgAw==
-  dependencies:
-    "@types/through" "*"
-    rxjs "^6.4.0"
 
 "@types/jsforce@1.9.23":
   version "1.9.23"
@@ -1375,7 +1382,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/json-schema@*", "@types/json-schema@^7.0.7":
+"@types/json-schema@^7.0.7":
   version "7.0.7"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.7.tgz#98a993516c859eb0d5c4c8f098317a9ea68db9ad"
   integrity sha512-cxWFQVseBm6O9Gbw1IWb8r6OS4OhSt3hPZLkFApLjM8TEXROBuQGLAH2i2gZpcXdLBIrpXuTDhH7Vbm1iXmNGA==
@@ -1396,26 +1403,6 @@
   version "4.14.170"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.170.tgz#0d67711d4bf7f4ca5147e9091b847479b87925d6"
   integrity sha512-bpcvu/MKHHeYX+qeEN8GE7DIravODWdACVA1ctevD8CN24RhPZIKMn9ntfAsrvLfSX3cR5RrBKAbYm9bGs0A+Q==
-
-"@types/mem-fs-editor@*":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@types/mem-fs-editor/-/mem-fs-editor-7.0.0.tgz#e6576e0f66e20055481b2cdbf193457f1a2c4e65"
-  integrity sha512-fTwoRtwv7YYLnzZmkOOzlrCZBJQssUcBCHxy7y52iUyxkqVxXCDOSis9yQbanOMYHnijIEtkIhep8YTMeAuVDw==
-  dependencies:
-    "@types/ejs" "*"
-    "@types/glob" "*"
-    "@types/json-schema" "*"
-    "@types/mem-fs" "*"
-    "@types/node" "*"
-    "@types/vinyl" "*"
-
-"@types/mem-fs@*":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@types/mem-fs/-/mem-fs-1.1.2.tgz#e7e4cc741225dea109b5f3ceb519b45f353e1393"
-  integrity sha512-tt+4IoDO8/wmtaP2bHnB91c8AnzYtR9MK6NxfcZY9E3XgtmzOiFMeSXu3EZrBeevd0nJ87iGoUiFDGsb9QUvew==
-  dependencies:
-    "@types/node" "*"
-    "@types/vinyl" "*"
 
 "@types/minimatch@*", "@types/minimatch@^3.0.3":
   version "3.0.4"
@@ -1520,60 +1507,18 @@
   resolved "https://registry.yarnpkg.com/@types/supports-color/-/supports-color-8.1.0.tgz#d25609c0c07a257dbc460cea4e693abf78fe6aef"
   integrity sha512-yuaTiC8EqSvcb03zAsCXySH18CUcHNJFvOoqCJTMMKG3o5E4Jgnr1ycDR2v1BK9Cj56iMiYgjqX98eiWjRsBeg==
 
-"@types/text-table@*":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@types/text-table/-/text-table-0.2.1.tgz#39c4d4a058a82f677392dfd09976e83d9b4c9264"
-  integrity sha512-dchbFCWfVgUSWEvhOkXGS7zjm+K7jCUvGrQkAHPk2Fmslfofp4HQTH2pqnQ3Pw5GPYv0zWa2AQjKtsfZThuemQ==
-
-"@types/through@*":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@types/through/-/through-0.0.30.tgz#e0e42ce77e897bd6aead6f6ea62aeb135b8a3895"
-  integrity sha512-FvnCJljyxhPM3gkRgWmxmDZyAQSiBQQWLI0A0VFL0K7W1oRUrPJSqNO0NvTnLkBcotdlp3lKvaT0JrnyRDkzOg==
-  dependencies:
-    "@types/node" "*"
-
 "@types/uuid@^8.3.0":
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
   integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
 
-"@types/vinyl@*", "@types/vinyl@^2.0.4":
+"@types/vinyl@^2.0.4":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@types/vinyl/-/vinyl-2.0.4.tgz#9a7a8071c8d14d3a95d41ebe7135babe4ad5995a"
   integrity sha512-2o6a2ixaVI2EbwBPg1QYLGQoHK56p/8X/sGfKbFC8N6sY9lfjsMf/GprtkQkSya0D4uRiutRZ2BWj7k3JvLsAQ==
   dependencies:
     "@types/expect" "^1.20.4"
     "@types/node" "*"
-
-"@types/yeoman-assert@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@types/yeoman-assert/-/yeoman-assert-3.1.1.tgz#d1f683e5f6e6b15d36bfb216221a19bd7e9735c6"
-  integrity sha512-ACDlMVhoLIA3VQPFKtJWlr3evUE3DaEbVxi1ukivBRNB1havMW+vo2J0+hNURF19yiqs7iu+yUHLG25bCi2xcw==
-
-"@types/yeoman-environment@*", "@types/yeoman-environment@^2.10.2":
-  version "2.10.3"
-  resolved "https://registry.yarnpkg.com/@types/yeoman-environment/-/yeoman-environment-2.10.3.tgz#e8e13b1238a32007b58290d79311aa5a9bf7e26c"
-  integrity sha512-1QQaJcXXFz5U/r83M6XShIr6GN3ps1mf/w4cDBrAmIP9ip+CPU+JklriPT6IMi2wb0oGzifx3iwjqXpHF63BlA==
-  dependencies:
-    "@types/diff" "*"
-    "@types/inquirer" "*"
-    "@types/mem-fs" "*"
-    "@types/text-table" "*"
-    "@types/yeoman-generator" "*"
-    chalk "^4.1.0"
-    rxjs "^6.4.0"
-
-"@types/yeoman-generator@*":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@types/yeoman-generator/-/yeoman-generator-5.2.0.tgz#b39fcbe749d1fb698cd5a5d155396a48ea4820f7"
-  integrity sha512-aLJ4RrAKwbJr6n5irMor/J8rfQ6e+WsMOWmc95geThMagnW4ZnExm6aMgcGp6/lYDGX33yCNvKLjGggT1u0+TA==
-  dependencies:
-    "@types/debug" "*"
-    "@types/ejs" "*"
-    "@types/inquirer" "*"
-    "@types/mem-fs-editor" "*"
-    "@types/yeoman-environment" "*"
-    rxjs "^6.4.0"
 
 "@typescript-eslint/eslint-plugin@^4.28.0":
   version "4.28.1"
@@ -10319,11 +10264,6 @@ yargs@^15.0.2:
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
 
-yeoman-assert@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/yeoman-assert/-/yeoman-assert-3.1.1.tgz#9f6fa0ecba7dd007c40f579668cb5dda18c79343"
-  integrity sha512-bCuLb/j/WzpvrJZCTdJJLFzm7KK8IYQJ3+dF9dYtNs2CUYyezFJDuULiZ2neM4eqjf45GN1KH/MzCTT3i90wUQ==
-
 yeoman-environment@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/yeoman-environment/-/yeoman-environment-2.4.0.tgz#4829445dc1306b02d9f5f7027cd224bf77a8224d"
@@ -10345,7 +10285,32 @@ yeoman-environment@2.4.0:
     text-table "^0.2.0"
     untildify "^3.0.3"
 
-yeoman-environment@3.3.0, yeoman-environment@~3.3.0:
+yeoman-environment@^2.0.5, yeoman-environment@^2.3.4, yeoman-environment@^2.9.5:
+  version "2.10.3"
+  resolved "https://registry.yarnpkg.com/yeoman-environment/-/yeoman-environment-2.10.3.tgz#9d8f42b77317414434cc0e51fb006a4bdd54688e"
+  integrity sha512-pLIhhU9z/G+kjOXmJ2bPFm3nejfbH+f1fjYRSOteEXDBrv1EoJE/e+kuHixSXfCYfTkxjYsvRaDX+1QykLCnpQ==
+  dependencies:
+    chalk "^2.4.1"
+    debug "^3.1.0"
+    diff "^3.5.0"
+    escape-string-regexp "^1.0.2"
+    execa "^4.0.0"
+    globby "^8.0.1"
+    grouped-queue "^1.1.0"
+    inquirer "^7.1.0"
+    is-scoped "^1.0.0"
+    lodash "^4.17.10"
+    log-symbols "^2.2.0"
+    mem-fs "^1.1.0"
+    mem-fs-editor "^6.0.0"
+    npm-api "^1.0.0"
+    semver "^7.1.3"
+    strip-ansi "^4.0.0"
+    text-table "^0.2.0"
+    untildify "^3.0.3"
+    yeoman-generator "^4.8.2"
+
+yeoman-environment@~3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/yeoman-environment/-/yeoman-environment-3.3.0.tgz#bfb1f5bc1338e09e77e621f49762c61b1934ac65"
   integrity sha512-2OV2hgRoLjkQrtNIfaTejinMHR5yjJ4DF/aG1Le/qnzHRAsE6gfFm9YL2Sq5FW5l16XSmt7BCMQlcDVyPTxpSg==
@@ -10384,31 +10349,6 @@ yeoman-environment@3.3.0, yeoman-environment@~3.3.0:
     text-table "^0.2.0"
     textextensions "^5.12.0"
     untildify "^4.0.0"
-
-yeoman-environment@^2.0.5, yeoman-environment@^2.3.4, yeoman-environment@^2.9.5:
-  version "2.10.3"
-  resolved "https://registry.yarnpkg.com/yeoman-environment/-/yeoman-environment-2.10.3.tgz#9d8f42b77317414434cc0e51fb006a4bdd54688e"
-  integrity sha512-pLIhhU9z/G+kjOXmJ2bPFm3nejfbH+f1fjYRSOteEXDBrv1EoJE/e+kuHixSXfCYfTkxjYsvRaDX+1QykLCnpQ==
-  dependencies:
-    chalk "^2.4.1"
-    debug "^3.1.0"
-    diff "^3.5.0"
-    escape-string-regexp "^1.0.2"
-    execa "^4.0.0"
-    globby "^8.0.1"
-    grouped-queue "^1.1.0"
-    inquirer "^7.1.0"
-    is-scoped "^1.0.0"
-    lodash "^4.17.10"
-    log-symbols "^2.2.0"
-    mem-fs "^1.1.0"
-    mem-fs-editor "^6.0.0"
-    npm-api "^1.0.0"
-    semver "^7.1.3"
-    strip-ansi "^4.0.0"
-    text-table "^0.2.0"
-    untildify "^3.0.3"
-    yeoman-generator "^4.8.2"
 
 yeoman-generator@3:
   version "3.2.0"
