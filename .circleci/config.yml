@@ -90,17 +90,17 @@ workflows:
           pre-job-steps:
             - release-management/pin-dependencies:
                 tag: latest
+      - canaries:
+          requires:
+            - release-management/release-package
+          filters:
+            branches:
+              only: main
       - release-management/promote-package:
           target: latest
           candidate: prerelease
           requires:
-            - release-management/test-package
-          filters:
-            branches:
-              only: release
-      - canaries:
-          requires:
-            - release-management/release-package
+            - canaries
           filters:
             branches:
               only: main
