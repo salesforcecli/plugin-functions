@@ -13,9 +13,11 @@ describe('Unit Tests', () => {
     let sandbox: SinonSandbox;
     let mockContext;
     let mockLogger;
+    let mockEvent
     let accounts;
 
     beforeEach(() => {
+        mockEvent = { id: {}, type: {}, source: {} };
         mockContext = {
             org: {
                 dataApi: { query: () => undefined }
@@ -58,7 +60,7 @@ describe('Unit Tests', () => {
     });
 
     it('Invoke {{fnNameCased}}', async () => {
-        const results = await execute({ data: {} }, mockContext, mockLogger);
+        const results = await execute(mockEvent, mockContext, mockLogger);
 
         expect(mockContext.org.dataApi.query.callCount).to.be.eql(1);
         expect(mockLogger.info.callCount).to.be.eql(2);

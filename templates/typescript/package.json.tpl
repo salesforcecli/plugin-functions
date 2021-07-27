@@ -29,6 +29,7 @@
     "eslint": "^6.8.0",
     "mocha": "^8.4.0",
     "sinon": "^10.0.0",
+    "sf-fx-sdk-nodejs": "^2.1.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   }
