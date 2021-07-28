@@ -400,10 +400,10 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.0.6.tgz#88e48b2df600546bb1ce8abca019bbd91e50ed5e"
-  integrity sha512-k8fgkyaC7BJIi5zUkXbNG8jafsB69zrIOH9QIYaRrudcUgxw5JI4xmjT07fymTKVmnV3/FVeQtseWmbbDFtSkg==
+"@heroku/functions-core@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.0.7.tgz#a4bf646171b60f4463a199eb00063cbc9f97bd58"
+  integrity sha512-030yK2UtF9CakCKOyaX0dMUs6JeyMnofb0cbf7YQpDCjIZRW7j3uPWjmlBNW6k+t2ew5G0FgJw4bQKzb/cTerw==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku/project-descriptor" "0.0.5"
@@ -1367,6 +1367,11 @@
   integrity sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==
   dependencies:
     "@types/node" "*"
+
+"@types/http-cache-semantics@*":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz#0ea7b61496902b95890dc4c3a116b60cb8dae812"
+  integrity sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==
 
 "@types/jsforce@1.9.23":
   version "1.9.23"
