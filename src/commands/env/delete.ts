@@ -80,20 +80,36 @@ export default class EnvDelete extends Command {
       );
     }
 
-    // Find and delete all connected function references if they exist
-    const org = await this.resolveOrg(app.data.sales_org_connection?.sales_org_id);
-    const project = await this.fetchSfdxProject();
-    const connection = org.getConnection();
-    let refList = await connection.metadata.list({ type: 'FunctionReference' });
-    refList = ensureArray(refList);
+    let org: Org | null = null;
+    try {
+      org = await this.resolveOrg(app.data.sales_org_connection?.sales_org_id);
+    } catch (error) {
+      // It's possible that they are deleting the compute environment after deleting the org it was
+      // connected to, in which case `resolveOrg` will error and we simply want to skip the process
+      // of cleaning up functon refs since they're all already gone. Otherwise, something else has
+      // gone wrong and we go ahead and bail out.
+      if (error.message !== 'Attempted to resolve an org without an org ID or defaultusername value') {
+        this.error;
+      }
+    }
 
-    if (refList && refList.length) {
-      const allReferences = refList.reduce((acc: FullNameReference[], ref) => {
-        acc.push(splitFullName(ref.fullName));
-        return acc;
-      }, []);
-      const referencesToRemove = filterProjectReferencesToRemove(allReferences, [], project.name);
-      await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
+    // If we are actually able to resolve an Org instance, it means they are deleting the compute
+    // environment while the org still exists, so we need to delete all the function references
+    // from the org as part of the cleanup process
+    if (org) {
+      const project = await this.fetchSfdxProject();
+      const connection = org.getConnection();
+      let refList = await connection.metadata.list({ type: 'FunctionReference' });
+      refList = ensureArray(refList);
+
+      if (refList && refList.length) {
+        const allReferences = refList.reduce((acc: FullNameReference[], ref) => {
+          acc.push(splitFullName(ref.fullName));
+          return acc;
+        }, []);
+        const referencesToRemove = filterProjectReferencesToRemove(allReferences, [], project.name);
+        await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
+      }
     }
 
     // Delete the application
