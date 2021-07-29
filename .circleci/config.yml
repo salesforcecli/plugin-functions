@@ -87,9 +87,6 @@ workflows:
           filters:
             branches:
               only: main
-          pre-job-steps:
-            - release-management/pin-dependencies:
-                tag: latest
       - canaries:
           requires:
             - release-management/release-package
