@@ -106,7 +106,6 @@ export default class LogTail extends Command {
 
     const response = await this.client.post<Heroku.LogSession>(`/apps/${appName}/log-sessions`, {
       data: {
-        source: 'app',
         tail: true,
       },
     });
