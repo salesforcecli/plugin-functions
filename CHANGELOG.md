@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.28](https://github.com/salesforcecli/plugin-functions/compare/v0.2.27...v0.2.28) (2021-07-29)
+
+### Bug Fixes
+
+- don't filter logs by app token ([#132](https://github.com/salesforcecli/plugin-functions/issues/132)) ([15be84b](https://github.com/salesforcecli/plugin-functions/commit/15be84b498de111015b3b89fc69ee61e1329ab6f))
+
 ### [0.2.27](https://github.com/salesforcecli/plugin-functions/compare/v0.2.26...v0.2.27) (2021-07-29)
 
 ### Bug Fixes
