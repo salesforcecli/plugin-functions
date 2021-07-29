@@ -6,7 +6,7 @@
  */
 import { URL } from 'url';
 import { Command as Base } from '@oclif/core';
-import { Aliases, AuthInfo, GlobalInfo, Org, SfdxProject } from '@salesforce/core';
+import { Aliases, AuthInfo, Config, GlobalInfo, Org, SfdxProject } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import APIClient from './api-client';
 import herokuVariant from './heroku-variant';
@@ -136,19 +136,28 @@ export default abstract class Command extends Base {
   }
 
   protected async resolveOrg(orgId?: string): Promise<Org> {
+    // We perform this check because `Org.create` blows up with a non-descriptive error message if you
+    // just assume the defaultusername is set
+    const config = await Config.create();
+    const defaultUsername = config.get('defaultusername') as string;
+
+    if (!orgId && !defaultUsername) {
+      throw new Error('Attempted to resolve an org without an org ID or defaultusername value');
+    }
+
     const infos = await AuthInfo.listAllAuthorizations();
 
     if (infos.length === 0) throw new Error('No connected orgs found');
 
     if (orgId) {
-      for (const info of infos) {
-        if (info.orgId === orgId) {
-          return await Org.create({ aliasOrUsername: info.username });
-        }
+      const matchingOrg = infos.find((info) => info.orgId === orgId);
+
+      if (matchingOrg) {
+        return await Org.create({ aliasOrUsername: matchingOrg.username });
       }
     }
 
-    return Org.create();
+    return Org.create({ aliasOrUsername: defaultUsername });
   }
 
   protected async fetchSfdxProject() {

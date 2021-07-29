@@ -77,6 +77,30 @@ describe('env:delete', () => {
 
   test
     .stderr()
+    .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
+    .do(() => {
+      sandbox
+        .stub(EnvDelete.prototype, 'resolveOrg' as any)
+        .throws('Attempted to resolve an org without an org ID or defaultusername value');
+    })
+    .add('projectResolveStub', () => {
+      return sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .command(['env:delete', `--environment=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
+    .it('deletes an environment even if its associated org no longer exists', (ctx) => {
+      const output = ctx.stderr;
+      expect(output).to.include(`Deleting environment ${COMPUTE_ENV_NAME}... done`);
+      // If they're deleting the environment after deleting the org, the command shouldn't attempt
+      // to clean up function references, and therefore it shouldn't attempt to resolve the project
+      expect(ctx.projectResolveStub).to.not.have.been.called;
+    });
+
+  test
+    .stderr()
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(404))
     .do(() => {
       sandbox.stub(EnvDelete.prototype, 'resolveOrg' as any).returns({});
