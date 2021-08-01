@@ -1300,9 +1300,9 @@
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
 "@types/sha256-file@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/sha256-file/-/sha256-file-1.0.0.tgz#fb9762a39daf33a6ec7da1b7ff6ec27187de66b4"
-  integrity sha512-b11B4u1e9xhzx5vqSINm6VBp5+ZxO6NMTkaiqbPED6wyCRimeztKWFBoX4pvzU6F4NkWzCTan9rmirBFtkx65Q==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/sha256-file/-/sha256-file-1.0.1.tgz#e00ca4732284a5fd8a504ba48a0240683a152a7e"
+  integrity sha512-YnDbU9sc81JuLjARNq2Q4Gw6eXuFsfgbNL6xEso8bQJeTpXR9bhGVZErFqSfXA4+6O0U53gHb1kobbZB2Du07A==
 
 "@types/sinon-chai@^3.2.5":
   version "3.2.5"
