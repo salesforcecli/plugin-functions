@@ -2,12 +2,12 @@
   {
     "command": "env:create:compute",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["connected-org", "json", "setalias"]
+    "flags": ["connected-org", "setalias"]
   },
   {
     "command": "env:delete",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["confirm", "environment", "json"]
+    "flags": ["confirm", "environment"]
   },
   {
     "command": "env:display",
@@ -22,12 +22,12 @@
   {
     "command": "env:log:tail",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "json"]
+    "flags": ["environment"]
   },
   {
     "command": "env:logdrain:add",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "json", "url"]
+    "flags": ["environment", "url"]
   },
   {
     "command": "env:logdrain:list",
@@ -37,37 +37,37 @@
   {
     "command": "env:logdrain:remove",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "json", "url"]
+    "flags": ["environment", "url"]
   },
   {
     "command": "env:var:get",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "json"]
+    "flags": ["environment"]
   },
   {
     "command": "env:var:list",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "json"]
+    "flags": ["environment"]
   },
   {
     "command": "env:var:set",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "json"]
+    "flags": ["environment"]
   },
   {
     "command": "env:var:unset",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "json"]
+    "flags": ["environment"]
   },
   {
     "command": "generate:function",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["json", "language", "name"]
+    "flags": ["language", "name"]
   },
   {
     "command": "generate:project",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["json", "name"]
+    "flags": ["name"]
   },
   {
     "command": "login:functions",
@@ -77,12 +77,12 @@
   {
     "command": "login:functions:jwt",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["clientid", "json", "keyfile", "username"]
+    "flags": ["clientid", "keyfile", "username"]
   },
   {
     "command": "project:deploy:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["branch", "connected-org", "force", "json", "quiet"]
+    "flags": ["branch", "connected-org", "force", "quiet"]
   },
   {
     "command": "run:function",
@@ -111,6 +111,6 @@
   {
     "command": "whoami:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["json", "show-token"]
+    "flags": ["show-token"]
   }
 ]
