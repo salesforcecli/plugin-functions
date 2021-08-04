@@ -29,8 +29,8 @@ interface EnvDisplayTable {
 
 export default class EnvDisplay extends Command {
   static description = 'display details for an environment';
-
   static examples = ['$ sfdx env:display --environment=billingApp-Scratch1'];
+  static disableJsonFlag = false;
 
   static flags = {
     environment: FunctionsFlagBuilder.environment({

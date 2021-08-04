@@ -19,9 +19,12 @@ function checkNetRcForAuth(name = 'password') {
   const netrcMachine: NetrcMachine = new NetrcMachine(key.hostname);
   return netrcMachine.get(name);
 }
+
 export default abstract class Command extends Base {
   protected static TOKEN_BEARER_KEY = 'functions-bearer';
   protected static TOKEN_REFRESH_KEY = 'functions-refresh';
+  // We want to implement `--json` on a per-command basis, so we disable the global json flag here
+  static disableJsonFlag = true;
 
   protected info!: GlobalInfo;
 
