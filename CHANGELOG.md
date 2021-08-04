@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.29](https://github.com/salesforcecli/plugin-functions/compare/v0.2.28...v0.2.29) (2021-08-04)
+
+### Bug Fixes
+
+- disable global json flag ([#159](https://github.com/salesforcecli/plugin-functions/issues/159)) ([9d3af3f](https://github.com/salesforcecli/plugin-functions/commit/9d3af3f05555d6053de81871f24f9b00293f811b))
+
 ### [0.2.28](https://github.com/salesforcecli/plugin-functions/compare/v0.2.27...v0.2.28) (2021-07-29)
 
 ### Bug Fixes

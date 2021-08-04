@@ -55,14 +55,11 @@ create a compute environment for use with Salesforce Functions
 
 ```
 USAGE
-  $ sf env create compute [--json] [-o <value>] [-a <value>]
+  $ sf env create compute [-o <value>] [-a <value>]
 
 FLAGS
   -a, --setalias=<value>       alias for the created environment
   -o, --connected-org=<value>  username or alias for the org that the compute environment should be connected to
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   create a compute environment for use with Salesforce Functions
@@ -81,14 +78,11 @@ delete an environment
 
 ```
 USAGE
-  $ sf env delete -e <value> [--json] [-c <value>]
+  $ sf env delete -e <value> [-c <value>]
 
 FLAGS
   -c, --confirm=name...      confirmation name
   -e, --environment=<value>  (required) environment name
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   delete an environment
@@ -126,7 +120,7 @@ List all environments by type
 
 ```
 USAGE
-  $ sf env list [-j] [--all] [-t org|scratchorg|compute]
+  $ sf env list [--all] [-t org|scratchorg|compute] [-j]
 
 FLAGS
   -j, --json                          output list in JSON format
@@ -154,13 +148,10 @@ stream log output for an environment
 
 ```
 USAGE
-  $ sf env log tail -e <value> [--json]
+  $ sf env log tail -e <value>
 
 FLAGS
   -e, --environment=<value>  (required) environment name to retrieve logs
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   stream log output for an environment
@@ -175,14 +166,11 @@ Add log drain to a specified environment
 
 ```
 USAGE
-  $ sf env logdrain add -e <value> -u <value> [--json]
+  $ sf env logdrain add -e <value> -u <value>
 
 FLAGS
   -e, --environment=<value>  (required) environment name
   -u, --url=<value>          (required) endpoint that will receive sent logs
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   Add log drain to a specified environment
@@ -216,14 +204,11 @@ Remove log drain from a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain remove -e <value> -u <value> [--json]
+  $ sf env logdrain remove -e <value> -u <value>
 
 FLAGS
   -e, --environment=<value>  (required) environment name
   -u, --url=<value>          (required) logdrain url to remove
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   Remove log drain from a specified environment.
@@ -238,13 +223,10 @@ display a single config value for an environment
 
 ```
 USAGE
-  $ sf env var get [KEY] -e <value> [--json]
+  $ sf env var get [KEY] -e <value>
 
 FLAGS
   -e, --environment=<value>  (required) environment name
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   display a single config value for an environment
@@ -259,13 +241,10 @@ list your config vars in a table
 
 ```
 USAGE
-  $ sf env var list -e <value> [--json]
+  $ sf env var list -e <value>
 
 FLAGS
   -e, --environment=<value>  (required) environment name
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   list your config vars in a table
@@ -280,13 +259,10 @@ sets a single config value for an environment
 
 ```
 USAGE
-  $ sf env var set -e <value> [--json]
+  $ sf env var set -e <value>
 
 FLAGS
   -e, --environment=<value>  (required) environment name
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   sets a single config value for an environment
@@ -301,13 +277,10 @@ unset a single config value for an environment
 
 ```
 USAGE
-  $ sf env var unset -e <value> [--json]
+  $ sf env var unset -e <value>
 
 FLAGS
   -e, --environment=<value>  (required) environment name
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   unset a single config value for an environment
@@ -322,14 +295,11 @@ create a function with basic scaffolding specific to a given language
 
 ```
 USAGE
-  $ sf generate function -n <value> -l javascript|typescript|java [--json]
+  $ sf generate function -n <value> -l javascript|typescript|java
 
 FLAGS
   -l, --language=(javascript|typescript|java)  (required) language
   -n, --name=<value>                           (required) function name
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   create a function with basic scaffolding specific to a given language
@@ -345,13 +315,10 @@ EXAMPLES
 
 ```
 USAGE
-  $ sf generate project -n <value> [--json]
+  $ sf generate project -n <value>
 
 FLAGS
   -n, --name=<value>  (required) name of the generated project
-
-GLOBAL FLAGS
-  --json  format output as json
 ```
 
 ## `sf login functions`
@@ -375,15 +342,12 @@ login using JWT instead of default web-based flow
 
 ```
 USAGE
-  $ sf login functions jwt -u <value> -f <value> -i <value> [--json]
+  $ sf login functions jwt -u <value> -f <value> -i <value>
 
 FLAGS
   -f, --keyfile=<value>   (required) path to JWT keyfile
   -i, --clientid=<value>  (required) OAuth client ID
   -u, --username=<value>  (required) authentication username
-
-GLOBAL FLAGS
-  --json  format output as json
 
 DESCRIPTION
   login using JWT instead of default web-based flow
@@ -396,7 +360,7 @@ EXAMPLES
 
 ```
 USAGE
-  $ sf project deploy functions -o <value> [--json] [-b <value>] [--force] [-q]
+  $ sf project deploy functions -o <value> [-b <value>] [--force] [-q]
 
 FLAGS
   -b, --branch=<value>         deploy the latest commit from a branch different from the currently active branch
@@ -407,9 +371,6 @@ FLAGS
   -q, --quiet                  limit the amount of output displayed from the deploy process
 
   --force                      ignore warnings and overwrite remote repository (not allowed in production)
-
-GLOBAL FLAGS
-  --json  format output as json
 ```
 
 ## `sf run function`
@@ -479,10 +440,7 @@ show information on your account
 
 ```
 USAGE
-  $ sf whoami functions [--json]
-
-GLOBAL FLAGS
-  --json  format output as json
+  $ sf whoami functions
 
 DESCRIPTION
   show information on your account
