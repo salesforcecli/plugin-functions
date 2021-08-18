@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
-import { Config } from '@salesforce/core';
+import { Config, SfdxPropertyKeys } from '@salesforce/core';
 import { cli } from 'cli-ux';
 
 import { MockTestOrgData, testSetup } from '@salesforce/core/lib/testSetup';
@@ -50,7 +50,7 @@ describe('run:function', () => {
       $$.configStubs.GlobalInfo = { contents: { orgs: { [testData.username]: await testData.getConfig() } } };
 
       const config = await Config.create(Config.getDefaultOptions(true));
-      await config.set(Config.DEFAULT_USERNAME, testData.username);
+      await config.set(SfdxPropertyKeys.DEFAULT_USERNAME, testData.username);
       await config.write();
     });
 
@@ -73,7 +73,7 @@ describe('run:function', () => {
         'TestHeader',
         '--structured',
         '-o',
-        Config.DEFAULT_USERNAME,
+        SfdxPropertyKeys.DEFAULT_USERNAME,
       ])
       .it('Should call the library with all arguments', async () => {
         sinon.assert.calledWith(
@@ -83,7 +83,7 @@ describe('run:function', () => {
             .and(sinon.match.has('url', targetUrl))
             .and(sinon.match.has('headers', ['TestHeader']))
             .and(sinon.match.has('structured', true))
-            .and(sinon.match.has('targetusername', Config.DEFAULT_USERNAME))
+            .and(sinon.match.has('targetusername', SfdxPropertyKeys.DEFAULT_USERNAME))
         );
       });
     test
