@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.30](https://github.com/salesforcecli/plugin-functions/compare/v0.2.29...v0.2.30) (2021-08-19)
+
+### Bug Fixes
+
+- allow equals sign in config pair value ([#165](https://github.com/salesforcecli/plugin-functions/issues/165)) ([3f8af63](https://github.com/salesforcecli/plugin-functions/commit/3f8af637873e1a1db81da00560cab19797b42ad9))
+
 ### [0.2.29](https://github.com/salesforcecli/plugin-functions/compare/v0.2.28...v0.2.29) (2021-08-04)
 
 ### Bug Fixes
