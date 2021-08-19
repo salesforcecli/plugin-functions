@@ -32,7 +32,11 @@ export default class ConfigSet extends Command {
       if (elem.indexOf('=') === -1) {
         this.error(`${herokuColor.cyan(elem)} is invalid. Please use the format ${herokuColor.cyan('key=value')}`);
       }
-      const [key, value] = elem.split('=');
+
+      const equalsIndex = elem.indexOf('=');
+      const key = elem.slice(0, equalsIndex);
+      const value = elem.slice(equalsIndex + 1);
+
       return { ...acc, [key]: value };
     }, {});
   }

@@ -42,6 +42,24 @@ describe('sf env:var:set', () => {
     });
 
   test
+    .stdout()
+    .stderr()
+    // Adding retries here because there is some kind of race condition that causes fancy-test to not
+    // fully capture the value of stderr when running in CI (╯°□°)╯︵ ┻━┻
+    .retries(2)
+    .nock('https://api.heroku.com', (api) =>
+      api
+        .patch('/apps/my-environment/config-vars', {
+          foo: 'bar=baz',
+        })
+        .reply(200)
+    )
+    .command(['env:var:set', 'foo=bar=baz', '--environment', 'my-environment'])
+    .it('allows equals sign in config pair value', (ctx) => {
+      expect(ctx.stderr).to.contain('Setting foo and restarting my-environment');
+    });
+
+  test
     .command(['env:var:set', 'foobar', '--environment', 'my-environment'])
     .catch((error) => {
       expect(error.message).to.contain('foobar is invalid. Please use the format key=value');
