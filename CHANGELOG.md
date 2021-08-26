@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.31](https://github.com/salesforcecli/plugin-functions/compare/v0.2.30...v0.2.31) (2021-08-26)
+
+### Features
+
+- js and ts function templates now use js modules ([#168](https://github.com/salesforcecli/plugin-functions/issues/168)) ([a777feb](https://github.com/salesforcecli/plugin-functions/commit/a777feb69d2e561c1df0e8a73dede3824dfd51ef))
+
 ### [0.2.30](https://github.com/salesforcecli/plugin-functions/compare/v0.2.29...v0.2.30) (2021-08-19)
 
 ### Bug Fixes
