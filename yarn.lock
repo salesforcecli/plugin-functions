@@ -400,10 +400,10 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.0.7.tgz#a4bf646171b60f4463a199eb00063cbc9f97bd58"
-  integrity sha512-030yK2UtF9CakCKOyaX0dMUs6JeyMnofb0cbf7YQpDCjIZRW7j3uPWjmlBNW6k+t2ew5G0FgJw4bQKzb/cTerw==
+"@heroku/functions-core@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.1.0.tgz#e43645fc3b49a3a17029747793991c68b8e8fa23"
+  integrity sha512-CdM/gApg8ny0adriBxikFqgAikAVQ2qAbrek2XWnag/OC3rxMo1FNttmtqwch70EGxalTsNAwAeAp3B3PDlsBA==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku/project-descriptor" "0.0.5"
