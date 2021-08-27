@@ -13,6 +13,7 @@ import Command from '../../lib/base';
 import herokuVariant from '../../lib/heroku-variant';
 import { ComputeEnvironment, Dictionary } from '../../lib/sfdc-types';
 import { environmentType } from '../../lib/flags';
+import { fetchSfdxProject } from '../../lib/utils';
 
 type EnvironmentType = 'org' | 'scratchorg' | 'compute';
 
@@ -246,7 +247,7 @@ export default class EnvList extends Command {
 
     if (!flags.all) {
       try {
-        const project = await this.fetchSfdxProject();
+        const project = await fetchSfdxProject();
 
         if (!flags.json) {
           this.log(`Current environments for project ${project.name}\n`);

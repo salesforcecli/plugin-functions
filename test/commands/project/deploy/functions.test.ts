@@ -8,9 +8,9 @@ import { expect, test } from '@oclif/test';
 import { CLIError } from '@oclif/errors';
 import { Org, SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
-import ProjectDeployFunctions from '../../../../src/commands/deploy/functions';
 import Git from '../../../../src/lib/git';
 import { AuthStubs } from '../../../helpers/auth';
+import * as FunctionReferenceUtils from '../../../../src/lib/function-reference-utils';
 
 const sandbox = sinon.createSandbox();
 
@@ -134,7 +134,7 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -144,39 +144,6 @@ describe('sf project deploy functions', () => {
     })
     .command(['deploy:functions', '--connected-org=my-scratch-org'])
     .it('deploys a function', (ctx) => {
-      expect(ctx.stdout).to.include('Reference for sweet_project-fn1 created');
-      expect(ctx.stdout).to.include('Reference for sweet_project-fn2 created');
-      expect(ctx.stdout).to.not.include('Removing the following functions that were deleted locally:');
-    });
-
-  // Falls back to netrc
-  test
-    .stdout()
-    .stderr()
-    .do(() => {
-      sandbox.stub(Git.prototype as any, 'hasUnpushedFiles').returns(false);
-      sandbox.stub(Git.prototype, 'status' as any).returns('On branch main');
-      const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any);
-      gitExecStub.withArgs(sinon.match.array.startsWith(['push'])).returns({ stdout: '', stderr: '' });
-
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-
-      // Falls back to netrc
-      AuthStubs.getToken.returns(undefined);
-      AuthStubs.netrc.withArgs('login').returns('login');
-      AuthStubs.netrc.withArgs('password').returns('password');
-
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
-    })
-    .finally(() => {
-      sandbox.restore();
-    })
-    .nock('https://api.heroku.com', (api) => {
-      api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
-    })
-    .command(['deploy:functions', '--connected-org=my-scratch-org'])
-    .it('deploys a function using netrc', (ctx) => {
       expect(ctx.stdout).to.include('Reference for sweet_project-fn1 created');
       expect(ctx.stdout).to.include('Reference for sweet_project-fn2 created');
       expect(ctx.stdout).to.not.include('Removing the following functions that were deleted locally:');
@@ -193,7 +160,7 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK_WITH_DELETED_FUNCTION);
 
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .add('execStub', () => {
       const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any);
@@ -229,7 +196,7 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK_WITH_DELETED_FUNCTION);
 
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -258,7 +225,7 @@ describe('sf project deploy functions', () => {
 
       AuthStubs.getToken.returns(undefined);
 
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .add('execStub', () => {
       return sandbox.stub(Git.prototype, 'exec' as any);
@@ -288,7 +255,7 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .add('execStub', () => {
       const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any);
@@ -329,7 +296,7 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .add('execStub', () => {
       const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any);
@@ -361,7 +328,7 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .add('execStub', () => {
       const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any);
@@ -397,7 +364,7 @@ describe('sf project deploy functions', () => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -422,8 +389,7 @@ describe('sf project deploy functions', () => {
 
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-
-      sandbox.stub(ProjectDeployFunctions.prototype, 'resolveFunctionReferences' as any).returns([
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns([
         ...FUNCTION_REFS_MOCK,
         {
           fullName: 'sweet_project-fnerror',

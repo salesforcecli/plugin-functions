@@ -15,6 +15,7 @@ import { ComputeEnvironment, Dictionary } from '../../lib/sfdc-types';
 import { FunctionsFlagBuilder } from '../../lib/flags';
 import herokuVariant from '../../lib/heroku-variant';
 import { ensureArray } from '../../lib/function-reference-utils';
+import { fetchSfdxProject } from '../../lib/utils';
 
 interface EnvDisplayTable {
   alias?: string;
@@ -101,7 +102,7 @@ export default class EnvDisplay extends Command {
       });
       const salesOrgId = app.sales_org_connection?.sales_org_id;
       const org = await this.resolveOrg(salesOrgId);
-      const project = await this.fetchSfdxProject();
+      const project = await fetchSfdxProject();
       const connection = org.getConnection();
 
       const refList = await connection.metadata.list({ type: 'FunctionReference' });

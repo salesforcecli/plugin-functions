@@ -17,6 +17,7 @@ import {
 import { FunctionsFlagBuilder, confirmationFlag } from '../../lib/flags';
 import Command from '../../lib/base';
 import batchCall from '../../lib/batch-call';
+import { fetchSfdxProject } from '../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.delete');
@@ -97,7 +98,7 @@ export default class EnvDelete extends Command {
     // environment while the org still exists, so we need to delete all the function references
     // from the org as part of the cleanup process
     if (org) {
-      const project = await this.fetchSfdxProject();
+      const project = await fetchSfdxProject();
       const connection = org.getConnection();
       let refList = await connection.metadata.list({ type: 'FunctionReference' });
       refList = ensureArray(refList);

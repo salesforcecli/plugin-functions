@@ -8,7 +8,7 @@ import { expect, test } from '@oclif/test';
 import { Aliases, Org, SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
 import EnvDelete from '../../../src/commands/env/delete';
-
+import * as Utils from '../../../src/lib/utils';
 const COMPUTE_ENV_NAME = 'my-new-compute-environment-100';
 const COMPUTE_ENV_ALIAS = 'my-compute-alias';
 
@@ -105,7 +105,7 @@ describe('env:delete', () => {
     .do(() => {
       sandbox.stub(EnvDelete.prototype, 'resolveOrg' as any).returns({});
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(EnvDelete.prototype, 'fetchOrg' as any).returns(ORG_MOCK);
+      sandbox.stub(Utils, 'fetchOrg' as any).returns(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();
