@@ -342,12 +342,13 @@ login using JWT instead of default web-based flow
 
 ```
 USAGE
-  $ sf login functions jwt -u <value> -f <value> -i <value>
+  $ sf login functions jwt -u <value> -f <value> -i <value> [-r <value>]
 
 FLAGS
-  -f, --keyfile=<value>   (required) path to JWT keyfile
-  -i, --clientid=<value>  (required) OAuth client ID
-  -u, --username=<value>  (required) authentication username
+  -f, --keyfile=<value>      (required) path to JWT keyfile
+  -i, --clientid=<value>     (required) OAuth client ID
+  -r, --instanceurl=<value>  the login URL of the instance the org lives on
+  -u, --username=<value>     (required) authentication username
 
 DESCRIPTION
   login using JWT instead of default web-based flow

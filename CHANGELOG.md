@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.32](https://github.com/salesforcecli/plugin-functions/compare/v0.2.31...v0.2.32) (2021-08-30)
+
+### Features
+
+- add instanceurl flag to jwt login ([#170](https://github.com/salesforcecli/plugin-functions/issues/170)) ([3375af9](https://github.com/salesforcecli/plugin-functions/commit/3375af988cce266e21f4cdb137a2e939541e699a))
+
 ### [0.2.31](https://github.com/salesforcecli/plugin-functions/compare/v0.2.30...v0.2.31) (2021-08-26)
 
 ### Features
