@@ -53,17 +53,34 @@ export default class JwtLogin extends Command {
       char: 'i',
       description: 'OAuth client ID',
     }),
+    instanceurl: Flags.string({
+      char: 'r',
+      description: 'the login URL of the instance the org lives on',
+    }),
   };
 
-  private async initAuthInfo(username: string, clientId: string, keyfile: string): Promise<AuthInfo> {
-    const project = await this.fetchSfdxProject();
+  private async initAuthInfo(
+    username: string,
+    clientId: string,
+    keyfile: string,
+    loginUrl?: string
+  ): Promise<AuthInfo> {
     const oauth2OptionsBase = {
       clientId,
       privateKeyFile: keyfile,
     };
-    const loginUrl = getString(project, 'sfdcLoginUrl', 'https://login.salesforce.com');
 
-    const oauth2Options = loginUrl ? Object.assign(oauth2OptionsBase, { loginUrl }) : oauth2OptionsBase;
+    if (!loginUrl) {
+      const project = await this.fetchSfdxProject();
+      // If the user passes an instance URL, we always want to defer that over trying to read their
+      // project config or defaulting to the basic salesforce login URL.
+      loginUrl = getString(project, 'sfdcLoginUrl', 'https://login.salesforce.com');
+    }
+
+    const oauth2Options = {
+      ...oauth2OptionsBase,
+      loginUrl,
+    };
 
     let authInfo: AuthInfo;
     try {
@@ -90,14 +107,14 @@ export default class JwtLogin extends Command {
 
   async run() {
     const {
-      flags: { clientid, username, keyfile },
+      flags: { clientid, username, keyfile, instanceurl },
     } = await this.parse(JwtLogin);
 
     cli.action.start('Logging in via JWT');
 
     // Use keyfile, clientid, and username to auth with salesforce via the same workflow
     // as sfdx auth:jwt:grant --json
-    const auth = await this.initAuthInfo(username, clientid, keyfile);
+    const auth = await this.initAuthInfo(username, clientid, keyfile, instanceurl);
 
     // Obtain sfdx access toekn from Auth info
     const token = auth.getFields(true).accessToken;
