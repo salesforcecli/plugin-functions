@@ -1,5 +1,10 @@
 [
   {
+    "command": "deploy:functions",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["branch", "connected-org", "force", "quiet"]
+  },
+  {
     "command": "env:create:compute",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["connected-org", "setalias"]
@@ -78,11 +83,6 @@
     "command": "login:functions:jwt",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["clientid", "instanceurl", "keyfile", "username"]
-  },
-  {
-    "command": "project:deploy:functions",
-    "plugin": "@salesforce/plugin-functions",
-    "flags": ["branch", "connected-org", "force", "quiet"]
   },
   {
     "command": "run:function",

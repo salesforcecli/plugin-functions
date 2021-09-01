@@ -11,23 +11,23 @@ import { Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
 import debugFactory from 'debug';
 import { UpsertResult } from 'jsforce';
-import Command from '../../../lib/base';
-import batchCall from '../../../lib/batch-call';
-import { FunctionsFlagBuilder } from '../../../lib/flags';
+import Command from '../../lib/base';
+import batchCall from '../../lib/batch-call';
+import { FunctionsFlagBuilder } from '../../lib/flags';
 import {
   ensureArray,
   filterProjectReferencesToRemove,
   FullNameReference,
   splitFullName,
-} from '../../../lib/function-reference-utils';
-import Git from '../../../lib/git';
-import { resolveFunctionsPaths } from '../../../lib/path-utils';
-import { parseProjectToml } from '../../../lib/project-toml';
-import { ComputeEnvironment, FunctionReference, SfdxProjectConfig } from '../../../lib/sfdc-types';
+} from '../../lib/function-reference-utils';
+import Git from '../../lib/git';
+import { resolveFunctionsPaths } from '../../lib/path-utils';
+import { parseProjectToml } from '../../lib/project-toml';
+import { ComputeEnvironment, FunctionReference, SfdxProjectConfig } from '../../lib/sfdc-types';
 
-const debug = debugFactory('project:deploy:functions');
+const debug = debugFactory('deploy:functions');
 
-export default class ProjectDeployFunctions extends Command {
+export default class DeployFunctions extends Command {
   private git?: Git;
 
   static flags = {
@@ -46,6 +46,8 @@ export default class ProjectDeployFunctions extends Command {
       char: 'q',
     }),
   };
+
+  static aliases = ['project:deploy:functions'];
 
   async getCurrentBranch() {
     const statusString = await this.git?.status();
@@ -107,7 +109,7 @@ export default class ProjectDeployFunctions extends Command {
   }
 
   async run() {
-    const { flags } = await this.parse(ProjectDeployFunctions);
+    const { flags } = await this.parse(DeployFunctions);
 
     // We pass the api token value to the Git constructor so that it will redact it from any of
     // the server logs
