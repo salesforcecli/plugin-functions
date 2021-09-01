@@ -7,6 +7,7 @@
 import * as path from 'path';
 import { URL } from 'url';
 import herokuColor from '@heroku-cli/color';
+import { Messages } from '@salesforce/core';
 import { Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
 import debugFactory from 'debug';
@@ -27,6 +28,9 @@ import { ComputeEnvironment, FunctionReference, SfdxProjectConfig } from '../../
 
 const debug = debugFactory('deploy:functions');
 
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'project.deploy.functions');
+
 export default class DeployFunctions extends Command {
   private git?: Git;
 
@@ -36,13 +40,13 @@ export default class DeployFunctions extends Command {
     }),
     branch: Flags.string({
       char: 'b',
-      description: 'deploy the latest commit from a branch different from the currently active branch',
+      description: messages.getMessage('flags.branch.summary'),
     }),
     force: Flags.boolean({
-      description: 'ignore warnings and overwrite remote repository (not allowed in production)',
+      description: messages.getMessage('flags.force.summary'),
     }),
     quiet: Flags.boolean({
-      description: 'limit the amount of output displayed from the deploy process',
+      description: messages.getMessage('flags.quiet.summary'),
       char: 'q',
     }),
   };

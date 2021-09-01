@@ -6,13 +6,17 @@
  */
 import axios from 'axios';
 import { cli } from 'cli-ux';
+import { Messages } from '@salesforce/core';
 
 import Command from '../../lib/base';
 
-export default class Login extends Command {
-  static description = 'log into your account';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'login.functions');
 
-  static examples = ['$ sfdx login:functions'];
+export default class Login extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   async run() {
     const identityUrl = process.env.SALESFORCE_FUNCTIONS_IDENTITY_URL || 'https://cli-auth.heroku.com';

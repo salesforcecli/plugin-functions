@@ -5,29 +5,33 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import herokuColor from '@heroku-cli/color';
+import { Messages } from '@salesforce/core';
 import { Flags } from '@oclif/core';
 import { generateFunction, Language } from '@heroku/functions-core';
 import Command from '../../lib/base';
+
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'generate.function');
 
 /**
  * Based on given language, create function project with specific scaffolding.
  */
 export default class GenerateFunction extends Command {
-  static description = 'create a function with basic scaffolding specific to a given language';
+  static description = messages.getMessage('summary');
 
-  static aliases = ['evergreen:function:init'];
+  static aliases = messages.getMessages('aliases');
 
-  static examples = ['$ sfdx evergreen:function:create MyFunction --language=javascript'];
+  static examples = messages.getMessages('examples');
 
   static flags = {
     name: Flags.string({
       required: true,
-      description: 'function name',
+      description: messages.getMessage('flags.name.summary'),
       char: 'n',
     }),
     language: Flags.enum({
       options: ['javascript', 'typescript', 'java'],
-      description: 'language',
+      description: messages.getMessage('flags.language.summary'),
       char: 'l',
       required: true,
     }),

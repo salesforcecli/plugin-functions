@@ -8,15 +8,17 @@ import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
+import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
 
-export default class LogDrainRemove extends Command {
-  static description = 'Remove log drain from a specified environment.';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.logdrain.remove');
 
-  static examples = [
-    '$ sfdx env:logdrain:remove --environment=billingApp-Sandbox --url=syslog://syslog-a.logdna.com:11137',
-  ];
+export default class LogDrainRemove extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     environment: FunctionsFlagBuilder.environment({
@@ -25,7 +27,7 @@ export default class LogDrainRemove extends Command {
     url: Flags.string({
       required: true,
       char: 'u',
-      description: 'logdrain url to remove',
+      description: messages.getMessage('flags.url.summary'),
     }),
   };
 

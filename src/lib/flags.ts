@@ -6,22 +6,26 @@
  */
 import { Flags, Errors, Interfaces } from '@oclif/core';
 import { cli } from 'cli-ux';
+import { Messages } from '@salesforce/core';
+
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'lib.flags');
 
 export const FunctionsFlagBuilder = {
   environment: Flags.build({
     char: 'e',
-    description: 'environment name',
+    description: messages.getMessage('flags.environment.summary'),
     required: false,
   }),
 
   connectedOrg: Flags.build({
     char: 'o',
-    description: 'username or alias for the org that the compute environment should be connected to',
+    description: messages.getMessage('flags.connectedOrg.summary'),
     required: false,
   }),
 
   keyValueFlag: Flags.build({
-    description: 'key-value pair (i.e. mykey=somevalue)',
+    description: messages.getMessage('flags.keyValueFlag.summary'),
     async parse(input) {
       const [key, ...rest] = input.split('=');
       const value = rest.join('=');
@@ -37,14 +41,14 @@ export const FunctionsFlagBuilder = {
 
 export const environmentType = Flags.string({
   char: 't',
-  description: 'filter by one or more environment types (org, scratchorg, compute)',
+  description: messages.getMessage('flags.environmentType.summary'),
   options: ['org', 'scratchorg', 'compute'],
   multiple: true,
 });
 
 export const confirmationFlag = Flags.string({
   char: 'c',
-  description: 'confirmation name',
+  description: messages.getMessage('flags.confirmationFlag.summary'),
   helpValue: 'name',
   multiple: true,
 });
@@ -52,7 +56,7 @@ export const confirmationFlag = Flags.string({
 export const waitFlag = Flags.boolean({
   char: 'w',
   required: false,
-  description: 'wait until complete to exit',
+  description: messages.getMessage('flags.waitFlag.summary'),
 });
 
 export const FunctionsTableFlags: Interfaces.FlagInput<any> = {
@@ -62,7 +66,7 @@ export const FunctionsTableFlags: Interfaces.FlagInput<any> = {
   ...(cli.table.flags({ except: ['csv', 'output'] }) as unknown as Interfaces.FlagInput<any>),
   output: Flags.string({
     exclusive: ['no-truncate', 'csv'],
-    description: 'output table in a more machine friendly format',
+    description: messages.getMessage('flags.FunctionsTableFlags.summary'),
     options: ['json', 'csv'],
   }),
 };

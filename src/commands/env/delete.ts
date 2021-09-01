@@ -6,7 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Org } from '@salesforce/core';
+import { Org, Messages } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import {
   filterProjectReferencesToRemove,
@@ -18,13 +18,13 @@ import { FunctionsFlagBuilder, confirmationFlag } from '../../lib/flags';
 import Command from '../../lib/base';
 import batchCall from '../../lib/batch-call';
 
-export default class EnvDelete extends Command {
-  static description = 'delete an environment';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.delete');
 
-  static examples = [
-    '$ sfdx env:delete --environment=billingApp-Scratch1',
-    '$ sfdx env:delete --environment=billingApp-Scratch1 --confirm=billingApp-Scratch1',
-  ];
+export default class EnvDelete extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     environment: FunctionsFlagBuilder.environment({

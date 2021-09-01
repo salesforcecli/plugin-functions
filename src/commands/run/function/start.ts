@@ -6,70 +6,67 @@
  */
 import * as path from 'path';
 import herokuColor from '@heroku-cli/color';
+import { Messages } from '@salesforce/core';
 import { Command, Flags } from '@oclif/core';
 import { getFunctionsBinary, getProjectDescriptor } from '@heroku/functions-core';
 import { cli } from 'cli-ux';
 
-export default class Start extends Command {
-  static description = 'build and run function image locally';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start');
 
-  static examples = [
-    `
-    $ sfdx run:function:start
-    $ sfdx run:function:start -e VAR=VALUE
-    $ sfdx run:function:start --network host --no-pull --clear-cache --debug-port 9000 --port 5000
-`,
-  ];
+export default class Start extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     builder: Flags.string({
-      description: 'set custom builder image',
+      description: messages.getMessage('flags.builder.summary'),
       hidden: true,
     }),
     path: Flags.string({
-      description: 'path to function dir',
+      description: messages.getMessage('flags.path.summary'),
       default: path.resolve('.'),
       hidden: true,
     }),
     port: Flags.integer({
       char: 'p',
-      description: 'port for running the function',
+      description: messages.getMessage('flags.port.summary'),
       default: 8080,
     }),
     'debug-port': Flags.integer({
       char: 'd',
-      description: 'port for remote debugging',
+      description: messages.getMessage('flags.debug-port.summary'),
       default: 9229,
     }),
     'clear-cache': Flags.boolean({
-      description: 'clear associated cache before executing.',
+      description: messages.getMessage('flags.clear-cache.summary'),
     }),
     'no-pull': Flags.boolean({
-      description: 'skip pulling builder image before use',
+      description: messages.getMessage('flags.no-pull.summary'),
     }),
     'no-build': Flags.boolean({
-      description: 'skip building the an image',
+      description: messages.getMessage('flags.no-build.summary'),
       hidden: true,
     }),
     'no-run': Flags.boolean({
-      description: 'skip running the built image',
+      description: messages.getMessage('flags.no-run.summary'),
       hidden: true,
     }),
     env: Flags.string({
       char: 'e',
-      description: 'set environment variables (provided during build and run)',
+      description: messages.getMessage('flags.env.summary'),
       multiple: true,
     }),
     network: Flags.string({
-      description:
-        'Connect and build containers to a network. This can be useful to build containers which require a local resource.',
+      description: messages.getMessage('flags.network.summary'),
     }),
     verbose: Flags.boolean({
       char: 'v',
-      description: 'output additional logs',
+      description: messages.getMessage('flags.verbose.summary'),
     }),
     descriptor: Flags.string({
-      description: 'Path to project descriptor file (project.toml) that contains function and/or bulid configuration',
+      description: messages.getMessage('flags.descriptor.summary'),
       hidden: true,
     }),
   };

@@ -10,6 +10,7 @@ import axios from 'axios';
 import { cli } from 'cli-ux';
 import * as Heroku from '@heroku-cli/schema';
 import EventSource = require('@heroku/eventsource');
+import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
 
@@ -86,14 +87,17 @@ function eventSourceStream(url: string, eventSourceOptions: EventSourceOptions, 
   return stream;
 }
 
-export default class LogTail extends Command {
-  static description = 'stream log output for an environment';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.log.tail');
 
-  static examples = ['sfdx env:log:tail --environment=billingApp-Scratch1'];
+export default class LogTail extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     environment: FunctionsFlagBuilder.environment({
-      description: 'environment name to retrieve logs',
+      description: messages.getMessage('flags.environment.summary'),
       required: true,
     }),
   };

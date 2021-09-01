@@ -6,7 +6,11 @@
  */
 import { Flags } from '@oclif/core';
 import { dim, cyan } from 'chalk';
+import { Messages } from '@salesforce/core';
 import Command from '../../lib/base';
+
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'whoami.functions');
 
 const FIELDS = <const>['id', 'email', 'token'];
 
@@ -14,13 +18,13 @@ export type FunctionsInformationKey = typeof FIELDS[number];
 export type FunctionsInformation = { [key in FunctionsInformationKey]?: string };
 
 export default class WhoAmI extends Command {
-  static description = 'show information on your account';
+  static description = messages.getMessage('summary');
 
-  static examples = ['$ <%= config.bin %> <%= command.id %>'];
+  static examples = messages.getMessages('examples');
 
   static flags = {
     'show-token': Flags.boolean({
-      description: 'show the stored functions token',
+      description: messages.getMessage('flags.show-token.summary'),
       hidden: true,
     }),
   };

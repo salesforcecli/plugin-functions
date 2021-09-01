@@ -10,43 +10,39 @@ import { runFunction, RunFunctionOptions } from '@heroku/functions-core';
 import { cli } from 'cli-ux';
 import herokuColor from '@heroku-cli/color';
 import { AxiosResponse } from 'axios';
-import { ConfigAggregator } from '@salesforce/core';
+import { ConfigAggregator, Messages } from '@salesforce/core';
 import getStdin from '../../lib/get-stdin';
 
-export default class Invoke extends Command {
-  static description = 'send a cloudevent to a function';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function');
 
-  static examples = [
-    `
-    $ sfdx run:function -l http://localhost:8080 -p '{"id": 12345}'
-    $ sfdx run:function -l http://localhost:8080 -p '@file.json'
-    $ echo '{"id": 12345}' | sfdx run:function -l http://localhost:8080
-    $ sfdx run:function -l http://localhost:8080 -p '{"id": 12345}' --structured
-`,
-  ];
+export default class Invoke extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     url: Flags.string({
       char: 'l',
-      description: 'url of the function to run',
+      description: messages.getMessage('flags.url.summary'),
       required: true,
     }),
     headers: Flags.string({
       char: 'H',
-      description: 'set headers',
+      description: messages.getMessage('flags.headers.summary'),
       multiple: true,
     }),
     payload: Flags.string({
       char: 'p',
-      description: 'set the payload of the cloudevent. also accepts @file.txt format',
+      description: messages.getMessage('flags.payload.summary'),
     }),
     structured: Flags.boolean({
       char: 's',
-      description: 'set the cloudevent to be emitted as a structured cloudevent (json)',
+      description: messages.getMessage('flags.structured.summary'),
     }),
     'connected-org': Flags.string({
       char: 'o',
-      description: 'username or alias for the target org; overrides default target org',
+      description: messages.getMessage('flags.connected-org.summary'),
     }),
   };
 

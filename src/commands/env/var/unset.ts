@@ -6,15 +6,19 @@
  */
 import herokuColor from '@heroku-cli/color';
 import { cli } from 'cli-ux';
+import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
+
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.unset');
 
 export default class ConfigUnset extends Command {
   static strict = false;
 
-  static description = 'unset a single config value for an environment';
+  static description = messages.getMessage('summary');
 
-  static examples = ['$ sfdx env:var:unset foo --environment=my-environment'];
+  static examples = messages.getMessages('examples');
 
   static flags = {
     environment: FunctionsFlagBuilder.environment({

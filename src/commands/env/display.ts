@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { Flags } from '@oclif/core';
-import { AuthInfo, Org, sfdc } from '@salesforce/core';
+import { AuthInfo, Org, sfdc, Messages } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import { OrgListUtil } from '@salesforce/plugin-org/lib/shared/orgListUtil';
 import { getAliasByUsername } from '@salesforce/plugin-org/lib/shared/utils';
@@ -27,9 +27,12 @@ interface EnvDisplayTable {
   spaceId?: string;
 }
 
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.display');
+
 export default class EnvDisplay extends Command {
-  static description = 'display details for an environment';
-  static examples = ['$ sfdx env:display --environment=billingApp-Scratch1'];
+  static description = messages.getMessage('summary');
+  static examples = messages.getMessages('examples');
   static disableJsonFlag = false;
 
   static flags = {

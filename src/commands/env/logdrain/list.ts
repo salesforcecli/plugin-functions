@@ -7,20 +7,24 @@
 import * as Heroku from '@heroku-cli/schema';
 import { Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
+import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
 
-export default class LogDrainList extends Command {
-  static description = 'List log drains connected to a specified environment';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.logdrain.list');
 
-  static examples = ['$ sfdx env:logdrain:list --environment=billingApp-Sandbox'];
+export default class LogDrainList extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
     json: Flags.boolean({
-      description: 'output result in json',
+      description: messages.getMessage('flags.json.summary'),
     }),
   };
 
