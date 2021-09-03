@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.33](https://github.com/salesforcecli/plugin-functions/compare/v0.2.32...v0.2.33) (2021-09-03)
+
+### Features
+
+- rename project:deploy:functions to deploy:functions ([#190](https://github.com/salesforcecli/plugin-functions/issues/190)) ([ef9aa02](https://github.com/salesforcecli/plugin-functions/commit/ef9aa025ea52f565427d28c88923090bd4aeff60))
+
 ### [0.2.32](https://github.com/salesforcecli/plugin-functions/compare/v0.2.31...v0.2.32) (2021-08-30)
 
 ### Features

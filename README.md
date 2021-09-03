@@ -28,6 +28,7 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 
 <!-- commands -->
 
+- [`sf deploy functions`](#sf-deploy-functions)
 - [`sf env create compute`](#sf-env-create-compute)
 - [`sf env delete`](#sf-env-delete)
 - [`sf env display`](#sf-env-display)
@@ -44,10 +45,29 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 - [`sf generate project`](#sf-generate-project)
 - [`sf login functions`](#sf-login-functions)
 - [`sf login functions jwt`](#sf-login-functions-jwt)
-- [`sf project deploy functions`](#sf-project-deploy-functions)
 - [`sf run function`](#sf-run-function)
 - [`sf run function start`](#sf-run-function-start)
 - [`sf whoami functions`](#sf-whoami-functions)
+
+## `sf deploy functions`
+
+```
+USAGE
+  $ sf deploy functions -o <value> [-b <value>] [--force] [-q]
+
+FLAGS
+  -b, --branch=<value>         deploy the latest commit from a branch different from the currently active branch
+
+  -o, --connected-org=<value>  (required) username or alias for the org that the compute environment should be connected
+                               to
+
+  -q, --quiet                  limit the amount of output displayed from the deploy process
+
+  --force                      ignore warnings and overwrite remote repository (not allowed in production)
+
+ALIASES
+  $ sf project deploy functions
+```
 
 ## `sf env create compute`
 
@@ -355,23 +375,6 @@ DESCRIPTION
 
 EXAMPLES
   $ sfdx login:functions:jwt --username testuser@mycompany.org --keyfile file.key --clientid 123456
-```
-
-## `sf project deploy functions`
-
-```
-USAGE
-  $ sf project deploy functions -o <value> [-b <value>] [--force] [-q]
-
-FLAGS
-  -b, --branch=<value>         deploy the latest commit from a branch different from the currently active branch
-
-  -o, --connected-org=<value>  (required) username or alias for the org that the compute environment should be connected
-                               to
-
-  -q, --quiet                  limit the amount of output displayed from the deploy process
-
-  --force                      ignore warnings and overwrite remote repository (not allowed in production)
 ```
 
 ## `sf run function`
