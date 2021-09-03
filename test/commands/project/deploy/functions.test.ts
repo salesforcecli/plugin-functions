@@ -8,7 +8,7 @@ import { expect, test } from '@oclif/test';
 import { CLIError } from '@oclif/errors';
 import { Org, SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
-import ProjectDeployFunctions from '../../../../src/commands/project/deploy/functions';
+import ProjectDeployFunctions from '../../../../src/commands/deploy/functions';
 import Git from '../../../../src/lib/git';
 import { AuthStubs } from '../../../helpers/auth';
 
@@ -142,7 +142,7 @@ describe('sf project deploy functions', () => {
     .nock('https://api.heroku.com', (api) => {
       api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org'])
     .it('deploys a function', (ctx) => {
       expect(ctx.stdout).to.include('Reference for sweet_project-fn1 created');
       expect(ctx.stdout).to.include('Reference for sweet_project-fn2 created');
@@ -175,7 +175,7 @@ describe('sf project deploy functions', () => {
     .nock('https://api.heroku.com', (api) => {
       api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org'])
     .it('deploys a function using netrc', (ctx) => {
       expect(ctx.stdout).to.include('Reference for sweet_project-fn1 created');
       expect(ctx.stdout).to.include('Reference for sweet_project-fn2 created');
@@ -207,7 +207,7 @@ describe('sf project deploy functions', () => {
     .nock('https://api.heroku.com', (api) => {
       api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org', '--branch=other-branch'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org', '--branch=other-branch'])
     .it('pulls from a different branch when specified', (ctx) => {
       expect(ctx.execStub).to.have.been.calledWith([
         'push',
@@ -237,7 +237,7 @@ describe('sf project deploy functions', () => {
     .nock('https://api.heroku.com', (api) => {
       api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org'])
     .it('clears function references when it finds that a function has been deleted locally', (ctx) => {
       expect(ctx.stdout).to.contain('Removing the following functions that were deleted locally:');
       expect(ctx.stdout).to.contain('sweet_project-fn2bedeleted');
@@ -266,7 +266,7 @@ describe('sf project deploy functions', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org'])
     .catch((error) => {
       expect(error.message).to.include('Please login with `sf login functions`');
     })
@@ -299,7 +299,7 @@ describe('sf project deploy functions', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org', '--force'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org', '--force'])
     .it('will force push when --force is used with a non-production org', (ctx) => {
       expect(ctx.execStub).to.have.been.calledWith([
         'push',
@@ -340,7 +340,7 @@ describe('sf project deploy functions', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org', '--force'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org', '--force'])
     .catch((error) => {
       expect(error.message).to.include('You cannot use the `--force` flag with a production org.');
     })
@@ -375,7 +375,7 @@ describe('sf project deploy functions', () => {
     .nock('https://api.heroku.com', (api) => {
       api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org'])
     .it('generates the correct remote when passing an API key', (ctx) => {
       expect(ctx.execStub).to.have.been.calledWith([
         'push',
@@ -405,7 +405,7 @@ describe('sf project deploy functions', () => {
     .nock('https://api.heroku.com', (api) => {
       api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org', '--quiet'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org', '--quiet'])
     .it('does not print stdout in quiet mode', (ctx) => {
       expect(ctx.stdout).to.not.include('STDOUT');
     });
@@ -438,7 +438,7 @@ describe('sf project deploy functions', () => {
     .nock('https://api.heroku.com', (api) => {
       api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
     })
-    .command(['project:deploy:functions', '--connected-org=my-scratch-org'])
+    .command(['deploy:functions', '--connected-org=my-scratch-org'])
     .catch((error) => {
       expect((error as CLIError).oclif.exit).to.equal(1);
     })
