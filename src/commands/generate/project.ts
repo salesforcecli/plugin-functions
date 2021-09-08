@@ -5,12 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { Flags } from '@oclif/core';
+import { Messages } from '@salesforce/core';
 import { generateProject } from '@heroku/functions-core';
 import Command from '../../lib/base';
+
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'generate.project');
 export default class GenerateProject extends Command {
   static flags = {
     name: Flags.string({
-      description: 'name of the generated project',
+      description: messages.getMessage('flags.name.summary'),
       char: 'n',
       required: true,
     }),

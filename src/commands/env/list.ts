@@ -6,7 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import { Flags } from '@oclif/core';
-import { Aliases, AuthInfo, Org, SfOrg } from '@salesforce/core';
+import { Aliases, AuthInfo, Org, SfOrg, Messages } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import { sortBy } from 'lodash';
 import Command from '../../lib/base';
@@ -16,22 +16,21 @@ import { environmentType } from '../../lib/flags';
 
 type EnvironmentType = 'org' | 'scratchorg' | 'compute';
 
-export default class EnvList extends Command {
-  static description = 'List all environments by type';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.list');
 
-  static examples = [
-    '$ sfdx env:list',
-    '$ sfdx env:list --all',
-    '$ sfdx env:list --environment-type org --environment-type compute',
-  ];
+export default class EnvList extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     all: Flags.boolean({
-      description: 'show all available envs instead of scoping to active orgs and their connected compute envs',
+      description: messages.getMessage('flags.all.summary'),
     }),
     'environment-type': environmentType,
     json: Flags.boolean({
-      description: 'output list in JSON format',
+      description: messages.getMessage('flags.json.summary'),
       char: 'j',
     }),
   };

@@ -7,7 +7,7 @@
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Flags } from '@oclif/core';
-import { Aliases } from '@salesforce/core';
+import { Aliases, Messages } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
 import { cli } from 'cli-ux';
 import { format } from 'date-fns';
@@ -21,20 +21,19 @@ interface FunctionConnectionRecord {
   Error?: string;
 }
 
-export default class EnvCreateCompute extends Command {
-  static description = 'create a compute environment for use with Salesforce Functions';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.create.compute');
 
-  static examples = [
-    '$ sfdx env:create:compute',
-    '$ sfdx env:create:compute --setalias my-compute-environment',
-    '$ sfdx env:create:compute --connected-org my-scratch-org',
-  ];
+export default class EnvCreateCompute extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     'connected-org': FunctionsFlagBuilder.connectedOrg(),
     setalias: Flags.string({
       char: 'a',
-      description: 'alias for the created environment',
+      description: messages.getMessage('flags.setalias.summary'),
     }),
   };
 

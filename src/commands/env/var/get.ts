@@ -6,14 +6,18 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
+import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 import Command from '../../../lib/base';
 
-export default class VarGet extends Command {
-  static description = 'display a single config value for an environment';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.get');
 
-  static examples = ['$ sfdx env:var:get foo --environment=my-environment'];
+export default class VarGet extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     environment: FunctionsFlagBuilder.environment({

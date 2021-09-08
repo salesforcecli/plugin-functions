@@ -7,13 +7,17 @@
 import * as Heroku from '@heroku-cli/schema';
 import { cli } from 'cli-ux';
 import { flatMap } from 'lodash';
+import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
 
-export default class ConfigList extends Command {
-  static description = 'list your config vars in a table';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.list');
 
-  static examples = ['$ sfdx env:var:list --environment=my-environment'];
+export default class ConfigList extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     environment: FunctionsFlagBuilder.environment({

@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { Flags } from '@oclif/core';
-import { AuthInfo, AuthRemover, SfdxError } from '@salesforce/core';
+import { AuthInfo, AuthRemover, SfdxError, Messages } from '@salesforce/core';
 import { getString } from '@salesforce/ts-types';
 import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
@@ -30,32 +30,33 @@ interface OAuthToken {
   };
 }
 
-export default class JwtLogin extends Command {
-  static description = 'login using JWT instead of default web-based flow';
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'login.functions.jwt');
 
-  static examples = [
-    '$ sfdx login:functions:jwt --username testuser@mycompany.org --keyfile file.key --clientid 123456',
-  ];
+export default class JwtLogin extends Command {
+  static description = messages.getMessage('summary');
+
+  static examples = messages.getMessages('examples');
 
   static flags = {
     username: Flags.string({
       required: true,
-      description: 'authentication username',
+      description: messages.getMessage('flags.username.summary'),
       char: 'u',
     }),
     keyfile: Flags.string({
       required: true,
       char: 'f',
-      description: 'path to JWT keyfile',
+      description: messages.getMessage('flags.keyfile.summary'),
     }),
     clientid: Flags.string({
       required: true,
       char: 'i',
-      description: 'OAuth client ID',
+      description: messages.getMessage('flags.clientid.summary'),
     }),
     instanceurl: Flags.string({
       char: 'r',
-      description: 'the login URL of the instance the org lives on',
+      description: messages.getMessage('flags.instanceurl.summary'),
     }),
   };
 
