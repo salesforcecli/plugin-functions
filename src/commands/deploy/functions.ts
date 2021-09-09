@@ -51,8 +51,6 @@ export default class DeployFunctions extends Command {
     }),
   };
 
-  static aliases = ['project:deploy:functions'];
-
   async getCurrentBranch() {
     const statusString = await this.git?.status();
 
