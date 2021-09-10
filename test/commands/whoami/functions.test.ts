@@ -16,5 +16,6 @@ describe('sf whoami:functions', () => {
     .command(['whoami:functions', '--show-token', '--json'])
     .it('shows messages in json format', (ctx) => {
       expect(ctx.stdout).to.include('{\n  "token": "password"\n}');
+      expect(ctx.stdout).to.not.include('Here is some information on your functions account:');
     });
 });
