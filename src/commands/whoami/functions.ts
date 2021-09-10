@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { Flags } from '@oclif/core';
+import { cli } from 'cli-ux';
 import { dim, cyan } from 'chalk';
 import { Messages } from '@salesforce/core';
 import Command from '../../lib/base';
@@ -26,6 +27,9 @@ export default class WhoAmI extends Command {
     'show-token': Flags.boolean({
       description: messages.getMessage('flags.show-token.summary'),
       hidden: true,
+    }),
+    json: Flags.boolean({
+      char: 'j',
     }),
   };
 
@@ -49,6 +53,16 @@ export default class WhoAmI extends Command {
       ret[key as FunctionsInformationKey] = val;
       this.log(dim(`  ${(key + ' :').padStart(pad)} ${val}`));
     });
+
+    if (flags.json) {
+      if (flags['show-token']) {
+        ret.token = this.auth;
+      }
+      fields.forEach(([key, val]) => {
+        ret[key as FunctionsInformationKey] = val;
+      });
+      cli.styledJSON(ret);
+    }
     return ret;
   }
 }
