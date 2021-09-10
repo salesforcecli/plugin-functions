@@ -111,6 +111,6 @@
   {
     "command": "whoami:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["show-token"]
+    "flags": ["json", "show-token"]
   }
 ]
