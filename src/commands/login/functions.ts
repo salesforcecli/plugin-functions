@@ -50,6 +50,8 @@ export default class Login extends Command {
 
     this.info.setToken(Command.TOKEN_BEARER_KEY, { token: bearerToken, url: this.identityUrl.toString() });
 
+    await this.info.write();
+
     const account = await this.fetchAccount();
 
     this.info.updateToken(Command.TOKEN_BEARER_KEY, { user: account.salesforce_username });

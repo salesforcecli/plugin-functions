@@ -7,6 +7,7 @@
 import { Flags } from '@oclif/core';
 import { AuthInfo, AuthRemover, SfdxError, Messages } from '@salesforce/core';
 import { getString } from '@salesforce/ts-types';
+import axios from 'axios';
 import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
 import { herokuVariant } from '../../../lib/heroku-variant';
@@ -124,7 +125,9 @@ export default class JwtLogin extends Command {
     // obtain heroku access_token. This is configurable so that we can also target staging
     const herokuClientId = process.env.SALESFORCE_FUNCTIONS_PUBLIC_OAUTH_CLIENT_ID ?? PUBLIC_CLIENT_ID;
 
-    const response = await this.client.post<OAuthToken>('/oauth/tokens', {
+    const response = await axios.request<OAuthToken>({
+      url: `${process.env.SALESFORCE_FUNCTIONS_API || 'https://api.heroku.com'}/oauth/tokens`,
+      method: 'post',
       data: {
         client: {
           id: herokuClientId,
@@ -145,6 +148,10 @@ export default class JwtLogin extends Command {
     this.resetClientAuth();
 
     this.info.setToken(Command.TOKEN_BEARER_KEY, { token: bearerToken, url: this.identityUrl.toString() });
+
+    // We write early and often here to ensure that the token will always be correctly retrieved by
+    // `info.getToken` when run elsewhere (e.g. in `fetchAccount`)
+    await this.info.write();
 
     const account = await this.fetchAccount();
 
