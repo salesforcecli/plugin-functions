@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.34](https://github.com/salesforcecli/plugin-functions/compare/v0.2.32...v0.2.34) (2021-09-10)
+
+### Features
+
+- add messages with markdown ([#191](https://github.com/salesforcecli/plugin-functions/issues/191)) ([4e235e3](https://github.com/salesforcecli/plugin-functions/commit/4e235e383ad85aca675e812dc337f4dc5ba95d27))
+- rename project:deploy:functions to deploy:functions ([#190](https://github.com/salesforcecli/plugin-functions/issues/190)) ([ef9aa02](https://github.com/salesforcecli/plugin-functions/commit/ef9aa025ea52f565427d28c88923090bd4aeff60))
+
+### Bug Fixes
+
+- bump version in package.json ([#196](https://github.com/salesforcecli/plugin-functions/issues/196)) ([55d7c87](https://github.com/salesforcecli/plugin-functions/commit/55d7c87a70a27d1cef1b18d5e87db5207cc8ad1c))
+- ensure tokens are always written before lookup ([#194](https://github.com/salesforcecli/plugin-functions/issues/194)) ([6212656](https://github.com/salesforcecli/plugin-functions/commit/6212656b0e314c6b1fbe7e7f726ab8081c10bc6f))
+- remove project deploy alias ([#193](https://github.com/salesforcecli/plugin-functions/issues/193)) ([e2dd08b](https://github.com/salesforcecli/plugin-functions/commit/e2dd08b8a2d43de966e9aa068960a46250398a74))
+
 ### [0.2.32](https://github.com/salesforcecli/plugin-functions/compare/v0.2.31...v0.2.32) (2021-08-30)
 
 ### Features
