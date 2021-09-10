@@ -29,6 +29,7 @@ export default class WhoAmI extends Command {
       hidden: true,
     }),
     json: Flags.boolean({
+      description: messages.getMessage('flags.json.summary'),
       char: 'j',
     }),
   };
