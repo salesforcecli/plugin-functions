@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.35](https://github.com/salesforcecli/plugin-functions/compare/v0.2.34...v0.2.35) (2021-09-11)
+
+### Features
+
+- **cli:** implement deploy hook for compute environment ([#172](https://github.com/salesforcecli/plugin-functions/issues/172)) ([025731b](https://github.com/salesforcecli/plugin-functions/commit/025731b78bdc419e0a82140a64b04c26bd13524c))
+
 ### [0.2.34](https://github.com/salesforcecli/plugin-functions/compare/v0.2.32...v0.2.34) (2021-09-10)
 
 ### Features
