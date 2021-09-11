@@ -987,10 +987,10 @@
     open "8.2.0"
     tslib "^2"
 
-"@salesforce/plugin-project-utils@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-project-utils/-/plugin-project-utils-0.0.6.tgz#94a2798aac37d1392316a11c136b6af269cbf97d"
-  integrity sha512-NtxFc75mEFQU2J0LthD2fCzmZ32iy7TM37qgpbbEPcwJLsHaxeb7djzt7NkLQ1maAKzrgRFw0iLq4kzojqOybg==
+"@salesforce/plugin-project-utils@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-project-utils/-/plugin-project-utils-0.0.7.tgz#e7b1427b7579255d54bdbf0e8795292e5e6e1e6e"
+  integrity sha512-sMEFpOELbZ2RP+zaYlasGgdVV/lorx8eh3j6lgJVVzXoxJntSEA188Ejnx2o8F0qTwIpwzgltkoeXlWiFbJqkQ==
   dependencies:
     "@salesforce/kit" "^1.5.8"
     "@salesforce/ts-types" "^1.5.13"
@@ -1047,14 +1047,7 @@
     sinon "^5.1.1"
     tslib "^2.2.0"
 
-"@salesforce/ts-types@^1.0.0", "@salesforce/ts-types@^1.2.0", "@salesforce/ts-types@^1.5.13", "@salesforce/ts-types@^1.5.17", "@salesforce/ts-types@^1.5.5":
-  version "1.5.17"
-  resolved "https://registry.yarnpkg.com/@salesforce/ts-types/-/ts-types-1.5.17.tgz#d69e92dfa716638d84b244a2611be80fb7986024"
-  integrity sha512-zyF1+4EacGsIWtfntbq7PvxjB2XABz33RzKfOhot15JC4tFiQaSFPtNb8d6hj7BkQSjo2Zs3qEeLJwRFcpaEIQ==
-  dependencies:
-    tslib "^2.2.0"
-
-"@salesforce/ts-types@^1.5.20":
+"@salesforce/ts-types@^1.0.0", "@salesforce/ts-types@^1.2.0", "@salesforce/ts-types@^1.5.13", "@salesforce/ts-types@^1.5.17", "@salesforce/ts-types@^1.5.20", "@salesforce/ts-types@^1.5.5":
   version "1.5.20"
   resolved "https://registry.yarnpkg.com/@salesforce/ts-types/-/ts-types-1.5.20.tgz#f6875a710ceca48223b240026a14af6d3b39882f"
   integrity sha512-Ov6um4CWd63EvkRavkHG0J/P9XYL55sdkDWPMr7+AIgqh5flHxDRz09/C4e9M94aX30rzJxW4TVX6EBf4Cu2BQ==
