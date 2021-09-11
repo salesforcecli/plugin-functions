@@ -11,6 +11,7 @@ import axios from 'axios';
 import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
 import { herokuVariant } from '../../../lib/heroku-variant';
+import { fetchSfdxProject } from '../../../lib/utils';
 
 // This is a public Oauth client created expressly for the purpose of headless auth in the functions CLI.
 // It does not require a client secret, is marked as public in the database and scoped accordingly
@@ -73,7 +74,7 @@ export default class JwtLogin extends Command {
     };
 
     if (!loginUrl) {
-      const project = await this.fetchSfdxProject();
+      const project = await fetchSfdxProject();
       // If the user passes an instance URL, we always want to defer that over trying to read their
       // project config or defaulting to the basic salesforce login URL.
       loginUrl = getString(project, 'sfdcLoginUrl', 'https://login.salesforce.com');

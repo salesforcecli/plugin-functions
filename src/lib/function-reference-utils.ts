@@ -4,7 +4,11 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import * as path from 'path';
 import { differenceWith, isEqual } from 'lodash';
+import { resolveFunctionsPaths } from './path-utils';
+import { parseProjectToml } from './project-toml';
+import { SfdxProjectConfig, FunctionReference } from './sfdc-types';
 
 export interface FullNameReference {
   project: string;
@@ -39,4 +43,33 @@ export function ensureArray<T>(refList?: T | T[]): T[] {
     refList = [refList];
   }
   return refList;
+}
+
+export async function resolveFunctionReferences(project: SfdxProjectConfig) {
+  // Locate functions directory and grab paths for all function names, error if not in project or no
+  // functions found
+  const fnPaths = await resolveFunctionsPaths();
+
+  // Create function reference objects
+  return Promise.all(
+    fnPaths.map(async (fnPath) => {
+      const projectTomlPath = path.join(fnPath, 'project.toml');
+      const projectToml: any = await parseProjectToml(projectTomlPath);
+      const fnName = projectToml.com.salesforce.id;
+
+      const fnReference: FunctionReference = {
+        fullName: `${project.name}-${fnName}`,
+        label: fnName,
+        description: projectToml.com.salesforce.description,
+      };
+
+      const permissionSet = projectToml._.metadata?.permissionSet;
+
+      if (permissionSet) {
+        fnReference.permissionSet = permissionSet;
+      }
+
+      return fnReference;
+    })
+  );
 }

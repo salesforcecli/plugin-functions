@@ -4,8 +4,6 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'path';
-import { URL } from 'url';
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
 import { Flags } from '@oclif/core';
@@ -20,11 +18,11 @@ import {
   filterProjectReferencesToRemove,
   FullNameReference,
   splitFullName,
+  resolveFunctionReferences,
 } from '../../lib/function-reference-utils';
 import Git from '../../lib/git';
-import { resolveFunctionsPaths } from '../../lib/path-utils';
-import { parseProjectToml } from '../../lib/project-toml';
-import { ComputeEnvironment, FunctionReference, SfdxProjectConfig } from '../../lib/sfdc-types';
+import { ComputeEnvironment, FunctionReference } from '../../lib/sfdc-types';
+import { fetchAppForProject, fetchOrg, fetchSfdxProject } from '../../lib/utils';
 
 const debug = debugFactory('deploy:functions');
 
@@ -51,65 +49,6 @@ export default class DeployFunctions extends Command {
     }),
   };
 
-  async getCurrentBranch() {
-    const statusString = await this.git?.status();
-
-    return statusString!.split('\n')[0].replace('On branch ', '');
-  }
-
-  async gitRemote(app: ComputeEnvironment) {
-    const externalApiKey = process.env.SALESFORCE_FUNCTIONS_API_KEY;
-    const url = new URL(app.git_url!);
-
-    if (externalApiKey) {
-      url.password = externalApiKey;
-      url.username = '';
-
-      return url.toString();
-    }
-
-    const username = this.username;
-    const token = this.auth;
-
-    if (!username || !token) {
-      this.error('No login found. Please log in using the `login:functions` command.');
-    }
-
-    url.username = username;
-    url.password = token;
-
-    return url.toString();
-  }
-
-  async resolveFunctionReferences(project: SfdxProjectConfig) {
-    // Locate functions directory and grab paths for all function names, error if not in project or no
-    // functions found
-    const fnPaths = await resolveFunctionsPaths();
-
-    // Create function reference objects
-    return Promise.all(
-      fnPaths.map(async (fnPath) => {
-        const projectTomlPath = path.join(fnPath, 'project.toml');
-        const projectToml: any = await parseProjectToml(projectTomlPath);
-        const fnName = projectToml.com.salesforce.id;
-
-        const fnReference: FunctionReference = {
-          fullName: `${project.name}-${fnName}`,
-          label: fnName,
-          description: projectToml.com.salesforce.description,
-        };
-
-        const permissionSet = projectToml._.metadata?.permissionSet;
-
-        if (permissionSet) {
-          fnReference.permissionSet = permissionSet;
-        }
-
-        return fnReference;
-      })
-    );
-  }
-
   async run() {
     const { flags } = await this.parse(DeployFunctions);
 
@@ -128,17 +67,17 @@ export default class DeployFunctions extends Command {
 
     // Heroku side: Fetch git remote URL and push working branch to Heroku git server
     cli.action.start('Pushing changes to functions');
-    const org = await this.fetchOrg(flags['connected-org']);
-    const project = await this.fetchSfdxProject();
+    const org = await fetchOrg(flags['connected-org']);
+    const project = await fetchSfdxProject();
 
     // FunctionReferences: create function reference using info from function.toml and project info
     // we do this early on because we don't want to bother with anything else if it turns out
     // there are no functions to deploy
-    const references = await this.resolveFunctionReferences(project);
+    const references = await resolveFunctionReferences(project);
 
     let app: ComputeEnvironment;
     try {
-      app = await this.fetchAppForProject(project.name, flags['connected-org']);
+      app = await fetchAppForProject(this.client, project.name, flags['connected-org']);
     } catch (error) {
       if (error.body.message?.includes("Couldn't find that app")) {
         this.error(
@@ -153,13 +92,13 @@ export default class DeployFunctions extends Command {
       this.error('You cannot use the `--force` flag with a production org.');
     }
 
-    const remote = await this.gitRemote(app);
+    const remote = await this.git.getRemote(app, redactedToken, this.username);
 
     debug('pushing to git server');
 
-    const currentBranch = await this.getCurrentBranch();
+    const currentBranch = await this.git.getCurrentBranch();
 
-    const pushCommand = ['push', remote, `${flags.branch ?? currentBranch}:master`];
+    const pushCommand = ['push', remote, `${flags.branch || currentBranch}:master`];
 
     // Since we error out if they try to use `--force` with a production org, we don't check for
     // a production org here since this code would be unreachable in that scenario

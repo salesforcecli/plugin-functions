@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { URL } from 'url';
-import { Interfaces, Errors } from '@oclif/core';
+import { Errors } from '@oclif/core';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as axiosDebugger from 'axios-debug-log';
 
@@ -49,7 +49,7 @@ export default class APIClient {
 
   private apiUrl: URL;
 
-  constructor(protected config: Interfaces.Config, options: APIClientConfig) {
+  constructor(options: APIClientConfig) {
     this.auth = options.auth;
     this.apiUrl = options.apiUrl;
 
@@ -59,7 +59,6 @@ export default class APIClient {
       baseURL: `${this.apiUrl.origin}`,
       headers: {
         Accept: 'application/vnd.heroku+json; version=3',
-        'user-agent': `sfdx-cli/${this.config.version} ${this.config.platform}`,
         ...envHeaders,
       },
     };
@@ -109,4 +108,11 @@ export default class APIClient {
   delete<T>(url: string, options: AxiosRequestConfig = {}) {
     return this.request<T>(url, { ...options, method: 'DELETE' });
   }
+}
+
+export function apiUrl(): URL {
+  const defaultUrl = 'https://api.heroku.com';
+  const envVarURL = process.env.SALESFORCE_FUNCTIONS_API;
+  const apiURL = new URL(envVarURL || defaultUrl);
+  return apiURL;
 }

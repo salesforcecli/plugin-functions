@@ -647,7 +647,7 @@
     is-wsl "^2.1.1"
     tslib "^2.0.0"
 
-"@oclif/core@^0.5.17", "@oclif/core@^0.5.34":
+"@oclif/core@^0.5.17", "@oclif/core@^0.5.33", "@oclif/core@^0.5.34":
   version "0.5.34"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-0.5.34.tgz#d8cadcd609929560e6cc836c45d94bc99379e1f6"
   integrity sha512-laLrm2tvIOr6uboDMVdAbBJMeAAgV0otkoF8imdyhYCsNcmXFyV3x0kwNGbEUYG945CQ0V00u7MS7tmlwdZlGw==
@@ -1006,6 +1006,17 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.1.0.tgz#bbf94a11ee036f2b0ec6ba82306cd9565a6ba26b"
   integrity sha512-6D7DvE6nFxpLyyTnrOIbbAeCJw2r/EpinFAcMh6gU0gA/CGfSbwV/8uR3uHLYL2zCyCZLH8jJ4dZ3BzCMqc+Eg==
+
+"@salesforce/sf-plugins-core@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-0.0.15.tgz#f7458258c14aad6c1819511ae9a9dd1d474b4f6a"
+  integrity sha512-k5i2s2mmx7prWZrZUp8FByU9Gdi7AwgpBz0cF+9TpQ8nLdqIyWZez3fNRr79SUTBFE1/sExHtN/wUJX5j5m1tA==
+  dependencies:
+    "@oclif/core" "^0.5.33"
+    "@salesforce/kit" "^1.5.8"
+    "@salesforce/ts-types" "^1.5.13"
+    cli-ux "^5.6.2"
+    inquirer "^8.1.1"
 
 "@salesforce/templates@^52.0.0":
   version "52.1.0"

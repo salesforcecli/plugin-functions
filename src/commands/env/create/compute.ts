@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 import Command from '../../../lib/base';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import pollForResult from '../../../lib/poll-for-result';
+import { fetchAppForProject, fetchOrg, fetchSfdxProject } from '../../../lib/utils';
 
 interface FunctionConnectionRecord {
   Id: string;
@@ -43,7 +44,7 @@ export default class EnvCreateCompute extends Command {
     const alias = flags.setalias;
 
     // if `--connected-org` is null here, fetchOrg will pull the default org from the surrounding environment
-    const org = await this.fetchOrg(flags['connected-org']);
+    const org = await fetchOrg(flags['connected-org']);
     const orgId = org.getOrgId();
 
     if (!(await this.isFunctionsEnabled(org))) {
@@ -62,7 +63,7 @@ export default class EnvCreateCompute extends Command {
 
     cli.action.start(`Creating compute environment for org ID ${orgId}`);
 
-    const project = await this.fetchSfdxProject();
+    const project = await fetchSfdxProject();
     const projectName = project.name;
 
     if (!projectName) {
@@ -161,7 +162,7 @@ export default class EnvCreateCompute extends Command {
       // we want to fetch the existing environment so that we can point the user to it
       if (error.body?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
         cli.action.stop('error!');
-        const app = await this.fetchAppForProject(projectName, org.getUsername());
+        const app = await fetchAppForProject(this.client, projectName, org.getUsername());
 
         this.log(`${DUPLICATE_PROJECT_MESSAGE}:`);
         this.log(`Compute Environment ID: ${app.name}`);

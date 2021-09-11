@@ -6,19 +6,11 @@
  */
 import { URL } from 'url';
 import { Command as Base } from '@oclif/core';
-import { Aliases, AuthInfo, Config, GlobalInfo, Org, SfdxProject } from '@salesforce/core';
+import { Aliases, AuthInfo, Config, GlobalInfo, Org } from '@salesforce/core';
 import { cli } from 'cli-ux';
-import APIClient from './api-client';
+import APIClient, { apiUrl } from './api-client';
 import herokuVariant from './heroku-variant';
-import NetrcMachine from './netrc';
-import { ComputeEnvironment, SfdcAccount, SfdxProjectConfig } from './sfdc-types';
-
-// Creds are no longer stored in netrc, but check for backwards compatibility
-function checkNetRcForAuth(name = 'password') {
-  const key = new URL('https://sfdx-functions-netrc-key-only.com');
-  const netrcMachine: NetrcMachine = new NetrcMachine(key.hostname);
-  return netrcMachine.get(name);
-}
+import { SfdcAccount } from './sfdc-types';
 
 export default abstract class Command extends Base {
   protected static TOKEN_BEARER_KEY = 'functions-bearer';
@@ -37,13 +29,6 @@ export default abstract class Command extends Base {
     this.info = await GlobalInfo.getInstance();
   }
 
-  protected get apiUrl(): URL {
-    const defaultUrl = 'https://api.heroku.com';
-    const envVarURL = process.env.SALESFORCE_FUNCTIONS_API;
-    const apiURL = new URL(envVarURL || defaultUrl);
-    return apiURL;
-  }
-
   protected get identityUrl(): URL {
     const defaultUrl = 'https://cli-auth.heroku.com';
     const envVarUrl = process.env.SALESFORCE_FUNCTIONS_IDENTITY_URL;
@@ -52,12 +37,7 @@ export default abstract class Command extends Base {
   }
 
   protected get username(): string {
-    let user = this.info.getToken(Command.TOKEN_BEARER_KEY)?.user;
-
-    if (!user) {
-      // backwards compatibility - use netrc token
-      user = checkNetRcForAuth('login');
-    }
+    const user = this.info.getToken(Command.TOKEN_BEARER_KEY)?.user;
 
     if (!user) throw new Error('no username found');
 
@@ -76,12 +56,8 @@ export default abstract class Command extends Base {
       if (apiKey) {
         this._auth = apiKey;
       } else {
-        let token = this.info.getToken(Command.TOKEN_BEARER_KEY, true)?.token;
+        const token = this.info.getToken(Command.TOKEN_BEARER_KEY, true)?.token;
 
-        if (!token) {
-          // backwards compatibility - use netrc token
-          token = checkNetRcForAuth();
-        }
         if (!token) {
           throw new Error(`Not authenticated. Please login with \`${this.config.bin} login functions\`.`);
         }
@@ -98,10 +74,10 @@ export default abstract class Command extends Base {
 
     const options = {
       auth: this.auth,
-      apiUrl: this.apiUrl,
+      apiUrl: apiUrl(),
     };
 
-    this._client = new APIClient(this.config, options);
+    this._client = new APIClient(options);
     return this._client;
   }
 
@@ -123,19 +99,6 @@ export default abstract class Command extends Base {
     });
 
     return data;
-  }
-
-  protected async fetchOrg(aliasOrUsername?: string) {
-    // if `aliasOrUsername` is null here, Org.create will pull the default org from the surrounding environment
-    return Org.create({
-      aliasOrUsername,
-    });
-  }
-
-  protected async fetchOrgId(aliasOrUsername?: string) {
-    const org = await this.fetchOrg(aliasOrUsername);
-
-    return org.getOrgId();
   }
 
   protected async resolveOrg(orgId?: string): Promise<Org> {
@@ -161,24 +124,6 @@ export default abstract class Command extends Base {
     }
 
     return Org.create({ aliasOrUsername: defaultUsername });
-  }
-
-  protected async fetchSfdxProject() {
-    const project = await SfdxProject.resolve();
-
-    return project.resolveProjectConfig() as Promise<SfdxProjectConfig>;
-  }
-
-  protected async fetchAppForProject(projectName: string, orgAliasOrUsername?: string) {
-    const orgId = await this.fetchOrgId(orgAliasOrUsername);
-
-    const { data } = await this.client.get<ComputeEnvironment>(`/sales-org-connections/${orgId}/apps/${projectName}`, {
-      headers: {
-        ...herokuVariant('evergreen'),
-      },
-    });
-
-    return data;
   }
 
   protected async resolveAppNameForEnvironment(appNameOrAlias: string): Promise<string> {
