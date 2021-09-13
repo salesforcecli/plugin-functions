@@ -36,12 +36,8 @@ export default abstract class Command extends Base {
     return identityUrl;
   }
 
-  protected get username(): string {
-    const user = this.info.getToken(Command.TOKEN_BEARER_KEY)?.user;
-
-    if (!user) throw new Error('no username found');
-
-    return user;
+  protected get username() {
+    return this.info.getToken(Command.TOKEN_BEARER_KEY)?.user;
   }
 
   protected resetClientAuth() {
