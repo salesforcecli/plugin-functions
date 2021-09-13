@@ -1758,9 +1758,9 @@ aws4@^1.8.0:
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
 
 axios-debug-log@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/axios-debug-log/-/axios-debug-log-0.8.2.tgz#d54051e6215c5f8342e46d3c048c5775f7d3261e"
-  integrity sha512-RRqKw2RH+TCXxXbeswNDkNu5unoDyWXUmqCJFsy7MZHumwxrWOfSlVz7b8weP4rS1bt9nz8lvRvgyVQINoYg0A==
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/axios-debug-log/-/axios-debug-log-0.8.4.tgz#2f311d70bbe36725562b1bb9c86e202ac3cd26fe"
+  integrity sha512-DvmaJiYusndhfAjQ94HqlvhaVoEjOetwo9cpb+OVtOZNZTqdz0VAVed3ZjSQKpyM1g8jDXUXFx0Pg1DhUZzAdw==
   dependencies:
     "@types/debug" "^4.0.0"
     debug "^4.0.0"
