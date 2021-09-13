@@ -10,6 +10,7 @@ import { Org, SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
 import Git from '../../../../src/lib/git';
 import { AuthStubs } from '../../../helpers/auth';
+import DeployFunctionsCommand from '../../../../src/commands/deploy/functions';
 import * as FunctionReferenceUtils from '../../../../src/lib/function-reference-utils';
 
 const sandbox = sinon.createSandbox();
@@ -329,6 +330,7 @@ describe('sf project deploy functions', () => {
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
 
       sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+      sandbox.stub(DeployFunctionsCommand.prototype, 'username' as any).returns(undefined);
     })
     .add('execStub', () => {
       const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any);

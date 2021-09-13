@@ -58,7 +58,7 @@ export class Git {
     return statusString!.split('\n')[0].replace('On branch ', '');
   }
 
-  async getRemote(app: ComputeEnvironment, token: string, username: string) {
+  async getRemote(app: ComputeEnvironment, token?: string, username?: string) {
     const externalApiKey = process.env.SALESFORCE_FUNCTIONS_API_KEY;
     const url = new URL(app.git_url!);
 

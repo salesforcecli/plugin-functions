@@ -174,7 +174,7 @@ export class FunctionsDeployer extends Deployer {
       throw new Error('You cannot use the force option with a production org.');
     }
 
-    const remote = await this.git!.getRemote(app, this.auth!, this.username);
+    const remote = await this.git!.getRemote(app, this.auth, this.username);
 
     debug('pushing to git server');
 
