@@ -987,16 +987,6 @@
     open "8.2.0"
     tslib "^2"
 
-"@salesforce/plugin-project-utils@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-project-utils/-/plugin-project-utils-0.0.6.tgz#94a2798aac37d1392316a11c136b6af269cbf97d"
-  integrity sha512-NtxFc75mEFQU2J0LthD2fCzmZ32iy7TM37qgpbbEPcwJLsHaxeb7djzt7NkLQ1maAKzrgRFw0iLq4kzojqOybg==
-  dependencies:
-    "@salesforce/kit" "^1.5.8"
-    "@salesforce/ts-types" "^1.5.13"
-    cli-ux "^5.6.2"
-    inquirer "^8.1.1"
-
 "@salesforce/prettier-config@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@salesforce/prettier-config/-/prettier-config-0.0.2.tgz#ded39bf7cb75238edc9db6dd093649111350f8bc"
