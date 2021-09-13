@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.38](https://github.com/salesforcecli/plugin-functions/compare/v0.2.36...v0.2.38) (2021-09-13)
+
+### Features
+
+- use sf-plugins-core ([#171](https://github.com/salesforcecli/plugin-functions/issues/171)) ([de2e374](https://github.com/salesforcecli/plugin-functions/commit/de2e3742dbb0271967394bcb0d32a5c07b2b9999))
+
+### Bug Fixes
+
+- don't refetch username when logging in via JWT ([#199](https://github.com/salesforcecli/plugin-functions/issues/199)) ([77bf0dc](https://github.com/salesforcecli/plugin-functions/commit/77bf0dc8df8510c483217ad9805ed5b8139781c5))
+- support api key in deploy functions ([#200](https://github.com/salesforcecli/plugin-functions/issues/200)) ([6879cc5](https://github.com/salesforcecli/plugin-functions/commit/6879cc5ea05ad90a170adfcd967a1a08a98a8bea))
+
 ### [0.2.36](https://github.com/salesforcecli/plugin-functions/compare/v0.2.35...v0.2.36) (2021-09-13)
 
 ### Bug Fixes
