@@ -439,7 +439,10 @@ Show information on your account.
 
 ```
 USAGE
-  $ sf whoami functions
+  $ sf whoami functions [-j]
+
+FLAGS
+  -j, --json  Output list in JSON format.
 
 DESCRIPTION
   Show information on your account.
