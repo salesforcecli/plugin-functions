@@ -2365,9 +2365,9 @@ cloneable-readable@^1.0.0:
     readable-stream "^2.3.5"
 
 cloudevents@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/cloudevents/-/cloudevents-4.0.2.tgz#6a79cac6480bcfb3e25b09ee6302d759ad805e1d"
-  integrity sha512-tIgdbZApPVT81PAOhmUcq8INkppmWeAsMAjp2EFmMoYc7Uez1B62m6AddxG9oVIUXyALWdATtzEeaSMhC83c/g==
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/cloudevents/-/cloudevents-4.0.3.tgz#47170fc464f71eda7b261b05aa2bada7ca2b56b3"
+  integrity sha512-FpwsQ0JZzGH1PcJmZTXRQkQSt5YFjwlppUrEUfTU0Ey175IIdYYDCIMeqMIX+qvDUhj8bFDrgU23xWA1JQbR1Q==
   dependencies:
     ajv "~6.12.3"
     uuid "~8.3.0"
