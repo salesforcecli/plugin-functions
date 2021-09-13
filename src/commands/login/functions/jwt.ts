@@ -148,15 +148,11 @@ export default class JwtLogin extends Command {
     // the new heroku credentials we're about to generate
     this.resetClientAuth();
 
-    this.info.setToken(Command.TOKEN_BEARER_KEY, { token: bearerToken, url: this.identityUrl.toString() });
-
-    // We write early and often here to ensure that the token will always be correctly retrieved by
-    // `info.getToken` when run elsewhere (e.g. in `fetchAccount`)
-    await this.info.write();
-
-    const account = await this.fetchAccount();
-
-    this.info.updateToken(Command.TOKEN_BEARER_KEY, { user: account.salesforce_username });
+    this.info.setToken(Command.TOKEN_BEARER_KEY, {
+      token: bearerToken,
+      url: this.identityUrl.toString(),
+      user: auth.getUsername(),
+    });
 
     await this.info.write();
 
