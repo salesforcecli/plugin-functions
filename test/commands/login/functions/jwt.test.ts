@@ -45,6 +45,7 @@ describe('sf login functions jwt', () => {
           };
         },
         save: sinon.stub(),
+        getUsername: sinon.stub().returns('username'),
       });
 
       sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
@@ -69,7 +70,6 @@ describe('sf login functions jwt', () => {
             token: HEROKU_ACCESS_TOKEN,
           },
         });
-      api.get('/account').reply(200, { salesforce_username: 'username' });
     })
     .command(['login:functions:jwt', '--username=foo@bar.com', '--keyfile=keyfile.key', '--clientid=12345'])
     .it('can save a bearer token from heroku identity service', () => {
@@ -93,6 +93,7 @@ describe('sf login functions jwt', () => {
           };
         },
         save: sinon.stub(),
+        getUsername: sinon.stub().returns('username'),
       });
     })
     .finally(() => sinon.restore())
@@ -113,7 +114,6 @@ describe('sf login functions jwt', () => {
             token: HEROKU_ACCESS_TOKEN,
           },
         });
-      api.get('/account').reply(200, { salesforce_username: 'username' });
     })
     .command([
       'login:functions:jwt',
@@ -144,6 +144,7 @@ describe('sf login functions jwt', () => {
           };
         },
         save: sinon.stub(),
+        getUsername: sinon.stub().returns('username'),
       });
     })
     .finally(() => sinon.restore())
@@ -164,7 +165,6 @@ describe('sf login functions jwt', () => {
             token: HEROKU_ACCESS_TOKEN,
           },
         });
-      api.get('/account').reply(200, { salesforce_username: 'username' });
     })
     .command(['login:functions:jwt', '--username=foo@bar.com', '--keyfile=keyfile.key', '--clientid=12345'])
     .it('will use project config login URL if instanceurl is not passed', (ctx) => {
