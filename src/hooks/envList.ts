@@ -6,8 +6,7 @@
  */
 
 import { SfHook } from '@salesforce/sf-plugins-core';
-import { Aliases, AuthInfo, Org, SfOrg, GlobalInfo } from '@salesforce/core';
-import { sortBy } from 'lodash';
+import { Aliases, AuthInfo, SfOrg, GlobalInfo, ConfigEntry } from '@salesforce/core';
 import herokuVariant from '../lib/heroku-variant';
 import { ComputeEnvironment, Dictionary, SfdcAccount } from '../lib/sfdc-types';
 import { fetchSfdxProject } from '../lib/utils';
@@ -20,28 +19,6 @@ type ComputeEnv = {
   connectedOrgId: string | undefined;
   computeEnvironmentName: string | undefined;
 };
-
-async function resolveOrgs() {
-  const infos = await AuthInfo.listAllAuthorizations();
-  const orgs: SfOrg[] = [];
-
-  for (const info of infos) {
-    try {
-      const org = await Org.create({ aliasOrUsername: info.username });
-      try {
-        await org.refreshAuth();
-        info.status = 'Active';
-        info.connectionStatus = 'Connected';
-      } catch (error) {
-        info.status = 'Deleted';
-        info.connectionStatus = 'Unknown';
-      }
-      orgs.push(info);
-    } catch (e) {}
-  }
-
-  return sortBy(orgs, (v) => [v.alias, v.username]);
-}
 
 async function fetchAccount(client: APIClient) {
   const { data } = await client.get<SfdcAccount>('/account', {
@@ -85,20 +62,16 @@ async function resolveEnvironments(orgs: SfOrg[]): Promise<ComputeEnvironment[]>
     }
   );
 
-  const environmentsWithAliases = await resolveAliasesForEnvironments(environments);
+  const environmentsWithAliases = await resolveAliasesForComputeEnvironments(environments);
 
   return resolveAliasesForConnectedOrg(environmentsWithAliases, orgs);
 }
 
-async function resolveAliasForValue(environmentName: string) {
-  const aliases = await Aliases.create({});
-
-  const entries = aliases.entries();
-
+async function resolveAliasForValue(environmentName: string, entries: ConfigEntry[]) {
   // Because there's no reliable way to query aliases *by their value*, we instead grab *all* of
   // the aliases and create a reverse lookup table that is keyed on the alias values rather than
-  // the aliases themselves.Then we cache it, because we definitely don't want to do this any
-  // more than we have to.
+  // the aliases themselves.
+
   const aliasReverseLookup = entries.reduce((acc: Dictionary<string>, [alias, environmentName]) => {
     if (typeof environmentName !== 'string') {
       return acc;
@@ -118,12 +91,16 @@ async function resolveAliasForValue(environmentName: string) {
   return aliasReverseLookup[environmentName] ?? '';
 }
 
-async function resolveAliasesForEnvironments(envs: ComputeEnvironment[]) {
+async function resolveAliasesForComputeEnvironments(envs: ComputeEnvironment[]) {
+  const aliases = await Aliases.create({});
+
+  const entries = aliases.entries();
+
   return Promise.all(
     envs.map(async (env) => {
       return {
         ...env,
-        alias: await resolveAliasForValue(env.id!),
+        alias: await resolveAliasForValue(env.id!, entries),
       };
     })
   );
@@ -148,16 +125,18 @@ function resolveAliasesForConnectedOrg(envs: ComputeEnvironment[], orgs: SfOrg[]
   });
 }
 
-const hook: SfHook.EnvList<ComputeEnv> = async function () {
-  const orgs = await resolveOrgs();
+const hook: SfHook.EnvList<ComputeEnv> = async function (opts) {
+  const orgs = await AuthInfo.listAllAuthorizations();
   let environments = await resolveEnvironments(orgs);
 
-  try {
-    const project = await fetchSfdxProject();
-    environments = environments.filter((env) => env.sfdx_project_name === project.name);
-  } catch (e) {}
-  // If the user IS in an SFDX project folder, we will filter compute environments down to ones associated with the project.
-  // If they are not, this will throw an error which we will swallow.
+  if (!opts.all) {
+    // If the user IS in an SFDX project folder, we will filter compute environments down to ones associated with the project.
+    // If they are not, this will throw an error which we will swallow.
+    try {
+      const project = await fetchSfdxProject();
+      environments = environments.filter((env) => env.sfdx_project_name === project.name);
+    } catch (e) {}
+  }
 
   return [
     {
