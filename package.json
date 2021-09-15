@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-functions",
   "description": "Functions plugin for the SF CLI",
-  "version": "0.2.39",
+  "version": "0.2.40",
   "author": "heroku-front-end@salesforce.com",
   "bin": {
     "functions": "./bin/run"

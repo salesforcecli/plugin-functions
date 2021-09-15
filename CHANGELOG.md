@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.40](https://github.com/salesforcecli/plugin-functions/compare/v0.2.39...v0.2.40) (2021-09-15)
+
+### Bug Fixes
+
+- **cli:** refactor env:list to get rid of TLS error ([#202](https://github.com/salesforcecli/plugin-functions/issues/202)) ([00d8fda](https://github.com/salesforcecli/plugin-functions/commit/00d8fdae81f6f4ad42fb7a6b07de1f4f4e8a7ba5))
+
 ### [0.2.39](https://github.com/salesforcecli/plugin-functions/compare/v0.2.38...v0.2.39) (2021-09-14)
 
 ### Features
