@@ -24,20 +24,20 @@ export default class ConfigUnset extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
+    'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
   };
 
   async run() {
     const { flags, argv } = await this.parse(ConfigUnset);
-    const { environment } = flags;
 
     const appName = await resolveAppNameForEnvironment(environment);
 
     if (argv.length === 0) {
       throw new Errors.CLIError('you must enter a config var key (i.e. mykey)');
     }
+    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
 
     const configPairs = argv.reduce((acc, elem) => {
       return {
@@ -49,7 +49,7 @@ export default class ConfigUnset extends Command {
     cli.action.start(
       `Unsetting ${Object.keys(configPairs)
         .map((key) => herokuColor.configVar(key))
-        .join(', ')} and restarting ${herokuColor.app(environment)}`
+        .join(', ')} and restarting ${herokuColor.app(flags['target-compute'])}`
     );
 
     await this.client.patch(`/apps/${appName}/config-vars`, {

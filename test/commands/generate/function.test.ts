@@ -31,7 +31,7 @@ describe('sf generate:function', () => {
         welcomeText: '',
       });
     })
-    .command(['generate:function', `--name=${name}`, '--language=javascript'])
+    .command(['generate:function', `--function-name=${name}`, '--language=javascript'])
     .it('Should call the library methods with proper args and log output', async (ctx) => {
       expect(generateFunctionStub).to.have.been.calledWith(name, language);
       expect(ctx.stdout).to.contain(`Created ${language} function ${name} in ${path}`);
@@ -47,7 +47,7 @@ describe('sf generate:function', () => {
       });
     })
     .stdout()
-    .command(['generate:function', `--name=${name}`, '--language=javascript'])
+    .command(['generate:function', `--function-name=${name}`, '--language=javascript'])
     .it('Should log welcome message', async (ctx) => {
       expect(generateFunctionStub).to.have.been.calledWith('myfunction', 'javascript');
       expect(ctx.stdout).to.contain('Before each...');
@@ -57,7 +57,7 @@ describe('sf generate:function', () => {
     .do(() => {
       generateFunctionStub.rejects(new Error('something bad happened'));
     })
-    .command(['generate:function', `--name=${name}`, '--language=javascript'])
+    .command(['generate:function', `--function-name=${name}`, '--language=javascript'])
     .catch((error) => {
       expect(error.message).to.contain('something bad happened');
     })

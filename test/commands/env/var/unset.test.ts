@@ -17,7 +17,7 @@ describe('sf env:var:unset', () => {
         })
         .reply(200)
     )
-    .command(['env:var:unset', 'foo', '--environment', 'my-environment'])
+    .command(['env:var:unset', 'foo', '--target-compute', 'my-environment'])
     .it('works with a single variable', (ctx) => {
       expect(ctx.stderr).to.contain('Unsetting foo and restarting my-environment');
     });
@@ -33,7 +33,7 @@ describe('sf env:var:unset', () => {
         })
         .reply(200)
     )
-    .command(['env:var:unset', 'foo', 'bar', '--environment', 'my-environment'])
+    .command(['env:var:unset', 'foo', 'bar', '--target-compute', 'my-environment'])
     .it('works with a multiple variables', (ctx) => {
       expect(ctx.stderr).to.contain('Unsetting foo, bar and restarting my-environment');
     });
