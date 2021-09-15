@@ -70,7 +70,7 @@ USAGE
   $ sf env create compute [-o <value>] [-a <value>]
 
 FLAGS
-  -a, --setalias=<value>       Alias for the created environment.
+  -a, --alias=<value>          Alias for the created environment.
   -o, --connected-org=<value>  Username or alias for the org that the compute environment should be connected to.
 
 DESCRIPTION
@@ -79,7 +79,7 @@ DESCRIPTION
 EXAMPLES
   $ sfdx env:create:compute
 
-  $ sfdx env:create:compute --setalias my-compute-environment
+  $ sfdx env:create:compute --alias my-compute-environment
 
   $ sfdx env:create:compute --connected-org my-scratch-org
 ```
@@ -90,19 +90,66 @@ Delete an environment.
 
 ```
 USAGE
-  $ sf env delete -e <value> [-c <value>]
+  $ sf env delete -c <value> [--no-prompt <value>]
 
 FLAGS
-  -c, --confirm=name...      Confirmation name.
-  -e, --environment=<value>  (required) Environment name.
+  -c, --target-compute=<value>  (required) Environment name.
+  --no-prompt=name...           Confirmation name.
 
 DESCRIPTION
   Delete an environment.
 
 EXAMPLES
-  $ sfdx env:delete --environment=billingApp-Scratch1
+  $ sfdx env:delete --target-compute=billingApp-Scratch1
 
-  $ sfdx env:delete --environment=billingApp-Scratch1 --confirm=billingApp-Scratch1
+  $ sfdx env:delete --target-compute=billingApp-Scratch1 --confirm=billingApp-Scratch1
+```
+
+## `sf env display`
+
+Display details for an environment.
+
+```
+USAGE
+  $ sf env display -c <value> [--json]
+
+FLAGS
+  -c, --target-compute=<value>  (required) Environment name.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Display details for an environment.
+
+EXAMPLES
+  $ sfdx env:display --target-compute=billingApp-Scratch1
+```
+
+## `sf env list`
+
+List all environments by type.
+
+```
+USAGE
+  $ sf env list [--all] [-t org|scratchorg|compute] [-j]
+
+FLAGS
+  -j, --json                         Output list in JSON format.
+  -t, --target-env-type=<option>...  Filter by one or more environment types (org, scratchorg, compute).
+                                     <options: org|scratchorg|compute>
+  --all                              Show all available envs instead of scoping to active orgs and their connected
+                                     compute envs.
+
+DESCRIPTION
+  List all environments by type.
+
+EXAMPLES
+  $ sfdx env:list
+
+  $ sfdx env:list --all
+
+  $ sfdx env:list --target-env-type org --target-env-type compute
 ```
 
 ## `sf env log tail`
@@ -111,16 +158,16 @@ Stream log output for an environment.
 
 ```
 USAGE
-  $ sf env log tail -e <value>
+  $ sf env log tail -c <value>
 
 FLAGS
-  -e, --environment=<value>  (required) Environment name to retrieve logs.
+  -c, --target-compute=<value>  (required) Environment name to retrieve logs.
 
 DESCRIPTION
   Stream log output for an environment.
 
 EXAMPLES
-  $ sfdx env:log:tail --environment=billingApp-Scratch1
+  $ sfdx env:log:tail --target-compute=billingApp-Scratch1
 ```
 
 ## `sf env logdrain add`
@@ -129,17 +176,17 @@ Add log drain to a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain add -e <value> -u <value>
+  $ sf env logdrain add -c <value> -u <value>
 
 FLAGS
-  -e, --environment=<value>  (required) Environment name.
-  -u, --url=<value>          (required) Endpoint that will receive sent logs.
+  -c, --target-compute=<value>  (required) Environment name.
+  -u, --drain-url=<value>       (required) Endpoint that will receive sent logs.
 
 DESCRIPTION
   Add log drain to a specified environment.
 
 EXAMPLES
-  $ sfdx env:logdrain:add --environment=billingApp-Sandbox --url=https://example.com/drain
+  $ sfdx env:logdrain:add --target-compute=billingApp-Sandbox --drain-url=https://example.com/drain
 ```
 
 ## `sf env logdrain list`
@@ -148,17 +195,17 @@ List log drains connected to a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain list -e <value> [-j]
+  $ sf env logdrain list -c <value> [--json]
 
 FLAGS
-  -e, --environment=<value>  (required) Environment name.
-  -j, --json                 Output list in JSON format.
+  -c, --target-compute=<value>  (required) Environment name.
+  --json                        Output result in json.
 
 DESCRIPTION
   List log drains connected to a specified environment.
 
 EXAMPLES
-  $ sfdx env:logdrain:list --environment=billingApp-Sandbox
+  $ sfdx env:logdrain:list --target-compute=billingApp-Sandbox
 ```
 
 ## `sf env logdrain remove`
@@ -167,17 +214,17 @@ Remove log drain from a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain remove -e <value> -u <value>
+  $ sf env logdrain remove -c <value> -u <value>
 
 FLAGS
-  -e, --environment=<value>  (required) Environment name.
-  -u, --url=<value>          (required) Logdrain url to remove.
+  -c, --target-compute=<value>  (required) Environment name.
+  -u, --drain-url=<value>       (required) Logdrain url to remove.
 
 DESCRIPTION
   Remove log drain from a specified environment.
 
 EXAMPLES
-  $ sfdx env:logdrain:remove --environment=billingApp-Sandbox --url=syslog://syslog-a.logdna.com:11137
+  $ sfdx env:logdrain:remove --target-compute=billingApp-Sandbox --drain-url=syslog://syslog-a.logdna.com:11137
 ```
 
 ## `sf env var get KEY`
@@ -186,16 +233,16 @@ display a single config value for an environment
 
 ```
 USAGE
-  $ sf env var get [KEY] -e <value>
+  $ sf env var get [KEY] -c <value>
 
 FLAGS
-  -e, --environment=<value>  (required) Environment name.
+  -c, --target-compute=<value>  (required) Environment name.
 
 DESCRIPTION
   display a single config value for an environment
 
 EXAMPLES
-  $ sfdx env:var:get foo --environment=my-environment
+  $ sfdx env:var:get foo --target-compute=my-environment
 ```
 
 ## `sf env var list`
@@ -204,17 +251,16 @@ List your config vars in a table.
 
 ```
 USAGE
-  $ sf env var list -e <value> [-j]
+  $ sf env var list -c <value>
 
 FLAGS
-  -e, --environment=<value>  (required) Environment name.
-  -j, --json                 Output list in JSON format.
+  -c, --target-compute=<value>  (required) Environment name.
 
 DESCRIPTION
   List your config vars in a table.
 
 EXAMPLES
-  $ sfdx env:var:list --environment=my-environment
+  $ sfdx env:var:list --target-compute=my-environment
 ```
 
 ## `sf env var set`
@@ -223,16 +269,16 @@ Sets a single config value for an environment.
 
 ```
 USAGE
-  $ sf env var set -e <value>
+  $ sf env var set -c <value>
 
 FLAGS
-  -e, --environment=<value>  (required) Environment name.
+  -c, --target-compute=<value>  (required) Environment name.
 
 DESCRIPTION
   Sets a single config value for an environment.
 
 EXAMPLES
-  $ sfdx env:var:set foo=bar --environment=my-environment
+  $ sfdx env:var:set foo=bar --target-compute=my-environment
 ```
 
 ## `sf env var unset`
@@ -241,16 +287,16 @@ Unset a single config value for an environment.
 
 ```
 USAGE
-  $ sf env var unset -e <value>
+  $ sf env var unset -c <value>
 
 FLAGS
-  -e, --environment=<value>  (required) Environment name.
+  -c, --target-compute=<value>  (required) Environment name.
 
 DESCRIPTION
   Unset a single config value for an environment.
 
 EXAMPLES
-  $ sfdx env:var:unset foo --environment=my-environment
+  $ sfdx env:var:unset foo --target-compute=my-environment
 ```
 
 ## `sf generate function`
@@ -263,16 +309,13 @@ USAGE
 
 FLAGS
   -l, --language=(javascript|typescript|java)  (required) Language.
-  -n, --name=<value>                           (required) Function name.
+  -n, --function-name=<value>                  (required) Function name.
 
 DESCRIPTION
   Create a function with basic scaffolding specific to a given language.
 
-ALIASES
-  $ sf evergreen function init
-
 EXAMPLES
-  $ sfdx evergreen:function:create MyFunction --language=javascript
+  $ sfdx generate:function --function-name=function-name --language=javascript
 ```
 
 ## `sf generate project`
@@ -282,19 +325,22 @@ USAGE
   $ sf generate project -n <value>
 
 FLAGS
-  -n, --name=<value>  (required) Name of the generated project.
+  -n, --project-name=<value>  (required) Name of the generated project.
+
+EXAMPLES
+  $ sfdx generate:project --project-name=project-name
 ```
 
 ## `sf login functions`
 
-Log into your account.
+Log interactively into your account.
 
 ```
 USAGE
   $ sf login functions
 
 DESCRIPTION
-  Log into your account.
+  Log interactively into your account.
 
 EXAMPLES
   $ sfdx login:functions
@@ -335,7 +381,7 @@ USAGE
 
 FLAGS
   -H, --headers=<value>...     Set headers.
-  -l, --url=<value>            (required) Url of the function to run.
+  -l, --function-url=<value>   (required) Url of the function to run.
   -o, --connected-org=<value>  Username or alias for the target org; overrides default target org.
   -p, --payload=<value>        Set the payload of the cloudevent. also accepts @file.txt format.
   -s, --structured             Set the cloudevent to be emitted as a structured cloudevent (json).
@@ -359,10 +405,11 @@ Build and run function image locally.
 
 ```
 USAGE
-  $ sf run function start [-p <value>] [-d <value>] [--clear-cache] [--no-pull] [-e <value>] [--network <value>] [-v]
+  $ sf run function start [--json] [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network
+    <value>] [-v]
 
 FLAGS
-  -d, --debug-port=<value>  [default: 9229] Port for remote debugging.
+  -b, --debug-port=<value>  [default: 9229] Port for remote debugging.
   -e, --env=<value>...      Set environment variables (provided during build and run).
   -p, --port=<value>        [default: 8080] Port for running the function.
   -v, --verbose             Output additional logs.
