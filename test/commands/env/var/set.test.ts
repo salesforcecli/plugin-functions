@@ -20,7 +20,7 @@ describe('sf env:var:set', () => {
         })
         .reply(200)
     )
-    .command(['env:var:set', 'foo=bar', '--environment', 'my-environment'])
+    .command(['env:var:set', 'foo=bar', '--target-compute', 'my-environment'])
     .it('works with a single variable', (ctx) => {
       expect(ctx.stderr).to.contain('Setting foo and restarting my-environment');
     });
@@ -36,7 +36,7 @@ describe('sf env:var:set', () => {
         })
         .reply(200)
     )
-    .command(['env:var:set', 'foo=bar', 'bar=baz', '--environment', 'my-environment'])
+    .command(['env:var:set', 'foo=bar', 'bar=baz', '--target-compute', 'my-environment'])
     .it('works with a multiple variables', (ctx) => {
       expect(ctx.stderr).to.contain('Setting foo, bar and restarting my-environment');
     });
@@ -54,13 +54,13 @@ describe('sf env:var:set', () => {
         })
         .reply(200)
     )
-    .command(['env:var:set', 'foo=bar=baz', '--environment', 'my-environment'])
+    .command(['env:var:set', 'foo=bar=baz', '--target-compute', 'my-environment'])
     .it('allows equals sign in config pair value', (ctx) => {
       expect(ctx.stderr).to.contain('Setting foo and restarting my-environment');
     });
 
   test
-    .command(['env:var:set', 'foobar', '--environment', 'my-environment'])
+    .command(['env:var:set', 'foobar', '--target-compute', 'my-environment'])
     .catch((error) => {
       expect(error.message).to.contain('foobar is invalid. Please use the format key=value');
     })

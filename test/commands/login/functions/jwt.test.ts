@@ -74,7 +74,7 @@ describe('sf login functions jwt', () => {
           },
         });
     })
-    .command(['login:functions:jwt', '--username=foo@bar.com', '--keyfile=keyfile.key', '--clientid=12345'])
+    .command(['login:functions:jwt', '--username=foo@bar.com', '--jwt-key-file=keyfile.key', '--clientid=12345'])
     .it('can save a bearer token from heroku identity service', () => {
       sinon.assert.match(contents, {
         'functions-bearer': {
@@ -113,7 +113,7 @@ describe('sf login functions jwt', () => {
     .command([
       'login:functions:jwt',
       '--username=foo@bar.com',
-      '--keyfile=keyfile.key',
+      '--jwt-key-file=keyfile.key',
       '--clientid=12345',
       '--instance-url=foo.com',
     ])

@@ -29,7 +29,7 @@ export default class EnvList extends Command {
     all: Flags.boolean({
       description: messages.getMessage('flags.all.summary'),
     }),
-    'environment-type': environmentType,
+    'target-env-type': environmentType,
     json: Flags.boolean({
       description: messages.getMessage('flags.json.summary'),
       char: 'j',
@@ -243,7 +243,7 @@ export default class EnvList extends Command {
     const { nonScratchOrgs, scratchOrgs } = await this.resolveOrgs(flags.all);
     const orgs = [...nonScratchOrgs, ...scratchOrgs];
     let environments = await this.resolveEnvironments(orgs);
-    const types = (flags['environment-type'] as EnvironmentType[]) ?? ['org', 'scratchorg', 'compute'];
+    const types = (flags['target-env-type'] as EnvironmentType[]) ?? ['org', 'scratchorg', 'compute'];
 
     if (!flags.all) {
       try {

@@ -19,12 +19,10 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'generate
 export default class GenerateFunction extends Command {
   static description = messages.getMessage('summary');
 
-  static aliases = messages.getMessages('aliases');
-
   static examples = messages.getMessages('examples');
 
   static flags = {
-    name: Flags.string({
+    'function-name': Flags.string({
       required: true,
       description: messages.getMessage('flags.name.summary'),
       char: 'n',
@@ -39,7 +37,7 @@ export default class GenerateFunction extends Command {
 
   async run() {
     const { flags } = await this.parse(GenerateFunction);
-    const fnName = flags.name;
+    const fnName = flags['function-name'];
 
     try {
       const { name, path, language, welcomeText } = await generateFunction(fnName, flags.language as Language);

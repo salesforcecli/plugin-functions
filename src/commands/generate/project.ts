@@ -12,8 +12,10 @@ import Command from '../../lib/base';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'generate.project');
 export default class GenerateProject extends Command {
+  static examples = messages.getMessages('examples');
+
   static flags = {
-    name: Flags.string({
+    'project-name': Flags.string({
       description: messages.getMessage('flags.name.summary'),
       char: 'n',
       required: true,
@@ -23,7 +25,7 @@ export default class GenerateProject extends Command {
   async run() {
     const { flags } = await this.parse(GenerateProject);
     try {
-      await generateProject(flags.name);
+      await generateProject(flags['project-name']);
     } catch (err) {
       this.error(err.message);
     }

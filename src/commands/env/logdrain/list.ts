@@ -20,7 +20,7 @@ export default class LogDrainList extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
+    'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
     json: Flags.boolean({
@@ -30,9 +30,8 @@ export default class LogDrainList extends Command {
 
   async run() {
     const { flags } = await this.parse(LogDrainList);
-    const { environment } = flags;
 
-    const appName = await this.resolveAppNameForEnvironment(environment);
+    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
 
     const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`apps/${appName}/log-drains`);
 
@@ -42,7 +41,7 @@ export default class LogDrainList extends Command {
     }
 
     if (drains.length === 0) {
-      this.log(`No log drains found for environment ${environment}.`);
+      this.log(`No log drains found for environment ${flags['target-compute']}.`);
       return;
     }
 

@@ -37,7 +37,7 @@ export default class EnvDisplay extends Command {
   static disableJsonFlag = false;
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
+    'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
     extended: Flags.boolean({
@@ -49,12 +49,10 @@ export default class EnvDisplay extends Command {
   async run() {
     const { flags } = await this.parse(EnvDisplay);
 
-    const { environment } = flags;
-
     try {
       // If we are able to successfully create an org, then we verify that this name does not refer
       // to a compute environment. Regardless of what happens, this block will result in an error.
-      const org: Org = await Org.create({ aliasOrUsername: environment });
+      const org: Org = await Org.create({ aliasOrUsername: flags['target-compute'] });
       const authInfo = await AuthInfo.create({ username: org.getUsername() });
       const fields = authInfo.getFields(true);
 
@@ -91,7 +89,7 @@ export default class EnvDisplay extends Command {
     }
 
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-    const appName = await this.resolveAppNameForEnvironment(environment);
+    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
 
     try {
       // If app exists, environment details will be displayed
@@ -108,7 +106,7 @@ export default class EnvDisplay extends Command {
       const refList = await connection.metadata.list({ type: 'FunctionReference' });
       const fnNames = ensureArray(refList).map((ref) => ref.fullName.split('-')[1]);
 
-      const alias = appName === environment ? undefined : environment;
+      const alias = appName === flags['target-compute'] ? undefined : flags['target-compute'];
 
       const returnValue: EnvDisplayTable = {
         // renamed properties
