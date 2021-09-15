@@ -1,6 +1,6 @@
 # summary
 
-Login using JWT instead of default web-based flow.
+Login using JWT instead of default web-based flow. This will authenticate you with both sf and Salesforce Functions.
 
 # examples
 
@@ -21,3 +21,19 @@ OAuth client ID.
 # flags.instanceurl.summary
 
 The login URL of the instance the org lives on.
+
+# flags.json.summary
+
+format output as json
+
+# flags.alias.summary
+
+Alias for the org.
+
+# flags.set-default.summary
+
+Set the org as the default that all org-related commands run against.
+
+# flags.set-default-dev-hub.summary
+
+Set the org as the default Dev Hub for scratch org creation.

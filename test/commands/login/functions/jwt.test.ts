@@ -21,11 +21,23 @@ const PROJECT_MOCK = {
   },
 };
 
+const SFDX_ACCESS_TOKEN = 'token1234';
+const HEROKU_ACCESS_TOKEN = 'herokutoken';
+
+const AUTH_INFO_STUB = {
+  getFields() {
+    return {
+      accessToken: SFDX_ACCESS_TOKEN,
+    };
+  },
+  save: sinon.stub(),
+  getUsername: sinon.stub().returns('username'),
+  setAlias: sinon.stub(),
+  setAsDefault: sinon.stub(),
+};
+
 describe('sf login functions jwt', () => {
   let contents: SfTokens;
-
-  const SFDX_ACCESS_TOKEN = 'token1234';
-  const HEROKU_ACCESS_TOKEN = 'herokutoken';
 
   beforeEach(() => {
     AuthStubs.write.callsFake(async function (this: GlobalInfo) {
@@ -38,16 +50,7 @@ describe('sf login functions jwt', () => {
     .stdout()
     .stderr()
     .do(() => {
-      sinon.stub(AuthInfo, 'create' as any).returns({
-        getFields() {
-          return {
-            accessToken: SFDX_ACCESS_TOKEN,
-          };
-        },
-        save: sinon.stub(),
-        getUsername: sinon.stub().returns('username'),
-      });
-
+      sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
       sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
@@ -86,15 +89,7 @@ describe('sf login functions jwt', () => {
     .stdout()
     .stderr()
     .add('AuthInfoCreateStub', () => {
-      return sinon.stub(AuthInfo, 'create' as any).returns({
-        getFields() {
-          return {
-            accessToken: SFDX_ACCESS_TOKEN,
-          };
-        },
-        save: sinon.stub(),
-        getUsername: sinon.stub().returns('username'),
-      });
+      return sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
     })
     .finally(() => sinon.restore())
     .nock('https://api.heroku.com', (api) => {
@@ -137,15 +132,7 @@ describe('sf login functions jwt', () => {
       sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .add('AuthInfoCreateStub', () => {
-      return sinon.stub(AuthInfo, 'create' as any).returns({
-        getFields() {
-          return {
-            accessToken: SFDX_ACCESS_TOKEN,
-          };
-        },
-        save: sinon.stub(),
-        getUsername: sinon.stub().returns('username'),
-      });
+      return sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
     })
     .finally(() => sinon.restore())
     .nock('https://api.heroku.com', (api) => {
@@ -173,5 +160,48 @@ describe('sf login functions jwt', () => {
           loginUrl: PROJECT_CONFIG_MOCK.sfdcLoginUrl,
         },
       });
+    });
+
+  test
+    .stdout()
+    .stderr()
+    .do(() => {
+      sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
+    })
+    .finally(() => {
+      sinon.restore();
+    })
+    .nock('https://api.heroku.com', (api) => {
+      api
+        .post('/oauth/tokens', {
+          client: {
+            id: PUBLIC_CLIENT_ID,
+          },
+          grant: {
+            type: 'urn:ietf:params:oauth:grant-type:token-exchange',
+          },
+          subject_token: SFDX_ACCESS_TOKEN,
+          subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+        })
+        .reply(201, {
+          access_token: {
+            token: HEROKU_ACCESS_TOKEN,
+          },
+        });
+    })
+    .command([
+      'login:functions:jwt',
+      '--username=foo@bar.com',
+      '--keyfile=keyfile.key',
+      '--clientid=12345',
+      '--set-default',
+      '--set-default-dev-hub',
+      '--alias=my-cool-alias',
+    ])
+    .it('can set alias and target org / devhub', () => {
+      expect(AUTH_INFO_STUB.setAlias).to.have.been.calledWith('my-cool-alias');
+      expect(AUTH_INFO_STUB.setAsDefault).to.have.been.calledWith({ org: true });
+      expect(AUTH_INFO_STUB.setAsDefault).to.have.been.calledWith({ devHub: true });
     });
 });

@@ -60,6 +60,21 @@ export default class JwtLogin extends Command {
       char: 'r',
       description: messages.getMessage('flags.instanceurl.summary'),
     }),
+    json: Flags.boolean({
+      description: messages.getMessage('flags.json.summary'),
+    }),
+    alias: Flags.string({
+      char: 'a',
+      description: messages.getMessage('flags.alias.summary'),
+    }),
+    'set-default': Flags.boolean({
+      char: 'd',
+      description: messages.getMessage('flags.set-default.summary'),
+    }),
+    'set-default-dev-hub': Flags.boolean({
+      char: 'v',
+      description: messages.getMessage('flags.set-default-dev-hub.summary'),
+    }),
   };
 
   private async initAuthInfo(
@@ -109,15 +124,34 @@ export default class JwtLogin extends Command {
   }
 
   async run() {
-    const {
-      flags: { clientid, username, keyfile, instanceurl },
-    } = await this.parse(JwtLogin);
+    const { flags } = await this.parse(JwtLogin);
+    const { clientid, username, keyfile, instanceurl } = flags;
 
     cli.action.start('Logging in via JWT');
 
     // Use keyfile, clientid, and username to auth with salesforce via the same workflow
     // as sfdx auth:jwt:grant --json
     const auth = await this.initAuthInfo(username, clientid, keyfile, instanceurl);
+
+    // Take care of any alias/default setting that needs to happen for the sfdx credential
+    // before we move on to the heroku stuff
+    if (flags.alias) {
+      await auth.setAlias(flags.alias);
+    }
+
+    if (flags['set-default']) {
+      await auth.setAsDefault({
+        org: true,
+      });
+    }
+
+    if (flags['set-default-dev-hub']) {
+      await auth.setAsDefault({
+        devHub: true,
+      });
+    }
+
+    await auth.save();
 
     // Obtain sfdx access toekn from Auth info
     const token = auth.getFields(true).accessToken;
