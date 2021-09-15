@@ -8,7 +8,6 @@ import { expect, test } from '@oclif/test';
 import { SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
 import { Aliases, AuthInfo, Org } from '@salesforce/core';
-import EnvList from '../../../src/commands/env/list';
 import EnvDisplay from '../../../src/commands/env/display';
 
 export const PROJECT_CONFIG_MOCK = {
@@ -35,46 +34,6 @@ const SCRATCH_ORG_MOCK = {
   edition: 'Developer',
   orgName: 'test company',
   createdDate: '2021-05-05T20:25:33.000+0000',
-};
-
-const GROUPED_ORGS_MOCK = {
-  nonScratchOrgs: [
-    {
-      username: 'foo@test.com',
-      orgId: '1',
-      isDevHub: true,
-      alias: undefined,
-      isDefaultUsername: true,
-      connectedStatus: 'Connected',
-    },
-    {
-      username: 'bar@test.com',
-      orgId: '2',
-      isDevHub: false,
-      alias: undefined,
-      connectedStatus: 'Connected',
-    },
-    {
-      username: 'baz@test.com',
-      orgId: '3',
-      isDevHub: false,
-      alias: undefined,
-      connectedStatus: 'Connected',
-    },
-  ],
-  scratchOrgs: [
-    {
-      username: 'test-if5m9vhwk3av@example.com',
-      orgId: '4',
-      expirationDate: '2021-04-12',
-      alias: 'my-scratch-org',
-      devHubOrgId: '00DR0000000IgciMAC',
-      orgName: 'chris.freeman company',
-      status: 'Active',
-      isExpired: false,
-      connectedStatus: 'Unknown',
-    },
-  ],
 };
 
 const ORG_ENV_NAME = 'my-org-env';
@@ -172,7 +131,6 @@ describe('sf env display', () => {
     .stdout()
     .do(() => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
       const error = new Error('No AuthInfo found');
       sandbox
         .stub(Org, 'create' as any)
@@ -199,7 +157,6 @@ describe('sf env display', () => {
     .stdout()
     .do(() => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
       const error = new Error('No AuthInfo found');
       sandbox
         .stub(Org, 'create' as any)
@@ -225,7 +182,6 @@ describe('sf env display', () => {
         get: () => COMPUTE_ENV_NAME,
       });
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
       const error = new Error('No AuthInfo found');
       sandbox
         .stub(Org, 'create' as any)
@@ -258,7 +214,6 @@ describe('sf env display', () => {
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200, APP_MOCK))
     .do(() => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(EnvList.prototype, 'resolveOrgs' as any).returns(GROUPED_ORGS_MOCK);
       const error = new Error('No AuthInfo found');
       sandbox
         .stub(Org, 'create' as any)

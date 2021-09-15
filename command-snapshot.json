@@ -20,11 +20,6 @@
     "flags": ["environment", "extended", "json"]
   },
   {
-    "command": "env:list",
-    "plugin": "@salesforce/plugin-functions",
-    "flags": ["all", "environment-type", "json"]
-  },
-  {
     "command": "env:log:tail",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["environment"]
