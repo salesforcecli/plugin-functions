@@ -59,7 +59,11 @@ export default class Invoke extends Command {
     }
     const aliasOrUser = flags['connected-org'] || `defaultusername ${defaultusername}`;
     this.log(`Using ${aliasOrUser} login credential to initialize context`);
-    const runFunctionOptions = { ...flags, targetusername: flags['connected-org'] ?? defaultusername };
+    const runFunctionOptions = {
+      url: flags['function-url'],
+      ...flags,
+      targetusername: flags['connected-org'] ?? defaultusername,
+    };
     cli.action.start(`${herokuColor.cyanBright('POST')} ${flags['function-url']}`);
     try {
       const response = await runFunction(runFunctionOptions as RunFunctionOptions);
