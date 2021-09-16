@@ -56,9 +56,24 @@ export default class JwtLogin extends Command {
       char: 'i',
       description: messages.getMessage('flags.clientid.summary'),
     }),
-    instanceurl: Flags.string({
-      char: 'r',
-      description: messages.getMessage('flags.instanceurl.summary'),
+    'instance-url': Flags.string({
+      char: 'l',
+      description: messages.getMessage('flags.instance-url.summary'),
+    }),
+    json: Flags.boolean({
+      description: messages.getMessage('flags.json.summary'),
+    }),
+    alias: Flags.string({
+      char: 'a',
+      description: messages.getMessage('flags.alias.summary'),
+    }),
+    'set-default': Flags.boolean({
+      char: 'd',
+      description: messages.getMessage('flags.set-default.summary'),
+    }),
+    'set-default-dev-hub': Flags.boolean({
+      char: 'v',
+      description: messages.getMessage('flags.set-default-dev-hub.summary'),
     }),
   };
 
@@ -109,18 +124,38 @@ export default class JwtLogin extends Command {
   }
 
   async run() {
-    const {
-      flags: { clientid, username, keyfile, instanceurl },
-    } = await this.parse(JwtLogin);
+    const { flags } = await this.parse(JwtLogin);
+    const { clientid, username, keyfile, 'instance-url': instanceUrl } = flags;
 
     cli.action.start('Logging in via JWT');
 
     // Use keyfile, clientid, and username to auth with salesforce via the same workflow
     // as sfdx auth:jwt:grant --json
-    const auth = await this.initAuthInfo(username, clientid, keyfile, instanceurl);
+    const auth = await this.initAuthInfo(username, clientid, keyfile, instanceUrl);
 
-    // Obtain sfdx access toekn from Auth info
-    const token = auth.getFields(true).accessToken;
+    // Take care of any alias/default setting that needs to happen for the sfdx credential
+    // before we move on to the heroku stuff
+    if (flags.alias) {
+      await auth.setAlias(flags.alias);
+    }
+
+    if (flags['set-default']) {
+      await auth.setAsDefault({
+        org: true,
+      });
+    }
+
+    if (flags['set-default-dev-hub']) {
+      await auth.setAsDefault({
+        devHub: true,
+      });
+    }
+
+    await auth.save();
+
+    // Obtain sfdx access token from Auth info
+    const authFields = auth.getFields(true);
+    const token = authFields.accessToken;
 
     // Fire off request to /oauth/tokens on the heroku side with JWT in the payload and
     // obtain heroku access_token. This is configurable so that we can also target staging
@@ -155,6 +190,17 @@ export default class JwtLogin extends Command {
     });
 
     await this.info.write();
+
+    if (flags.json) {
+      cli.styledJSON({
+        username: authFields.username,
+        sfdxAccessToken: token,
+        functionsAccessToken: bearerToken,
+        instanceUrl: authFields.instanceUrl,
+        orgId: authFields.orgId,
+        privateKey: authFields.privateKey,
+      });
+    }
 
     cli.action.stop();
   }
