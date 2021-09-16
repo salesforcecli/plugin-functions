@@ -6,9 +6,9 @@
  */
 import { URL } from 'url';
 import { Command as Base } from '@oclif/core';
-import { Aliases, AuthInfo, Config, GlobalInfo, Org } from '@salesforce/core';
+import { GlobalInfo, Org } from '@salesforce/core';
 import { cli } from 'cli-ux';
-import APIClient, { apiUrl } from './api-client';
+import APIClient, { herokuClientApiUrl } from './api-client';
 import herokuVariant from './heroku-variant';
 import { SfdcAccount } from './sfdc-types';
 
@@ -70,7 +70,7 @@ export default abstract class Command extends Base {
 
     const options = {
       auth: this.auth,
-      apiUrl: apiUrl(),
+      apiUrl: herokuClientApiUrl(),
     };
 
     this._client = new APIClient(options);
@@ -95,44 +95,6 @@ export default abstract class Command extends Base {
     });
 
     return data;
-  }
-
-  protected async resolveOrg(orgId?: string): Promise<Org> {
-    // We perform this check because `Org.create` blows up with a non-descriptive error message if you
-    // just assume the defaultusername is set
-    const config = await Config.create();
-    const defaultUsername = config.get('defaultusername') as string;
-
-    if (!orgId && !defaultUsername) {
-      throw new Error('Attempted to resolve an org without an org ID or defaultusername value');
-    }
-
-    const infos = await AuthInfo.listAllAuthorizations();
-
-    if (infos.length === 0) throw new Error('No connected orgs found');
-
-    if (orgId) {
-      const matchingOrg = infos.find((info) => info.orgId === orgId);
-
-      if (matchingOrg) {
-        return await Org.create({ aliasOrUsername: matchingOrg.username });
-      }
-    }
-
-    return Org.create({ aliasOrUsername: defaultUsername });
-  }
-
-  protected async resolveAppNameForEnvironment(appNameOrAlias: string): Promise<string> {
-    // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-    const aliases = await Aliases.create({});
-    const matchingAlias = aliases.get(appNameOrAlias);
-    let appName: string;
-    if (matchingAlias) {
-      appName = matchingAlias as string;
-    } else {
-      appName = appNameOrAlias;
-    }
-    return appName;
   }
 
   protected async isFunctionsEnabled(org: Org) {

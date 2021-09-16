@@ -17,7 +17,7 @@ import {
 import { FunctionsFlagBuilder, confirmationFlag } from '../../lib/flags';
 import Command from '../../lib/base';
 import batchCall from '../../lib/batch-call';
-import { fetchSfdxProject } from '../../lib/utils';
+import { fetchSfdxProject, resolveAppNameForEnvironment, resolveOrg } from '../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.delete');
@@ -63,7 +63,7 @@ export default class EnvDelete extends Command {
     }
 
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
 
     let app: Heroku.App;
 
@@ -83,7 +83,7 @@ export default class EnvDelete extends Command {
 
     let org: Org | null = null;
     try {
-      org = await this.resolveOrg(app.data.sales_org_connection?.sales_org_id);
+      org = await resolveOrg(app.data.sales_org_connection?.sales_org_id);
     } catch (error) {
       // It's possible that they are deleting the compute environment after deleting the org it was
       // connected to, in which case `resolveOrg` will error and we simply want to skip the process

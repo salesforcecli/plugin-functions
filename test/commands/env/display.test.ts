@@ -10,6 +10,7 @@ import * as sinon from 'sinon';
 import { Aliases, AuthInfo, Org } from '@salesforce/core';
 import EnvList from '../../../src/commands/env/list';
 import EnvDisplay from '../../../src/commands/env/display';
+import * as Utils from '../../../src/lib/utils';
 
 export const PROJECT_CONFIG_MOCK = {
   name: 'sweet_project',
@@ -178,7 +179,7 @@ describe('sf env display', () => {
         .stub(Org, 'create' as any)
         .onCall(0)
         .throws(error);
-      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
+      sandbox.stub(Utils, 'resolveOrg' as any).resolves(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -205,7 +206,7 @@ describe('sf env display', () => {
         .stub(Org, 'create' as any)
         .onCall(0)
         .throws(error);
-      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
+      sandbox.stub(Utils, 'resolveOrg' as any).resolves(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -231,7 +232,7 @@ describe('sf env display', () => {
         .stub(Org, 'create' as any)
         .onCall(0)
         .throws(error);
-      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
+      sandbox.stub(Utils, 'resolveOrg' as any).resolves(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -264,7 +265,7 @@ describe('sf env display', () => {
         .stub(Org, 'create' as any)
         .onCall(0)
         .throws(error);
-      sandbox.stub(EnvDisplay.prototype, 'resolveOrg' as any).resolves(ORG_MOCK);
+      sandbox.stub(Utils, 'resolveOrg' as any).resolves(ORG_MOCK);
     })
     .finally(() => {
       sandbox.restore();

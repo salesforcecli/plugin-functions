@@ -12,7 +12,7 @@ import { UpsertResult } from 'jsforce';
 import { Deployer, Deployable, SfHook } from '@salesforce/sf-plugins-core';
 import { cyan } from 'chalk';
 import debugFactory from 'debug';
-import APIClient, { apiUrl } from '../lib/api-client';
+import APIClient, { herokuClientApiUrl } from '../lib/api-client';
 import Git from '../lib/git';
 import { ComputeEnvironment, FunctionReference } from '../lib/sfdc-types';
 import { fetchAppForProject, fetchOrg, fetchSfdxProject } from '../lib/utils';
@@ -100,7 +100,7 @@ export class FunctionsDeployer extends Deployer {
 
     this.client = new APIClient({
       auth: this.auth,
-      apiUrl: apiUrl(),
+      apiUrl: herokuClientApiUrl(),
     });
 
     // We pass the api token value to the Git constructor so that it will redact it from any of

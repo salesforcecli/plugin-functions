@@ -9,6 +9,7 @@ import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
+import { resolveAppNameForEnvironment } from '../../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.unset');
@@ -29,7 +30,7 @@ export default class ConfigUnset extends Command {
   async run() {
     const { flags, argv } = await this.parse(ConfigUnset);
 
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
 
     const configPairs = argv.reduce((acc, elem) => {
       return {

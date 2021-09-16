@@ -10,6 +10,7 @@ import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 import Command from '../../../lib/base';
+import { resolveAppNameForEnvironment } from '../../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.get');
@@ -35,7 +36,7 @@ export default class VarGet extends Command {
   async run() {
     const { flags, args } = await this.parse(VarGet);
 
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
 
     const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
 

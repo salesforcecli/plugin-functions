@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Org, SfdxProject } from '@salesforce/core';
+import { Aliases, AuthInfo, Config, Org, SfdxProject } from '@salesforce/core';
 import APIClient from './api-client';
 import herokuVariant from './heroku-variant';
 import { ComputeEnvironment, SfdxProjectConfig } from './sfdc-types';
@@ -39,4 +39,42 @@ export async function fetchAppForProject(client: APIClient, projectName: string,
   });
 
   return data;
+}
+
+export async function resolveAppNameForEnvironment(appNameOrAlias: string): Promise<string> {
+  // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
+  const aliases = await Aliases.create({});
+  const matchingAlias = aliases.get(appNameOrAlias);
+  let appName: string;
+  if (matchingAlias) {
+    appName = matchingAlias as string;
+  } else {
+    appName = appNameOrAlias;
+  }
+  return appName;
+}
+
+export async function resolveOrg(orgId?: string): Promise<Org> {
+  // We perform this check because `Org.create` blows up with a non-descriptive error message if you
+  // just assume the defaultusername is set
+  const config = await Config.create();
+  const defaultUsername = config.get('defaultusername') as string;
+
+  if (!orgId && !defaultUsername) {
+    throw new Error('Attempted to resolve an org without an org ID or defaultusername value');
+  }
+
+  const infos = await AuthInfo.listAllAuthorizations();
+
+  if (infos.length === 0) throw new Error('No connected orgs found');
+
+  if (orgId) {
+    const matchingOrg = infos.find((info) => info.orgId === orgId);
+
+    if (matchingOrg) {
+      return await Org.create({ aliasOrUsername: matchingOrg.username });
+    }
+  }
+
+  return Org.create({ aliasOrUsername: defaultUsername });
 }
