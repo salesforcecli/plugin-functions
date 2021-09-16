@@ -20,7 +20,7 @@ describe('sf env logdrain remove', () => {
     .nock('https://api.heroku.com', (api) =>
       api.delete(`/apps/${APP_NAME}/log-drains/${encodeURIComponent(LOG_DRAIN.url)}`).reply(200, LOG_DRAIN)
     )
-    .command(['env:logdrain:remove', '-c', APP_NAME, '-u', LOG_DRAIN.url])
+    .command(['env:logdrain:remove', '-c', APP_NAME, '-l', LOG_DRAIN.url])
     .it('deletes a log drain', (ctx) => {
       expect(ctx.stderr).to.contain(`Deleting drain for environment ${APP_NAME}`);
     });

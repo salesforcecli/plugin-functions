@@ -27,7 +27,7 @@ export default class LogDrainAdd extends Command {
     }),
     'drain-url': Flags.string({
       required: true,
-      char: 'u',
+      char: 'l',
       description: messages.getMessage('flags.url.summary'),
     }),
   };

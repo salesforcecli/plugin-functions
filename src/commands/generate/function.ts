@@ -30,7 +30,7 @@ export default class GenerateFunction extends Command {
     language: Flags.enum({
       options: ['javascript', 'typescript', 'java'],
       description: messages.getMessage('flags.language.summary'),
-      char: 'l',
+      char: 'L',
       required: true,
     }),
   };
