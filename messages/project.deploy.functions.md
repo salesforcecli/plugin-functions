@@ -20,6 +20,10 @@ You must run this command from within a git repository. Only committed changes t
 
     <%= config.bin %> <%= command.id %> --connected-org=org-alias --force
 
+# flags.connected-org.summary
+
+The alias or username of connected Salesforce org.
+
 # flags.branch.summary
 
 Deploy the latest commit from a branch different from the currently active branch.
