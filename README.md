@@ -350,20 +350,24 @@ EXAMPLES
 
 ## `sf login functions jwt`
 
-Login using JWT instead of default web-based flow.
+Login using JWT instead of default web-based flow. This will authenticate you with both sf and Salesforce Functions.
 
 ```
 USAGE
-  $ sf login functions jwt -u <value> -f <value> -i <value> [-r <value>]
+  $ sf login functions jwt -u <value> -f <value> -i <value> [-l <value>] [--json] [-a <value>] [-d] [-v]
 
 FLAGS
-  -f, --keyfile=<value>      (required) Path to JWT keyfile.
-  -i, --clientid=<value>     (required) OAuth client ID.
-  -r, --instanceurl=<value>  The login URL of the instance the org lives on.
-  -u, --username=<value>     (required) Authentication username.
+  -a, --alias=<value>         Alias for the org.
+  -d, --set-default           Set the org as the default that all org-related commands run against.
+  -f, --keyfile=<value>       (required) Path to JWT keyfile.
+  -i, --clientid=<value>      (required) OAuth client ID.
+  -l, --instance-url=<value>  The login URL of the instance the org lives on.
+  -u, --username=<value>      (required) Authentication username.
+  -v, --set-default-dev-hub   Set the org as the default Dev Hub for scratch org creation.
+  --json                      format output as json
 
 DESCRIPTION
-  Login using JWT instead of default web-based flow.
+  Login using JWT instead of default web-based flow. This will authenticate you with both sf and Salesforce Functions.
 
 EXAMPLES
   $ sfdx login:functions:jwt --username testuser@mycompany.org --keyfile file.key --clientid 123456
