@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as Heroku from '@heroku-cli/schema';
-import { Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
@@ -23,9 +22,7 @@ export default class LogDrainList extends Command {
     'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
-    json: Flags.boolean({
-      description: messages.getMessage('flags.json.summary'),
-    }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {

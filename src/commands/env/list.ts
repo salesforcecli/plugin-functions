@@ -12,7 +12,7 @@ import { sortBy } from 'lodash';
 import Command from '../../lib/base';
 import herokuVariant from '../../lib/heroku-variant';
 import { ComputeEnvironment, Dictionary } from '../../lib/sfdc-types';
-import { environmentType } from '../../lib/flags';
+import { environmentType, FunctionsFlagBuilder } from '../../lib/flags';
 import { fetchSfdxProject } from '../../lib/utils';
 
 type EnvironmentType = 'org' | 'scratchorg' | 'compute';
@@ -30,10 +30,7 @@ export default class EnvList extends Command {
       description: messages.getMessage('flags.all.summary'),
     }),
     'target-env-type': environmentType,
-    json: Flags.boolean({
-      description: messages.getMessage('flags.json.summary'),
-      char: 'j',
-    }),
+    json: FunctionsFlagBuilder.json,
   };
 
   private aliases?: Aliases;

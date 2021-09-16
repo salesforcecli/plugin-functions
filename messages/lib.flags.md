@@ -25,3 +25,7 @@ Wait until complete to exit.
 # flags.FunctionsTableFlags.summary
 
 Output table in a more machine friendly format.
+
+# flags.json.summary
+
+Output list in JSON format.

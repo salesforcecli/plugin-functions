@@ -11,7 +11,3 @@ List all environments by type.
 # flags.all.summary
 
 Show all available envs instead of scoping to active orgs and their connected compute envs.
-
-# flags.json.summary
-
-Output list in JSON format.

@@ -37,6 +37,11 @@ export const FunctionsFlagBuilder = {
       return { key, value };
     },
   }),
+
+  json: Flags.boolean({
+    description: messages.getMessage('flags.json.summary'),
+    char: 'j',
+  }),
 };
 
 export const environmentType = Flags.string({
