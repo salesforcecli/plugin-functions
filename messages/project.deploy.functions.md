@@ -12,11 +12,11 @@ You must run this command from within a git repository. Only committed changes t
 
     <%= config.bin %> <%= command.id %> --connected-org=org-alias
 
-- Deploy a Salesforce Function to 'deploy-branch':
+- Deploy to 'deploy-branch':
 
     <%= config.bin %> <%= command.id %> --connected-org=org-alias --branch=deploy-branch
 
-- Force-deploy a Salesforce Function:
+- Overwrite the remote repository:
 
     <%= config.bin %> <%= command.id %> --connected-org=org-alias --force
 
