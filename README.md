@@ -14,15 +14,15 @@ Functions plugin for the SF CLI
 
 # Usage
 
-1. Install the SFDX CLI: [Install instructions](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)
-2. Then run `sfdx plugins:install @salesforce/plugin-functions`:
+1. Install the SF CLI: [Install instructions](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)
+2. Then run `sf plugins:install @salesforce/plugin-functions`:
 
 ```sh-session
-$ sfdx plugins:install @salesforce/plugin-functions
+$ sf plugins:install @salesforce/plugin-functions
 running command...
 ```
 
-Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx login:functions`
+Now you should be able to run functions commands, e.g. `sf generate project`, `sf login functions`
 
 # Commands
 
@@ -31,8 +31,6 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 - [`sf deploy functions`](#sf-deploy-functions)
 - [`sf env create compute`](#sf-env-create-compute)
 - [`sf env delete`](#sf-env-delete)
-- [`sf env display`](#sf-env-display)
-- [`sf env list`](#sf-env-list)
 - [`sf env log tail`](#sf-env-log-tail)
 - [`sf env logdrain add`](#sf-env-logdrain-add)
 - [`sf env logdrain list`](#sf-env-logdrain-list)
@@ -105,53 +103,6 @@ EXAMPLES
   $ sfdx env:delete --environment=billingApp-Scratch1
 
   $ sfdx env:delete --environment=billingApp-Scratch1 --confirm=billingApp-Scratch1
-```
-
-## `sf env display`
-
-Display details for an environment.
-
-```
-USAGE
-  $ sf env display -e <value> [--json]
-
-FLAGS
-  -e, --environment=<value>  (required) Environment name.
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  Display details for an environment.
-
-EXAMPLES
-  $ sfdx env:display --environment=billingApp-Scratch1
-```
-
-## `sf env list`
-
-List all environments by type.
-
-```
-USAGE
-  $ sf env list [--all] [-t org|scratchorg|compute] [-j]
-
-FLAGS
-  -j, --json                          Output list in JSON format.
-  -t, --environment-type=<option>...  Filter by one or more environment types (org, scratchorg, compute).
-                                      <options: org|scratchorg|compute>
-  --all                               Show all available envs instead of scoping to active orgs and their connected
-                                      compute envs.
-
-DESCRIPTION
-  List all environments by type.
-
-EXAMPLES
-  $ sfdx env:list
-
-  $ sfdx env:list --all
-
-  $ sfdx env:list --environment-type org --environment-type compute
 ```
 
 ## `sf env log tail`
