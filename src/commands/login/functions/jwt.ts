@@ -153,8 +153,9 @@ export default class JwtLogin extends Command {
 
     await auth.save();
 
-    // Obtain sfdx access toekn from Auth info
-    const token = auth.getFields(true).accessToken;
+    // Obtain sfdx access token from Auth info
+    const authFields = auth.getFields(true);
+    const token = authFields.accessToken;
 
     // Fire off request to /oauth/tokens on the heroku side with JWT in the payload and
     // obtain heroku access_token. This is configurable so that we can also target staging
@@ -189,6 +190,17 @@ export default class JwtLogin extends Command {
     });
 
     await this.info.write();
+
+    if (flags.json) {
+      cli.styledJSON({
+        username: authFields.username,
+        sfdxAccessToken: token,
+        functionsAccessToken: bearerToken,
+        instanceUrl: authFields.instanceUrl,
+        orgId: authFields.orgId,
+        privateKey: authFields.privateKey,
+      });
+    }
 
     cli.action.stop();
   }

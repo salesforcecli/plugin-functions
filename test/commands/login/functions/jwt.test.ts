@@ -204,4 +204,64 @@ describe('sf login functions jwt', () => {
       expect(AUTH_INFO_STUB.setAsDefault).to.have.been.calledWith({ org: true });
       expect(AUTH_INFO_STUB.setAsDefault).to.have.been.calledWith({ devHub: true });
     });
+
+  const ORG_INSTANCE_URL = '1234.org.com';
+  const PRIVATE_KEY_PATH = 'keyfile.key';
+  const USERNAME = '@foo@bar.com';
+  const ORG_ID = '1234';
+
+  test
+    .stdout()
+    .stderr()
+    .do(() => {
+      sinon.stub(AuthInfo, 'create' as any).returns({
+        ...AUTH_INFO_STUB,
+        getFields: sinon.stub().returns({
+          accessToken: SFDX_ACCESS_TOKEN,
+          instanceUrl: ORG_INSTANCE_URL,
+          username: USERNAME,
+          orgId: ORG_ID,
+          privateKey: PRIVATE_KEY_PATH,
+        }),
+      });
+      sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+    })
+    .finally(() => {
+      sinon.restore();
+    })
+    .nock('https://api.heroku.com', (api) => {
+      api
+        .post('/oauth/tokens', {
+          client: {
+            id: PUBLIC_CLIENT_ID,
+          },
+          grant: {
+            type: 'urn:ietf:params:oauth:grant-type:token-exchange',
+          },
+          subject_token: SFDX_ACCESS_TOKEN,
+          subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+        })
+        .reply(201, {
+          access_token: {
+            token: HEROKU_ACCESS_TOKEN,
+          },
+        });
+    })
+    .command([
+      'login:functions:jwt',
+      `--username=${USERNAME}`,
+      `--keyfile=${PRIVATE_KEY_PATH}`,
+      '--clientid=12345',
+      '--json',
+    ])
+    .it('returns the correct json payload when --json is used', (ctx) => {
+      expect(JSON.parse(ctx.stdout)).to.deep.equal({
+        username: USERNAME,
+        orgId: ORG_ID,
+        sfdxAccessToken: SFDX_ACCESS_TOKEN,
+        functionsAccessToken: HEROKU_ACCESS_TOKEN,
+        instanceUrl: ORG_INSTANCE_URL,
+        privateKey: PRIVATE_KEY_PATH,
+      });
+    });
 });
