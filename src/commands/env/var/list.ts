@@ -23,6 +23,7 @@ export default class ConfigList extends Command {
     'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -41,6 +42,11 @@ export default class ConfigList extends Command {
 
     if (!configArray.length) {
       this.warn(`No config vars found for environment ${flags['target-compute']}`);
+      return;
+    }
+
+    if (flags.json) {
+      cli.styledJSON(config);
       return;
     }
 
