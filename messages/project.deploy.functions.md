@@ -4,7 +4,7 @@ Deploy a Salesforce Function to an org from your local project.
 
 # description
 
-You must run this command from within a git repository. Only committed changes to Functions will be deployed. The active branch will be deployed unless specified otherwise with `--branch`.
+You must run this command from within a git repository. Only committed changes to Functions are deployed. The active branch is deployed unless specified otherwise with `--branch`.
 
 # examples
 
