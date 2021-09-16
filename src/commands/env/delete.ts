@@ -31,13 +31,13 @@ export default class EnvDelete extends Command {
     'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
-    'no-prompt': confirmationFlag,
+    confirm: confirmationFlag,
   };
 
   async run() {
     const { flags } = await this.parse(EnvDelete);
 
-    await this.confirmRemovePrompt('environment', flags['target-compute'], flags['no-prompt']);
+    await this.confirmRemovePrompt('environment', flags['target-compute'], flags.confirm);
 
     cli.action.start(`Deleting environment ${flags['target-compute']}`);
 

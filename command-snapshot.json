@@ -12,7 +12,7 @@
   {
     "command": "env:delete",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["no-prompt", "target-compute"]
+    "flags": ["confirm", "target-compute"]
   },
   {
     "command": "env:display",

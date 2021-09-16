@@ -32,8 +32,10 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 - [`sf env create compute`](#sf-env-create-compute)
 - [`sf env delete`](#sf-env-delete)
 - [`sf env display`](#sf-env-display)
+- [`sf env list`](#sf-env-list)
 - [`sf env log tail`](#sf-env-log-tail)
 - [`sf env logdrain add`](#sf-env-logdrain-add)
+- [`sf env logdrain list`](#sf-env-logdrain-list)
 - [`sf env logdrain remove`](#sf-env-logdrain-remove)
 - [`sf env var get KEY`](#sf-env-var-get-key)
 - [`sf env var list`](#sf-env-var-list)
@@ -45,6 +47,7 @@ Now you should be able to run functions commands, e.g. `sfdx env:list`, `sfdx lo
 - [`sf login functions jwt`](#sf-login-functions-jwt)
 - [`sf run function`](#sf-run-function)
 - [`sf run function start`](#sf-run-function-start)
+- [`sf whoami functions`](#sf-whoami-functions)
 
 ## `sf deploy functions`
 
@@ -89,11 +92,11 @@ Delete an environment.
 
 ```
 USAGE
-  $ sf env delete -c <value> [--no-prompt <value>]
+  $ sf env delete -c <value> [--confirm <value>]
 
 FLAGS
   -c, --target-compute=<value>  (required) Environment name.
-  --no-prompt=name...           Confirmation name.
+  --confirm=name...           Confirmation name.
 
 DESCRIPTION
   Delete an environment.
@@ -125,6 +128,32 @@ EXAMPLES
   $ sfdx env:display --target-compute=billingApp-Scratch1
 ```
 
+## `sf env list`
+
+List all environments by type.
+
+```
+USAGE
+  $ sf env list [--all] [-t org|scratchorg|compute] [-j]
+
+FLAGS
+  -j, --json                         Output list in JSON format.
+  -t, --target-env-type=<option>...  Filter by one or more environment types (org, scratchorg, compute).
+                                     <options: org|scratchorg|compute>
+  --all                              Show all available envs instead of scoping to active orgs and their connected
+                                     compute envs.
+
+DESCRIPTION
+  List all environments by type.
+
+EXAMPLES
+  $ sfdx env:list
+
+  $ sfdx env:list --all
+
+  $ sfdx env:list --target-env-type org --target-env-type compute
+```
+
 ## `sf env log tail`
 
 Stream log output for an environment.
@@ -149,11 +178,11 @@ Add log drain to a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain add -c <value> -u <value>
+  $ sf env logdrain add -c <value> -l <value>
 
 FLAGS
   -c, --target-compute=<value>  (required) Environment name.
-  -u, --drain-url=<value>       (required) Endpoint that will receive sent logs.
+  -l, --drain-url=<value>       (required) Endpoint that will receive sent logs.
 
 DESCRIPTION
   Add log drain to a specified environment.
@@ -162,17 +191,36 @@ EXAMPLES
   $ sfdx env:logdrain:add --target-compute=billingApp-Sandbox --drain-url=https://example.com/drain
 ```
 
+## `sf env logdrain list`
+
+List log drains connected to a specified environment.
+
+```
+USAGE
+  $ sf env logdrain list -c <value> [-j]
+
+FLAGS
+  -c, --target-compute=<value>  (required) Environment name.
+  -j, --json                    Output list in JSON format.
+
+DESCRIPTION
+  List log drains connected to a specified environment.
+
+EXAMPLES
+  $ sfdx env:logdrain:list --target-compute=billingApp-Sandbox
+```
+
 ## `sf env logdrain remove`
 
 Remove log drain from a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain remove -c <value> -u <value>
+  $ sf env logdrain remove -c <value> -l <value>
 
 FLAGS
   -c, --target-compute=<value>  (required) Environment name.
-  -u, --drain-url=<value>       (required) Logdrain url to remove.
+  -l, --drain-url=<value>       (required) Logdrain url to remove.
 
 DESCRIPTION
   Remove log drain from a specified environment.
@@ -259,10 +307,10 @@ Create a function with basic scaffolding specific to a given language.
 
 ```
 USAGE
-  $ sf generate function -n <value> -l javascript|typescript|java
+  $ sf generate function -n <value> -L javascript|typescript|java
 
 FLAGS
-  -l, --language=(javascript|typescript|java)  (required) Language.
+  -L, --language=(javascript|typescript|java)  (required) Language.
   -n, --function-name=<value>                  (required) Function name.
 
 DESCRIPTION
@@ -387,6 +435,24 @@ EXAMPLES
   $ sfdx run:function:start -e VAR=VALUE
 
   $ sfdx run:function:start --network host --no-pull --clear-cache --debug-port 9000 --port 5000
+```
+
+## `sf whoami functions`
+
+Show information on your account.
+
+```
+USAGE
+  $ sf whoami functions [-j]
+
+FLAGS
+  -j, --json  Output list in JSON format.
+
+DESCRIPTION
+  Show information on your account.
+
+EXAMPLES
+  $ sf whoami functions
 ```
 
 <!-- commandsstop -->

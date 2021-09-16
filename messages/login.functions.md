@@ -1,6 +1,6 @@
 # summary
 
-Log interactively into an environment, such as a Salesforce org or compute environment.
+Log into your account.
 
 # examples
 
