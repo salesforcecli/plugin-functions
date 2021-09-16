@@ -96,7 +96,7 @@ USAGE
 
 FLAGS
   -c, --target-compute=<value>  (required) Environment name.
-  --confirm=name...           Confirmation name.
+  --confirm=name...             Confirmation name.
 
 DESCRIPTION
   Delete an environment.
@@ -335,14 +335,14 @@ EXAMPLES
 
 ## `sf login functions`
 
-Log interactively into your account.
+Log into your account.
 
 ```
 USAGE
   $ sf login functions
 
 DESCRIPTION
-  Log interactively into your account.
+  Log into your account.
 
 EXAMPLES
   $ sfdx login:functions
