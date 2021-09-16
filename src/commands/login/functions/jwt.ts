@@ -56,9 +56,9 @@ export default class JwtLogin extends Command {
       char: 'i',
       description: messages.getMessage('flags.clientid.summary'),
     }),
-    instanceurl: Flags.string({
-      char: 'r',
-      description: messages.getMessage('flags.instanceurl.summary'),
+    'instance-url': Flags.string({
+      char: 'l',
+      description: messages.getMessage('flags.instance-url.summary'),
     }),
     json: Flags.boolean({
       description: messages.getMessage('flags.json.summary'),
@@ -125,13 +125,13 @@ export default class JwtLogin extends Command {
 
   async run() {
     const { flags } = await this.parse(JwtLogin);
-    const { clientid, username, keyfile, instanceurl } = flags;
+    const { clientid, username, keyfile, 'instance-url': instanceUrl } = flags;
 
     cli.action.start('Logging in via JWT');
 
     // Use keyfile, clientid, and username to auth with salesforce via the same workflow
     // as sfdx auth:jwt:grant --json
-    const auth = await this.initAuthInfo(username, clientid, keyfile, instanceurl);
+    const auth = await this.initAuthInfo(username, clientid, keyfile, instanceUrl);
 
     // Take care of any alias/default setting that needs to happen for the sfdx credential
     // before we move on to the heroku stuff

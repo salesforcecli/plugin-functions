@@ -18,7 +18,7 @@ Path to JWT keyfile.
 
 OAuth client ID.
 
-# flags.instanceurl.summary
+# flags.instance-url.summary
 
 The login URL of the instance the org lives on.
 
