@@ -9,6 +9,7 @@ import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
+import { resolveAppNameForEnvironment } from '../../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.logdrain.list');
@@ -28,7 +29,7 @@ export default class LogDrainList extends Command {
   async run() {
     const { flags } = await this.parse(LogDrainList);
 
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
 
     const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`apps/${appName}/log-drains`);
 

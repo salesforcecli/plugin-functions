@@ -10,6 +10,7 @@ import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 import Command from '../../../lib/base';
+import { resolveAppNameForEnvironment } from '../../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.set');
@@ -48,7 +49,7 @@ export default class ConfigSet extends Command {
   async run() {
     const { flags, argv } = await this.parse(ConfigSet);
 
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
     const configPairs = this.parseKeyValuePairs(argv);
 
     cli.action.start(

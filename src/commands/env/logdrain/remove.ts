@@ -11,6 +11,7 @@ import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
+import { resolveAppNameForEnvironment } from '../../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.logdrain.remove');
@@ -34,7 +35,7 @@ export default class LogDrainRemove extends Command {
   async run() {
     const { flags } = await this.parse(LogDrainRemove);
 
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
 
     cli.action.start(`Deleting drain for environment ${herokuColor.app(flags['target-compute'])}`);
 

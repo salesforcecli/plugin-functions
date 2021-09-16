@@ -10,7 +10,7 @@ import { Aliases, AuthInfo, SfOrg, GlobalInfo, ConfigEntry } from '@salesforce/c
 import herokuVariant from '../lib/heroku-variant';
 import { ComputeEnvironment, Dictionary, SfdcAccount } from '../lib/sfdc-types';
 import { fetchSfdxProject } from '../lib/utils';
-import APIClient, { apiUrl } from '../lib/api-client';
+import APIClient, { herokuClientApiUrl } from '../lib/api-client';
 
 type ComputeEnv = {
   alias: any;
@@ -48,7 +48,7 @@ async function resolveEnvironments(orgs: SfOrg[]): Promise<ComputeEnvironment[]>
 
   const client = new APIClient({
     auth,
-    apiUrl: apiUrl(),
+    apiUrl: herokuClientApiUrl(),
   });
 
   const account = await fetchAccount(client);

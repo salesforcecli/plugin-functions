@@ -7,7 +7,6 @@
 import { expect, test } from '@oclif/test';
 import { Aliases, Org, SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
-import EnvDelete from '../../../src/commands/env/delete';
 import * as Utils from '../../../src/lib/utils';
 const COMPUTE_ENV_NAME = 'my-new-compute-environment-100';
 const COMPUTE_ENV_ALIAS = 'my-compute-alias';
@@ -43,7 +42,7 @@ describe('env:delete', () => {
     .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .do(() => {
-      sandbox.stub(EnvDelete.prototype, 'resolveOrg' as any).returns(ORG_MOCK);
+      sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
@@ -58,7 +57,7 @@ describe('env:delete', () => {
   test
     .stderr()
     .do(() => {
-      sandbox.stub(EnvDelete.prototype, 'resolveOrg' as any).returns(ORG_MOCK);
+      sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Aliases, 'create' as any).returns({
         get: () => COMPUTE_ENV_NAME,
@@ -81,7 +80,7 @@ describe('env:delete', () => {
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .do(() => {
       sandbox
-        .stub(EnvDelete.prototype, 'resolveOrg' as any)
+        .stub(Utils, 'resolveOrg' as any)
         .throws('Attempted to resolve an org without an org ID or defaultusername value');
     })
     .add('projectResolveStub', () => {
@@ -103,7 +102,7 @@ describe('env:delete', () => {
     .stderr()
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(404))
     .do(() => {
-      sandbox.stub(EnvDelete.prototype, 'resolveOrg' as any).returns({});
+      sandbox.stub(Utils, 'resolveOrg' as any).returns({});
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Utils, 'fetchOrg' as any).returns(ORG_MOCK);
     })

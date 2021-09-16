@@ -15,7 +15,7 @@ import { ComputeEnvironment, Dictionary } from '../../lib/sfdc-types';
 import { FunctionsFlagBuilder } from '../../lib/flags';
 import herokuVariant from '../../lib/heroku-variant';
 import { ensureArray } from '../../lib/function-reference-utils';
-import { fetchSfdxProject } from '../../lib/utils';
+import { fetchSfdxProject, resolveAppNameForEnvironment, resolveOrg } from '../../lib/utils';
 
 interface EnvDisplayTable {
   alias?: string;
@@ -89,7 +89,7 @@ export default class EnvDisplay extends Command {
     }
 
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
 
     try {
       // If app exists, environment details will be displayed
@@ -99,7 +99,7 @@ export default class EnvDisplay extends Command {
         },
       });
       const salesOrgId = app.sales_org_connection?.sales_org_id;
-      const org = await this.resolveOrg(salesOrgId);
+      const org = await resolveOrg(salesOrgId);
       const project = await fetchSfdxProject();
       const connection = org.getConnection();
 

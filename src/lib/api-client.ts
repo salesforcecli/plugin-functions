@@ -110,7 +110,7 @@ export default class APIClient {
   }
 }
 
-export function apiUrl(): URL {
+export function herokuClientApiUrl(): URL {
   const defaultUrl = 'https://api.heroku.com';
   const envVarURL = process.env.SALESFORCE_FUNCTIONS_API;
   const apiURL = new URL(envVarURL || defaultUrl);
