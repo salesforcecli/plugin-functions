@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.43](https://github.com/salesforcecli/plugin-functions/compare/v0.2.42...v0.2.43) (2021-09-16)
+
+### Features
+
+- **cli:** implement display hook for compute environment ([#206](https://github.com/salesforcecli/plugin-functions/issues/206)) ([e3cf28d](https://github.com/salesforcecli/plugin-functions/commit/e3cf28dbb76cbf25fa23c94c9d3e1654b698bac3))
+
 ### [0.2.42](https://github.com/salesforcecli/plugin-functions/compare/v0.2.41...v0.2.42) (2021-09-16)
 
 ### Bug Fixes
