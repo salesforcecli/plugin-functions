@@ -48,7 +48,7 @@ describe('env:delete', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--no-prompt=${COMPUTE_ENV_NAME}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .it('deletes an environment when providing the name of the compute environment', (ctx) => {
       const output = ctx.stderr;
       expect(output).to.include(`Deleting environment ${COMPUTE_ENV_NAME}... done`);
@@ -68,7 +68,7 @@ describe('env:delete', () => {
     })
     .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
-    .command(['env:delete', `--target-compute=${COMPUTE_ENV_ALIAS}`, `--no-prompt=${COMPUTE_ENV_ALIAS}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_ALIAS}`, `--confirm=${COMPUTE_ENV_ALIAS}`])
     .it('deletes an environment when providing the valid alias of a compute environment name', (ctx) => {
       const output = ctx.stderr;
       expect(output).to.include(`Deleting environment ${COMPUTE_ENV_ALIAS}... done`);
@@ -89,7 +89,7 @@ describe('env:delete', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--no-prompt=${COMPUTE_ENV_NAME}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .it('deletes an environment even if its associated org no longer exists', (ctx) => {
       const output = ctx.stderr;
       expect(output).to.include(`Deleting environment ${COMPUTE_ENV_NAME}... done`);
@@ -109,7 +109,7 @@ describe('env:delete', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--no-prompt=${COMPUTE_ENV_NAME}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .catch((error) => {
       expect(error.message).to.contain(
         'Value provided for environment does not match a compute environment name or an alias to a compute environment'
@@ -128,7 +128,7 @@ describe('env:delete', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--no-prompt=${COMPUTE_ENV_NAME}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .catch((error) => {
       expect(error.message).to.contain(
         `The environment ${COMPUTE_ENV_NAME} is a Salesforce org. The env:delete command currently can only be used to delete compute environments. Please use sfdx force:org:delete to delete scratch and sandbox Salesforce org environments.`
