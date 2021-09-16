@@ -154,7 +154,7 @@ describe('sf login functions jwt', () => {
         });
     })
     .command(['login:functions:jwt', '--username=foo@bar.com', '--keyfile=keyfile.key', '--clientid=12345'])
-    .it('will use project config login URL if instanc-eurl is not passed', (ctx) => {
+    .it('will use project config login URL if instance-url is not passed', (ctx) => {
       expect(ctx.AuthInfoCreateStub).to.have.been.calledWithMatch({
         oauth2Options: {
           loginUrl: PROJECT_CONFIG_MOCK.sfdcLoginUrl,

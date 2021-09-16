@@ -20,16 +20,15 @@ export default class ConfigList extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
+    'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
   };
 
   async run() {
     const { flags } = await this.parse(ConfigList);
-    const { environment } = flags;
 
-    const appName = await this.resolveAppNameForEnvironment(environment);
+    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
 
     const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
 
@@ -41,7 +40,7 @@ export default class ConfigList extends Command {
     });
 
     if (!configArray.length) {
-      this.warn(`No config vars found for environment ${environment}`);
+      this.warn(`No config vars found for environment ${flags['target-compute']}`);
       return;
     }
 

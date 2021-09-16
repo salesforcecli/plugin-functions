@@ -21,27 +21,26 @@ export default class LogDrainAdd extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
+    'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
-    url: Flags.string({
+    'drain-url': Flags.string({
       required: true,
-      char: 'u',
+      char: 'l',
       description: messages.getMessage('flags.url.summary'),
     }),
   };
 
   async run() {
     const { flags } = await this.parse(LogDrainAdd);
-    const { environment } = flags;
 
-    const appName = await this.resolveAppNameForEnvironment(environment);
+    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
 
-    cli.action.start(`Creating drain for environment ${herokuColor.app(environment)}`);
+    cli.action.start(`Creating drain for environment ${herokuColor.app(flags['target-compute'])}`);
 
     await this.client.post<Heroku.LogDrain>(`apps/${appName}/log-drains`, {
       data: {
-        url: flags.url,
+        url: flags['drain-url'],
       },
     });
 

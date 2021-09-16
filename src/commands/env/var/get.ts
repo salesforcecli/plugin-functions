@@ -20,7 +20,7 @@ export default class VarGet extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
+    'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
   };
@@ -34,9 +34,8 @@ export default class VarGet extends Command {
 
   async run() {
     const { flags, args } = await this.parse(VarGet);
-    const { environment } = flags;
 
-    const appName = await this.resolveAppNameForEnvironment(environment);
+    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
 
     const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
 
@@ -44,7 +43,9 @@ export default class VarGet extends Command {
 
     if (!value) {
       this.warn(
-        `No config var named ${herokuColor.cyan(args.key)} found for environment ${herokuColor.cyan(environment)}`
+        `No config var named ${herokuColor.cyan(args.key)} found for environment ${herokuColor.cyan(
+          flags['target-compute']
+        )}`
       );
     }
 

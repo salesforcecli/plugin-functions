@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as Heroku from '@heroku-cli/schema';
-import { Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
@@ -20,19 +19,16 @@ export default class LogDrainList extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
+    'target-compute': FunctionsFlagBuilder.environment({
       required: true,
     }),
-    json: Flags.boolean({
-      description: messages.getMessage('flags.json.summary'),
-    }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
     const { flags } = await this.parse(LogDrainList);
-    const { environment } = flags;
 
-    const appName = await this.resolveAppNameForEnvironment(environment);
+    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
 
     const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`apps/${appName}/log-drains`);
 
@@ -42,7 +38,7 @@ export default class LogDrainList extends Command {
     }
 
     if (drains.length === 0) {
-      this.log(`No log drains found for environment ${environment}.`);
+      this.log(`No log drains found for environment ${flags['target-compute']}.`);
       return;
     }
 

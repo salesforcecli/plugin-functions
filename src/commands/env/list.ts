@@ -12,7 +12,7 @@ import { sortBy } from 'lodash';
 import Command from '../../lib/base';
 import herokuVariant from '../../lib/heroku-variant';
 import { ComputeEnvironment, Dictionary } from '../../lib/sfdc-types';
-import { environmentType } from '../../lib/flags';
+import { environmentType, FunctionsFlagBuilder } from '../../lib/flags';
 import { fetchSfdxProject } from '../../lib/utils';
 
 type EnvironmentType = 'org' | 'scratchorg' | 'compute';
@@ -29,11 +29,8 @@ export default class EnvList extends Command {
     all: Flags.boolean({
       description: messages.getMessage('flags.all.summary'),
     }),
-    'environment-type': environmentType,
-    json: Flags.boolean({
-      description: messages.getMessage('flags.json.summary'),
-      char: 'j',
-    }),
+    'target-env-type': environmentType,
+    json: FunctionsFlagBuilder.json,
   };
 
   private aliases?: Aliases;
@@ -243,7 +240,7 @@ export default class EnvList extends Command {
     const { nonScratchOrgs, scratchOrgs } = await this.resolveOrgs(flags.all);
     const orgs = [...nonScratchOrgs, ...scratchOrgs];
     let environments = await this.resolveEnvironments(orgs);
-    const types = (flags['environment-type'] as EnvironmentType[]) ?? ['org', 'scratchorg', 'compute'];
+    const types = (flags['target-env-type'] as EnvironmentType[]) ?? ['org', 'scratchorg', 'compute'];
 
     if (!flags.all) {
       try {

@@ -13,7 +13,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'lib.flag
 
 export const FunctionsFlagBuilder = {
   environment: Flags.build({
-    char: 'e',
+    char: 'c',
     description: messages.getMessage('flags.environment.summary'),
     required: false,
   }),
@@ -37,6 +37,11 @@ export const FunctionsFlagBuilder = {
       return { key, value };
     },
   }),
+
+  json: Flags.boolean({
+    description: messages.getMessage('flags.json.summary'),
+    char: 'j',
+  }),
 };
 
 export const environmentType = Flags.string({
@@ -47,7 +52,6 @@ export const environmentType = Flags.string({
 });
 
 export const confirmationFlag = Flags.string({
-  char: 'c',
   description: messages.getMessage('flags.confirmationFlag.summary'),
   helpValue: 'name',
   multiple: true,
