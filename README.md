@@ -113,13 +113,11 @@ Display details for an environment.
 
 ```
 USAGE
-  $ sf env display -e <value> [--json]
+  $ sf env display -e <value> [-j]
 
 FLAGS
   -e, --environment=<value>  (required) Environment name.
-
-GLOBAL FLAGS
-  --json  Format output as json.
+  -j, --json                 Output list in JSON format.
 
 DESCRIPTION
   Display details for an environment.
@@ -197,11 +195,11 @@ List log drains connected to a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain list -e <value> [--json]
+  $ sf env logdrain list -e <value> [-j]
 
 FLAGS
   -e, --environment=<value>  (required) Environment name.
-  --json                     Output result in json.
+  -j, --json                 Output list in JSON format.
 
 DESCRIPTION
   List log drains connected to a specified environment.
@@ -253,10 +251,11 @@ List your config vars in a table.
 
 ```
 USAGE
-  $ sf env var list -e <value>
+  $ sf env var list -e <value> [-j]
 
 FLAGS
   -e, --environment=<value>  (required) Environment name.
+  -j, --json                 Output list in JSON format.
 
 DESCRIPTION
   List your config vars in a table.
@@ -407,8 +406,7 @@ Build and run function image locally.
 
 ```
 USAGE
-  $ sf run function start [--json] [-p <value>] [-d <value>] [--clear-cache] [--no-pull] [-e <value>] [--network
-    <value>] [-v]
+  $ sf run function start [-p <value>] [-d <value>] [--clear-cache] [--no-pull] [-e <value>] [--network <value>] [-v]
 
 FLAGS
   -d, --debug-port=<value>  [default: 9229] Port for remote debugging.
