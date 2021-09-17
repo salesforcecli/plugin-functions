@@ -4,7 +4,11 @@ Create a function with basic scaffolding specific to a given language.
 
 # examples
 
-$ sfdx generate:function --function-name=function-name --language=javascript
+$ sfdx evergreen:function:create MyFunction --language=javascript
+
+# aliases
+
+evergreen:function:init
 
 # flags.name.summary
 

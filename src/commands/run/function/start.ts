@@ -35,7 +35,7 @@ export default class Start extends Command {
       default: 8080,
     }),
     'debug-port': Flags.integer({
-      char: 'b',
+      char: 'd',
       description: messages.getMessage('flags.debug-port.summary'),
       default: 9229,
     }),

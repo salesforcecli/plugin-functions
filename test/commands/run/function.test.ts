@@ -59,7 +59,7 @@ describe('run:function', () => {
       .it(`Should call the library with payload ${userpayload}`, async () => {
         sinon.assert.calledWith(
           runFunctionStub,
-          sinon.match.has('payload', userpayload).and(sinon.match.has('function-url', targetUrl))
+          sinon.match.has('payload', userpayload).and(sinon.match.has('url', targetUrl))
         );
       });
     test
@@ -80,7 +80,7 @@ describe('run:function', () => {
           runFunctionStub,
           sinon.match
             .has('payload', userpayload)
-            .and(sinon.match.has('function-url', targetUrl))
+            .and(sinon.match.has('url', targetUrl))
             .and(sinon.match.has('headers', ['TestHeader']))
             .and(sinon.match.has('structured', true))
             .and(sinon.match.has('targetusername', SfdxPropertyKeys.DEFAULT_USERNAME))

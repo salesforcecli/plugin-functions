@@ -23,7 +23,7 @@ export default class ConfigSet extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    'target-compute': FunctionsFlagBuilder.environment({
+    environment: FunctionsFlagBuilder.environment({
       required: true,
     }),
   };
@@ -48,14 +48,15 @@ export default class ConfigSet extends Command {
 
   async run() {
     const { flags, argv } = await this.parse(ConfigSet);
+    const { environment } = flags;
 
-    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(environment);
     const configPairs = this.parseKeyValuePairs(argv);
 
     cli.action.start(
       `Setting ${Object.keys(configPairs)
         .map((key) => herokuColor.configVar(key))
-        .join(', ')} and restarting ${herokuColor.app(flags['target-compute'])}`
+        .join(', ')} and restarting ${herokuColor.app(environment)}`
     );
 
     await this.client.patch(`/apps/${appName}/config-vars`, {

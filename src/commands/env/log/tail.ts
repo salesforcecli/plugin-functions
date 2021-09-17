@@ -97,7 +97,7 @@ export default class LogTail extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    'target-compute': FunctionsFlagBuilder.environment({
+    environment: FunctionsFlagBuilder.environment({
       description: messages.getMessage('flags.environment.summary'),
       required: true,
     }),
@@ -105,8 +105,9 @@ export default class LogTail extends Command {
 
   async run() {
     const { flags } = await this.parse(LogTail);
+    const { environment } = flags;
 
-    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(environment);
 
     const response = await this.client.post<Heroku.LogSession>(`/apps/${appName}/log-sessions`, {
       data: {

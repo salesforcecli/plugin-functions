@@ -21,7 +21,7 @@ describe('sf generate project', () => {
 
   test
     .stdout()
-    .command(['generate:project', `--project-name=${name}`])
+    .command(['generate:project', `--name=${name}`])
     .it('Should call the library methods with proper args and log output', async (ctx) => {
       expect(generateProjectStub).to.have.been.calledWith(name);
     });
@@ -30,7 +30,7 @@ describe('sf generate project', () => {
     .do(() => {
       generateProjectStub.rejects(new Error('something bad happened'));
     })
-    .command(['generate:project', `--project-name=${name}`])
+    .command(['generate:project', `--name=${name}`])
     .catch((error) => {
       expect(error.message).to.contain('something bad happened');
     })

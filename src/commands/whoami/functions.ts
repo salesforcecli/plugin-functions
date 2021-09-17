@@ -8,7 +8,6 @@ import { Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { dim, cyan } from 'chalk';
 import { Messages } from '@salesforce/core';
-import { FunctionsFlagBuilder } from '../../lib/flags';
 import Command from '../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);
@@ -29,7 +28,10 @@ export default class WhoAmI extends Command {
       description: messages.getMessage('flags.show-token.summary'),
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
+    json: Flags.boolean({
+      description: messages.getMessage('flags.json.summary'),
+      char: 'j',
+    }),
   };
 
   async run(): Promise<FunctionsInformation> {
