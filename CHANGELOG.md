@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.44](https://github.com/salesforcecli/plugin-functions/compare/v0.2.43...v0.2.44) (2021-09-17)
+
+### Bug Fixes
+
+- upgrade @oclif/core ([#211](https://github.com/salesforcecli/plugin-functions/issues/211)) ([236d678](https://github.com/salesforcecli/plugin-functions/commit/236d6789f226bfc61aca5847490a6ddc3e12305b))
+
 ### [0.2.43](https://github.com/salesforcecli/plugin-functions/compare/v0.2.42...v0.2.43) (2021-09-16)
 
 ### Features

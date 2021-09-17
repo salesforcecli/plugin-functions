@@ -113,13 +113,11 @@ Display details for an environment.
 
 ```
 USAGE
-  $ sf env display -c <value> [--json]
+  $ sf env display -c <value> [-j]
 
 FLAGS
   -c, --target-compute=<value>  (required) Environment name.
-
-GLOBAL FLAGS
-  --json  Format output as json.
+  -j, --json                    Output list in JSON format.
 
 DESCRIPTION
   Display details for an environment.
@@ -379,7 +377,7 @@ Send a cloudevent to a function.
 
 ```
 USAGE
-  $ sf run function -l <value> [--json] [-H <value>] [-p <value>] [-s] [-o <value>]
+  $ sf run function -l <value> [-H <value>] [-p <value>] [-s] [-o <value>]
 
 FLAGS
   -H, --headers=<value>...     Set headers.
@@ -387,9 +385,6 @@ FLAGS
   -o, --connected-org=<value>  Username or alias for the target org; overrides default target org.
   -p, --payload=<value>        Set the payload of the cloudevent. also accepts @file.txt format.
   -s, --structured             Set the cloudevent to be emitted as a structured cloudevent (json).
-
-GLOBAL FLAGS
-  --json  Format output as json.
 
 DESCRIPTION
   Send a cloudevent to a function.
@@ -410,8 +405,7 @@ Build and run function image locally.
 
 ```
 USAGE
-  $ sf run function start [--json] [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network
-    <value>] [-v]
+  $ sf run function start [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network <value>] [-v]
 
 FLAGS
   -b, --debug-port=<value>  [default: 9229] Port for remote debugging.
@@ -422,9 +416,6 @@ FLAGS
   --network=<value>         Connect and build containers to a network. This can be useful to build containers which
                             require a local resource.
   --no-pull                 Skip pulling builder image before use.
-
-GLOBAL FLAGS
-  --json  Format output as json.
 
 DESCRIPTION
   Build and run function image locally.
