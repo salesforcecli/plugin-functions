@@ -5,6 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import herokuColor from '@heroku-cli/color';
+import * as Heroku from '@heroku-cli/schema';
+import { Errors } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
@@ -32,6 +34,22 @@ export default class ConfigUnset extends Command {
     const { environment } = flags;
 
     const appName = await resolveAppNameForEnvironment(environment);
+
+    if (argv.length === 0) {
+      throw new Errors.CLIError('you must enter a config var key (i.e. mykey)');
+    }
+
+    const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
+
+    const value = config[argv[0]];
+
+    if (!value) {
+      throw new Errors.CLIError(
+        `No config var named ${herokuColor.cyan(argv[0])} found for environment ${herokuColor.cyan(
+          flags['target-compute']
+        )}`
+      );
+    }
 
     const configPairs = argv.reduce((acc, elem) => {
       return {
