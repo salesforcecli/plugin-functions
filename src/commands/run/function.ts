@@ -22,7 +22,7 @@ export default class Invoke extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    'function-url': Flags.string({
+    url: Flags.string({
       char: 'l',
       description: messages.getMessage('flags.url.summary'),
       required: true,
@@ -59,12 +59,8 @@ export default class Invoke extends Command {
     }
     const aliasOrUser = flags['connected-org'] || `defaultusername ${defaultusername}`;
     this.log(`Using ${aliasOrUser} login credential to initialize context`);
-    const runFunctionOptions = {
-      url: flags['function-url'],
-      ...flags,
-      targetusername: flags['connected-org'] ?? defaultusername,
-    };
-    cli.action.start(`${herokuColor.cyanBright('POST')} ${flags['function-url']}`);
+    const runFunctionOptions = { ...flags, targetusername: flags['connected-org'] ?? defaultusername };
+    cli.action.start(`${herokuColor.cyanBright('POST')} ${flags.url}`);
     try {
       const response = await runFunction(runFunctionOptions as RunFunctionOptions);
       cli.action.stop(herokuColor.greenBright(response.status.toString()));

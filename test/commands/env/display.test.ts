@@ -128,7 +128,7 @@ describe('sf env display', () => {
       sandbox.restore();
     })
     .stdout()
-    .command(['env:display', `--target-compute=${ORG_ENV_NAME}`])
+    .command(['env:display', `--environment=${ORG_ENV_NAME}`])
     .it('list org environment details when a non-scratch org environment is provided', (ctx) => {
       expect(ctx.stdout).not.to.include(SCRATCH_ORG_MOCK.status);
       expect(ctx.stdout).not.to.include(SCRATCH_ORG_MOCK.expirationDate);
@@ -156,7 +156,7 @@ describe('sf env display', () => {
       sandbox.restore();
     })
     .stdout()
-    .command(['env:display', `--target-compute=${ORG_ENV_NAME}`])
+    .command(['env:display', `--environment=${ORG_ENV_NAME}`])
     .it('list org environment details when a scratch org environment is provided', (ctx) => {
       expect(ctx.stdout).to.include(SCRATCH_ORG_MOCK.status);
       expect(ctx.stdout).to.include(SCRATCH_ORG_MOCK.expirationDate);
@@ -184,7 +184,7 @@ describe('sf env display', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:display', `--target-compute=${COMPUTE_ENV_NAME}`])
+    .command(['env:display', `--environment=${COMPUTE_ENV_NAME}`])
     .it('list compute environment details when a compute environment is provided', (ctx) => {
       expect(ctx.stdout).to.include(COMPUTE_ENV_NAME);
       expect(ctx.stdout).to.include(PROJECT_CONFIG_MOCK.name);
@@ -211,7 +211,7 @@ describe('sf env display', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:display', `--target-compute=${COMPUTE_ENV_NAME}`, '--extended'])
+    .command(['env:display', `--environment=${COMPUTE_ENV_NAME}`, '--extended'])
     .it('lists app id and space id when -x flag is passed along with a compute environment', (ctx) => {
       expect(ctx.stdout).to.include('App Id');
       expect(ctx.stdout).to.include('Space Id');
@@ -237,7 +237,7 @@ describe('sf env display', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:display', `--target-compute=${COMPUTE_ENV_ALIAS}`])
+    .command(['env:display', `--environment=${COMPUTE_ENV_ALIAS}`])
     .it('list compute environment details when a compute environment alias is provided', (ctx) => {
       expect(ctx.stdout).to.include(COMPUTE_ENV_NAME);
       expect(ctx.stdout).to.include(COMPUTE_ENV_ALIAS);
@@ -245,7 +245,7 @@ describe('sf env display', () => {
 
   test
     .stderr()
-    .command(['env:display', '--target-compute=invalidName'])
+    .command(['env:display', '--environment=invalidName'])
     .catch((error) => {
       expect(error.message).to.contain(
         'Value provided for environment does not match any environment names or aliases.'
@@ -270,7 +270,7 @@ describe('sf env display', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:display', `--target-compute=${COMPUTE_ENV_NAME}`, '--json'])
+    .command(['env:display', `--environment=${COMPUTE_ENV_NAME}`, '--json'])
     .it('outputs JSON when the --json flag is used', (ctx) => {
       expect(JSON.parse(ctx.stdout)).to.deep.equal({
         connectedOrgs: '00D9A0000009JGUUA2',

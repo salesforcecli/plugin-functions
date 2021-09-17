@@ -4,4 +4,4 @@ Display details for an environment.
 
 # examples
 
-$ sfdx env:display --target-compute=billingApp-Scratch1
+$ sfdx env:display --environment=billingApp-Scratch1

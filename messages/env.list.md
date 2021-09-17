@@ -6,7 +6,7 @@ List all environments by type.
 
 - $ sfdx env:list
 - $ sfdx env:list --all
-- $ sfdx env:list --target-env-type org --target-env-type compute
+- $ sfdx env:list --environment-type org --environment-type compute
 
 # flags.all.summary
 
