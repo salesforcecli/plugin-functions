@@ -82,7 +82,17 @@
   {
     "command": "login:functions:jwt",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["alias", "clientid", "instance-url", "json", "keyfile", "set-default", "set-default-dev-hub", "username"]
+    "flags": [
+      "alias",
+      "clientid",
+      "instance-url",
+      "instanceurl",
+      "json",
+      "keyfile",
+      "set-default",
+      "set-default-dev-hub",
+      "username"
+    ]
   },
   {
     "command": "run:function",

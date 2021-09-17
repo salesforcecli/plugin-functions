@@ -8,6 +8,7 @@ import { expect, test } from '@oclif/test';
 import { AuthInfo, GlobalInfo, SfdxProject, SfTokens } from '@salesforce/core';
 import * as sinon from 'sinon';
 import { AuthStubs } from '../../../helpers/auth';
+import vacuum from '../../../helpers/vacuum';
 
 const PUBLIC_CLIENT_ID = '1e9cdca9-cec7-4dbf-ae84-408694b22bac';
 
@@ -118,6 +119,51 @@ describe('sf login functions jwt', () => {
       '--instance-url=foo.com',
     ])
     .it('will use an instance URL if passed', (ctx) => {
+      expect(ctx.AuthInfoCreateStub).to.have.been.calledWithMatch({
+        oauth2Options: {
+          loginUrl: 'foo.com',
+        },
+      });
+    });
+
+  test
+    .stdout()
+    .stderr()
+    .add('AuthInfoCreateStub', () => {
+      return sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
+    })
+    .finally(() => sinon.restore())
+    .nock('https://api.heroku.com', (api) => {
+      api
+        .post('/oauth/tokens', {
+          client: {
+            id: PUBLIC_CLIENT_ID,
+          },
+          grant: {
+            type: 'urn:ietf:params:oauth:grant-type:token-exchange',
+          },
+          subject_token: SFDX_ACCESS_TOKEN,
+          subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+        })
+        .reply(201, {
+          access_token: {
+            token: HEROKU_ACCESS_TOKEN,
+          },
+        });
+    })
+    .command([
+      'login:functions:jwt',
+      '--username=foo@bar.com',
+      '--keyfile=keyfile.key',
+      '--clientid=12345',
+      '--instanceurl=foo.com',
+    ])
+    .it('will use an instance URL if passed using the old flag (no dash)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.include(
+        vacuum(
+          '--instanceurl is deprecated and will be removed in a future release. Please use --instance-url going forward.'
+        )
+      );
       expect(ctx.AuthInfoCreateStub).to.have.been.calledWithMatch({
         oauth2Options: {
           loginUrl: 'foo.com',

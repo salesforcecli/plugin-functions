@@ -59,6 +59,13 @@ export default class JwtLogin extends Command {
     'instance-url': Flags.string({
       char: 'l',
       description: messages.getMessage('flags.instance-url.summary'),
+      exclusive: ['instanceurl'],
+    }),
+    instanceurl: Flags.string({
+      char: 'l',
+      description: messages.getMessage('flags.instance-url.summary'),
+      exclusive: ['instance-url'],
+      hidden: true,
     }),
     json: Flags.boolean({
       description: messages.getMessage('flags.json.summary'),
@@ -125,7 +132,13 @@ export default class JwtLogin extends Command {
 
   async run() {
     const { flags } = await this.parse(JwtLogin);
-    const { clientid, username, keyfile, 'instance-url': instanceUrl } = flags;
+    const { clientid, username, keyfile } = flags;
+    // We support both versions of the flag here for the sake of backward compat
+    const instanceUrl = flags['instance-url'] ?? flags.instanceurl;
+
+    if (flags.instanceurl) {
+      this.warn(messages.getMessage('flags.instanceurl.deprecation'));
+    }
 
     cli.action.start('Logging in via JWT');
 
