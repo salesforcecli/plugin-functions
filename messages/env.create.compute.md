@@ -4,7 +4,7 @@ Create a compute environment for use with Salesforce Functions.
 
 # description
 
-Compute environments must be connected to a Salesforce org. By default the command uses your local environment's connected org. Use the '--connected-org' flag to specify a specific org. Run 'sf env list' to see a list of connected orgs.
+Compute environments must be connected to a Salesforce org. By default the command uses your local environment's connected org. Use the '--connected-org' flag to specify a specific org. Run 'sf env list' to see a list of environments.
 
 # examples
 
