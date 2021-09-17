@@ -112,7 +112,51 @@
       "@oclif/plugin-which",
       "@oclif/plugin-command-snapshot",
       "@salesforce/plugin-command-reference"
-    ]
+    ],
+    "topics": {
+      "deploy": {
+        "description": "Commands to deploy artifacts to an environment."
+      },
+      "env": {
+        "description": "Commands to manage your environments, such as orgs and compute environments.",
+        "subtopics": {
+          "create": {
+            "description": "Commands to create a compute environment for use with Salesforce Functions."
+          },
+          "log": {
+            "description": "Commands to stream log output for an environment."
+          },
+          "logdrain": {
+            "description": "Commands to add a log drain to a specified environment."
+          },
+          "var": {
+            "description": "Commands to get, list, add, and set environment variables."
+          }
+        }
+      },
+      "generate": {
+        "description": "Create a function with basic scaffolding specific to a given language."
+      },
+      "login": {
+        "description": "Commands to log in to an environment.",
+        "subtopics": {
+          "functions": {
+            "description": "Log in to Salesforce Functions."
+          }
+        }
+      },
+      "run": {
+        "description": "Commands to run a function.",
+        "subtopics": {
+          "function": {
+            "description": "Send a cloudevent to a function."
+          }
+        }
+      },
+      "whoami": {
+        "description": "Show information on your account."
+      }
+    }
   },
   "repository": "salesforcecli/plugin-functions",
   "scripts": {
