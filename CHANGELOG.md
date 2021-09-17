@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.45](https://github.com/salesforcecli/plugin-functions/compare/v0.2.44...v0.2.45) (2021-09-17)
+
+### Features
+
+- **cli:** add json flag to env var list ([#210](https://github.com/salesforcecli/plugin-functions/issues/210)) ([80b218e](https://github.com/salesforcecli/plugin-functions/commit/80b218eddd7b9eabdd416b545767b42d0c4be8a7))
+
 ### [0.2.44](https://github.com/salesforcecli/plugin-functions/compare/v0.2.43...v0.2.44) (2021-09-17)
 
 ### Bug Fixes

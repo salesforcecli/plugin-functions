@@ -251,10 +251,11 @@ List your config vars in a table.
 
 ```
 USAGE
-  $ sf env var list -c <value>
+  $ sf env var list -c <value> [-j]
 
 FLAGS
   -c, --target-compute=<value>  (required) Environment name.
+  -j, --json                    Output list in JSON format.
 
 DESCRIPTION
   List your config vars in a table.
