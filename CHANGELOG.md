@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.46](https://github.com/salesforcecli/plugin-functions/compare/v0.2.45...v0.2.46) (2021-09-17)
+
+### Bug Fixes
+
+- support the old version of instance url flag ([#212](https://github.com/salesforcecli/plugin-functions/issues/212)) ([827847c](https://github.com/salesforcecli/plugin-functions/commit/827847c8242dfb833d62f9df859757caf1502418))
+
 ### [0.2.45](https://github.com/salesforcecli/plugin-functions/compare/v0.2.44...v0.2.45) (2021-09-17)
 
 ### Features

@@ -353,7 +353,7 @@ Login using JWT instead of default web-based flow. This will authenticate you wi
 
 ```
 USAGE
-  $ sf login functions jwt -u <value> -f <value> -i <value> [-l <value>] [--json] [-a <value>] [-d] [-v]
+  $ sf login functions jwt -u <value> -f <value> -i <value> [-l <value> | ] [--json] [-a <value>] [-d] [-v]
 
 FLAGS
   -a, --alias=<value>         Alias for the org.
