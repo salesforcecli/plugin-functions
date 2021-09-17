@@ -22,7 +22,7 @@ Compute environments must be connected to a Salesforce org. By default the comma
 
 # flags.connected-org.summary
 
-The alias or username of connected Salesforce org.
+The alias or username of the connected Salesforce org.
 
 # flags.alias.summary
 
