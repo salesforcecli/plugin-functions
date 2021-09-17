@@ -37,3 +37,7 @@ Set the org as the default that all org-related commands run against.
 # flags.set-default-dev-hub.summary
 
 Set the org as the default Dev Hub for scratch org creation.
+
+# flags.instanceurl.deprecation
+
+--instanceurl is deprecated and will be removed in a future release. Please use --instance-url going forward.
