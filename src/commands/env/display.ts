@@ -44,6 +44,7 @@ export default class EnvDisplay extends Command {
       char: 'x',
       hidden: true,
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {

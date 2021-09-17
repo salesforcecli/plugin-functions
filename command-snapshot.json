@@ -87,7 +87,7 @@
   {
     "command": "run:function",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["connected-org", "function-url", "headers", "json", "payload", "structured"]
+    "flags": ["connected-org", "function-url", "headers", "payload", "structured"]
   },
   {
     "command": "run:function:start",
@@ -98,7 +98,6 @@
       "debug-port",
       "descriptor",
       "env",
-      "json",
       "network",
       "no-build",
       "no-pull",
