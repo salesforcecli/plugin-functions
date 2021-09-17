@@ -52,7 +52,7 @@
   {
     "command": "env:var:list",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["target-compute"]
+    "flags": ["json", "target-compute"]
   },
   {
     "command": "env:var:set",

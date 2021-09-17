@@ -38,4 +38,24 @@ describe('sf env:var:list', () => {
     .it('shows a message when there are no config vars', (ctx) => {
       expect(ctx.stderr).to.include('Warning: No config vars found for environment my-environment');
     });
+  test
+    .stdout()
+    .stderr()
+    .nock('https://api.heroku.com', (api) =>
+      api.get('/apps/my-environment/config-vars').reply(200, {
+        foo: 'bar',
+        baz: 'baq',
+      })
+    )
+    .command(['env:var:list', '--target-compute', 'my-environment', '--json'])
+    .it('shows config vars in json format', (ctx) => {
+      expect(vacuum(ctx.stdout)).to.contain(
+        vacuum(`
+        {
+          "foo": "bar",
+          "baz": "baq"
+        }
+  `)
+      );
+    });
 });
