@@ -135,13 +135,13 @@
         }
       },
       "generate": {
-        "description": "Create a function with basic scaffolding specific to a given language."
+        "description": "Commands to generate a project, create a function, and more."
       },
       "login": {
         "description": "Commands to log in to an environment.",
         "subtopics": {
           "functions": {
-            "description": "Log in to Salesforce Functions."
+            "description": "Commands to log in to Salesforce Functions."
           }
         }
       },
@@ -149,12 +149,12 @@
         "description": "Commands to run a function.",
         "subtopics": {
           "function": {
-            "description": "Send a cloudevent to a function."
+            "description": "Commands to run a function."
           }
         }
       },
       "whoami": {
-        "description": "Show information on your account."
+        "description": "Commands to show information about yourself or your account."
       }
     }
   },
