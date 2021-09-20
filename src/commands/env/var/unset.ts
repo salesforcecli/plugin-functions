@@ -39,16 +39,6 @@ export default class ConfigUnset extends Command {
       throw new Errors.CLIError('you must enter a config var key (i.e. mykey)');
     }
 
-    const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
-
-    const value = config[argv[0]];
-
-    if (!value) {
-      throw new Errors.CLIError(
-        `No config var named ${herokuColor.cyan(argv[0])} found for environment ${herokuColor.cyan(environment)}`
-      );
-    }
-
     const configPairs = argv.reduce((acc, elem) => {
       return {
         ...acc,

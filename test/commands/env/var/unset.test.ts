@@ -12,8 +12,6 @@ describe('sf env:var:unset', () => {
     .stderr()
     .nock('https://api.heroku.com', (api) =>
       api
-        .get('/apps/my-environment/config-vars')
-        .reply(200, { foo: 'bar' })
         .patch('/apps/my-environment/config-vars', {
           foo: null,
         })
@@ -29,8 +27,6 @@ describe('sf env:var:unset', () => {
     .stderr()
     .nock('https://api.heroku.com', (api) =>
       api
-        .get('/apps/my-environment/config-vars')
-        .reply(200, { foo: 'bar', bar: 'zoo' })
         .patch('/apps/my-environment/config-vars', {
           foo: null,
           bar: null,
