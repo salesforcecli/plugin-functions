@@ -12,6 +12,8 @@ describe('sf env:var:unset', () => {
     .stderr()
     .nock('https://api.heroku.com', (api) =>
       api
+        .get('/apps/my-environment/config-vars')
+        .reply(200, { foo: 'bar' })
         .patch('/apps/my-environment/config-vars', {
           foo: null,
         })
@@ -27,6 +29,8 @@ describe('sf env:var:unset', () => {
     .stderr()
     .nock('https://api.heroku.com', (api) =>
       api
+        .get('/apps/my-environment/config-vars')
+        .reply(200, { foo: 'bar', bar: 'zoo' })
         .patch('/apps/my-environment/config-vars', {
           foo: null,
           bar: null,
@@ -37,4 +41,12 @@ describe('sf env:var:unset', () => {
     .it('works with a multiple variables', (ctx) => {
       expect(ctx.stderr).to.contain('Unsetting foo, bar and restarting my-environment');
     });
+
+  test
+    .stderr()
+    .command(['env:var:unset', '--environment', 'my-environment'])
+    .catch((error) => {
+      expect(error.message).to.contain('you must enter a config var key (i.e. mykey)');
+    })
+    .it('errors when no argument is given');
 });

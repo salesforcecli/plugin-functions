@@ -10,8 +10,8 @@ import { Errors } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
-import Command from '../../../lib/base';
 import { resolveAppNameForEnvironment } from '../../../lib/utils';
+import Command from '../../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.unset');
@@ -45,9 +45,7 @@ export default class ConfigUnset extends Command {
 
     if (!value) {
       throw new Errors.CLIError(
-        `No config var named ${herokuColor.cyan(argv[0])} found for environment ${herokuColor.cyan(
-          flags['target-compute']
-        )}`
+        `No config var named ${herokuColor.cyan(argv[0])} found for environment ${herokuColor.cyan(environment)}`
       );
     }
 
