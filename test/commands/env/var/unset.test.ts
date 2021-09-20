@@ -37,4 +37,12 @@ describe('sf env:var:unset', () => {
     .it('works with a multiple variables', (ctx) => {
       expect(ctx.stderr).to.contain('Unsetting foo, bar and restarting my-environment');
     });
+
+  test
+    .stderr()
+    .command(['env:var:unset', '--environment', 'my-environment'])
+    .catch((error) => {
+      expect(error.message).to.contain('you must enter a config var key (i.e. mykey)');
+    })
+    .it('errors when no argument is given');
 });

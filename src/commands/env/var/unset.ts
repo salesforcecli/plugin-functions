@@ -5,11 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import herokuColor from '@heroku-cli/color';
+import * as Heroku from '@heroku-cli/schema';
+import { Errors } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
-import Command from '../../../lib/base';
 import { resolveAppNameForEnvironment } from '../../../lib/utils';
+import Command from '../../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.unset');
@@ -32,6 +34,10 @@ export default class ConfigUnset extends Command {
     const { environment } = flags;
 
     const appName = await resolveAppNameForEnvironment(environment);
+
+    if (argv.length === 0) {
+      throw new Errors.CLIError('you must enter a config var key (i.e. mykey)');
+    }
 
     const configPairs = argv.reduce((acc, elem) => {
       return {
