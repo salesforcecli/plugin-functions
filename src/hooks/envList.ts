@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { SfHook } from '@salesforce/sf-plugins-core';
+import { SfHook, EnvList } from '@salesforce/sf-plugins-core';
 import { Aliases, AuthInfo, SfOrg, GlobalInfo, ConfigEntry } from '@salesforce/core';
 import herokuVariant from '../lib/heroku-variant';
 import { ComputeEnvironment, Dictionary, SfdcAccount } from '../lib/sfdc-types';
@@ -140,8 +140,9 @@ const hook: SfHook.EnvList<ComputeEnv> = async function (opts) {
 
   return [
     {
+      type: EnvList.EnvType.computeEnvs,
       title: 'Compute Environments',
-      data: await environments.map((env) => {
+      data: environments.map((env) => {
         return {
           alias: env.alias,
           projectName: env.sfdx_project_name,
