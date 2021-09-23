@@ -5,7 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
-import { Aliases, Org, SfdxProject } from '@salesforce/core';
+import { Org, SfdxProject } from '@salesforce/core';
+import { AliasAccessor } from '@salesforce/core/lib/globalInfo';
 import * as sinon from 'sinon';
 import * as Utils from '../../../src/lib/utils';
 import vacuum from '../../helpers/vacuum';
@@ -60,9 +61,7 @@ describe('env:delete', () => {
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(Aliases, 'create' as any).returns({
-        get: () => COMPUTE_ENV_NAME,
-      });
+      sandbox.stub(AliasAccessor.prototype, 'get').returns(COMPUTE_ENV_NAME);
     })
     .finally(() => {
       sandbox.restore();
@@ -82,7 +81,7 @@ describe('env:delete', () => {
     .do(() => {
       sandbox
         .stub(Utils, 'resolveOrg' as any)
-        .throws('Attempted to resolve an org without an org ID or defaultusername value');
+        .throws('Attempted to resolve an org without an org ID or target-org value');
     })
     .add('projectResolveStub', () => {
       return sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
@@ -145,9 +144,7 @@ describe('env:delete', () => {
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(Aliases, 'create' as any).returns({
-        get: () => COMPUTE_ENV_NAME,
-      });
+      sandbox.stub(AliasAccessor.prototype, 'get').returns(COMPUTE_ENV_NAME);
     })
     .finally(() => {
       sandbox.restore();

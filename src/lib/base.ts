@@ -37,7 +37,7 @@ export default abstract class Command extends Base {
   }
 
   protected get username() {
-    return this.info.getToken(Command.TOKEN_BEARER_KEY)?.user;
+    return this.info.tokens.get(Command.TOKEN_BEARER_KEY)?.user;
   }
 
   protected resetClientAuth() {
@@ -52,7 +52,7 @@ export default abstract class Command extends Base {
       if (apiKey) {
         this._auth = apiKey;
       } else {
-        const token = this.info.getToken(Command.TOKEN_BEARER_KEY, true)?.token;
+        const token = this.info.tokens.get(Command.TOKEN_BEARER_KEY, true)?.token;
 
         if (!token) {
           throw new Error(`Not authenticated. Please login with \`${this.config.bin} login functions\`.`);

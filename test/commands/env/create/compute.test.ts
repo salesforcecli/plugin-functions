@@ -5,8 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
+import { Org, SfdxProject } from '@salesforce/core';
+import { AliasAccessor } from '@salesforce/core/lib/globalInfo';
 import * as sinon from 'sinon';
-import { Org, SfdxProject, Aliases } from '@salesforce/core';
+import { AuthStubs } from '../../../helpers/auth';
 import vacuum from '../../../helpers/vacuum';
 
 const APP_MOCK = {
@@ -101,10 +103,8 @@ describe('sf env create compute', () => {
     .do(() => {
       orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(Aliases, 'create' as any).returns({
-        set: aliasSetSpy,
-        write: aliasWriteSpy,
-      });
+      sandbox.stub(AliasAccessor.prototype, 'set' as any).callsFake(aliasSetSpy);
+      AuthStubs.write.callsFake(aliasWriteSpy);
     })
     .finally(() => {
       sandbox.restore();
@@ -132,10 +132,8 @@ describe('sf env create compute', () => {
     .do(() => {
       orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(Aliases, 'create' as any).returns({
-        set: aliasSetSpy,
-        write: aliasWriteSpy,
-      });
+      sandbox.stub(AliasAccessor.prototype, 'set' as any).callsFake(aliasSetSpy);
+      AuthStubs.write.callsFake(aliasWriteSpy);
     })
     .finally(() => {
       sandbox.restore();
@@ -198,15 +196,13 @@ describe('sf env create compute', () => {
     });
 
   test
-    .stdout({ print: true })
-    .stderr({ print: true })
+    .stdout()
+    .stderr()
     .retries(3)
     .do(() => {
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(Aliases, 'create' as any).returns({
-        set: aliasSetSpy,
-        write: aliasWriteSpy,
-      });
+      sandbox.stub(AliasAccessor.prototype, 'set' as any).callsFake(aliasSetSpy);
+      AuthStubs.write.callsFake(aliasWriteSpy);
     })
     .add('queryStub', () => {
       const queryStub = sinon.stub();
