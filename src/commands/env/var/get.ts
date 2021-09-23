@@ -36,8 +36,7 @@ export default class VarGet extends Command {
   async run() {
     const { flags, args } = await this.parse(VarGet);
 
-    const appName = await resolveAppNameForEnvironment(environment);
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
 
     const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
 

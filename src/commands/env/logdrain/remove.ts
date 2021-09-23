@@ -35,8 +35,7 @@ export default class LogDrainRemove extends Command {
   async run() {
     const { flags } = await this.parse(LogDrainRemove);
 
-    const appName = await resolveAppNameForEnvironment(environment);
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
 
     cli.action.start(`Deleting drain for environment ${herokuColor.app(flags['target-compute'])}`);
 

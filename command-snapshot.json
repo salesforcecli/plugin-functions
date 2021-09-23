@@ -15,11 +15,6 @@
     "flags": ["confirm", "target-compute"]
   },
   {
-    "command": "env:display",
-    "plugin": "@salesforce/plugin-functions",
-    "flags": ["extended", "json", "target-compute"]
-  },
-  {
     "command": "env:list",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["all", "json", "target-env-type"]
@@ -32,12 +27,12 @@
   {
     "command": "env:logdrain:add",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["drain-url", "target-compute"]
+    "flags": ["drain-url", "environment"]
   },
   {
     "command": "env:logdrain:list",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["json", "target-compute"]
+    "flags": ["environment", "json"]
   },
   {
     "command": "env:logdrain:remove",
@@ -52,7 +47,7 @@
   {
     "command": "env:var:list",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "json", "target-compute"]
+    "flags": ["json", "target-compute"]
   },
   {
     "command": "env:var:set",
@@ -62,7 +57,7 @@
   {
     "command": "env:var:unset",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["target-compute"]
+    "flags": ["environment", "target-compute"]
   },
   {
     "command": "generate:function",
@@ -97,7 +92,7 @@
   {
     "command": "run:function",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["connected-org", "function-url", "headers", "json", "payload", "structured", "url"]
+    "flags": ["connected-org", "function-url", "headers", "payload", "structured"]
   },
   {
     "command": "run:function:start",

@@ -47,7 +47,7 @@ describe('sf env:var:list', () => {
         baz: 'baq',
       })
     )
-    .command(['env:var:list', '--environment', 'my-environment', '--json'])
+    .command(['env:var:list', '--target-compute', 'my-environment', '--json'])
     .it('shows config vars in json format', (ctx) => {
       expect(vacuum(ctx.stdout)).to.contain(
         vacuum(`

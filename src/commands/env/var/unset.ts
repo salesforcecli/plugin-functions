@@ -25,19 +25,37 @@ export default class ConfigUnset extends Command {
 
   static flags = {
     'target-compute': FunctionsFlagBuilder.environment({
-      required: true,
+      exclusive: ['environment'],
+    }),
+    environment: FunctionsFlagBuilder.environment({
+      char: 'e',
+      exclusive: ['target-compute'],
+      hidden: true,
     }),
   };
 
   async run() {
     const { flags, argv } = await this.parse(ConfigUnset);
+    // We support both versions of the flag here for the sake of backward compat
+    const targetCompute = flags['target-compute'] ?? flags.environment;
 
-    const appName = await resolveAppNameForEnvironment(environment);
+    if (!targetCompute) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+       See more help with --help`
+      );
+    }
+
+    if (flags.environment) {
+      this.warn(messages.getMessage('flags.environment.deprecation'));
+    }
+
+    const appName = await resolveAppNameForEnvironment(targetCompute);
 
     if (argv.length === 0) {
       throw new Errors.CLIError('you must enter a config var key (i.e. mykey)');
     }
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
 
     const configPairs = argv.reduce((acc, elem) => {
       return {
@@ -49,7 +67,7 @@ export default class ConfigUnset extends Command {
     cli.action.start(
       `Unsetting ${Object.keys(configPairs)
         .map((key) => herokuColor.configVar(key))
-        .join(', ')} and restarting ${herokuColor.app(flags['target-compute'])}`
+        .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
     );
 
     await this.client.patch(`/apps/${appName}/config-vars`, {

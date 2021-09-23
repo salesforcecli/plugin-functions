@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
+import vacuum from '../../../helpers/vacuum';
 
 describe('sf env:var:unset', () => {
   test
@@ -39,8 +40,27 @@ describe('sf env:var:unset', () => {
     });
 
   test
+
     .stderr()
-    .command(['env:var:unset', '--environment', 'my-environment'])
+    .nock('https://api.heroku.com', (api) =>
+      api
+        .patch('/apps/my-environment/config-vars', {
+          foo: null,
+        })
+        .reply(200)
+    )
+    .command(['env:var:unset', 'foo', '--environment', 'my-environment'])
+    .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
+        )
+      );
+    });
+
+  test
+    .stderr()
+    .command(['env:var:unset', '--target-compute', 'my-environment'])
     .catch((error) => {
       expect(error.message).to.contain('you must enter a config var key (i.e. mykey)');
     })

@@ -49,8 +49,7 @@ export default class ConfigSet extends Command {
   async run() {
     const { flags, argv } = await this.parse(ConfigSet);
 
-    const appName = await resolveAppNameForEnvironment(environment);
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
     const configPairs = this.parseKeyValuePairs(argv);
 
     cli.action.start(

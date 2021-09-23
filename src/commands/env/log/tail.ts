@@ -106,8 +106,7 @@ export default class LogTail extends Command {
   async run() {
     const { flags } = await this.parse(LogTail);
 
-    const appName = await resolveAppNameForEnvironment(environment);
-    const appName = await this.resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
 
     const response = await this.client.post<Heroku.LogSession>(`/apps/${appName}/log-sessions`, {
       data: {
