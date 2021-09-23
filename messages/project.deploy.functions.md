@@ -10,15 +10,15 @@ You must run this command from within a git repository. Only committed changes t
 
 - Deploy a Salesforce Function:
 
-    <%= config.bin %> <%= command.id %> --connected-org=org-alias
+    <%= config.bin %> <%= command.id %> --connected-org org-alias
 
 - Deploy to 'deploy-branch':
 
-    <%= config.bin %> <%= command.id %> --connected-org=org-alias --branch=deploy-branch
+    <%= config.bin %> <%= command.id %> --connected-org org-alias --branch deploy-branch
 
 - Overwrite the remote repository:
 
-    <%= config.bin %> <%= command.id %> --connected-org=org-alias --force
+    <%= config.bin %> <%= command.id %> --connected-org org-alias --force
 
 # flags.connected-org.summary
 
