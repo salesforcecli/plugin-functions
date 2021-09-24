@@ -2,6 +2,10 @@
 
 Add log drain to a specified environment.
 
+# description
+
+Both '--environment' and '--url' are required flags. '--url' should be a HTTP or HTTPS URL that can receive the log drain messages.
+
 # examples
 
 - Add a log drain:
