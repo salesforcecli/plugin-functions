@@ -4,9 +4,15 @@ Add log drain to a specified environment.
 
 # examples
 
-$ sfdx env:logdrain:add --target-compute=billingApp-Sandbox --drain-url=https://example.com/drain
+- Add a log drain:
 
-# flags.drain-url.summary
+  <%= config.bin %> <%= command.id %> --target-compute environment-name --url https://path/to/logdrain
+
+# flags.environment.summary
+
+Environment that will send logs.
+
+# flags.url.summary
 
 Endpoint that will receive sent logs.
 
