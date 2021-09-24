@@ -6,7 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Flags } from '@oclif/core';
+import { Errors, Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
@@ -23,23 +23,61 @@ export default class LogDrainRemove extends Command {
 
   static flags = {
     'target-compute': FunctionsFlagBuilder.environment({
-      required: true,
+      exclusive: ['environment'],
+    }),
+    environment: FunctionsFlagBuilder.environment({
+      char: 'e',
+      exclusive: ['target-compute'],
+      hidden: true,
     }),
     'drain-url': Flags.string({
-      required: true,
+      exclusive: ['url'],
       char: 'l',
-      description: messages.getMessage('flags.url.summary'),
+      description: messages.getMessage('flags.drain-url.summary'),
+    }),
+    url: Flags.string({
+      exclusive: ['drain-url'],
+      char: 'u',
+      description: messages.getMessage('flags.drain-url.summary'),
+      hidden: true,
     }),
   };
 
   async run() {
     const { flags } = await this.parse(LogDrainRemove);
+    // We support both versions of the flag here for the sake of backward compat
+    const targetCompute = flags['target-compute'] ?? flags.environment;
+    const url = flags['drain-url'] ?? flags.url;
 
-    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
+    if (!targetCompute) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+       See more help with --help`
+      );
+    }
 
-    cli.action.start(`Deleting drain for environment ${herokuColor.app(flags['target-compute'])}`);
+    if (!url) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+       -u, --drain-url DRAIN-URL  ${herokuColor.dim('Logdrain url to remove.')}
+       See more help with --help`
+      );
+    }
 
-    await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(flags['drain-url'])}`);
+    if (flags.environment) {
+      this.warn(messages.getMessage('flags.environment.deprecation'));
+    }
+
+    if (flags.url) {
+      this.warn(messages.getMessage('flags.url.deprecation'));
+    }
+
+    const appName = await resolveAppNameForEnvironment(targetCompute);
+
+    cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
+
+    await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(url)}`);
 
     cli.action.stop();
   }

@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
+import vacuum from '../../../helpers/vacuum';
 
 describe('sf env:var:set', () => {
   test
@@ -57,6 +58,27 @@ describe('sf env:var:set', () => {
     .command(['env:var:set', 'foo=bar=baz', '--target-compute', 'my-environment'])
     .it('allows equals sign in config pair value', (ctx) => {
       expect(ctx.stderr).to.contain('Setting foo and restarting my-environment');
+    });
+
+  test
+    .stderr()
+    // Adding retries here because there is some kind of race condition that causes fancy-test to not
+    // fully capture the value of stderr when running in CI (╯°□°)╯︵ ┻━┻
+    .retries(2)
+    .nock('https://api.heroku.com', (api) =>
+      api
+        .patch('/apps/my-environment/config-vars', {
+          foo: 'bar',
+        })
+        .reply(200)
+    )
+    .command(['env:var:set', 'foo=bar', '--environment', 'my-environment'])
+    .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
+        )
+      );
     });
 
   test

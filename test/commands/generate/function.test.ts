@@ -7,6 +7,7 @@
 import { expect, test } from '@oclif/test';
 import * as sinon from 'sinon';
 import * as library from '@heroku/functions-core';
+import vacuum from '../../helpers/vacuum';
 
 describe('sf generate:function', () => {
   const sandbox: sinon.SinonSandbox = sinon.createSandbox();
@@ -35,6 +36,25 @@ describe('sf generate:function', () => {
     .it('Should call the library methods with proper args and log output', async (ctx) => {
       expect(generateFunctionStub).to.have.been.calledWith(name, language);
       expect(ctx.stdout).to.contain(`Created ${language} function ${name} in ${path}`);
+    });
+
+  test
+    .stderr()
+    .do(() => {
+      generateFunctionStub.returns({
+        name,
+        path,
+        language,
+        welcomeText: '',
+      });
+    })
+    .command(['generate:function', `--name=${name}`, '--language=javascript'])
+    .it('will use name if passed using the old flag (not --function-name)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '--name is deprecated and will be removed in a future release. Please use --function-name going forward.'
+        )
+      );
     });
 
   test

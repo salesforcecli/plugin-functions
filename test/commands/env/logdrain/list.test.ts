@@ -47,6 +47,18 @@ describe('sf env logdrain list', () => {
     });
 
   test
+    .stderr()
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAINS))
+    .command(['env:logdrain:list', '-e', APP_NAME])
+    .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
+        )
+      );
+    });
+
+  test
     .stdout()
     .stderr()
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAINS))

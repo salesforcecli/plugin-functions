@@ -58,4 +58,21 @@ describe('sf env:var:list', () => {
   `)
       );
     });
+
+  test
+    .stderr()
+    .nock('https://api.heroku.com', (api) =>
+      api.get('/apps/my-environment/config-vars').reply(200, {
+        foo: 'bar',
+        baz: 'baq',
+      })
+    )
+    .command(['env:var:list', '--environment', 'my-environment'])
+    .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
+        )
+      );
+    });
 });

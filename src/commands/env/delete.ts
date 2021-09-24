@@ -8,6 +8,7 @@ import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Org, Messages } from '@salesforce/core';
 import { cli } from 'cli-ux';
+import { Errors } from '@oclif/core';
 import {
   filterProjectReferencesToRemove,
   splitFullName,
@@ -29,41 +30,58 @@ export default class EnvDelete extends Command {
 
   static flags = {
     'target-compute': FunctionsFlagBuilder.environment({
-      required: true,
+      exclusive: ['environment'],
+    }),
+    environment: FunctionsFlagBuilder.environment({
+      char: 'e',
+      exclusive: ['target-compute'],
+      hidden: true,
     }),
     confirm: confirmationFlag,
   };
 
   async run() {
     const { flags } = await this.parse(EnvDelete);
+    // We support both versions of the flag here for the sake of backward compat
+    const targetCompute = flags['target-compute'] ?? flags.environment;
 
-    await this.confirmRemovePrompt('environment', flags['target-compute'], flags.confirm);
+    if (!targetCompute) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+       See more help with --help`
+      );
+    }
 
-    cli.action.start(`Deleting environment ${flags['target-compute']}`);
+    if (flags.environment) {
+      this.warn(messages.getMessage('flags.environment.deprecation'));
+    }
+
+    await this.confirmRemovePrompt('environment', targetCompute, flags.confirm);
+
+    cli.action.start(`Deleting environment ${targetCompute}`);
 
     if (flags['target-compute']) {
       try {
         // If we are able to successfully create an org, then we verify that this name does not refer to a compute environment. Regardless of what happens, this block will result in an error.
-        const org: Org = await Org.create({ aliasOrUsername: flags['target-compute'] });
+        const org: Org = await Org.create({ aliasOrUsername: targetCompute });
         if (org) {
           throw new Error(
             `The environment ${herokuColor.cyan(
-              flags['target-compute']
+              targetCompute
             )} is a Salesforce org. The env:delete command currently can only be used to delete compute environments. Please use sfdx force:org:delete to delete scratch and sandbox Salesforce org environments.`
           );
         }
       } catch (error) {
         // If the error is the one we throw above, then we will send the error to the user. If not (meaning the org creation failed) then we swallow the error and proceed.
-        if (
-          error.message.includes(`The environment ${herokuColor.cyan(flags['target-compute'])} is a Salesforce org.`)
-        ) {
+        if (error.message.includes(`The environment ${herokuColor.cyan(targetCompute)} is a Salesforce org.`)) {
           this.error(error);
         }
       }
     }
 
     // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
+    const appName = await resolveAppNameForEnvironment(targetCompute);
 
     let app: Heroku.App;
 

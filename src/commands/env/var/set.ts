@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import herokuColor from '@heroku-cli/color';
+import { Errors } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
@@ -24,7 +25,12 @@ export default class ConfigSet extends Command {
 
   static flags = {
     'target-compute': FunctionsFlagBuilder.environment({
-      required: true,
+      exclusive: ['environment'],
+    }),
+    environment: FunctionsFlagBuilder.environment({
+      char: 'e',
+      exclusive: ['target-compute'],
+      hidden: true,
     }),
   };
 
@@ -48,14 +54,28 @@ export default class ConfigSet extends Command {
 
   async run() {
     const { flags, argv } = await this.parse(ConfigSet);
+    // We support both versions of the flag here for the sake of backward compat
+    const targetCompute = flags['target-compute'] ?? flags.environment;
 
-    const appName = await resolveAppNameForEnvironment(flags['target-compute']);
+    if (!targetCompute) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+       See more help with --help`
+      );
+    }
+
+    if (flags.environment) {
+      this.warn(messages.getMessage('flags.environment.deprecation'));
+    }
+
+    const appName = await resolveAppNameForEnvironment(targetCompute);
     const configPairs = this.parseKeyValuePairs(argv);
 
     cli.action.start(
       `Setting ${Object.keys(configPairs)
         .map((key) => herokuColor.configVar(key))
-        .join(', ')} and restarting ${herokuColor.app(flags['target-compute'])}`
+        .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
     );
 
     await this.client.patch(`/apps/${appName}/config-vars`, {

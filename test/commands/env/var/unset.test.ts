@@ -40,7 +40,6 @@ describe('sf env:var:unset', () => {
     });
 
   test
-
     .stderr()
     .nock('https://api.heroku.com', (api) =>
       api

@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as fs from 'fs';
-import { Command, Flags } from '@oclif/core';
+import { Command, Errors, Flags } from '@oclif/core';
 import { runFunction, RunFunctionOptions } from '@heroku/functions-core';
 import { cli } from 'cli-ux';
 import herokuColor from '@heroku-cli/color';
@@ -23,9 +23,15 @@ export default class Invoke extends Command {
 
   static flags = {
     'function-url': Flags.string({
+      exclusive: ['url'],
       char: 'l',
-      description: messages.getMessage('flags.url.summary'),
-      required: true,
+      description: messages.getMessage('flags.function-url.summary'),
+    }),
+    url: Flags.string({
+      exclusive: ['function-url'],
+      char: 'l',
+      description: messages.getMessage('flags.function-url.summary'),
+      hidden: true,
     }),
     headers: Flags.string({
       char: 'H',
@@ -48,6 +54,17 @@ export default class Invoke extends Command {
 
   async run() {
     const { flags } = await this.parse(Invoke);
+    const url = flags['function-url'] ?? flags.url;
+    if (!url) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+       -l, --function-url FUNCTION-URL  ${herokuColor.dim('Function name.')}
+       See more help with --help`
+      );
+    }
+    if (flags.url) {
+      this.warn(messages.getMessage('flags.url.deprecation'));
+    }
     flags.payload = await this.getPayloadData(flags.payload);
     if (!flags.payload) {
       this.error('no payload provided (provide via stdin or -p)');
@@ -60,11 +77,11 @@ export default class Invoke extends Command {
     const aliasOrUser = flags['connected-org'] || `defaultusername ${defaultusername}`;
     this.log(`Using ${aliasOrUser} login credential to initialize context`);
     const runFunctionOptions = {
-      url: flags['function-url'],
+      url,
       ...flags,
       targetusername: flags['connected-org'] ?? defaultusername,
     };
-    cli.action.start(`${herokuColor.cyanBright('POST')} ${flags['function-url']}`);
+    cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
     try {
       const response = await runFunction(runFunctionOptions as RunFunctionOptions);
       cli.action.stop(herokuColor.greenBright(response.status.toString()));
