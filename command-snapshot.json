@@ -85,6 +85,11 @@
     ]
   },
   {
+    "command": "logout:functions",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": []
+  },
+  {
     "command": "run:function",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["connected-org", "headers", "payload", "structured", "url"]
