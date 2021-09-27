@@ -4,16 +4,16 @@ Create a function with basic scaffolding specific to a given language.
 
 # examples
 
-$ sfdx evergreen:function:create MyFunction --language=javascript
+$ sfdx generate:function --function-name=function-name --language=javascript
 
-# aliases
-
-evergreen:function:init
-
-# flags.name.summary
+# flags.function-name.summary
 
 Function name.
 
 # flags.language.summary
 
 Language.
+
+# flags.name.deprecation
+
+--name is deprecated and will be removed in a future release. Please use --function-name going forward.

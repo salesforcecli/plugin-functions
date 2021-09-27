@@ -6,7 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
-import { Flags } from '@oclif/core';
+import { Errors, Flags } from '@oclif/core';
 import { generateFunction, Language } from '@heroku/functions-core';
 import Command from '../../lib/base';
 
@@ -19,15 +19,19 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'generate
 export default class GenerateFunction extends Command {
   static description = messages.getMessage('summary');
 
-  static aliases = messages.getMessages('aliases');
-
   static examples = messages.getMessages('examples');
 
   static flags = {
-    name: Flags.string({
-      required: true,
-      description: messages.getMessage('flags.name.summary'),
+    'function-name': Flags.string({
+      exclusive: ['name'],
+      description: messages.getMessage('flags.function-name.summary'),
       char: 'n',
+    }),
+    name: Flags.string({
+      exclusive: ['function-name'],
+      description: messages.getMessage('flags.function-name.summary'),
+      char: 'n',
+      hidden: true,
     }),
     language: Flags.enum({
       options: ['javascript', 'typescript', 'java'],
@@ -39,7 +43,19 @@ export default class GenerateFunction extends Command {
 
   async run() {
     const { flags } = await this.parse(GenerateFunction);
-    const fnName = flags.name;
+    const fnName = flags['function-name'] ?? flags.name;
+
+    if (!fnName) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+       -n, --function-name FUNCTION-NAME  ${herokuColor.dim('Function name.')}
+       See more help with --help`
+      );
+    }
+
+    if (flags.name) {
+      this.warn(messages.getMessage('flags.name.deprecation'));
+    }
 
     try {
       const { name, path, language, welcomeText } = await generateFunction(fnName, flags.language as Language);

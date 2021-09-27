@@ -4,8 +4,8 @@ List log drains connected to a specified environment.
 
 # examples
 
-$ sfdx env:logdrain:list --environment=billingApp-Sandbox
+$ sfdx env:logdrain:list --target-compute=billingApp-Sandbox
 
-# flags.json.summary
+# flags.environment.deprecation
 
-Output result in json.
+--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.

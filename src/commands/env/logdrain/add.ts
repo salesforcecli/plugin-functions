@@ -6,7 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Flags } from '@oclif/core';
+import { Errors, Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
@@ -22,27 +22,64 @@ export default class LogDrainAdd extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
+    'target-compute': FunctionsFlagBuilder.environment({
+      exclusive: ['environment'],
+    }),
     environment: FunctionsFlagBuilder.environment({
-      required: true,
+      char: 'e',
+      exclusive: ['target-compute'],
+      hidden: true,
+    }),
+    'drain-url': Flags.string({
+      exclusive: ['url'],
+      char: 'l',
+      description: messages.getMessage('flags.drain-url.summary'),
     }),
     url: Flags.string({
-      required: true,
+      exclusive: ['drain-url'],
       char: 'u',
-      description: messages.getMessage('flags.url.summary'),
+      description: messages.getMessage('flags.drain-url.summary'),
+      hidden: true,
     }),
   };
 
   async run() {
     const { flags } = await this.parse(LogDrainAdd);
-    const { environment } = flags;
+    // We support both versions of the flag here for the sake of backward compat
+    const targetCompute = flags['target-compute'] ?? flags.environment;
+    const url = flags['drain-url'] ?? flags.url;
 
-    const appName = await resolveAppNameForEnvironment(environment);
+    if (!targetCompute) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+       See more help with --help`
+      );
+    }
 
-    cli.action.start(`Creating drain for environment ${herokuColor.app(environment)}`);
+    if (!url) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+       -u, --drain-url DRAIN-URL  ${herokuColor.dim('Endpoint that will receive sent logs.')}
+       See more help with --help`
+      );
+    }
+
+    if (flags.environment) {
+      this.warn(messages.getMessage('flags.environment.deprecation'));
+    }
+
+    if (flags.url) {
+      this.warn(messages.getMessage('flags.url.deprecation'));
+    }
+
+    const appName = await resolveAppNameForEnvironment(targetCompute);
+
+    cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
 
     await this.client.post<Heroku.LogDrain>(`apps/${appName}/log-drains`, {
       data: {
-        url: flags.url,
+        url,
       },
     });
 

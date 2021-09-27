@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
+import vacuum from '../../../helpers/vacuum';
 
 describe('sf env:var:set', () => {
   test
@@ -20,7 +21,7 @@ describe('sf env:var:set', () => {
         })
         .reply(200)
     )
-    .command(['env:var:set', 'foo=bar', '--environment', 'my-environment'])
+    .command(['env:var:set', 'foo=bar', '--target-compute', 'my-environment'])
     .it('works with a single variable', (ctx) => {
       expect(ctx.stderr).to.contain('Setting foo and restarting my-environment');
     });
@@ -36,7 +37,7 @@ describe('sf env:var:set', () => {
         })
         .reply(200)
     )
-    .command(['env:var:set', 'foo=bar', 'bar=baz', '--environment', 'my-environment'])
+    .command(['env:var:set', 'foo=bar', 'bar=baz', '--target-compute', 'my-environment'])
     .it('works with a multiple variables', (ctx) => {
       expect(ctx.stderr).to.contain('Setting foo, bar and restarting my-environment');
     });
@@ -54,13 +55,34 @@ describe('sf env:var:set', () => {
         })
         .reply(200)
     )
-    .command(['env:var:set', 'foo=bar=baz', '--environment', 'my-environment'])
+    .command(['env:var:set', 'foo=bar=baz', '--target-compute', 'my-environment'])
     .it('allows equals sign in config pair value', (ctx) => {
       expect(ctx.stderr).to.contain('Setting foo and restarting my-environment');
     });
 
   test
-    .command(['env:var:set', 'foobar', '--environment', 'my-environment'])
+    .stderr()
+    // Adding retries here because there is some kind of race condition that causes fancy-test to not
+    // fully capture the value of stderr when running in CI (╯°□°)╯︵ ┻━┻
+    .retries(2)
+    .nock('https://api.heroku.com', (api) =>
+      api
+        .patch('/apps/my-environment/config-vars', {
+          foo: 'bar',
+        })
+        .reply(200)
+    )
+    .command(['env:var:set', 'foo=bar', '--environment', 'my-environment'])
+    .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
+        )
+      );
+    });
+
+  test
+    .command(['env:var:set', 'foobar', '--target-compute', 'my-environment'])
     .catch((error) => {
       expect(error.message).to.contain('foobar is invalid. Please use the format key=value');
     })

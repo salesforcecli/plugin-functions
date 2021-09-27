@@ -12,6 +12,7 @@ import { MockTestOrgData, testSetup } from '@salesforce/core/lib/testSetup';
 import * as sinon from 'sinon';
 
 import * as library from '@heroku/functions-core';
+import vacuum from '../../helpers/vacuum';
 
 describe('run:function', () => {
   const $$ = testSetup();
@@ -59,7 +60,7 @@ describe('run:function', () => {
       .it(`Should call the library with payload ${userpayload}`, async () => {
         sinon.assert.calledWith(
           runFunctionStub,
-          sinon.match.has('payload', userpayload).and(sinon.match.has('url', targetUrl))
+          sinon.match.has('payload', userpayload).and(sinon.match.has('function-url', targetUrl))
         );
       });
     test
@@ -80,7 +81,7 @@ describe('run:function', () => {
           runFunctionStub,
           sinon.match
             .has('payload', userpayload)
-            .and(sinon.match.has('url', targetUrl))
+            .and(sinon.match.has('function-url', targetUrl))
             .and(sinon.match.has('headers', ['TestHeader']))
             .and(sinon.match.has('structured', true))
             .and(sinon.match.has('targetusername', SfdxPropertyKeys.DEFAULT_USERNAME))
@@ -91,6 +92,17 @@ describe('run:function', () => {
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
       .it('Should log default username', async (ctx) => {
         expect(ctx.stdout).to.contain(`Using defaultusername ${testData.username} login credential`);
+      });
+
+    test
+      .stderr()
+      .command(['run:function', '--url', targetUrl, '-p', userpayload])
+      .it('will use url if passed using the old flag (not --function-url)', (ctx) => {
+        expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+          vacuum(
+            '--url is deprecated and will be removed in a future release. Please use --function-url going forward.'
+          )
+        );
       });
 
     test

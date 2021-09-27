@@ -52,7 +52,6 @@ export const environmentType = Flags.string({
 });
 
 export const confirmationFlag = Flags.string({
-  char: 'c',
   description: messages.getMessage('flags.confirmationFlag.summary'),
   helpValue: 'name',
   multiple: true,

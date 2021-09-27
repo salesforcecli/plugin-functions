@@ -7,6 +7,7 @@
 import { expect, test } from '@oclif/test';
 import * as sinon from 'sinon';
 import * as library from '@heroku/functions-core';
+import vacuum from '../../helpers/vacuum';
 
 describe('sf generate project', () => {
   const sandbox: sinon.SinonSandbox = sinon.createSandbox();
@@ -21,16 +22,25 @@ describe('sf generate project', () => {
 
   test
     .stdout()
-    .command(['generate:project', `--name=${name}`])
+    .command(['generate:project', `--project-name=${name}`])
     .it('Should call the library methods with proper args and log output', async (ctx) => {
       expect(generateProjectStub).to.have.been.calledWith(name);
+    });
+
+  test
+    .stderr()
+    .command(['generate:project', `--name=${name}`])
+    .it('will use name if passed using the old flag (not --project-name)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum('--name is deprecated and will be removed in a future release. Please use --project-name going forward.')
+      );
     });
 
   test
     .do(() => {
       generateProjectStub.rejects(new Error('something bad happened'));
     })
-    .command(['generate:project', `--name=${name}`])
+    .command(['generate:project', `--project-name=${name}`])
     .catch((error) => {
       expect(error.message).to.contain('something bad happened');
     })

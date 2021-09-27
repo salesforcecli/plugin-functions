@@ -9,7 +9,7 @@ Send a cloudevent to a function.
 - $ echo '{"id": 12345}' | sfdx run:function -l http://localhost:8080
 - $ sfdx run:function -l http://localhost:8080 -p '{"id": 12345}' --structured
 
-# flags.url.summary
+# flags.function-url.summary
 
 Url of the function to run.
 
@@ -28,3 +28,7 @@ Set the cloudevent to be emitted as a structured cloudevent (json).
 # flags.connected-org.summary
 
 Username or alias for the target org; overrides default target org.
+
+# flags.url.deprecation
+
+--url is deprecated and will be removed in a future release. Please use --function-url going forward.

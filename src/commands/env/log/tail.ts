@@ -6,11 +6,13 @@
  */
 import * as Stream from 'stream';
 import * as util from 'util';
+import herokuColor from '@heroku-cli/color';
 import axios from 'axios';
 import { cli } from 'cli-ux';
 import * as Heroku from '@heroku-cli/schema';
 import EventSource = require('@heroku/eventsource');
 import { Messages } from '@salesforce/core';
+import { Errors } from '@oclif/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
 import { resolveAppNameForEnvironment } from '../../../lib/utils';
@@ -97,17 +99,35 @@ export default class LogTail extends Command {
   static examples = messages.getMessages('examples');
 
   static flags = {
-    environment: FunctionsFlagBuilder.environment({
+    'target-compute': FunctionsFlagBuilder.environment({
       description: messages.getMessage('flags.environment.summary'),
-      required: true,
+      exclusive: ['environment'],
+    }),
+    environment: FunctionsFlagBuilder.environment({
+      char: 'e',
+      exclusive: ['target-compute'],
+      hidden: true,
     }),
   };
 
   async run() {
     const { flags } = await this.parse(LogTail);
-    const { environment } = flags;
+    // We support both versions of the flag here for the sake of backward compat
+    const targetCompute = flags['target-compute'] ?? flags.environment;
 
-    const appName = await resolveAppNameForEnvironment(environment);
+    if (!targetCompute) {
+      throw new Errors.CLIError(
+        `Missing required flag:
+        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+       See more help with --help`
+      );
+    }
+
+    if (flags.environment) {
+      this.warn(messages.getMessage('flags.environment.deprecation'));
+    }
+
+    const appName = await resolveAppNameForEnvironment(targetCompute);
 
     const response = await this.client.post<Heroku.LogSession>(`/apps/${appName}/log-sessions`, {
       data: {

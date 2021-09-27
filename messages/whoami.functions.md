@@ -9,7 +9,3 @@ $ <%= config.bin %> <%= command.id %>
 # flags.show-token.summary
 
 Show the stored functions token.
-
-# flags.json.summary
-
-Output list in JSON format.

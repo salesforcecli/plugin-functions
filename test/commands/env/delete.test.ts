@@ -8,6 +8,7 @@ import { expect, test } from '@oclif/test';
 import { Aliases, Org, SfdxProject } from '@salesforce/core';
 import * as sinon from 'sinon';
 import * as Utils from '../../../src/lib/utils';
+import vacuum from '../../helpers/vacuum';
 const COMPUTE_ENV_NAME = 'my-new-compute-environment-100';
 const COMPUTE_ENV_ALIAS = 'my-compute-alias';
 
@@ -48,7 +49,7 @@ describe('env:delete', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:delete', `--environment=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .it('deletes an environment when providing the name of the compute environment', (ctx) => {
       const output = ctx.stderr;
       expect(output).to.include(`Deleting environment ${COMPUTE_ENV_NAME}... done`);
@@ -68,7 +69,7 @@ describe('env:delete', () => {
     })
     .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
-    .command(['env:delete', `--environment=${COMPUTE_ENV_ALIAS}`, `--confirm=${COMPUTE_ENV_ALIAS}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_ALIAS}`, `--confirm=${COMPUTE_ENV_ALIAS}`])
     .it('deletes an environment when providing the valid alias of a compute environment name', (ctx) => {
       const output = ctx.stderr;
       expect(output).to.include(`Deleting environment ${COMPUTE_ENV_ALIAS}... done`);
@@ -89,7 +90,7 @@ describe('env:delete', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:delete', `--environment=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .it('deletes an environment even if its associated org no longer exists', (ctx) => {
       const output = ctx.stderr;
       expect(output).to.include(`Deleting environment ${COMPUTE_ENV_NAME}... done`);
@@ -109,7 +110,7 @@ describe('env:delete', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:delete', `--environment=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .catch((error) => {
       expect(error.message).to.contain(
         'Value provided for environment does not match a compute environment name or an alias to a compute environment'
@@ -128,7 +129,7 @@ describe('env:delete', () => {
     .finally(() => {
       sandbox.restore();
     })
-    .command(['env:delete', `--environment=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`])
     .catch((error) => {
       expect(error.message).to.contain(
         `The environment ${COMPUTE_ENV_NAME} is a Salesforce org. The env:delete command currently can only be used to delete compute environments. Please use sfdx force:org:delete to delete scratch and sandbox Salesforce org environments.`
@@ -137,5 +138,28 @@ describe('env:delete', () => {
     .it('errors when providing an alias of an org environment', (ctx) => {
       const output = ctx.stderr;
       expect(output).to.include(`Deleting environment ${COMPUTE_ENV_NAME}... failed`);
+    });
+
+  test
+    .stderr()
+    .do(() => {
+      sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(Aliases, 'create' as any).returns({
+        get: () => COMPUTE_ENV_NAME,
+      });
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
+    .command(['env:delete', `--environment=${COMPUTE_ENV_ALIAS}`, `--confirm=${COMPUTE_ENV_ALIAS}`])
+    .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
+        )
+      );
     });
 });

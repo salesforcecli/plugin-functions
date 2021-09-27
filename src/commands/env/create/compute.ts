@@ -32,16 +32,28 @@ export default class EnvCreateCompute extends Command {
 
   static flags = {
     'connected-org': FunctionsFlagBuilder.connectedOrg(),
+    alias: Flags.string({
+      char: 'a',
+      description: messages.getMessage('flags.alias.summary'),
+      exclusive: ['setalias'],
+    }),
+
     setalias: Flags.string({
       char: 'a',
-      description: messages.getMessage('flags.setalias.summary'),
+      description: messages.getMessage('flags.alias.summary'),
+      exclusive: ['alias'],
+      hidden: true,
     }),
   };
 
   async run() {
     const { flags } = await this.parse(EnvCreateCompute);
 
-    const alias = flags.setalias;
+    const alias = flags.alias ?? flags.setalias;
+
+    if (flags.setalias) {
+      this.warn(messages.getMessage('flags.setalias.deprecation'));
+    }
 
     // if `--connected-org` is null here, fetchOrg will pull the default org from the surrounding environment
     const org = await fetchOrg(flags['connected-org']);
@@ -152,7 +164,7 @@ export default class EnvCreateCompute extends Command {
 
       this.log(
         alias
-          ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready`
+          ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready.`
           : 'Your compute environment is ready.'
       );
     } catch (error) {

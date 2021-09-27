@@ -6,6 +6,7 @@
  */
 import { readFileSync } from 'fs';
 import { expect, test } from '@oclif/test';
+import vacuum from '../../../helpers/vacuum';
 const fs = require('fs');
 
 describe('logs', () => {
@@ -25,17 +26,34 @@ describe('logs', () => {
       })
     )
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${appName}/log-sessions`).reply(200, fakeResponseData))
-    .command(['env:log:tail', `--environment=${appName}`])
+    .command(['env:log:tail', `--target-compute=${appName}`])
     .it('shows logSessionURL', (ctx) => {
       const logs = readFileSync('test/helpers/logoutput.txt', 'utf-8');
       expect(ctx.stdout).to.include(logs);
     });
 
   test
+    .stderr()
+    .nock(logSessionURLBase, {}, (api) =>
+      api.get(logSessionURLAddress).reply(200, (_uri: any, _requestBody: any) => {
+        return fs.createReadStream('test/helpers/logoutput.txt');
+      })
+    )
+    .nock('https://api.heroku.com', (api) => api.post(`/apps/${appName}/log-sessions`).reply(200, fakeResponseData))
+    .command(['env:log:tail', `--environment=${appName}`])
+    .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
+      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
+        )
+      );
+    });
+
+  test
     .stdout()
     .nock(logSessionURLBase, {}, (api) => api.get(logSessionURLAddress).reply(404, {}))
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${appName}/log-sessions`).reply(200, fakeResponseData))
-    .command(['env:log:tail', `--environment=${appName}`])
+    .command(['env:log:tail', `--target-compute=${appName}`])
     .catch((error: Error) => expect(error.message).to.equal('Request failed with status code 404'))
     .it('shows 404 error');
 
@@ -43,7 +61,7 @@ describe('logs', () => {
     .stdout()
     .nock(logSessionURLBase, {}, (api) => api.get(logSessionURLAddress).reply(403, {}))
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${appName}/log-sessions`).reply(200, fakeResponseData))
-    .command(['env:log:tail', `--environment=${appName}`])
+    .command(['env:log:tail', `--target-compute=${appName}`])
     .catch((error: Error) => expect(error.message).to.equal('Request failed with status code 403'))
     .it('shows 403 error');
 });
