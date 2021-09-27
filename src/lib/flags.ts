@@ -13,7 +13,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'lib.flag
 
 export const FunctionsFlagBuilder = {
   environment: Flags.build({
-    char: 'c',
+    char: 'e',
     description: messages.getMessage('flags.environment.summary'),
     required: false,
   }),

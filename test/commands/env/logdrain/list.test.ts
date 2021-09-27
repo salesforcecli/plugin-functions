@@ -25,7 +25,7 @@ describe('sf env logdrain list', () => {
     .stdout()
     .stderr()
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAINS))
-    .command(['env:logdrain:list', '-c', APP_NAME])
+    .command(['env:logdrain:list', '-e', APP_NAME])
     .it('shows a list of log drains', (ctx) => {
       expect(vacuum(ctx.stdout)).to.contain(
         vacuum(`
@@ -41,7 +41,7 @@ describe('sf env logdrain list', () => {
     .stdout()
     .stderr()
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, []))
-    .command(['env:logdrain:list', '-c', APP_NAME])
+    .command(['env:logdrain:list', '-e', APP_NAME])
     .it('shows a list of log drains', (ctx) => {
       expect(ctx.stdout).to.contain(`No log drains found for environment ${APP_NAME}.`);
     });
@@ -49,7 +49,7 @@ describe('sf env logdrain list', () => {
   test
     .stderr()
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAINS))
-    .command(['env:logdrain:list', '-e', APP_NAME])
+    .command(['env:logdrain:list', '--environment', APP_NAME])
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
       expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
@@ -62,7 +62,7 @@ describe('sf env logdrain list', () => {
     .stdout()
     .stderr()
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAINS))
-    .command(['env:logdrain:list', '-c', APP_NAME, '--json'])
+    .command(['env:logdrain:list', '-e', APP_NAME, '--json'])
     .it('shows log drains in JSON when --json is passed', (ctx) => {
       expect(JSON.parse(ctx.stdout)).to.deep.equal(LOG_DRAINS);
     });

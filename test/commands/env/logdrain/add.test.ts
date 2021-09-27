@@ -19,7 +19,7 @@ describe('sf env logdrain add', () => {
     .stdout()
     .stderr()
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
-    .command(['env:logdrain:add', '-c', APP_NAME, '-l', LOG_DRAIN.url])
+    .command(['env:logdrain:add', '-e', APP_NAME, '-l', LOG_DRAIN.url])
     .retries(3)
     .it('creates a log drain', (ctx) => {
       expect(ctx.stderr).to.contain(`Creating drain for environment ${APP_NAME}`);
@@ -28,7 +28,7 @@ describe('sf env logdrain add', () => {
   test
     .stderr()
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
-    .command(['env:logdrain:add', '-e', APP_NAME, '-l', LOG_DRAIN.url])
+    .command(['env:logdrain:add', '--environment', APP_NAME, '-l', LOG_DRAIN.url])
     .retries(3)
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
       expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
@@ -41,7 +41,7 @@ describe('sf env logdrain add', () => {
   test
     .stderr()
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
-    .command(['env:logdrain:add', '-c', APP_NAME, '-u', LOG_DRAIN.url])
+    .command(['env:logdrain:add', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url])
     .retries(3)
     .it('will use url if passed using the old flag (not --drain-url)', (ctx) => {
       expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
