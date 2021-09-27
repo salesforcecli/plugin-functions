@@ -1,10 +1,20 @@
 # summary
 
-display a single config value for an environment
+Display a single config variable for an environment.
+
+# description
+
+You must provide the '--target-compute' flag and the key to retrieve.
 
 # examples
 
-$ sfdx env:var:get foo --target-compute=my-environment
+- Get a config variable:
+
+  <%= config.bin %> <%= command.id %> [KEY] --target-compute environment-alias
+
+# flags.environment.summary
+
+Environment to retrieve variables from.
 
 # flags.environment.deprecation
 
