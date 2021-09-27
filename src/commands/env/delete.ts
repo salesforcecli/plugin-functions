@@ -61,7 +61,7 @@ export default class EnvDelete extends Command {
 
     cli.action.start(`Deleting environment ${targetCompute}`);
 
-    if (flags['target-compute']) {
+    if (targetCompute) {
       try {
         // If we are able to successfully create an org, then we verify that this name does not refer to a compute environment. Regardless of what happens, this block will result in an error.
         const org: Org = await Org.create({ aliasOrUsername: targetCompute });
