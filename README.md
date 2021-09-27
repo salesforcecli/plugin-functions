@@ -43,6 +43,7 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 - [`sf generate project`](#sf-generate-project)
 - [`sf login functions`](#sf-login-functions)
 - [`sf login functions jwt`](#sf-login-functions-jwt)
+- [`sf logout functions`](#sf-logout-functions)
 - [`sf run function`](#sf-run-function)
 - [`sf run function start`](#sf-run-function-start)
 - [`sf whoami functions`](#sf-whoami-functions)
@@ -323,6 +324,21 @@ DESCRIPTION
 
 EXAMPLES
   $ sfdx login:functions:jwt --username testuser@mycompany.org --keyfile file.key --clientid 123456
+```
+
+## `sf logout functions`
+
+Log out of your Salesforce Functions account.
+
+```
+USAGE
+  $ sf logout functions
+
+DESCRIPTION
+  Log out of your Salesforce Functions account.
+
+EXAMPLES
+  $ sfdx logout:functions
 ```
 
 ## `sf run function`

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.49](https://github.com/salesforcecli/plugin-functions/compare/v0.2.48...v0.2.49) (2021-09-27)
+
+### Features
+
+- add logout:functions command ([#216](https://github.com/salesforcecli/plugin-functions/issues/216)) ([#233](https://github.com/salesforcecli/plugin-functions/issues/233)) ([133211a](https://github.com/salesforcecli/plugin-functions/commit/133211ad430126bde3507b9d94e00f6792fa4ba6))
+
 ### [0.2.48](https://github.com/salesforcecli/plugin-functions/compare/v0.2.47...v0.2.48) (2021-09-20)
 
 ### [0.2.47](https://github.com/salesforcecli/plugin-functions/compare/v0.2.46...v0.2.47) (2021-09-17)
