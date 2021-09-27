@@ -68,7 +68,7 @@ Create a compute environment for use with Salesforce Functions.
 
 ```
 USAGE
-  $ sf env create compute [-o <value>] [-a <value>]
+  $ sf env create compute [-o <value>] [-a <value> | ]
 
 FLAGS
   -a, --alias=<value>          Alias for the created environment.
@@ -91,11 +91,11 @@ Delete an environment.
 
 ```
 USAGE
-  $ sf env delete -c <value> [--confirm <value>]
+  $ sf env delete [-e <value> | ] [--confirm <value>]
 
 FLAGS
-  -c, --target-compute=<value>  (required) Environment name.
-  --confirm=name...           Confirmation name.
+  -e, --target-compute=<value>  Environment name.
+  --confirm=name...             Confirmation name.
 
 DESCRIPTION
   Delete an environment.
@@ -112,10 +112,10 @@ Stream log output for an environment.
 
 ```
 USAGE
-  $ sf env log tail -c <value>
+  $ sf env log tail [-e <value> | ]
 
 FLAGS
-  -c, --target-compute=<value>  (required) Environment name to retrieve logs.
+  -e, --target-compute=<value>  Environment name to retrieve logs.
 
 DESCRIPTION
   Stream log output for an environment.
@@ -130,11 +130,11 @@ Add log drain to a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain add -c <value> -l <value>
+  $ sf env logdrain add [-e <value> | ] [-l <value> | ]
 
 FLAGS
-  -c, --target-compute=<value>  (required) Environment name.
-  -l, --drain-url=<value>       (required) Endpoint that will receive sent logs.
+  -e, --target-compute=<value>  Environment name.
+  -l, --drain-url=<value>       Endpoint that will receive sent logs.
 
 DESCRIPTION
   Add log drain to a specified environment.
@@ -149,10 +149,10 @@ List log drains connected to a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain list -c <value> [-j]
+  $ sf env logdrain list [-e <value> | ] [-j]
 
 FLAGS
-  -c, --target-compute=<value>  (required) Environment name.
+  -e, --target-compute=<value>  Environment name.
   -j, --json                    Output list in JSON format.
 
 DESCRIPTION
@@ -168,11 +168,11 @@ Remove log drain from a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain remove -c <value> -l <value>
+  $ sf env logdrain remove [-e <value> | ] [-l <value> | ]
 
 FLAGS
-  -c, --target-compute=<value>  (required) Environment name.
-  -l, --drain-url=<value>       (required) Logdrain url to remove.
+  -e, --target-compute=<value>  Environment name.
+  -l, --drain-url=<value>       Logdrain url to remove.
 
 DESCRIPTION
   Remove log drain from a specified environment.
@@ -187,10 +187,10 @@ display a single config value for an environment
 
 ```
 USAGE
-  $ sf env var get [KEY] -c <value>
+  $ sf env var get [KEY] [-e <value> | ]
 
 FLAGS
-  -c, --target-compute=<value>  (required) Environment name.
+  -e, --target-compute=<value>  Environment name.
 
 DESCRIPTION
   display a single config value for an environment
@@ -205,10 +205,11 @@ List your config vars in a table.
 
 ```
 USAGE
-  $ sf env var list -c <value>
+  $ sf env var list [-e <value> | ] [-j]
 
 FLAGS
-  -c, --target-compute=<value>  (required) Environment name.
+  -e, --target-compute=<value>  Environment name.
+  -j, --json                    Output list in JSON format.
 
 DESCRIPTION
   List your config vars in a table.
@@ -223,10 +224,10 @@ Sets a single config value for an environment.
 
 ```
 USAGE
-  $ sf env var set -c <value>
+  $ sf env var set [-e <value> | ]
 
 FLAGS
-  -c, --target-compute=<value>  (required) Environment name.
+  -e, --target-compute=<value>  Environment name.
 
 DESCRIPTION
   Sets a single config value for an environment.
@@ -241,10 +242,10 @@ Unset a single config value for an environment.
 
 ```
 USAGE
-  $ sf env var unset -c <value>
+  $ sf env var unset [-e <value> | ]
 
 FLAGS
-  -c, --target-compute=<value>  (required) Environment name.
+  -e, --target-compute=<value>  Environment name.
 
 DESCRIPTION
   Unset a single config value for an environment.
@@ -259,11 +260,11 @@ Create a function with basic scaffolding specific to a given language.
 
 ```
 USAGE
-  $ sf generate function -n <value> -L javascript|typescript|java
+  $ sf generate function -l javascript|typescript|java [-n <value> | ]
 
 FLAGS
-  -L, --language=(javascript|typescript|java)  (required) Language.
-  -n, --function-name=<value>                  (required) Function name.
+  -l, --language=(javascript|typescript|java)  (required) Language.
+  -n, --function-name=<value>                  Function name.
 
 DESCRIPTION
   Create a function with basic scaffolding specific to a given language.
@@ -276,10 +277,10 @@ EXAMPLES
 
 ```
 USAGE
-  $ sf generate project -n <value>
+  $ sf generate project [-n <value> | ]
 
 FLAGS
-  -n, --project-name=<value>  (required) Name of the generated project.
+  -n, --project-name=<value>  Name of the generated project.
 
 EXAMPLES
   $ sfdx generate:project --project-name=project-name
@@ -287,14 +288,14 @@ EXAMPLES
 
 ## `sf login functions`
 
-Log interactively into your account.
+Log into your account.
 
 ```
 USAGE
   $ sf login functions
 
 DESCRIPTION
-  Log interactively into your account.
+  Log into your account.
 
 EXAMPLES
   $ sfdx login:functions
@@ -346,11 +347,11 @@ Send a cloudevent to a function.
 
 ```
 USAGE
-  $ sf run function -l <value> [-H <value>] [-p <value>] [-s] [-o <value>]
+  $ sf run function [-l <value> | ] [-H <value>] [-p <value>] [-s] [-o <value>]
 
 FLAGS
   -H, --headers=<value>...     Set headers.
-  -l, --function-url=<value>   (required) Url of the function to run.
+  -l, --function-url=<value>   Url of the function to run.
   -o, --connected-org=<value>  Username or alias for the target org; overrides default target org.
   -p, --payload=<value>        Set the payload of the cloudevent. also accepts @file.txt format.
   -s, --structured             Set the cloudevent to be emitted as a structured cloudevent (json).
@@ -374,8 +375,7 @@ Build and run function image locally.
 
 ```
 USAGE
-  $ sf run function start [--json] [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network
-    <value>] [-v]
+  $ sf run function start [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network <value>] [-v]
 
 FLAGS
   -b, --debug-port=<value>  [default: 9229] Port for remote debugging.

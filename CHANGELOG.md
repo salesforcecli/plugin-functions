@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.50](https://github.com/salesforcecli/plugin-functions/compare/v0.2.49...v0.2.50) (2021-09-27)
+
+### Bug Fixes
+
+- update cli based on style guide ([#229](https://github.com/salesforcecli/plugin-functions/issues/229)) ([36c443d](https://github.com/salesforcecli/plugin-functions/commit/36c443d04e2cafe05f48b919df93fbcd8a069151))
+
 ### [0.2.49](https://github.com/salesforcecli/plugin-functions/compare/v0.2.48...v0.2.49) (2021-09-27)
 
 ### Features
