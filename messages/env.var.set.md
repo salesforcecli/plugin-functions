@@ -1,10 +1,16 @@
 # summary
 
-Sets a single config value for an environment.
+Set a single config value for an environment.
 
 # examples
 
-$ sfdx env:var:set foo=bar --target-compute=my-environment
+- Set a config value:
+
+  <%= config.bin %> <%= command.id %> [KEY]=[VALUE] --target-compute environment-alias
+
+# flags.environment.summary
+
+Environment in which to set the config value.
 
 # flags.environment.deprecation
 
