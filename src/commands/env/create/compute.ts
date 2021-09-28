@@ -7,7 +7,7 @@
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Flags } from '@oclif/core';
-import { Aliases, Messages } from '@salesforce/core';
+import { Messages } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
 import { cli } from 'cli-ux';
 import { format } from 'date-fns';
@@ -153,11 +153,9 @@ export default class EnvCreateCompute extends Command {
       cli.action.start('Connecting environments');
 
       if (alias) {
-        const aliases = await Aliases.create({});
+        this.info.aliases.set(alias, app.id!);
 
-        aliases.set(alias, app.id);
-
-        await aliases.write();
+        await this.info.write();
       }
 
       cli.action.stop();

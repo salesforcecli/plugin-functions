@@ -90,7 +90,7 @@ export class FunctionsDeployer extends Deployer {
     if (apiKey) {
       this.auth = apiKey;
     } else {
-      const token = this.info.getToken(this.TOKEN_BEARER_KEY, true)?.token;
+      const token = this.info.tokens.get(this.TOKEN_BEARER_KEY, true)?.token;
 
       if (!token) {
         throw new Error('Not authenticated. Please login with `sf login functions`.');

@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Aliases, AuthInfo, Config, Org, SfdxProject } from '@salesforce/core';
+import { AuthInfo, ConfigAggregator, GlobalInfo, Org, SfdxProject } from '@salesforce/core';
 import APIClient from './api-client';
 import herokuVariant from './heroku-variant';
 import { ComputeEnvironment, SfdxProjectConfig } from './sfdc-types';
@@ -43,11 +43,11 @@ export async function fetchAppForProject(client: APIClient, projectName: string,
 
 export async function resolveAppNameForEnvironment(appNameOrAlias: string): Promise<string> {
   // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-  const aliases = await Aliases.create({});
-  const matchingAlias = aliases.get(appNameOrAlias);
+  const info = await GlobalInfo.getInstance();
+  const matchingAlias = info.aliases.get(appNameOrAlias);
   let appName: string;
   if (matchingAlias) {
-    appName = matchingAlias as string;
+    appName = matchingAlias;
   } else {
     appName = appNameOrAlias;
   }
@@ -56,12 +56,12 @@ export async function resolveAppNameForEnvironment(appNameOrAlias: string): Prom
 
 export async function resolveOrg(orgId?: string): Promise<Org> {
   // We perform this check because `Org.create` blows up with a non-descriptive error message if you
-  // just assume the defaultusername is set
-  const config = await Config.create();
-  const defaultUsername = config.get('defaultusername') as string;
+  // just assume the target org is set
+  const config = await ConfigAggregator.create();
+  const targetOrg = config.getPropertyValue('target-org') as string;
 
-  if (!orgId && !defaultUsername) {
-    throw new Error('Attempted to resolve an org without an org ID or defaultusername value');
+  if (!orgId && !targetOrg) {
+    throw new Error('Attempted to resolve an org without an org ID or target-org value');
   }
 
   const infos = await AuthInfo.listAllAuthorizations();
@@ -76,5 +76,5 @@ export async function resolveOrg(orgId?: string): Promise<Org> {
     }
   }
 
-  return Org.create({ aliasOrUsername: defaultUsername });
+  return Org.create({ aliasOrUsername: targetOrg });
 }

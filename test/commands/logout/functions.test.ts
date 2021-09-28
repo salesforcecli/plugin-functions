@@ -14,7 +14,7 @@ describe('sf logout functions', () => {
 
   beforeEach(() => {
     AuthStubs.write.callsFake(async function (this: GlobalInfo) {
-      contents = this.getTokens(true);
+      contents = this.tokens.getAll(true);
       return this.getContents();
     });
   });

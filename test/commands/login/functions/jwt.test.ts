@@ -42,7 +42,7 @@ describe('sf login functions jwt', () => {
 
   beforeEach(() => {
     AuthStubs.write.callsFake(async function (this: GlobalInfo) {
-      contents = this.getTokens(true);
+      contents = this.tokens.getAll(true);
       return this.getContents();
     });
   });

@@ -70,16 +70,16 @@ export default class Invoke extends Command {
       this.error('no payload provided (provide via stdin or -p)');
     }
     const aggregator = await ConfigAggregator.create();
-    const defaultusername = aggregator.getPropertyValue('defaultusername');
-    if (!flags['connected-org'] && !defaultusername) {
-      this.warn('No -o connected org or defaultusername found, context will be partially initialized');
+    const targetOrg = aggregator.getPropertyValue('target-org');
+    if (!flags['connected-org'] && !targetOrg) {
+      this.warn('No -o connected org or target-org found, context will be partially initialized');
     }
-    const aliasOrUser = flags['connected-org'] || `defaultusername ${defaultusername}`;
+    const aliasOrUser = flags['connected-org'] || `target-org ${targetOrg}`;
     this.log(`Using ${aliasOrUser} login credential to initialize context`);
     const runFunctionOptions = {
       url,
       ...flags,
-      targetusername: flags['connected-org'] ?? defaultusername,
+      targetusername: flags['connected-org'] ?? targetOrg,
     };
     cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
     try {

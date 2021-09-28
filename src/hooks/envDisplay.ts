@@ -32,7 +32,7 @@ const hook: SfHook.EnvDisplay<ComputeEnv> = async function (opts) {
   if (apiKey) {
     auth = apiKey;
   } else {
-    const token = info.getToken('functions-bearer', true)?.token;
+    const token = info.tokens.get('functions-bearer', true)?.token;
 
     if (!token) {
       throw new Error('Not authenticated. Please login with `sf login functions`.');

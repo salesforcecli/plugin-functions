@@ -6,6 +6,7 @@
  */
 
 import { GlobalInfo } from '@salesforce/core';
+import { TokenAccessor } from '@salesforce/core/lib/globalInfo';
 import { stubMethod } from '@salesforce/ts-sinon';
 import { createSandbox, SinonStub } from 'sinon';
 import NetrcMachine from '../../src/lib/netrc';
@@ -21,7 +22,7 @@ export const AuthStubs: {
 // Run on next tick after mocha is setup
 process.nextTick(() => {
   beforeEach(() => {
-    AuthStubs.getToken = stubMethod(sandbox, GlobalInfo.prototype, 'getToken').returns({
+    AuthStubs.getToken = stubMethod(sandbox, TokenAccessor.prototype, 'get').returns({
       token: 'password',
       user: 'login',
     });

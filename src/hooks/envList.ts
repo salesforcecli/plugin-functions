@@ -6,7 +6,7 @@
  */
 
 import { SfHook, EnvList } from '@salesforce/sf-plugins-core';
-import { Aliases, AuthInfo, SfOrg, GlobalInfo, ConfigEntry } from '@salesforce/core';
+import { AuthInfo, SfOrg, GlobalInfo, ConfigEntry, OrgAuthorization } from '@salesforce/core';
 import herokuVariant from '../lib/heroku-variant';
 import { ComputeEnvironment, Dictionary, SfdcAccount } from '../lib/sfdc-types';
 import { fetchSfdxProject } from '../lib/utils';
@@ -30,7 +30,7 @@ async function fetchAccount(client: APIClient) {
   return data;
 }
 
-async function resolveEnvironments(orgs: SfOrg[]): Promise<ComputeEnvironment[]> {
+async function resolveEnvironments(orgs: OrgAuthorization[]): Promise<ComputeEnvironment[]> {
   const info = await GlobalInfo.getInstance();
   const apiKey = process.env.SALESFORCE_FUNCTIONS_API_KEY;
   let auth;
@@ -38,7 +38,7 @@ async function resolveEnvironments(orgs: SfOrg[]): Promise<ComputeEnvironment[]>
   if (apiKey) {
     auth = apiKey;
   } else {
-    const token = info.getToken('functions-bearer', true)?.token;
+    const token = info.tokens.get('functions-bearer', true)?.token;
 
     if (!token) {
       throw new Error('Not authenticated. Please login with `sf login functions`.');
@@ -92,9 +92,9 @@ async function resolveAliasForValue(environmentName: string, entries: ConfigEntr
 }
 
 async function resolveAliasesForComputeEnvironments(envs: ComputeEnvironment[]) {
-  const aliases = await Aliases.create({});
+  const info = await GlobalInfo.getInstance();
 
-  const entries = aliases.entries();
+  const entries = Object.entries(info.aliases);
 
   return Promise.all(
     envs.map(async (env) => {
@@ -106,13 +106,13 @@ async function resolveAliasesForComputeEnvironments(envs: ComputeEnvironment[]) 
   );
 }
 
-function resolveAliasesForConnectedOrg(envs: ComputeEnvironment[], orgs: SfOrg[]) {
+function resolveAliasesForConnectedOrg(envs: ComputeEnvironment[], orgs: OrgAuthorization[]) {
   return envs.map((env) => {
     const orgId = env.sales_org_connection?.sales_org_id;
 
     const orgAlias = orgs.reduce((result, org) => {
       if (org.orgId === orgId) {
-        return org.alias ?? '';
+        return (org.aliases && org.aliases[0]) ?? '';
       }
 
       return result;

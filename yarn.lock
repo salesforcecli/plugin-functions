@@ -911,18 +911,19 @@
     mkdirp "1.0.4"
     sfdx-faye "^1.0.9"
 
-"@salesforce/core@3.3.1":
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.3.1.tgz#0e7ea5742fcbc167542d503bbd618d00142ce016"
-  integrity sha512-UCQ2VYJQthDazGGCaWgQpvpMcgGwaf0NC5d7SL2Qx/Lz9d/C/U7U0OeRBtBrjePodZp/HpEeTnrbGjut+3DaOw==
+"@salesforce/core@3.6.4":
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.6.4.tgz#9c2cf29650325c332788ec81811dc43fe0bfdb45"
+  integrity sha512-BLnNz6xxI2yu4W7PoEKXrmrqAc7iCA6/lgKvOrPfFXRf6nnHA5eNxJ+oU9icgKnPv1/Ls/Fvki92lIXRQlK7BA==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
     "@salesforce/kit" "^1.5.8"
     "@salesforce/schemas" "^1.0.1"
-    "@salesforce/ts-types" "^1.5.13"
+    "@salesforce/ts-types" "^1.5.20"
     "@types/graceful-fs" "^4.1.5"
     "@types/jsforce" "^1.9.29"
     "@types/mkdirp" "^1.0.1"
+    change-case "^4.1.2"
     debug "^3.1.0"
     graceful-fs "^4.2.4"
     jsen "0.6.6"

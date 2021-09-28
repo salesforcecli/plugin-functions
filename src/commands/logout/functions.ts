@@ -20,7 +20,7 @@ export default class Login extends Command {
   async run() {
     cli.action.start(messages.getMessage('action.start'));
 
-    this.info.unsetToken(Command.TOKEN_BEARER_KEY);
+    this.info.tokens.unset(Command.TOKEN_BEARER_KEY);
     await this.info.write();
 
     cli.action.stop();

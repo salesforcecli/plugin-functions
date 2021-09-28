@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
-import { Config, SfdxPropertyKeys } from '@salesforce/core';
+import { Config, OrgConfigProperties } from '@salesforce/core';
 import { cli } from 'cli-ux';
 
 import { MockTestOrgData, testSetup } from '@salesforce/core/lib/testSetup';
@@ -51,11 +51,13 @@ describe('run:function', () => {
       $$.configStubs.GlobalInfo = { contents: { orgs: { [testData.username]: await testData.getConfig() } } };
 
       const config = await Config.create(Config.getDefaultOptions(true));
-      await config.set(SfdxPropertyKeys.DEFAULT_USERNAME, testData.username);
+      await config.set(OrgConfigProperties.TARGET_ORG, testData.username);
       await config.write();
     });
 
     test
+      .stdout()
+      .stderr()
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
       .it(`Should call the library with payload ${userpayload}`, async () => {
         sinon.assert.calledWith(
@@ -64,6 +66,8 @@ describe('run:function', () => {
         );
       });
     test
+      .stdout()
+      .stderr()
       .command([
         'run:function',
         '-l',
@@ -74,7 +78,7 @@ describe('run:function', () => {
         'TestHeader',
         '--structured',
         '-o',
-        SfdxPropertyKeys.DEFAULT_USERNAME,
+        OrgConfigProperties.TARGET_ORG,
       ])
       .it('Should call the library with all arguments', async () => {
         sinon.assert.calledWith(
@@ -84,14 +88,15 @@ describe('run:function', () => {
             .and(sinon.match.has('function-url', targetUrl))
             .and(sinon.match.has('headers', ['TestHeader']))
             .and(sinon.match.has('structured', true))
-            .and(sinon.match.has('targetusername', SfdxPropertyKeys.DEFAULT_USERNAME))
+            .and(sinon.match.has('targetusername', OrgConfigProperties.TARGET_ORG))
         );
       });
     test
       .stdout()
+      .stderr()
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
-      .it('Should log default username', async (ctx) => {
-        expect(ctx.stdout).to.contain(`Using defaultusername ${testData.username} login credential`);
+      .it('Should log target org', async (ctx) => {
+        expect(ctx.stdout).to.contain(`Using target-org ${testData.username} login credential`);
       });
 
     test
@@ -107,6 +112,7 @@ describe('run:function', () => {
 
     test
       .stdout()
+      .stderr()
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
       .it('Should log response', async (ctx) => {
         expect(ctx.stdout).to.contain('Something happened!');
@@ -130,6 +136,8 @@ describe('run:function', () => {
     });
 
     test
+      .stdout()
+      .stderr()
       .stub(process, 'exit', () => '')
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
       .catch((error) => expect(error.message).to.contain('Something bad happened!'))
@@ -146,6 +154,8 @@ describe('run:function', () => {
     });
 
     test
+      .stdout()
+      .stderr()
       .stub(process, 'exit', () => '')
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
       .catch((error) => expect(error.message).to.contain(errorMessage))
@@ -165,7 +175,7 @@ describe('run:function', () => {
       .command(['run:function', '-l', targetUrl, '-p {"id":12345}'])
       .it('should output the response from the server', (ctx) => {
         expect(ctx.stdout).to.contain('Something happened!');
-        expect(ctx.stderr).to.contain('Warning: No -o connected org or defaultusername found');
+        expect(ctx.stderr).to.contain('Warning: No -o connected org or target-org found');
       });
   });
 });
