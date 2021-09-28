@@ -60,11 +60,6 @@
     "flags": ["function-name", "language", "name"]
   },
   {
-    "command": "generate:project",
-    "plugin": "@salesforce/plugin-functions",
-    "flags": ["name", "project-name"]
-  },
-  {
     "command": "login:functions",
     "plugin": "@salesforce/plugin-functions",
     "flags": []
