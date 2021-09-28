@@ -1,10 +1,16 @@
-# flags.project-name.summary
+# summary
 
-Name of the generated project.
+Generate a project.
 
 # examples
 
-$ sfdx generate:project --project-name=project-name
+- Generate a project:
+
+  <%= config.bin %> <%= command.id %> --project-name project-name
+
+# flags.project-name.summary
+
+Name of the generated project.
 
 # flags.name.deprecation
 
