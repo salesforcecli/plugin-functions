@@ -1,7 +1,13 @@
 # summary
 
-Log into your account.
+Log in to Salesforce Functions.
+
+# description
+
+This step is required to develop or deploy Salesforce Functions.
 
 # examples
 
-$ sfdx login:functions
+- Log in to Salesforce Functions:
+
+  <%= config.bin %> <%= command.id %>
