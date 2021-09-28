@@ -1,18 +1,24 @@
 # summary
 
-Create a function with basic scaffolding specific to a given language.
+Create a Salesforce Function with basic scaffolding specific to a given language.
+
+# description
+
+Both '--language' and '--name' are required flags. Function names must start with a capital letter.
 
 # examples
 
-$ sfdx generate:function --function-name=function-name --language=javascript
+- Create a JavaScript function:
+
+  <%= config.bin %> <%= command.id %> --function-name MyFunction --language javascript
 
 # flags.function-name.summary
 
-Function name.
+Function name. Must start with a capital letter.
 
 # flags.language.summary
 
-Language.
+Language. Can be one of: javascript, typescript, java.
 
 # flags.name.deprecation
 
