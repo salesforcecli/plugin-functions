@@ -44,7 +44,7 @@ export async function fetchAppForProject(client: APIClient, projectName: string,
 export async function resolveAppNameForEnvironment(appNameOrAlias: string): Promise<string> {
   // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
   const info = await GlobalInfo.getInstance();
-  const matchingAlias = info.aliases.get(appNameOrAlias);
+  const matchingAlias = info.aliases.getValue(appNameOrAlias);
   let appName: string;
   if (matchingAlias) {
     appName = matchingAlias;
