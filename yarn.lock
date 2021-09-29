@@ -911,10 +911,10 @@
     mkdirp "1.0.4"
     sfdx-faye "^1.0.9"
 
-"@salesforce/core@3.6.4":
-  version "3.6.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.6.4.tgz#9c2cf29650325c332788ec81811dc43fe0bfdb45"
-  integrity sha512-BLnNz6xxI2yu4W7PoEKXrmrqAc7iCA6/lgKvOrPfFXRf6nnHA5eNxJ+oU9icgKnPv1/Ls/Fvki92lIXRQlK7BA==
+"@salesforce/core@3.6.5":
+  version "3.6.5"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.6.5.tgz#4c3afa392eb61cd34e2683033c04fbfa4d546850"
+  integrity sha512-EqMZS4Awn/WctCqVWecXOIJKzLUleWw2fvViNP0lVJgt56ZAinZRBetXJFITyKVyslW/WIAhX92NHW7t3AG7Hg==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
     "@salesforce/kit" "^1.5.8"

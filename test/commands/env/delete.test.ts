@@ -61,7 +61,7 @@ describe('env:delete', () => {
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(AliasAccessor.prototype, 'get').returns(COMPUTE_ENV_NAME);
+      sandbox.stub(AliasAccessor.prototype, 'getValue').returns(COMPUTE_ENV_NAME);
     })
     .finally(() => {
       sandbox.restore();
@@ -144,7 +144,7 @@ describe('env:delete', () => {
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(AliasAccessor.prototype, 'get').returns(COMPUTE_ENV_NAME);
+      sandbox.stub(AliasAccessor.prototype, 'getValue').returns(COMPUTE_ENV_NAME);
     })
     .finally(() => {
       sandbox.restore();
