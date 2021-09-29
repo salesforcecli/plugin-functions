@@ -144,7 +144,24 @@ export default class JwtLogin extends Command {
 
     // Use keyfile, clientid, and username to auth with salesforce via the same workflow
     // as sfdx auth:jwt:grant --json
-    const auth = await this.initAuthInfo(username, clientid, keyfile, instanceUrl);
+    let auth;
+
+    try {
+      auth = await this.initAuthInfo(username, clientid, keyfile, instanceUrl);
+    } catch (error) {
+      const err = error as SfdxError;
+      if (flags.json) {
+        cli.styledJSON({
+          status: 1,
+          exitCode: err.exitCode,
+          name: err.name,
+          message: err.message,
+          warnings: [],
+        });
+        cli.exit(1);
+      }
+      throw err;
+    }
 
     // Take care of any alias/default setting that needs to happen for the sfdx credential
     // before we move on to the heroku stuff
@@ -206,12 +223,16 @@ export default class JwtLogin extends Command {
 
     if (flags.json) {
       cli.styledJSON({
-        username: authFields.username,
-        sfdxAccessToken: token,
-        functionsAccessToken: bearerToken,
-        instanceUrl: authFields.instanceUrl,
-        orgId: authFields.orgId,
-        privateKey: authFields.privateKey,
+        status: 0,
+        result: {
+          username: authFields.username,
+          sfdxAccessToken: token,
+          functionsAccessToken: bearerToken,
+          instanceUrl: authFields.instanceUrl,
+          orgId: authFields.orgId,
+          privateKey: authFields.privateKey,
+        },
+        warnings: [],
       });
     }
 
