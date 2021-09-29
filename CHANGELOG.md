@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.52](https://github.com/salesforcecli/plugin-functions/compare/v0.2.51...v0.2.52) (2021-09-29)
+
+### Bug Fixes
+
+- use getValue for aliases instead of get ([#243](https://github.com/salesforcecli/plugin-functions/issues/243)) ([0b7f27d](https://github.com/salesforcecli/plugin-functions/commit/0b7f27d24a5680b4b2949682cf80eecafb869a7b))
+
 ### [0.2.51](https://github.com/salesforcecli/plugin-functions/compare/v0.2.50...v0.2.51) (2021-09-29)
 
 ### Features
