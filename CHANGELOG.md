@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.54](https://github.com/salesforcecli/plugin-functions/compare/v0.2.53...v0.2.54) (2021-09-29)
+
+### Bug Fixes
+
+- remove generate project command ([#240](https://github.com/salesforcecli/plugin-functions/issues/240)) ([a28b918](https://github.com/salesforcecli/plugin-functions/commit/a28b918edab43c6cbe342f0697b8ba2398b873ed))
+
 ### [0.2.53](https://github.com/salesforcecli/plugin-functions/compare/v0.2.51...v0.2.53) (2021-09-29)
 
 ### Features

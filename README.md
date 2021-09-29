@@ -40,7 +40,6 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 - [`sf env var set`](#sf-env-var-set)
 - [`sf env var unset`](#sf-env-var-unset)
 - [`sf generate function`](#sf-generate-function)
-- [`sf generate project`](#sf-generate-project)
 - [`sf login functions`](#sf-login-functions)
 - [`sf login functions jwt`](#sf-login-functions-jwt)
 - [`sf logout functions`](#sf-logout-functions)
@@ -271,19 +270,6 @@ DESCRIPTION
 
 EXAMPLES
   $ sfdx generate:function --function-name=function-name --language=javascript
-```
-
-## `sf generate project`
-
-```
-USAGE
-  $ sf generate project [-n <value> | ]
-
-FLAGS
-  -n, --project-name=<value>  Name of the generated project.
-
-EXAMPLES
-  $ sfdx generate:project --project-name=project-name
 ```
 
 ## `sf login functions`
