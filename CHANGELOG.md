@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.51](https://github.com/salesforcecli/plugin-functions/compare/v0.2.50...v0.2.51) (2021-09-29)
+
+### Features
+
+- **cli:** success json for logdrain list ([#241](https://github.com/salesforcecli/plugin-functions/issues/241)) ([102ce89](https://github.com/salesforcecli/plugin-functions/commit/102ce89c632cf68d6fe17b2d4402138a1d175863))
+
 ### [0.2.50](https://github.com/salesforcecli/plugin-functions/compare/v0.2.49...v0.2.50) (2021-09-27)
 
 ### Bug Fixes
