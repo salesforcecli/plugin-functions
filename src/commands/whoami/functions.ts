@@ -40,13 +40,30 @@ export default class WhoAmI extends Command {
     const fields = Object.entries(account).filter(([key]) => FIELDS.includes(key as FunctionsInformationKey));
 
     if (flags.json) {
-      if (flags['show-token']) {
-        ret.token = this.auth;
-      }
       fields.forEach(([key, val]) => {
         ret[key as FunctionsInformationKey] = val;
       });
-      cli.styledJSON(ret);
+
+      if (flags['show-token']) {
+        cli.styledJSON({
+          status: 0,
+          result: {
+            functionsEmail: ret['email'],
+            functionsId: ret['id'],
+            functionsToken: this.auth,
+          },
+          warnings: [],
+        });
+      } else {
+        cli.styledJSON({
+          status: 0,
+          result: {
+            functionsEmail: ret['email'],
+            functionsId: ret['id'],
+          },
+          warnings: [],
+        });
+      }
     } else {
       this.log(`Hello ${account.name} 👋 \n`);
 
