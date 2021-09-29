@@ -55,31 +55,44 @@ export default class LogDrainList extends Command {
     const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`apps/${appName}/log-drains`);
 
     if (flags.json) {
-      cli.styledJSON(drains);
-      return;
-    }
-
-    if (drains.length === 0) {
-      this.log(`No log drains found for environment ${targetCompute}.`);
-      return;
-    }
-
-    cli.table<Heroku.LogDrain>(
-      drains,
-      {
-        id: {
-          header: 'ID',
-          get: (row) => row.id,
-        },
-        url: {
-          header: 'URL',
-          get: (row) => row.url,
-        },
-      },
-      {
-        printLine: this.log.bind(this),
-        ...flags,
+      if (drains.length === 0) {
+        cli.styledJSON({
+          status: 0,
+          result: [],
+          warnings: [`No logdrain found for environment <${appName}>`],
+        });
+        return;
       }
-    );
+
+      cli.styledJSON({
+        status: 0,
+        result: drains,
+        warnings: [],
+      });
+      return;
+    } else {
+      if (drains.length === 0) {
+        this.log(`No log drains found for environment ${targetCompute}.`);
+        return;
+      }
+
+      cli.table<Heroku.LogDrain>(
+        drains,
+        {
+          id: {
+            header: 'ID',
+            get: (row) => row.id,
+          },
+          url: {
+            header: 'URL',
+            get: (row) => row.url,
+          },
+        },
+        {
+          printLine: this.log.bind(this),
+          ...flags,
+        }
+      );
+    }
   }
 }
