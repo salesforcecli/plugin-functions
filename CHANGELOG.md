@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.53](https://github.com/salesforcecli/plugin-functions/compare/v0.2.51...v0.2.53) (2021-09-29)
+
+### Features
+
+- **cli:** success json for var list ([#242](https://github.com/salesforcecli/plugin-functions/issues/242)) ([9d0ab0a](https://github.com/salesforcecli/plugin-functions/commit/9d0ab0a5d5c75063bed8f3cf105b1ae50a785805))
+
+### Bug Fixes
+
+- update json ([#244](https://github.com/salesforcecli/plugin-functions/issues/244)) ([a37b521](https://github.com/salesforcecli/plugin-functions/commit/a37b521842646667f52c9b5568e5df717a0e04fa))
+- update JSON output for login functions jwt ([#245](https://github.com/salesforcecli/plugin-functions/issues/245)) ([783372e](https://github.com/salesforcecli/plugin-functions/commit/783372e22b51002e7d23642de80153102a9a437c))
+- use getValue for aliases instead of get ([#243](https://github.com/salesforcecli/plugin-functions/issues/243)) ([0b7f27d](https://github.com/salesforcecli/plugin-functions/commit/0b7f27d24a5680b4b2949682cf80eecafb869a7b))
+
 ### [0.2.51](https://github.com/salesforcecli/plugin-functions/compare/v0.2.50...v0.2.51) (2021-09-29)
 
 ### Features
