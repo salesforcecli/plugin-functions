@@ -62,32 +62,44 @@ export default class ConfigList extends Command {
       };
     });
 
-    if (!configArray.length) {
-      this.warn(`No config vars found for environment ${targetCompute}`);
-      return;
-    }
-
     if (flags.json) {
-      cli.styledJSON(config);
-      return;
-    }
-
-    cli.table(
-      configArray,
-      {
-        key: {
-          header: 'Key',
-          get: (configVar) => configVar.key,
-        },
-        value: {
-          header: 'Value',
-          get: (configVar) => configVar.value,
-        },
-      },
-      {
-        printLine: this.log.bind(this),
-        ...flags,
+      if (!configArray.length) {
+        cli.styledJSON({
+          status: 0,
+          result: [],
+          warnings: [`No config vars found for environment <${targetCompute}>`],
+        });
+        return;
       }
-    );
+
+      cli.styledJSON({
+        status: 0,
+        result: config,
+        warnings: [],
+      });
+    } else {
+      if (!configArray.length) {
+        this.warn(`No config vars found for environment ${targetCompute}`);
+        return;
+      }
+
+      cli.table(
+        configArray,
+        {
+          key: {
+            header: 'Key',
+            get: (configVar) => configVar.key,
+          },
+          value: {
+            header: 'Value',
+            get: (configVar) => configVar.value,
+          },
+        },
+        {
+          printLine: this.log.bind(this),
+          ...flags,
+        }
+      );
+    }
   }
 }
