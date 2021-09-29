@@ -16,9 +16,9 @@ Use the '--json' flag to return config vars in JSON format.
 
   <%= config.bin %> <%= command.id %> --target-compute environment-alias --json
 
-# flags.environment.summary
+# flags.target-compute.summary
 
-Environment to get config vars from.
+Compute environment to get config vars from.
 
 # flags.json.summary
 

@@ -10,11 +10,11 @@ Both '--target-compute' and '--drain-url' are required flags.
 
 - Remove a logdrain:
 
-  <%= config.bin %> <%= command.id %> --target-compute environment-alias --drain-url https://path/to/logdrain
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias --url https://path/to/logdrain
 
-# flags.environment.summary
+# flags.target-compute.summary
 
-Environment that contains log drains.
+Compute environment that contains log drains.
 
 # flags.drain-url.summary
 

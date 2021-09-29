@@ -4,7 +4,7 @@ Add log drain to a specified environment.
 
 # description
 
-Both '--environment' and '--url' are required flags. '--url' should be a HTTP or HTTPS URL that can receive the log drain messages.
+Both '--target-compute' and '--url' are required flags. '--url' should be a HTTP or HTTPS URL that can receive the log drain messages.
 
 # examples
 
@@ -12,9 +12,9 @@ Both '--environment' and '--url' are required flags. '--url' should be a HTTP or
 
   <%= config.bin %> <%= command.id %> --target-compute environment-name --url https://path/to/logdrain
 
-# flags.environment.summary
+# flags.target-compute.summary
 
-Environment that will send logs.
+Compute environment that will send logs.
 
 # flags.url.summary
 

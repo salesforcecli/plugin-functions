@@ -14,9 +14,9 @@ List log drains connected to a specified environment.
 
   <%= config.bin %> <%= command.id %> --target-compute environment-alias --json
 
-# flags.environment.summary
+# flags.target-compute.summary
 
-Environment that contains log drains.
+Compute environment that contains log drains.
 
 # flags.environment.deprecation
 

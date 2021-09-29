@@ -12,9 +12,9 @@ You must provide the '--target-compute' flag and the key to retrieve.
 
   <%= config.bin %> <%= command.id %> [KEY] --target-compute environment-alias
 
-# flags.environment.summary
+# flags.target-compute.summary
 
-Environment to retrieve variables from.
+Compute environment to retrieve variables from.
 
 # flags.environment.deprecation
 

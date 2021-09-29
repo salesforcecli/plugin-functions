@@ -8,9 +8,9 @@ Stream log output for an environment.
 
   <%= config.bin %> <%= command.id %> --target-compute environment-alias
 
-# flags.environment.summary
+# flags.target-compute.summary
 
-Environment name to retrieve logs.
+Compute environment name to retrieve logs.
 
 # flags.environment.deprecation
 

@@ -12,9 +12,9 @@ Run 'sf env var list' to see a list of config values that can be unset.
 
   <%= config.bin %> <%= command.id %> --target-compute environment-alias
 
-# flags.environment.summary
+# flags.target-compute.summary
 
-Environment in which to unset the config value.
+Compute environment in which to unset the config value.
 
 # flags.environment.deprecation
 
