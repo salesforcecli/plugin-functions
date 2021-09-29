@@ -20,6 +20,12 @@ const LOG_DRAINS = [
   },
 ];
 
+const SUCCESS_OUTPUT = {
+  status: 0,
+  result: LOG_DRAINS,
+  warnings: [],
+};
+
 describe('sf env logdrain list', () => {
   test
     .stdout()
@@ -64,6 +70,6 @@ describe('sf env logdrain list', () => {
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAINS))
     .command(['env:logdrain:list', '-e', APP_NAME, '--json'])
     .it('shows log drains in JSON when --json is passed', (ctx) => {
-      expect(JSON.parse(ctx.stdout)).to.deep.equal(LOG_DRAINS);
+      expect(JSON.parse(ctx.stdout)).to.deep.equal(SUCCESS_OUTPUT);
     });
 });
