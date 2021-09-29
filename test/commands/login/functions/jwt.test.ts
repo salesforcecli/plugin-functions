@@ -4,6 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import { CLIError } from '@oclif/core/lib/errors';
 import { expect, test } from '@oclif/test';
 import { AuthInfo, GlobalInfo, SfdxProject, SfTokens } from '@salesforce/core';
 import * as sinon from 'sinon';
@@ -302,12 +303,50 @@ describe('sf login functions jwt', () => {
     ])
     .it('returns the correct json payload when --json is used', (ctx) => {
       expect(JSON.parse(ctx.stdout)).to.deep.equal({
-        username: USERNAME,
-        orgId: ORG_ID,
-        sfdxAccessToken: SFDX_ACCESS_TOKEN,
-        functionsAccessToken: HEROKU_ACCESS_TOKEN,
-        instanceUrl: ORG_INSTANCE_URL,
-        privateKey: PRIVATE_KEY_PATH,
+        status: 0,
+        result: {
+          username: USERNAME,
+          orgId: ORG_ID,
+          sfdxAccessToken: SFDX_ACCESS_TOKEN,
+          functionsAccessToken: HEROKU_ACCESS_TOKEN,
+          instanceUrl: ORG_INSTANCE_URL,
+          privateKey: PRIVATE_KEY_PATH,
+        },
+        warnings: [],
+      });
+    });
+
+  test
+    .stdout()
+    .stderr()
+    .do(() => {
+      sinon.stub(AuthInfo, 'create' as any).throws({
+        exitCode: 1,
+        name: 'JwtAuthError',
+        message: 'oops no auth',
+      });
+      sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+    })
+    .finally(() => {
+      sinon.restore();
+    })
+    .command([
+      'login:functions:jwt',
+      `--username=${USERNAME}`,
+      `--keyfile=${PRIVATE_KEY_PATH}`,
+      '--clientid=12345',
+      '--json',
+    ])
+    .catch((error) => {
+      expect((error as CLIError).oclif.exit).to.equal(1);
+    })
+    .it('returns the correct json payload when --json is used and sfdx auth errors', (ctx) => {
+      expect(JSON.parse(ctx.stdout)).to.deep.equal({
+        status: 1,
+        exitCode: 1,
+        name: 'JwtAuthError',
+        message: 'oops no auth',
+        warnings: [],
       });
     });
 });
