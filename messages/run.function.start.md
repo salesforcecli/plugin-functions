@@ -1,12 +1,24 @@
 # summary
 
-Build and run function image locally.
+Build and run a Salesforce Function locally.
+
+# description
+
+Run this command from the directory of your Salesforce Functions project.
 
 # examples
 
-- $ sfdx run:function:start
-- $ sfdx run:function:start -e VAR=VALUE
-- $ sfdx run:function:start --network host --no-pull --clear-cache --debug-port 9000 --port 5000
+- Build and run a function:
+
+  <%= config.bin %> <%= command.id %>
+
+- Run a function on a specific port with additional logs:
+
+  <%= config.bin %> <%= command.id %> --port 5000 --verbose
+
+- Add environment variables and specify a network:
+
+  <%= config.bin %> <%= command.id %> --env KEY=VALUE --network host
 
 # flags.builder.summary
 
@@ -14,7 +26,7 @@ Set custom builder image.
 
 # flags.path.summary
 
-Path to function dir.
+Path to function directory.
 
 # flags.port.summary
 
