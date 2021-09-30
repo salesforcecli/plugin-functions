@@ -4,7 +4,9 @@ Log out of your Salesforce Functions account.
 
 # examples
 
-$ sfdx logout:functions
+- Log out:
+
+  <%= config.bin %> <%= command.id %>
 
 # action.start
 
