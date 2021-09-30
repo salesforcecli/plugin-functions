@@ -2,9 +2,19 @@
 
 Unset a single config value for an environment.
 
+# description
+
+Run 'sf env var list' to see a list of config values that can be unset.
+
 # examples
 
-$ sfdx env:var:unset foo --target-compute=my-environment
+- Unset a value:
+
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias
+
+# flags.target-compute.summary
+
+Compute environment in which to unset the config value.
 
 # flags.environment.deprecation
 

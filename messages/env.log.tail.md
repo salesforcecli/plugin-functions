@@ -4,11 +4,13 @@ Stream log output for an environment.
 
 # examples
 
-$ sfdx env:log:tail --target-compute=billingApp-Scratch1
+- Stream log output:
 
-# flags.environment.summary
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias
 
-Environment name to retrieve logs.
+# flags.target-compute.summary
+
+Compute environment name to retrieve logs.
 
 # flags.environment.deprecation
 

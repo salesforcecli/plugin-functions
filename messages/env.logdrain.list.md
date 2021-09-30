@@ -4,7 +4,17 @@ List log drains connected to a specified environment.
 
 # examples
 
-$ sfdx env:logdrain:list --target-compute=billingApp-Sandbox
+- List log drains:
+
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias
+
+- List log drains as json:
+
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias --json
+
+# flags.target-compute.summary
+
+Compute environment that contains log drains.
 
 # flags.environment.deprecation
 

@@ -2,13 +2,23 @@
 
 Remove log drain from a specified environment.
 
+# description
+
+Both '--target-compute' and '--drain-url' are required flags.
+
 # examples
 
-$ sfdx env:logdrain:remove --target-compute=billingApp-Sandbox --drain-url=syslog://syslog-a.logdna.com:11137
+- Remove a logdrain:
+
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias --url https://path/to/logdrain
+
+# flags.target-compute.summary
+
+Compute environment that contains log drains.
 
 # flags.drain-url.summary
 
-Logdrain url to remove.
+Log drain url to remove.
 
 # flags.environment.deprecation
 

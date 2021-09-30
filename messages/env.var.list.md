@@ -1,10 +1,28 @@
 # summary
 
-List your config vars in a table.
+List your environment's config vars in a table.
+
+# description
+
+Use the '--json' flag to return config vars in JSON format.
 
 # examples
 
-$ sfdx env:var:list --target-compute=my-environment
+- List config vars:
+
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias
+
+- List in JSON format:
+
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias --json
+
+# flags.target-compute.summary
+
+Compute environment to get config vars from.
+
+# flags.json.summary
+
+Output result in JSON.
 
 # flags.environment.deprecation
 
