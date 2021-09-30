@@ -2,8 +2,6 @@
 
 Send a cloudevent to a function.
 
-# description
-
 # examples
 
 - Run a function:

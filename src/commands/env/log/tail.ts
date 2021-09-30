@@ -100,7 +100,7 @@ export default class LogTail extends Command {
 
   static flags = {
     'target-compute': FunctionsFlagBuilder.environment({
-      description: messages.getMessage('flags.environment.summary'),
+      description: messages.getMessage('flags.target-compute.summary'),
       exclusive: ['environment'],
     }),
     environment: FunctionsFlagBuilder.environment({

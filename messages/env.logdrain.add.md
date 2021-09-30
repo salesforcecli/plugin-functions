@@ -16,7 +16,7 @@ Both '--target-compute' and '--url' are required flags. '--url' should be a HTTP
 
 Compute environment that will send logs.
 
-# flags.url.summary
+# flags.drain-url.summary
 
 Endpoint that will receive sent logs.
 

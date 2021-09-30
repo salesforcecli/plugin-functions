@@ -1,4 +1,4 @@
-# flags.environment.summary
+# flags.target-compute.summary
 
 Environment name.
 

@@ -8,7 +8,7 @@ Set a single config value for an environment.
 
   <%= config.bin %> <%= command.id %> [KEY]=[VALUE] --target-compute environment-alias
 
-# flags.environment.summary
+# flags.target-compute.summary
 
 Environment in which to set the config value.
 

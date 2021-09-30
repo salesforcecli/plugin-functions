@@ -14,7 +14,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'lib.flag
 export const FunctionsFlagBuilder = {
   environment: Flags.build({
     char: 'e',
-    description: messages.getMessage('flags.environment.summary'),
+    description: messages.getMessage('flags.target-compute.summary'),
     required: false,
   }),
 

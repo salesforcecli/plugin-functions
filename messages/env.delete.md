@@ -12,13 +12,13 @@ Running this command will prompt a confirmation. If you want to skip this confir
 
 - Delete a compute environment:
 
-    <%= config.bin %> <%= command.id %> --target-compute environment-alias
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias
 
 - Delete without a confirmation step:
 
-    <%= config.bin %> <%= command.id %> --target-compute environment-alias --confirm environment-alias
+  <%= config.bin %> <%= command.id %> --target-compute environment-alias --confirm environment-alias
 
-# flags.environment.summary
+# flags.target-compute.summary
 
 The alias of the environment to delete.
 

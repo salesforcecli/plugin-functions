@@ -2,8 +2,6 @@
 
 List log drains connected to a specified environment.
 
-# description
-
 # examples
 
 - List log drains:
