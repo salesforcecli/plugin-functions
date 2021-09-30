@@ -112,7 +112,51 @@
       "@oclif/plugin-which",
       "@oclif/plugin-command-snapshot",
       "@salesforce/plugin-command-reference"
-    ]
+    ],
+    "topics": {
+      "deploy": {
+        "description": "Commands to deploy artifacts to an environment."
+      },
+      "env": {
+        "description": "Commands to manage your environments, such as orgs and compute environments.",
+        "subtopics": {
+          "create": {
+            "description": "Commands to create a compute environment for use with Salesforce Functions."
+          },
+          "log": {
+            "description": "Commands to stream log output for an environment."
+          },
+          "logdrain": {
+            "description": "Commands to add a log drain to a specified environment."
+          },
+          "var": {
+            "description": "Commands to get, list, add, and set environment variables."
+          }
+        }
+      },
+      "generate": {
+        "description": "Commands to generate a project, create a function, and more."
+      },
+      "login": {
+        "description": "Commands to log in to an environment.",
+        "subtopics": {
+          "functions": {
+            "description": "Commands to log in to Salesforce Functions."
+          }
+        }
+      },
+      "run": {
+        "description": "Commands to run a function.",
+        "subtopics": {
+          "function": {
+            "description": "Commands to run a function."
+          }
+        }
+      },
+      "whoami": {
+        "description": "Commands to show information about yourself or your account."
+      }
+    }
   },
   "repository": "salesforcecli/plugin-functions",
   "scripts": {
@@ -132,7 +176,7 @@
     "test": "sf-test",
     "test:command-reference": "./bin/dev commandreference:generate --erroronwarnings",
     "test:deprecation-policy": "./bin/dev snapshot:compare",
-    "version": "oclif readme"
+    "version": "oclif readme" 
   },
   "publishConfig": {
     "access": "public"
