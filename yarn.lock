@@ -1041,15 +1041,7 @@
     typescript "^4.1.3"
     xunit-file "^1.0.0"
 
-"@salesforce/kit@^1.2.2", "@salesforce/kit@^1.4.5", "@salesforce/kit@^1.5.0", "@salesforce/kit@^1.5.8":
-  version "1.5.14"
-  resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-1.5.14.tgz#013853ffc53e10e7add2abfa266372b29fda8317"
-  integrity sha512-vGzNltfWo7wtaDR0Drgf3nAMWsJ5ZheM4LODfFZeorsFk4Xj8J6hPJWuMcYUT07yCenECQalOjT0SU3p77QgYA==
-  dependencies:
-    "@salesforce/ts-types" "^1.5.13"
-    tslib "^2.2.0"
-
-"@salesforce/kit@^1.5.17":
+"@salesforce/kit@^1.2.2", "@salesforce/kit@^1.4.5", "@salesforce/kit@^1.5.0", "@salesforce/kit@^1.5.17", "@salesforce/kit@^1.5.8":
   version "1.5.17"
   resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-1.5.17.tgz#4fd9c50ba2e072c50d319654f86f86808c544795"
   integrity sha512-Uuh+v7WPSo+L21moVprl+jbDTl3ndmcJM5et/vFLZW4ur6CCJCJSoReM9ttF1qZuQskyCyhVZo6/aMZrVUe+rQ==
@@ -1072,9 +1064,9 @@
     tslib "^1"
 
 "@salesforce/plugin-org@^1.6.7":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-org/-/plugin-org-1.7.0.tgz#bf89f4819a143cbcee8f1d3fcb8b1fda13c8c66e"
-  integrity sha512-sFm/5rR7iQfmAYL04elm59qf9L5tXYmyQR5pXHdGEni3J+beC2txLctQlCHcPGqm3f9Yv5P5aq7mDwW8RgXDUQ==
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-org/-/plugin-org-1.8.0.tgz#82d47651cab0ac951c6d59afe9c5ebfb1c00fa40"
+  integrity sha512-OUIsPIM48P9PKNIzoZu3FI5Ez9D/Y3QNzT3oLNpWkpHs1K59Wqo9BHAVwmRi7Z/bTYgBsegcDsWzkAlxfXsoag==
   dependencies:
     "@oclif/config" "^1"
     "@salesforce/command" "^3.0.3"
