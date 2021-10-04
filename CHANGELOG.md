@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/salesforcecli/plugin-functions/compare/v1.0.2...v1.0.3) (2021-10-04)
+
+### Bug Fixes
+
+- env list hook not displaying compute environments / alises ([#250](https://github.com/salesforcecli/plugin-functions/issues/250)) ([ef66a28](https://github.com/salesforcecli/plugin-functions/commit/ef66a28793b81ec327f2e05233d4cc767b529f7f))
+
 ### [1.0.2](https://github.com/salesforcecli/plugin-functions/compare/v1.0.0...v1.0.2) (2021-09-30)
 
 ## [1.0.0](https://github.com/salesforcecli/plugin-functions/compare/v0.2.54...v1.0.0) (2021-09-30)
