@@ -6,7 +6,7 @@
  */
 
 import { SfHook, EnvList } from '@salesforce/sf-plugins-core';
-import { AuthInfo, SfOrg, GlobalInfo, ConfigEntry, OrgAuthorization } from '@salesforce/core';
+import { AuthInfo, GlobalInfo, ConfigEntry, OrgAuthorization } from '@salesforce/core';
 import herokuVariant from '../lib/heroku-variant';
 import { ComputeEnvironment, Dictionary, SfdcAccount } from '../lib/sfdc-types';
 import { fetchSfdxProject } from '../lib/utils';
@@ -94,7 +94,7 @@ async function resolveAliasForValue(environmentName: string, entries: ConfigEntr
 async function resolveAliasesForComputeEnvironments(envs: ComputeEnvironment[]) {
   const info = await GlobalInfo.getInstance();
 
-  const entries = Object.entries(info.aliases);
+  const entries = Object.entries(info.aliases.getAll());
 
   return Promise.all(
     envs.map(async (env) => {
