@@ -18,6 +18,7 @@ type ComputeEnv = {
   connectedOrgAlias: any;
   connectedOrgId: string | undefined;
   computeEnvironmentName: string | undefined;
+  computeEnvironmentId: string | undefined;
 };
 
 async function fetchAccount(client: APIClient) {
@@ -149,6 +150,7 @@ const hook: SfHook.EnvList<ComputeEnv> = async function (opts) {
           connectedOrgAlias: env.orgAlias,
           connectedOrgId: env.sales_org_connection?.sales_org_id,
           computeEnvironmentName: env.name,
+          computeEnvironmentId: env.id,
         };
       }),
     },
