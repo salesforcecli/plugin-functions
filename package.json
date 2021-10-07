@@ -6,7 +6,7 @@
   "bin": {
     "functions": "./bin/run"
   },
-  "bugs": "https://github.com/salesforcecli/cli/issues",
+  "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
     "@heroku-cli/color": "^1.1.14",
     "@heroku-cli/schema": "^1.0.25",
