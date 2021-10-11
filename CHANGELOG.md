@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/salesforcecli/plugin-functions/compare/v1.1.0...v1.1.1) (2021-10-11)
+
+### Bug Fixes
+
+- remove plugin-not-found ([#254](https://github.com/salesforcecli/plugin-functions/issues/254)) ([aff1f0c](https://github.com/salesforcecli/plugin-functions/commit/aff1f0c51c41344d776da35068283f1102f9ec15))
+
 ## [1.1.0](https://github.com/salesforcecli/plugin-functions/compare/v1.0.3...v1.1.0) (2021-10-08)
 
 ### Features
