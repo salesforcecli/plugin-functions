@@ -720,24 +720,6 @@
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.0.1.tgz#e97fc5c234db1a745fb4468eb79cabeea5f84af9"
   integrity sha512-ai9XwnEZ+P34VUtV+fX/6HmRbo5CXGdZjX3iK3PsY6O+KYeJBKVAkPCKLz0qtAHxx0HX4+Yj2wnmy+hTCx6HYQ==
-  dependencies:
-    "@oclif/linewrap" "^1.0.0"
-    chalk "^4.1.0"
-    clean-stack "^3.0.0"
-    cli-ux "^5.1.0"
-    debug "^4.1.1"
-    fs-extra "^9.0.1"
-    get-package-type "^0.1.0"
-    globby "^11.0.1"
-    indent-string "^4.0.0"
-    is-wsl "^2.1.1"
-    lodash.template "^4.4.0"
-    semver "^7.3.2"
-    string-width "^4.2.0"
-    strip-ansi "^6.0.0"
-    tslib "^2.0.0"
-    widest-line "^3.1.0"
-    wrap-ansi "^7.0.0"
 
 "@oclif/core@^1.0.2":
   version "1.0.2"
@@ -985,13 +967,12 @@
   integrity sha512-ubf8dbFAdMcoK4sHXtJD/IrA8WXj8H2df7a8b7wGFBMegqziQDzL7yqwmE7qbAEtD7MxLm1FhQQP+WONPCdoWA==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
-    "@salesforce/kit" "^1.5.8"
+    "@salesforce/kit" "^1.5.0"
     "@salesforce/schemas" "^1.0.1"
-    "@salesforce/ts-types" "^1.5.20"
+    "@salesforce/ts-types" "^1.5.13"
     "@types/graceful-fs" "^4.1.5"
     "@types/jsforce" "^1.9.29"
     "@types/mkdirp" "^1.0.1"
-    change-case "^4.1.2"
     debug "^3.1.0"
     graceful-fs "^4.2.4"
     jsen "0.6.6"
@@ -1001,18 +982,19 @@
     sfdx-faye "^1.0.9"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^2.2.0", "@salesforce/core@^2.20.10", "@salesforce/core@^2.23.4", "@salesforce/core@^2.28.0":
-  version "2.28.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.28.1.tgz#a6ca31f151b097d567242e324f5e87e0bd76de83"
-  integrity sha512-n+cpGbhrBHQH9XzUTgefvhARESYZt65/QjV0Qiu0nNnetz9zrzwCxMSpOf8BjrScxtfqcgGD6vGnO2nv/AGO/Q==
+"@salesforce/core@^3.6.6":
+  version "3.6.6"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.6.6.tgz#31e231080f42e20d66bc834b6e80e141f1aabd1f"
+  integrity sha512-ubf8dbFAdMcoK4sHXtJD/IrA8WXj8H2df7a8b7wGFBMegqziQDzL7yqwmE7qbAEtD7MxLm1FhQQP+WONPCdoWA==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
-    "@salesforce/kit" "^1.5.0"
+    "@salesforce/kit" "^1.5.8"
     "@salesforce/schemas" "^1.0.1"
-    "@salesforce/ts-types" "^1.5.13"
+    "@salesforce/ts-types" "^1.5.20"
     "@types/graceful-fs" "^4.1.5"
     "@types/jsforce" "^1.9.29"
     "@types/mkdirp" "^1.0.1"
+    change-case "^4.1.2"
     debug "^3.1.0"
     graceful-fs "^4.2.4"
     jsen "0.6.6"
