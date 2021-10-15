@@ -4,14 +4,20 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-
 import { GlobalInfo } from '@salesforce/core';
 import { SfHook } from '@salesforce/sf-plugins-core';
 import APIClient, { herokuClientApiUrl } from '../lib/api-client';
 import { ensureArray } from '../lib/function-reference-utils';
 import herokuVariant from '../lib/heroku-variant';
 import { ComputeEnvironment } from '../lib/sfdc-types';
-import { fetchSfdxProject, resolveAppNameForEnvironment, resolveOrg } from '../lib/utils';
+import {
+  fetchSfdxProject,
+  resolveAppNameForEnvironment,
+  resolveOrg,
+  findOrgExpirationStatus,
+  getOrgAlias,
+  getOrgUsername,
+} from '../lib/utils';
 
 interface ComputeEnv {
   alias?: string;
@@ -19,7 +25,10 @@ interface ComputeEnv {
   project: string;
   createdDate?: string;
   functions?: string[];
-  connectedOrgs?: string;
+  connectedOrgId: string;
+  connectedOrgStatus: string;
+  connectedOrgAlias?: string;
+  connectedOrgUsername?: string;
   appId?: string;
   spaceId: any;
 }
@@ -57,15 +66,23 @@ const hook: SfHook.EnvDisplay<ComputeEnv> = async function (opts) {
         ...herokuVariant('evergreen'),
       },
     });
-    const salesOrgId = app.sales_org_connection?.sales_org_id;
-    const org = await resolveOrg(salesOrgId);
-    const project = await fetchSfdxProject();
-    const connection = org.getConnection();
 
-    const refList = await connection.metadata.list({ type: 'FunctionReference' });
-    const fnNames = ensureArray(refList).map((ref) => ref.fullName.split('-')[1]);
+    const org = await resolveOrg(app.sales_org_connection?.sales_org_id);
+    const orgId = org.getOrgId();
+    const project = await fetchSfdxProject();
+
+    const isExpired = await findOrgExpirationStatus(orgId);
+
+    let fnNames;
+    if (!isExpired) {
+      const connection = org.getConnection();
+      const refList = await connection.metadata.list({ type: 'FunctionReference' });
+      fnNames = ensureArray(refList).map((ref) => ref.fullName.split('-')[1]);
+    }
 
     const alias = appName === targetEnv ? undefined : targetEnv;
+    const connectedOrgAlias = await getOrgAlias(orgId);
+    const connectedOrgUsername = await getOrgUsername(orgId);
 
     const returnValue = {
       // renamed properties
@@ -73,8 +90,11 @@ const hook: SfHook.EnvDisplay<ComputeEnv> = async function (opts) {
       environmentName: app.name!,
       project: project.name,
       createdDate: app.created_at,
-      functions: fnNames.length ? fnNames : undefined,
-      connectedOrgs: salesOrgId,
+      connectedOrgId: orgId,
+      connectedOrgStatus: isExpired ? 'Expired' : 'Active',
+      connectedOrgAlias,
+      connectedOrgUsername,
+      functions: fnNames,
       appId: app.id,
       spaceId: app.space?.id,
     };
