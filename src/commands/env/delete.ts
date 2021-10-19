@@ -18,7 +18,7 @@ import {
 import { FunctionsFlagBuilder, confirmationFlag } from '../../lib/flags';
 import Command from '../../lib/base';
 import batchCall from '../../lib/batch-call';
-import { fetchSfdxProject, resolveAppNameForEnvironment, resolveOrg } from '../../lib/utils';
+import { fetchSfdxProject, findOrgExpirationStatus, resolveAppNameForEnvironment, resolveOrg } from '../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.delete');
@@ -63,7 +63,8 @@ export default class EnvDelete extends Command {
 
     if (targetCompute) {
       try {
-        // If we are able to successfully create an org, then we verify that this name does not refer to a compute environment. Regardless of what happens, this block will result in an error.
+        // If we are able to successfully create a Salesforce org, then this name does not refer to a compute environment.
+        // Regardless of what happens, this block will result in an error.
         const org: Org = await Org.create({ aliasOrUsername: targetCompute });
         if (org) {
           throw new Error(
@@ -73,7 +74,8 @@ export default class EnvDelete extends Command {
           );
         }
       } catch (error) {
-        // If the error is the one we throw above, then we will send the error to the user. If not (meaning the org creation failed) then we swallow the error and proceed.
+        // If the error is the one we throw above, then we will send the error to the user.
+        // If not (meaning the environment name provided might be a compute environment) then we swallow the error and proceed.
         if (error.message.includes(`The environment ${herokuColor.cyan(targetCompute)} is a Salesforce org.`)) {
           this.error(error);
         }
@@ -99,15 +101,15 @@ export default class EnvDelete extends Command {
       );
     }
 
-    let org: Org | null = null;
+    let connectedOrg: Org | null = null;
     try {
-      org = await resolveOrg(app.data.sales_org_connection?.sales_org_id);
+      connectedOrg = await resolveOrg(app.data.sales_org_connection?.sales_org_id);
     } catch (error) {
       // It's possible that they are deleting the compute environment after deleting the org it was
       // connected to, in which case `resolveOrg` will error and we simply want to skip the process
       // of cleaning up functon refs since they're all already gone. Otherwise, something else has
       // gone wrong and we go ahead and bail out.
-      if (error.message !== 'Attempted to resolve an org without an org ID or target-org value') {
+      if (error.message !== 'Attempted to resolve an org without a valid org ID') {
         this.error;
       }
     }
@@ -115,19 +117,25 @@ export default class EnvDelete extends Command {
     // If we are actually able to resolve an Org instance, it means they are deleting the compute
     // environment while the org still exists, so we need to delete all the function references
     // from the org as part of the cleanup process
-    if (org) {
-      const project = await fetchSfdxProject();
-      const connection = org.getConnection();
-      let refList = await connection.metadata.list({ type: 'FunctionReference' });
-      refList = ensureArray(refList);
+    if (connectedOrg) {
+      const orgId = connectedOrg.getOrgId();
+      const isExpired = await findOrgExpirationStatus(orgId);
 
-      if (refList && refList.length) {
-        const allReferences = refList.reduce((acc: FullNameReference[], ref) => {
-          acc.push(splitFullName(ref.fullName));
-          return acc;
-        }, []);
-        const referencesToRemove = filterProjectReferencesToRemove(allReferences, [], project.name);
-        await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
+      if (!isExpired) {
+        const project = await fetchSfdxProject();
+        const connection = connectedOrg.getConnection();
+
+        let refList = await connection.metadata.list({ type: 'FunctionReference' });
+        refList = ensureArray(refList);
+
+        if (refList && refList.length) {
+          const allReferences = refList.reduce((acc: FullNameReference[], ref) => {
+            acc.push(splitFullName(ref.fullName));
+            return acc;
+          }, []);
+          const referencesToRemove = filterProjectReferencesToRemove(allReferences, [], project.name);
+          await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
+        }
       }
     }
 

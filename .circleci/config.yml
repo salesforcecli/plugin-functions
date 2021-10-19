@@ -68,7 +68,7 @@ workflows:
                 - linux
                 - windows
               node_version:
-                - latest
+                - '16'
                 - lts
                 - maintenance
             exclude:
@@ -78,6 +78,7 @@ workflows:
                 node_version: maintenance
       - release-management/test-plugin-inclusion:
           target_cli: sf
+          node_version: '16'
       - release-management/release-package:
           sign: true
           github-release: true
