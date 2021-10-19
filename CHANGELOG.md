@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.5](https://github.com/salesforcecli/plugin-functions/compare/v1.1.4...v1.1.5) (2021-10-19)
+
+### Bug Fixes
+
+- resolve NoEnvFoundError + improvements to env display hook ([#259](https://github.com/salesforcecli/plugin-functions/issues/259)) ([e35ceda](https://github.com/salesforcecli/plugin-functions/commit/e35cedad35dc2c0046c1e8dac9aa13ff5c16f162))
+
 ### [1.1.4](https://github.com/salesforcecli/plugin-functions/compare/v1.1.3...v1.1.4) (2021-10-13)
 
 ### Bug Fixes
