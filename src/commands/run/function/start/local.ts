@@ -48,7 +48,12 @@ export default class Local extends Command {
 
   async run() {
     const { flags } = await this.parse(Local);
-    const localRun = new LocalRun(flags);
+    const localRun = new LocalRun({
+      path: flags.path,
+      port: flags.port,
+      debugPort: flags['debug-port'],
+      language: flags.language,
+    });
     localRun.on('info', (message: string) => cli.info(message));
     await localRun.exec();
   }

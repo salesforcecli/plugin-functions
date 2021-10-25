@@ -8,6 +8,7 @@
 import * as events from 'events';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as execa from 'execa';
 
 export default class LocalRun {
   readonly path: string;
@@ -114,13 +115,77 @@ class NodeJsLangRunner extends LangRunner {
   }
 
   async build(): Promise<void> {
-    // Check that npm & node is installed
-    // Ensure the latest invoker is installed
-    // Compile the app if needed (for typescript)
+    await this.checkNodeJs();
+    await this.checkNpx();
+    await this.runNpmBuild();
   }
 
   async start(): Promise<void> {
-    // Start the installed invoker with correct args
-    // Ensure signals to cli are passed to child invoker process
+    await this.startRuntime();
+  }
+
+  private async checkNodeJs(): Promise<void> {
+    try {
+      await execa('node', ['-v']);
+    } catch (error) {
+      throw new Error('Node.JS executable not found.');
+    }
+  }
+
+  private async checkNpx(): Promise<void> {
+    try {
+      await execa('npx', ['-v']);
+    } catch (error) {
+      throw new Error('npx executable not found.');
+    }
+  }
+
+  private async runNpmBuild(): Promise<void> {
+    const packageJsonPath = path.resolve(this.localRun.path, 'package.json');
+    let packageJsonContent: string;
+    try {
+      packageJsonContent = await fs.promises.readFile(packageJsonPath, 'utf8');
+    } catch {
+      throw new Error(`Could not read 'package.json' from ${packageJsonPath}.`);
+    }
+    let packageJson: { scripts?: { build?: string } };
+    try {
+      packageJson = JSON.parse(packageJsonContent);
+    } catch {
+      throw new Error(`Cound not parse 'package.json' as JSON from ${packageJsonPath}.`);
+    }
+
+    if (packageJson.scripts?.build) {
+      try {
+        await execa('npm', ['run', 'build', '--prefix', this.localRun.path], { stdio: 'inherit' });
+      } catch (err) {
+        throw new Error(`Could not execute npm build script: ${err}`);
+      }
+    }
+  }
+
+  private async startRuntime(): Promise<void> {
+    try {
+      await execa(
+        'npx',
+        [
+          '-y',
+          '@heroku/sf-fx-runtime-nodejs@0.9.1',
+          'serve',
+          this.localRun.path,
+          '--host',
+          this.localRun.host,
+          '--port',
+          this.localRun.port.toString(),
+          '--debug-port',
+          this.localRun.debugPort.toString(),
+        ],
+        {
+          stdio: 'inherit',
+        }
+      );
+    } catch (err) {
+      throw new Error(`Could not execute function runtime: ${err}`);
+    }
   }
 }
