@@ -157,7 +157,7 @@ class NodeJsLangRunner extends LangRunner {
 
     if (packageJson.scripts?.build) {
       try {
-        await execa('npm', ['run', 'build', '--prefix', this.localRun.path], { stdio: 'inherit' });
+        await execa.command(['npm', 'run', 'build', '--prefix', this.localRun.path].join(' '), { stdio: 'inherit' });
       } catch (err) {
         throw new Error(`Could not execute npm build script: ${err}`);
       }
@@ -166,9 +166,9 @@ class NodeJsLangRunner extends LangRunner {
 
   private async startRuntime(): Promise<void> {
     try {
-      await execa(
-        'npx',
+      await execa.command(
         [
+          'npx',
           '-y',
           '@heroku/sf-fx-runtime-nodejs@0.9.1',
           'serve',
@@ -179,7 +179,7 @@ class NodeJsLangRunner extends LangRunner {
           this.localRun.port.toString(),
           '--debug-port',
           this.localRun.debugPort.toString(),
-        ],
+        ].join(' '),
         {
           stdio: 'inherit',
         }
