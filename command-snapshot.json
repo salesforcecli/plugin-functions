@@ -108,6 +108,11 @@
     ]
   },
   {
+    "command": "run:function:start:local",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["debug-port", "language", "path", "port"]
+  },
+  {
     "command": "whoami:functions",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["json", "show-token"]
