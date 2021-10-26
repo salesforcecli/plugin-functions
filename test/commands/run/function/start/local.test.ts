@@ -22,12 +22,26 @@ describe('run:function:start:local', () => {
     sandbox.restore();
   });
 
+  context('without a language argument and a package.json', () => {
+    test
+      .command(['run:function:start:local', '--path', rootPath])
+      .it('should start the Node.js invoker runtime', (ctx) => {
+        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+      });
+  });
+
   context('with --language javascript', () => {
     test
-      .stdout()
-      .stderr()
       .command(['run:function:start:local', '--path', rootPath, '-l', 'javascript'])
-      .it('should start the javascript invoker', (ctx) => {
+      .it('should start the Node.js invoker runtime', (ctx) => {
+        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+      });
+  });
+
+  context('with --language typescript', () => {
+    test
+      .command(['run:function:start:local', '--path', rootPath, '-l', 'typescript'])
+      .it('should start the Node.js invoker runtime', (ctx) => {
         expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
       });
   });
