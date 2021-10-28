@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.6](https://github.com/salesforcecli/plugin-functions/compare/v1.1.5...v1.1.6) (2021-10-28)
+
+### Bug Fixes
+
+- add test for spaces in config var ([#261](https://github.com/salesforcecli/plugin-functions/issues/261)) ([94b01f2](https://github.com/salesforcecli/plugin-functions/commit/94b01f27776589a345aa672239e7eff13376b1bb))
+
 ### [1.1.5](https://github.com/salesforcecli/plugin-functions/compare/v1.1.4...v1.1.5) (2021-10-19)
 
 ### Bug Fixes
