@@ -34,7 +34,7 @@ export default class NodeJsLangRunner extends LangRunner {
 
   private async checkNodeJs(): Promise<void> {
     try {
-      await execa('node', ['-v']);
+      await execa.command('node -v');
     } catch (error) {
       throw new Error('Node.JS executable not found.');
     }

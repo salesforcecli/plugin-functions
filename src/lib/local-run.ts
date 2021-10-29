@@ -11,6 +11,7 @@ import * as fs from 'fs';
 import * as execa from 'execa';
 import LangRunner, { LangRunnerOpts } from '../lib/lang-runner';
 import LangRunnerNodeJs from '../lib/lang-runner-nodejs';
+import LangRunnerJava from '../lib/lang-runner-java';
 
 export default class LocalRun {
   readonly lang: string;
@@ -18,7 +19,12 @@ export default class LocalRun {
 
   constructor(lang = 'auto', runnerOpts: LangRunnerOpts = {}, runners?: Map<string, typeof LangRunner>) {
     this.lang = lang;
-    runners = runners ?? new Map<string, typeof LangRunner>([['nodejs', LangRunnerNodeJs]]);
+    runners =
+      runners ??
+      new Map<string, typeof LangRunner>([
+        ['nodejs', LangRunnerNodeJs],
+        ['java', LangRunnerJava],
+      ]);
 
     this.runners = new Map();
     for (const [l, r] of runners) {
