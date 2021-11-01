@@ -46,7 +46,7 @@ describe('run:function:start:local', () => {
     test
       .command(['run:function:start:local', '--path', javaPath])
       .it('should start the Java invoker runtime', (ctx) => {
-        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+        expect(commandSpy).to.have.been.calledWith(sinon.match('sf-fx-runtime-java'));
       });
   });
 
@@ -54,7 +54,7 @@ describe('run:function:start:local', () => {
     test
       .command(['run:function:start:local', '--language', 'auto', '--path', javaPath])
       .it('should start the Java invoker runtime', (ctx) => {
-        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+        expect(commandSpy).to.have.been.calledWith(sinon.match('sf-fx-runtime-java'));
       });
   });
 
