@@ -2522,6 +2522,14 @@ cloudevents@^4.0.2:
     ajv "~6.12.3"
     uuid "~8.3.0"
 
+cloudevents@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/cloudevents/-/cloudevents-5.0.0.tgz#4c5243aa2370e1173f489b61d506ec6ea7b41be5"
+  integrity sha512-ximOtbqCaOfSAqkkP0AwG5nIunNuCzNEADXVNW9FSmmOCDxab234NOpJsZovMx6j/COo2p3hwGDcbSS8LN/l1w==
+  dependencies:
+    ajv "~6.12.3"
+    uuid "~8.3.0"
+
 cmd-shim@^4.0.1:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/cmd-shim/-/cmd-shim-4.1.0.tgz#b3a904a6743e9fede4148c6f3800bf2a08135bdd"
