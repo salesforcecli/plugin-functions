@@ -1091,9 +1091,9 @@
     tslib "^1"
 
 "@salesforce/plugin-org@^1.8.1":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-org/-/plugin-org-1.8.1.tgz#fa53506d25628ba849ba0dec894941de5568b441"
-  integrity sha512-B4C2GRPC5r+DEV5x+883o1xtZNn7HyLQVF6H5/alHLe7wJ2orQHCJK9QvSDaRK2bcmW2CGW593likAx5TY1bqA==
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-org/-/plugin-org-1.9.0.tgz#94c9d18ae45386eece01b96093aea44168023c4f"
+  integrity sha512-a7HauXNZWKkp3QcfcuKkBP0U2NhwzsP8KOS8YVuGlAJTkCehK3A0+f6RYiqtlU6CoTsu9vsak67rs4CcLtbtsw==
   dependencies:
     "@oclif/config" "^1"
     "@salesforce/command" "^4.1.3"
