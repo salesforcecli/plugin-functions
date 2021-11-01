@@ -32,7 +32,9 @@ export default class LangRunnerJava extends LangRunner {
 
   async build(): Promise<void> {
     await this.checkJava();
+    await this.checkMaven();
     await this.ensureRuntimeJar();
+    await this.runMavenInstall();
     await this.runRuntimeJarBundle();
   }
 
@@ -48,11 +50,27 @@ export default class LangRunnerJava extends LangRunner {
     }
   }
 
+  private async checkMaven(): Promise<void> {
+    try {
+      await execa.command('mvn --version');
+    } catch (error) {
+      throw new Error('Maven executable not found.');
+    }
+  }
+
   private async ensureRuntimeJar(): Promise<void> {
     if (await this.checkRuntimeJar()) {
       return;
     }
     await this.downloadRuntimeJar();
+  }
+
+  private async runMavenInstall(): Promise<void> {
+    try {
+      await execa.command('mvn install', { stdio: 'inherit', cwd: this.path });
+    } catch (error) {
+      throw new Error(`Could not build function: ${error}`);
+    }
   }
 
   private async checkRuntimeJar(): Promise<boolean> {
