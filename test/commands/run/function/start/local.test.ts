@@ -10,7 +10,11 @@ import * as execa from 'execa';
 import * as sinon from 'sinon';
 
 describe('run:function:start:local', () => {
-  const rootPath = path.resolve(__dirname, '../../../../..');
+  const fixturesPath = path.resolve(__dirname, '../../../../fixtures');
+  const jsPath = path.resolve(fixturesPath, 'javascripttemplate');
+  const javaPath = path.resolve(fixturesPath, 'javatemplate');
+  const tsPath = path.resolve(fixturesPath, 'typescripttemplate');
+
   let sandbox: sinon.SinonSandbox;
   let commandSpy: any;
   beforeEach(() => {
@@ -24,15 +28,39 @@ describe('run:function:start:local', () => {
 
   context('without a language argument and a package.json', () => {
     test
-      .command(['run:function:start:local', '--path', rootPath])
+      .command(['run:function:start:local', '--path', jsPath])
       .it('should start the Node.js invoker runtime', (ctx) => {
+        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+      });
+  });
+
+  context('with --language=auto and a package.json', () => {
+    test
+      .command(['run:function:start:local', '--language', 'auto', '--path', jsPath])
+      .it('should start the Node.js invoker runtime', (ctx) => {
+        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+      });
+  });
+
+  context('without a language argument and a pom.xml', () => {
+    test
+      .command(['run:function:start:local', '--path', javaPath])
+      .it('should start the Java invoker runtime', (ctx) => {
+        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+      });
+  });
+
+  context('without --language=auto and a pom.xml', () => {
+    test
+      .command(['run:function:start:local', '--language', 'auto', '--path', javaPath])
+      .it('should start the Java invoker runtime', (ctx) => {
         expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
       });
   });
 
   context('with --language javascript', () => {
     test
-      .command(['run:function:start:local', '--path', rootPath, '-l', 'javascript'])
+      .command(['run:function:start:local', '--path', jsPath, '-l', 'javascript'])
       .it('should start the Node.js invoker runtime', (ctx) => {
         expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
       });
@@ -40,7 +68,7 @@ describe('run:function:start:local', () => {
 
   context('with --language typescript', () => {
     test
-      .command(['run:function:start:local', '--path', rootPath, '-l', 'typescript'])
+      .command(['run:function:start:local', '--path', tsPath, '-l', 'typescript'])
       .it('should start the Node.js invoker runtime', (ctx) => {
         expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
       });
@@ -48,7 +76,7 @@ describe('run:function:start:local', () => {
 
   context('with --language java', () => {
     test
-      .command(['run:function:start:local', '--path', rootPath, '-l', 'java'])
+      .command(['run:function:start:local', '--path', javaPath, '-l', 'java'])
       .it('should start the Java invoker runtime', (ctx) => {
         expect(commandSpy).to.have.been.calledWith(sinon.match('sf-fx-runtime-java'));
       });
