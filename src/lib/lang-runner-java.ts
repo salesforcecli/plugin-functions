@@ -18,7 +18,6 @@ const runtimeJarUrl = `https://repo1.maven.org/maven2/com/salesforce/functions/s
 const runtimeJarDir = path.resolve(os.tmpdir(), 'sf-fx-runtime-java-runtime-jar');
 const runtimeJarPath = path.resolve(runtimeJarDir, runtimeJarName);
 const runtimeJarSha = '1db6d78bdbb7aff7ebe011565190ca9dd4d3e68730e206628230d480d057fe1e';
-const bundleDir = path.resolve(os.tmpdir(), 'sf-fx-runtime-java-bundle');
 
 export default class LangRunnerJava extends LangRunner {
   async detect(): Promise<boolean> {
@@ -50,7 +49,6 @@ export default class LangRunnerJava extends LangRunner {
   }
 
   private async ensureRuntimeJar(): Promise<void> {
-    console.log(runtimeJarPath);
     if (await this.checkRuntimeJar()) {
       return;
     }

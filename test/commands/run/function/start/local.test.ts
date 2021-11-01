@@ -45,4 +45,12 @@ describe('run:function:start:local', () => {
         expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
       });
   });
+
+  context('with --language java', () => {
+    test
+      .command(['run:function:start:local', '--path', rootPath, '-l', 'java'])
+      .it('should start the Java invoker runtime', (ctx) => {
+        expect(commandSpy).to.have.been.calledWith(sinon.match('sf-fx-runtime-java'));
+      });
+  });
 });
