@@ -38,7 +38,7 @@ export default class LangRunnerJava extends LangRunner {
   }
 
   async start(): Promise<void> {
-    // run runtime jar `serve`
+    await this.runRuntimeJarServe();
   }
 
   private async checkJava(): Promise<void> {
@@ -92,7 +92,17 @@ export default class LangRunnerJava extends LangRunner {
     });
   }
 
+  private bundleDir(): string {
+    return path.resolve(this.tmpDir, 'bundle');
+  }
+
   private async runRuntimeJarBundle(): Promise<void> {
-    await execa.command(`java -jar ${runtimeJarPath} bundle ${this.path} ${bundleDir}`, { stdio: 'inherit' });
+    await execa.command(`java -jar ${runtimeJarPath} bundle ${this.path} ${this.bundleDir()}`, { stdio: 'inherit' });
+  }
+
+  private async runRuntimeJarServe(): Promise<void> {
+    await execa.command(`java -jar ${runtimeJarPath} serve --host=${this.host} --port=${this.port} ${this.path}`, {
+      stdio: 'inherit',
+    });
   }
 }
