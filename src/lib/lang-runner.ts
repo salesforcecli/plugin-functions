@@ -21,14 +21,12 @@ export default class LangRunner {
   protected readonly path: string;
   protected readonly host: string;
   protected readonly debugPort: number;
-  protected readonly tmpDir: string;
 
   constructor(opts: LangRunnerOpts) {
     this.path = opts.path || '.';
     this.port = opts.port || 8080;
     this.host = opts.host || 'localhost';
     this.debugPort = opts.debugPort || 9229;
-    this.tmpDir = path.resolve(os.tmpdir(), crypto.randomBytes(12).toString('hex'));
   }
 
   async detect(): Promise<boolean> {
