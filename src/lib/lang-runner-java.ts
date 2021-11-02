@@ -34,7 +34,6 @@ export default class LangRunnerJava extends LangRunner {
     await this.checkJava();
     await this.ensureRuntimeJar();
     await this.runMavenInstall();
-    await this.runRuntimeJarBundle();
   }
 
   async start(): Promise<void> {
@@ -97,14 +96,6 @@ export default class LangRunnerJava extends LangRunner {
           reject(err);
         });
     });
-  }
-
-  private bundleDir(): string {
-    return path.resolve(this.tmpDir, 'bundle');
-  }
-
-  private async runRuntimeJarBundle(): Promise<void> {
-    await execa.command(`java -jar ${runtimeJarPath} bundle ${this.path} ${this.bundleDir()}`, { stdio: 'inherit' });
   }
 
   private async runRuntimeJarServe(): Promise<void> {
