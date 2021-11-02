@@ -34,7 +34,7 @@ export default class Local extends Command {
       default: 8080,
     }),
     'debug-port': Flags.integer({
-      char: 'd',
+      char: 'b',
       description: messages.getMessage('flags.debug-port.summary'),
       default: 9229,
     }),

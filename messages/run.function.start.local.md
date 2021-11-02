@@ -4,8 +4,7 @@ Build and run a Salesforce Function locally.
 
 # description
 
-Run this command from the directory of your Salesforce Functions project to
-start a function invoker.
+Run this command from the directory of your Salesforce Functions project.
 
 # examples
 
