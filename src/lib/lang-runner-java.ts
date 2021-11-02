@@ -32,7 +32,6 @@ export default class LangRunnerJava extends LangRunner {
 
   async build(): Promise<void> {
     await this.checkJava();
-    await this.checkMaven();
     await this.ensureRuntimeJar();
     await this.runMavenInstall();
     await this.runRuntimeJarBundle();
@@ -47,14 +46,6 @@ export default class LangRunnerJava extends LangRunner {
       await execa.command('java --version');
     } catch (error) {
       throw new Error('Java executable not found.');
-    }
-  }
-
-  private async checkMaven(): Promise<void> {
-    try {
-      await execa.command('mvn --version');
-    } catch (error) {
-      throw new Error('Maven executable not found.');
     }
   }
 
