@@ -67,9 +67,9 @@ export default class LangRunnerJava extends LangRunner {
 
   private async runMavenInstall(): Promise<void> {
     try {
-      await execa.command('mvn install', { stdio: 'inherit', cwd: this.path });
+      await execa.command(`${path.resolve(this.path, 'mvnw')} install`, { stdio: 'inherit', cwd: this.path });
     } catch (error) {
-      throw new Error(`Could not build function: ${error}`);
+      throw new Error(`Could not build function with mvnw: ${error}`);
     }
   }
 
