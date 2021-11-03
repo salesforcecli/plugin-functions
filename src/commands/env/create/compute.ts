@@ -26,7 +26,9 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.create.compute');
 
 export default class EnvCreateCompute extends Command {
-  static description = messages.getMessage('summary');
+  static summary = messages.getMessage('summary');
+
+  static description = messages.getMessage('description');
 
   static examples = messages.getMessages('examples');
 
