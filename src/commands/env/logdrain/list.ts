@@ -17,7 +17,7 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.logdrain.list');
 
 export default class LogDrainList extends Command {
-  static description = messages.getMessage('summary');
+  static summary = messages.getMessage('summary');
 
   static examples = messages.getMessages('examples');
 

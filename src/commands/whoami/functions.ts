@@ -20,7 +20,9 @@ export type FunctionsInformationKey = typeof FIELDS[number];
 export type FunctionsInformation = { [key in FunctionsInformationKey]?: string };
 
 export default class WhoAmI extends Command {
-  static description = messages.getMessage('summary');
+  static summary = messages.getMessage('summary');
+
+  static description = messages.getMessage('description');
 
   static examples = messages.getMessages('examples');
 

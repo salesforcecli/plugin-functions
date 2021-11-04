@@ -17,7 +17,9 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.logdrain.remove');
 
 export default class LogDrainRemove extends Command {
-  static description = messages.getMessage('summary');
+  static summary = messages.getMessage('summary');
+
+  static description = messages.getMessage('description');
 
   static examples = messages.getMessages('examples');
 

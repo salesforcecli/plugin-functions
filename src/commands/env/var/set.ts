@@ -19,7 +19,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.
 export default class ConfigSet extends Command {
   static strict = false;
 
-  static description = messages.getMessage('summary');
+  static summary = messages.getMessage('summary');
 
   static examples = messages.getMessages('examples');
 

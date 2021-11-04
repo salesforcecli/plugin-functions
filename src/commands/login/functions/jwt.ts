@@ -36,7 +36,9 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'login.functions.jwt');
 
 export default class JwtLogin extends Command {
-  static description = messages.getMessage('summary');
+  static summary = messages.getMessage('summary');
+
+  static description = messages.getMessage('description');
 
   static examples = messages.getMessages('examples');
 
