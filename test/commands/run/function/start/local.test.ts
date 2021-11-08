@@ -19,7 +19,10 @@ describe('run:function:start:local', () => {
   let commandSpy: any;
   beforeEach(() => {
     sandbox = sinon.createSandbox();
-    commandSpy = sandbox.stub(execa, 'command');
+    // execa provided types are incorrect about 'command' return values.
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    commandSpy = sandbox.stub(execa, 'command').resolves({ stdout: 'v16.0.0' });
   });
 
   afterEach(() => {

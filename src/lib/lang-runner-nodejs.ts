@@ -8,6 +8,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as execa from 'execa';
+import * as semver from 'semver';
 import LangRunner from '../lib/lang-runner';
 import LocalRun from '../lib/local-run';
 
@@ -33,10 +34,16 @@ export default class NodeJsLangRunner extends LangRunner {
   }
 
   private async checkNodeJs(): Promise<void> {
+    let stdout = '';
     try {
-      await execa.command('node -v');
+      const cmd = await execa.command('node -v');
+      ({ stdout } = cmd);
     } catch (error) {
       throw new Error('Node.JS executable not found.');
+    }
+    const version = semver.clean(stdout);
+    if (!version || semver.lt(version, '14.0.0')) {
+      throw new Error('Node.js functions require Node.js 14 or greater.');
     }
   }
 
