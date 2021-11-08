@@ -73,7 +73,13 @@ export default class LangRunnerJava extends LangRunner {
   }
 
   private async downloadRuntimeJar(): Promise<void> {
-    await fs.promises.mkdir(runtimeJarDir);
+    try {
+      await fs.promises.mkdir(runtimeJarDir);
+    } catch (err) {
+      if (err.code !== 'EEXIST') {
+        throw err;
+      }
+    }
     const file = fs.createWriteStream(runtimeJarPath);
     return await new Promise((resolve, reject) => {
       https
