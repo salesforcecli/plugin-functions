@@ -85,7 +85,10 @@ export default class NodeJsLangRunner extends LangRunner {
         [
           'npx',
           '-y',
+          '-g',
+          '-p',
           '@heroku/sf-fx-runtime-nodejs@0.9.1',
+          'sf-fx-runtime-nodejs',
           'serve',
           this.path,
           '--host',
