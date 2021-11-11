@@ -90,16 +90,31 @@ export default class LangRunnerJava extends LangRunner {
 
   private async downloadRuntimeJar(): Promise<void> {
     try {
-      await fs.promises.mkdir(runtimeJarDir);
+      await this.ensureDirExists(runtimeJarDir);
+      await this.downloadToFile(runtimeJarUrl, runtimeJarPath);
+      await this.verifyFileSha(runtimeJarPath, runtimeJarSha);
     } catch (err) {
-      if (err.code !== 'EEXIST') {
-        throw err;
+      try {
+        await fs.promises.unlink(runtimeJarPath);
+      } catch {
+        // failed to delete the jar -- probably never created it.
       }
+      throw err;
     }
-    const file = fs.createWriteStream(runtimeJarPath);
-    return await new Promise((resolve, reject) => {
+  }
+
+  private async runRuntimeJarServe(): Promise<void> {
+    await execa.command(`java -jar ${runtimeJarPath} serve --host=${this.host} --port=${this.port} ${this.path}`, {
+      cwd: this.path,
+      stdio: 'inherit',
+    });
+  }
+
+  private downloadToFile(url: string, path: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const file = fs.createWriteStream(path);
       https
-        .get(runtimeJarUrl, (resp) => {
+        .get(url, (resp) => {
           const headers = JSON.stringify(resp.headers);
           if (resp.statusCode !== 200) {
             reject(`Unexpected status code: ${resp.statusCode}`);
@@ -117,32 +132,28 @@ export default class LangRunnerJava extends LangRunner {
         .on('error', (err) => {
           reject(err);
         });
-    })
-      .then(async () => {
-        const shaHash = crypto.createHash('sha256');
-        const fileBuf = await fs.promises.readFile(runtimeJarPath);
-        shaHash.update(fileBuf);
-        const shaDigest = shaHash.digest('hex');
-
-        console.log(runtimeJarSha, shaDigest);
-        if (runtimeJarSha !== shaDigest) {
-          throw new Error('sf-fx-runtime-java jar could not be validated.');
-        }
-      })
-      .catch(async (err) => {
-        try {
-          await fs.promises.unlink(runtimeJarPath);
-        } catch (err) {
-          console.log('could not delete runtime jar', err);
-        }
-        throw err;
-      });
+    });
   }
 
-  private async runRuntimeJarServe(): Promise<void> {
-    await execa.command(`java -jar ${runtimeJarPath} serve --host=${this.host} --port=${this.port} ${this.path}`, {
-      cwd: this.path,
-      stdio: 'inherit',
-    });
+  private async verifyFileSha(path: string, expectedDigest: string): Promise<void> {
+    const shaHash = crypto.createHash('sha256');
+    const fileBuf = await fs.promises.readFile(path);
+    shaHash.update(fileBuf);
+    const actualDigest = shaHash.digest('hex');
+
+    if (expectedDigest !== actualDigest) {
+      throw new Error(`${path} could not be validated.`);
+    }
+  }
+
+  private async ensureDirExists(dir: string): Promise<void> {
+    try {
+      await fs.promises.mkdir(dir);
+    } catch (err) {
+      // Don't throw if the dir already existed
+      if (err.code !== 'EEXIST') {
+        throw err;
+      }
+    }
   }
 }
