@@ -13,10 +13,11 @@ import * as execa from 'execa';
 import LangRunner from '../lib/lang-runner';
 import LocalRun from '../lib/local-run';
 
-const runtimeJarName = 'sf-fx-runtime-java-runtime-1.0.3-jar-with-dependencies.jar';
-const runtimeJarUrl = `https://repo1.maven.org/maven2/com/salesforce/functions/sf-fx-runtime-java-runtime/1.0.3/${runtimeJarName}`;
-const runtimeJarDir = path.resolve(os.tmpdir(), 'sf-fx-runtime-java-runtime-jar');
-const runtimeJarPath = path.resolve(runtimeJarDir, runtimeJarName);
+const runtimeJarVersion = '1.0.3';
+const runtimeJarName = `sf-fx-runtime-java-runtime-${runtimeJarVersion}-jar-with-dependencies.jar`;
+const runtimeJarUrl = `https://repo1.maven.org/maven2/com/salesforce/functions/sf-fx-runtime-java-runtime/${runtimeJarVersion}/${runtimeJarName}`;
+const runtimeJarDir = path.resolve(os.tmpdir(), 'sf-fx-runtime-java');
+const runtimeJarPath = path.resolve(runtimeJarDir, `sf-fx-runtime-java-${runtimeJarVersion}.jar`);
 const runtimeJarSha = '1db6d78bdbb7aff7ebe011565190ca9dd4d3e68730e206628230d480d057fe1e';
 
 export default class LangRunnerJava extends LangRunner {
