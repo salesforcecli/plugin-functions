@@ -33,7 +33,7 @@ export default class LangRunnerJava extends LangRunner {
   async build(): Promise<void> {
     await this.checkJava();
     await this.ensureRuntimeJar();
-    await this.runMavenInstall();
+    await this.runMavenCompile();
   }
 
   async start(): Promise<void> {
@@ -55,11 +55,25 @@ export default class LangRunnerJava extends LangRunner {
     await this.downloadRuntimeJar();
   }
 
-  private async runMavenInstall(): Promise<void> {
+  private async runMavenCompile(): Promise<void> {
+    let mvnBin = path.resolve(this.path, 'mvnw');
     try {
-      await execa.command(`${path.resolve(this.path, 'mvnw')} install`, { stdio: 'inherit', cwd: this.path });
+      // check to see if `mvnw` exists in function root.
+      await fs.promises.access(mvnBin);
+    } catch {
+      // mvnw does not exist, use user installed `mvn` instead.
+      mvnBin = 'mvn';
+    }
+    try {
+      // ensure mvn or mvnw exists and is executable
+      await execa.command(`${mvnBin} --version`, { cwd: this.path });
     } catch (error) {
-      throw new Error(`Could not build function with mvnw: ${error}`);
+      throw new Error(`Could not run maven executable: ${error}`);
+    }
+    try {
+      await execa.command(`${mvnBin} compile`, { stdio: 'inherit', cwd: this.path });
+    } catch (error) {
+      throw new Error(`Could not compile function with maven: ${error}`);
     }
   }
 
@@ -106,6 +120,7 @@ export default class LangRunnerJava extends LangRunner {
 
   private async runRuntimeJarServe(): Promise<void> {
     await execa.command(`java -jar ${runtimeJarPath} serve --host=${this.host} --port=${this.port} ${this.path}`, {
+      cwd: this.path,
       stdio: 'inherit',
     });
   }
