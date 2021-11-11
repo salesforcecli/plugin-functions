@@ -9,6 +9,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as https from 'https';
+import * as crypto from 'crypto';
 import * as execa from 'execa';
 import LangRunner from '../lib/lang-runner';
 import LocalRun from '../lib/local-run';
@@ -110,13 +111,32 @@ export default class LangRunnerJava extends LangRunner {
             })
             .on('end', () => {
               file.end();
-              resolve();
+              resolve(undefined);
             });
         })
         .on('error', (err) => {
           reject(err);
         });
-    });
+    })
+      .then(async () => {
+        const shaHash = crypto.createHash('sha256');
+        const fileBuf = await fs.promises.readFile(runtimeJarPath);
+        shaHash.update(fileBuf);
+        const shaDigest = shaHash.digest('hex');
+
+        console.log(runtimeJarSha, shaDigest);
+        if (runtimeJarSha !== shaDigest) {
+          throw new Error('sf-fx-runtime-java jar could not be validated.');
+        }
+      })
+      .catch(async (err) => {
+        try {
+          await fs.promises.unlink(runtimeJarPath);
+        } catch (err) {
+          console.log('could not delete runtime jar', err);
+        }
+        throw err;
+      });
   }
 
   private async runRuntimeJarServe(): Promise<void> {
