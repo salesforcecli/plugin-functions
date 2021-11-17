@@ -69,7 +69,9 @@ export default class APIClient {
   async request<T>(url: string, options: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> {
     options.headers = options.headers || {};
 
-    if (!Object.keys(options.headers).find((header) => header.toLowerCase() === 'authorization')) {
+    if (
+      !Object.keys(options.headers as Record<string, string>).find((header) => header.toLowerCase() === 'authorization')
+    ) {
       options.headers.authorization = `Bearer ${this.auth}`;
     }
 

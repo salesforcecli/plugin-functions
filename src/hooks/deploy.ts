@@ -160,7 +160,8 @@ export class FunctionsDeployer extends Deployer {
     let app: ComputeEnvironment;
     try {
       app = await fetchAppForProject(this.client!, project.name, flags['connected-org']);
-    } catch (error) {
+    } catch (err) {
+      const error = err as { body: { message?: string } };
       if (error.body.message?.includes("Couldn't find that app")) {
         throw new Error(
           `No compute environment found for org ${flags['connected-org']}. Please ensure you've created a compute environment before deploying.`
@@ -188,11 +189,12 @@ export class FunctionsDeployer extends Deployer {
 
     try {
       await this.git!.exec(pushCommand, flags.quiet);
-    } catch (error) {
+    } catch (err) {
+      const error = err as Error;
       // if they've passed `--quiet` we don't want to show any build server output *unless* there's
       // an error, in which case we want to show all of it
       if (flags.quiet) {
-        throw new Error(error.message.replace(this.auth, '<REDACTED>'));
+        throw new Error(error.message.replace(this.auth || '', '<REDACTED>'));
       }
 
       // In this case, they have not passed `--quiet`, in which case we have already streamed

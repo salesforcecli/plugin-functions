@@ -106,7 +106,8 @@ export default abstract class Command extends Base {
     try {
       await conn.metadata.list({ type: 'FunctionReference' });
       return true;
-    } catch (error) {
+    } catch (err) {
+      const error = err as Error;
       if (
         error.name.includes('INVALID_TYPE') ||
         error.message.includes('Cannot use: FunctionReference in this organization')

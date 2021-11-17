@@ -11,7 +11,7 @@ import Redactor from '../../src/lib/redactor';
 function streamToString(stream: stream.Readable) {
   const chunks: Buffer[] = [];
   return new Promise((resolve, reject) => {
-    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+    stream.on('data', (chunk: ArrayBuffer) => chunks.push(Buffer.from(chunk)));
     stream.on('error', (err) => reject(err));
     stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
   });

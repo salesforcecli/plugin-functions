@@ -68,7 +68,7 @@ workflows:
                 - linux
                 - windows
               node_version:
-                - '16'
+                - latest
                 - lts
                 - maintenance
             exclude:
@@ -78,7 +78,6 @@ workflows:
                 node_version: maintenance
       - release-management/test-plugin-inclusion:
           target_cli: sf
-          node_version: '16'
       - release-management/release-package:
           sign: true
           github-release: true
@@ -111,7 +110,8 @@ workflows:
               only:
                 - main
     jobs:
-      - release-management/test-ts-update
+      - release-management/test-ts-update:
+          es_target: ES2021
   just-nuts:
     when: << pipeline.parameters.run-just-nuts >>
     jobs:
@@ -125,3 +125,13 @@ workflows:
               os:
                 - linux
                 - windows
+  dependabot-automerge:
+    triggers:
+      - schedule:
+          cron: '0 2,5,8,11 * * *'
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - release-management/dependabot-automerge
