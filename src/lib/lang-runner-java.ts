@@ -11,6 +11,7 @@ import * as fs from 'fs';
 import * as https from 'https';
 import * as crypto from 'crypto';
 import * as execa from 'execa';
+import * as semver from 'semver';
 import LangRunner from '../lib/lang-runner';
 import LocalRun from '../lib/local-run';
 
@@ -22,6 +23,8 @@ const runtimeJarPath = path.resolve(runtimeJarDir, `sf-fx-runtime-java-${runtime
 const runtimeJarSha = '1db6d78bdbb7aff7ebe011565190ca9dd4d3e68730e206628230d480d057fe1e';
 
 export default class LangRunnerJava extends LangRunner {
+  javaVersion?: string;
+
   async detect(): Promise<boolean> {
     const pomXmlPath = path.resolve(this.path, 'pom.xml');
     try {
@@ -43,11 +46,19 @@ export default class LangRunnerJava extends LangRunner {
   }
 
   private async checkJava(): Promise<void> {
+    let stderr = '';
     try {
-      await execa.command('java --version');
+      ({ stderr } = await execa.command('java -fullversion'));
     } catch (error) {
       throw new Error('Java executable not found.');
     }
+    stderr = stderr.trim();
+    const re = /"(\d+.\d+.\d+).*"/;
+    const matches = re.exec(stderr);
+    if (!matches || matches.length < 2) {
+      throw new Error(`Could not determine Java version from: ${stderr}`);
+    }
+    this.javaVersion = matches[1];
   }
 
   private async ensureRuntimeJar(): Promise<void> {
@@ -104,10 +115,19 @@ export default class LangRunnerJava extends LangRunner {
   }
 
   private async runRuntimeJarServe(): Promise<void> {
-    await execa.command(`java -jar ${runtimeJarPath} serve --host=${this.host} --port=${this.port} ${this.path}`, {
-      cwd: this.path,
-      stdio: 'inherit',
-    });
+    let agentLibArg = '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=';
+    if (this.javaVersion && semver.satisfies(this.javaVersion, '1.8.*')) {
+      agentLibArg = agentLibArg + this.debugPort;
+    } else {
+      agentLibArg = agentLibArg + `*:${this.debugPort}`;
+    }
+    await execa.command(
+      `java ${agentLibArg} -jar ${runtimeJarPath} serve --host=${this.host} --port=${this.port} ${this.path}`,
+      {
+        cwd: this.path,
+        stdio: 'inherit',
+      }
+    );
   }
 
   private downloadToFile(url: string, path: string): Promise<void> {

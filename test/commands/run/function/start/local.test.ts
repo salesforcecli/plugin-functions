@@ -22,7 +22,7 @@ describe('run:function:start:local', () => {
     // execa provided types are incorrect about 'command' return values.
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    commandSpy = sandbox.stub(execa, 'command').resolves({ stdout: 'v16.0.0' });
+    commandSpy = sandbox.stub(execa, 'command').resolves({ stdout: 'v16.0.0', stderr: 'openjdk "16.0.1+9-25"' });
   });
 
   afterEach(() => {
