@@ -9,7 +9,7 @@ import { Command, Errors, Flags } from '@oclif/core';
 import { runFunction, RunFunctionOptions } from '@heroku/functions-core';
 import { cli } from 'cli-ux';
 import herokuColor from '@heroku-cli/color';
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 import { ConfigAggregator, Messages } from '@salesforce/core';
 import getStdin from '../../lib/get-stdin';
 
@@ -77,8 +77,8 @@ export default class Invoke extends Command {
     const aliasOrUser = flags['connected-org'] || `target-org ${targetOrg}`;
     this.log(`Using ${aliasOrUser} login credential to initialize context`);
     const runFunctionOptions = {
-      url,
       ...flags,
+      url,
       targetusername: flags['connected-org'] ?? targetOrg,
     };
     cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
@@ -86,12 +86,13 @@ export default class Invoke extends Command {
       const response = await runFunction(runFunctionOptions as RunFunctionOptions);
       cli.action.stop(herokuColor.greenBright(response.status.toString()));
       this.writeResponse(response);
-    } catch (error) {
-      cli.debug(error);
+    } catch (err) {
+      const error = err as AxiosError;
+      cli.debug(error as unknown as string);
       if (error.response) {
         cli.action.stop(herokuColor.redBright(`${error.response.status} ${error.response.statusText}`));
         this.debug(error.response);
-        this.error(error.response.data);
+        this.error(error.response.data as string);
       } else {
         cli.action.stop(herokuColor.redBright('Error'));
         this.error(error);
@@ -111,7 +112,7 @@ export default class Invoke extends Command {
     if (contentType.includes('application/json') || contentType.includes('application/cloudevents+json')) {
       cli.styledJSON(response.data);
     } else {
-      this.log(response.data);
+      this.log(response.data as string);
     }
   }
 }

@@ -11,7 +11,8 @@ export async function parseProjectToml(fnTomlPath: string): Promise<any> {
   const parser = new ProjectDescriptor();
   try {
     return await parser.parseFile(fnTomlPath);
-  } catch (error) {
+  } catch (err) {
+    const error = err as Error;
     if (error.message.includes('File Not Found')) {
       cli.error(error.message + ' Are you in the correct working directory?');
     } else {

@@ -10,6 +10,7 @@ import { Messages } from '@salesforce/core';
 import { Command, Flags } from '@oclif/core';
 import { getFunctionsBinary, getProjectDescriptor } from '@heroku/functions-core';
 import { cli } from 'cli-ux';
+import { JsonMap } from '@salesforce/ts-types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start');
@@ -96,9 +97,9 @@ export default class Start extends Command {
     try {
       descriptor = await getProjectDescriptor(buildOpts.descriptor);
     } catch (error) {
-      cli.error(error);
+      cli.error(error as Error);
     }
-    const functionName = descriptor.com.salesforce.id;
+    const functionName = descriptor.com.salesforce.id as string;
 
     const benny = await getFunctionsBinary();
 
@@ -112,11 +113,11 @@ export default class Start extends Command {
     benny.on('pack', writeMsg);
     benny.on('container', writeMsg);
 
-    benny.on('error', (msg: any) => {
+    benny.on('error', (msg: { text: string }) => {
       cli.error(msg.text, { exit: false });
     });
 
-    benny.on('log', (msg: any) => {
+    benny.on('log', (msg: { text: string; level: string; fields: JsonMap }) => {
       if (msg.level === 'debug' && !flags.verbose) return;
       if (msg.level === 'error') {
         cli.exit();
@@ -128,8 +129,10 @@ export default class Start extends Command {
 
       // evergreen:benny:message {"type":"log","timestamp":"2021-05-10T10:00:27.953248-05:00","level":"info","fields":{"debugPort":"9229","localImageName":"jvm-fn-init","network":"","port":"8080"}} +21ms
       if (msg.fields && msg.fields.localImageName) {
-        this.log(`${herokuColor.magenta('Running on port')} :${herokuColor.cyan(msg.fields.port)}`);
-        this.log(`${herokuColor.magenta('Debugger running on port')} :${herokuColor.cyan(msg.fields.debugPort)}`);
+        this.log(`${herokuColor.magenta('Running on port')} :${herokuColor.cyan(msg.fields.port as string)}`);
+        this.log(
+          `${herokuColor.magenta('Debugger running on port')} :${herokuColor.cyan(msg.fields.debugPort as string)}`
+        );
       }
     });
 

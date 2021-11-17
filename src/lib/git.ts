@@ -27,7 +27,8 @@ export class Git {
       }
 
       return subprocess;
-    } catch (error) {
+    } catch (err) {
+      const error = err as { code: string };
       if (error.code === 'ENOENT') {
         throw new Error('Git must be installed in order to deploy Salesforce Functions');
       }

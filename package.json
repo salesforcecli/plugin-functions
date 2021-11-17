@@ -63,7 +63,7 @@
     "eslint-config-salesforce-typescript": "^0.2.8",
     "eslint-plugin-header": "^3.0.0",
     "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-jsdoc": "^36.0.8",
+    "eslint-plugin-jsdoc": "^35.5.1",
     "eslint-plugin-prettier": "^4.0.0",
     "globby": "^11.0.4",
     "husky": "^7.0.2",
@@ -83,11 +83,11 @@
     "node": ">=12.0.0"
   },
   "files": [
-    "/bin",
     "/lib",
     "/messages",
     "/templates",
-    "/oclif.manifest.json"
+    "/oclif.manifest.json",
+    "/schemas"
   ],
   "homepage": "https://github.com/salesforcecli/plugin-functions",
   "keywords": [
@@ -165,13 +165,14 @@
     "format": "sf-format",
     "lint": "sf-lint",
     "postpack": "shx rm -f oclif.manifest.json",
-    "posttest": "yarn lint && yarn test:deprecation-policy",
+    "posttest": "yarn lint && yarn test:deprecation-policy && yarn test:command-reference",
     "prepack": "sf-prepack",
     "prepare": "sf-install && husky install",
     "pretest": "sf-compile-test",
     "test": "sf-test",
     "test:command-reference": "./bin/dev commandreference:generate --erroronwarnings",
     "test:deprecation-policy": "./bin/dev snapshot:compare",
+    "test:json-schema": "./bin/dev schema:compare",
     "version": "oclif readme"
   },
   "publishConfig": {

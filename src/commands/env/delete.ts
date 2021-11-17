@@ -75,7 +75,8 @@ export default class EnvDelete extends Command {
             )} is a Salesforce org. The env:delete command currently can only be used to delete compute environments. Please use sfdx force:org:delete to delete scratch and sandbox Salesforce org environments.`
           );
         }
-      } catch (error) {
+      } catch (err) {
+        const error = err as Error;
         // If the error is the one we throw above, then we will send the error to the user.
         // If not (meaning the environment name provided might be a compute environment) then we swallow the error and proceed.
         if (error.message.includes(`The environment ${herokuColor.cyan(targetCompute)} is a Salesforce org.`)) {
@@ -105,8 +106,9 @@ export default class EnvDelete extends Command {
 
     let connectedOrg: Org | null = null;
     try {
-      connectedOrg = await resolveOrg(app.data.sales_org_connection?.sales_org_id);
-    } catch (error) {
+      connectedOrg = await resolveOrg(app.data.sales_org_connection?.sales_org_id as string | undefined);
+    } catch (err) {
+      const error = err as Error;
       // It's possible that they are deleting the compute environment after deleting the org it was
       // connected to, in which case `resolveOrg` will error and we simply want to skip the process
       // of cleaning up functon refs since they're all already gone. Otherwise, something else has
