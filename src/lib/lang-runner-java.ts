@@ -140,14 +140,9 @@ export default class LangRunnerJava extends LangRunner {
             reject(`Unexpected status code: ${resp.statusCode}`);
             return;
           }
-          resp
-            .on('data', (chunk) => {
-              file.write(chunk);
-            })
-            .on('end', () => {
-              file.end();
-              resolve(undefined);
-            });
+          resp.pipe(file);
+          file.on('finish', resolve);
+          file.on('error', reject);
         })
         .on('error', (err) => {
           reject(err);
