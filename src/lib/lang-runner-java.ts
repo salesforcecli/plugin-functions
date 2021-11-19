@@ -166,7 +166,7 @@ export default class LangRunnerJava extends LangRunner {
       await fs.promises.mkdir(dir);
     } catch (err) {
       // Don't throw if the dir already existed
-      if (err.code !== 'EEXIST') {
+      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') {
         throw err;
       }
     }
