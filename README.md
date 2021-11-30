@@ -45,6 +45,7 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 - [`sf logout functions`](#sf-logout-functions)
 - [`sf run function`](#sf-run-function)
 - [`sf run function start`](#sf-run-function-start)
+- [`sf run function start local`](#sf-run-function-start-local)
 - [`sf whoami functions`](#sf-whoami-functions)
 
 ## `sf deploy functions`
@@ -416,7 +417,7 @@ EXAMPLES
 
 ## `sf run function start`
 
-Build and run a Salesforce Function locally.
+Build and run a Salesforce Function in a container.
 
 ```
 USAGE
@@ -433,7 +434,7 @@ FLAGS
   --no-pull                 Skip pulling builder image before use.
 
 DESCRIPTION
-  Build and run a Salesforce Function locally.
+  Build and run a Salesforce Function in a container.
 
   Run this command from the directory of your Salesforce Functions project.
 
@@ -449,6 +450,32 @@ EXAMPLES
   Add environment variables and specify a network:
 
     $ sf run function start --env KEY=VALUE --network host
+```
+
+## `sf run function start local`
+
+Build and run a Salesforce Function locally.
+
+```
+USAGE
+  $ sf run function start local [-p <value>] [-b <value>] [-l javascript|typescript|java|auto]
+
+FLAGS
+  -b, --debug-port=<value>                          [default: 9229] Port to use for debbugging the function.
+  -l, --language=(javascript|typescript|java|auto)  [default: auto] The language that the function runs in.
+  -p, --port=<value>                                [default: 8080] Port to bind the invoker to.
+
+DESCRIPTION
+  Build and run a Salesforce Function locally.
+
+EXAMPLES
+  Build a function and start the invoker
+
+    $ sf run function start local
+
+  Start the invoker with a specific language and port
+
+    $ sf run function start local --port 5000 --language javascript
 ```
 
 ## `sf whoami functions`
