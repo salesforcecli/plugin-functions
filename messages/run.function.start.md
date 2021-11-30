@@ -1,6 +1,6 @@
 # summary
 
-Build and run a Salesforce Function locally.
+Build and run a Salesforce Function in a container.
 
 # description
 
