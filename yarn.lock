@@ -1350,9 +1350,9 @@
   integrity sha512-i1KGxqcvJaLQali+WuypQnXwcplhtNtjs66eNsZpp2P2FL/trJJxx/VWsM0YCL2iMoIJrbXje48lvIQAQ4p2ZA==
 
 "@types/nodegit@^0.27.2":
-  version "0.27.3"
-  resolved "https://registry.yarnpkg.com/@types/nodegit/-/nodegit-0.27.3.tgz#fee7d2c3b5e8d828cd59804d6525cb7e3cabdc1f"
-  integrity sha512-Bdu5zd62wcI2bwvxyZ1WPtANMLQKgXtZOMRtodN4kaUHm8DIK0fhrVNa6QPfkDUCf8hDdanP7cTLTp7Ts5VqZg==
+  version "0.27.6"
+  resolved "https://registry.yarnpkg.com/@types/nodegit/-/nodegit-0.27.6.tgz#3dd9c716ea74bde7a645ebc752887219523b72ad"
+  integrity sha512-e4v1/klhqoSz92K5LXHH0VyriaXb3J4Ab/mdEg5McycLFxUaB2kVK2ixpDyKBep92Spn8lt0JjWQ4yJji9uDyQ==
   dependencies:
     "@types/node" "*"
 
