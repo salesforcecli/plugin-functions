@@ -7,7 +7,7 @@
   {
     "command": "env:create:compute",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["alias", "connected-org", "setalias"]
+    "flags": ["alias", "connected-org"]
   },
   {
     "command": "env:delete",
