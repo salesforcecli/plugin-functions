@@ -709,9 +709,9 @@
     wrap-ansi "^7.0.0"
 
 "@oclif/core@^1.0.0", "@oclif/core@^1.0.1", "@oclif/core@^1.0.2":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.0.3.tgz#5c906ef27afe1f5585b87982cffe7f72a7ef1bc5"
-  integrity sha512-ghQ/p06Ybsa832JIJiFTxUknApm6RnJK1MaptYSxx55GLOGiFv7+I6B4roQov9f6Zj5SQCVYjRYwmJlX0PV0XA==
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.0.4.tgz#79ba3ed554441c3c08de38c3109275f3d9a1c188"
+  integrity sha512-6WBFFb9WnSxvfXPkQa1NLbEBL6tgEpsinAao/CSP/c5yeLrDCHIEn0+0HFKJzaZcYFG+puTelai6cU2A2sTyOw==
   dependencies:
     "@oclif/linewrap" "^1.0.0"
     chalk "^4.1.0"
