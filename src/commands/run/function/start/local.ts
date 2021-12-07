@@ -4,15 +4,11 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as fs from 'fs';
 import * as path from 'path';
-import { Command, Errors, Flags } from '@oclif/core';
+import { Command, Flags } from '@oclif/core';
 import { runFunction, RunFunctionOptions } from '@heroku/functions-core';
-import { cli } from 'cli-ux';
-import herokuColor from '@heroku-cli/color';
-import { AxiosResponse } from 'axios';
-import { ConfigAggregator, Messages } from '@salesforce/core';
-import LocalRun from '../../../../lib/local-run';
+import LocalRun from '@heroku/functions-core/dist/local-run';
+import { Messages } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start.local');
