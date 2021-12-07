@@ -436,17 +436,19 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.1.3.tgz#fad612c63c7509fde6cea2eb491cfbcbba8bce43"
-  integrity sha512-mVwT6onwnKMGmOSHoF17goyA+jrFCPX8fGQc+ZzqRfEd39N9JSxAVx/RIP7f+Psaii1EvMVGNqcIwD6GJ1lpYg==
+"@heroku/functions-core@0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.1.4.tgz#8863f2c5df9256d279801a717f903dd3ef8c9030"
+  integrity sha512-Hvbvmr+/sBoW6WhnIP56xFomfcq1/K2ffQHV0ZgfiCL3hP07I6etflJizPp+4khLl3x/n1O6P51JmoEebUxJZQ==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku/project-descriptor" "0.0.5"
     "@salesforce/core" "^2.20.10"
     "@salesforce/templates" "^52.0.0"
     "@salesforce/ts-sinon" "^1.3.12"
-    axios "^0.21.1"
+    "@types/chai-as-promised" "^7.1.4"
+    axios "^0.21.2"
+    chai-as-promised "^7.1.1"
     cloudevents "^4.0.2"
     fs-extra "^9.1.0"
     global-agent "^2.1.8"
@@ -455,6 +457,7 @@
     mem-fs-editor "^8.1.2 || ^9.0.0"
     node-fetch "^2.6.1"
     openpgp "^5.0.0"
+    semver "^7.3.5"
     sha256-file "^1.0.0"
     yeoman-environment "~3.3.0"
 
@@ -1249,6 +1252,13 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.2.tgz#423c77877d0569db20e1fc80885ac4118314010e"
   integrity sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==
 
+"@types/chai-as-promised@^7.1.4":
+  version "7.1.4"
+  resolved "https://registry.yarnpkg.com/@types/chai-as-promised/-/chai-as-promised-7.1.4.tgz#caf64e76fb056b8c8ced4b761ed499272b737601"
+  integrity sha512-1y3L1cHePcIm5vXkh1DSGf/zQq5n5xDKG1fpCvf18+uOkpce0Z1ozNFPkyWsVswK7ntN1sZBw3oU6gmN+pDUcA==
+  dependencies:
+    "@types/chai" "*"
+
 "@types/chai@*", "@types/chai@^4.2.11":
   version "4.2.19"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.19.tgz#80f286b515897413c7a35bdda069cc80f2344233"
@@ -1919,7 +1929,7 @@ axios-debug-log@^0.8.2:
     "@types/debug" "^4.0.0"
     debug "^4.0.0"
 
-axios@^0.21.1:
+axios@^0.21.1, axios@^0.21.2:
   version "0.21.4"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
   integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
@@ -2247,6 +2257,13 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
+
+chai-as-promised@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/chai-as-promised/-/chai-as-promised-7.1.1.tgz#08645d825deb8696ee61725dbf590c012eb00ca0"
+  integrity sha512-azL6xMoi+uxu6z4rhWQ1jbdUhOMhis2PvscD/xjLqNMkv3BPPp2JyyuTHOrf9BOosGpNQ11v6BKv/g57RXbiaA==
+  dependencies:
+    check-error "^1.0.2"
 
 chai@^4.2.0:
   version "4.3.4"
