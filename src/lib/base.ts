@@ -79,11 +79,19 @@ export default abstract class Command extends Base {
 
   protected catch(err: any): any {
     cli.action.stop('failed');
-
     if (err.http?.response?.status === 401) {
       this.error('Your token has expired, please login with sf login functions');
     } else {
-      throw err;
+      if (this.argv.includes('--json')) {
+        const json = {
+          stack: err.stack.toString(),
+          message: err.message,
+          code: err.code,
+        };
+        cli.styledJSON(json);
+      } else {
+        throw err;
+      }
     }
   }
 
