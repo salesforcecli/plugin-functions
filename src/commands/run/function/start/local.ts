@@ -6,8 +6,7 @@
  */
 import * as path from 'path';
 import { Command, Flags } from '@oclif/core';
-import { runFunction, RunFunctionOptions } from '@heroku/functions-core';
-import LocalRun from '@heroku/functions-core/dist/local-run';
+import { LocalRun } from '@heroku/functions-core';
 import { Messages } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
