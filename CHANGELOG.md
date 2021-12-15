@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/salesforcecli/plugin-functions/compare/v1.2.2...v1.3.0) (2021-12-15)
+
+### Features
+
+- **cli:** use jsforce for login ([#312](https://github.com/salesforcecli/plugin-functions/issues/312)) ([0fa0f3f](https://github.com/salesforcecli/plugin-functions/commit/0fa0f3f7d48345dbba69199ffadb0326bfc9888d))
+
 ### [1.2.2](https://github.com/salesforcecli/plugin-functions/compare/v1.2.0...v1.2.2) (2021-11-30)
 
 ## [1.2.0](https://github.com/salesforcecli/plugin-functions/compare/v1.1.7...v1.2.0) (2021-11-30)
