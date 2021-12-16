@@ -47,7 +47,7 @@
   {
     "command": "env:var:set",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute"]
+    "flags": ["environment", "target-compute", "json"]
   },
   {
     "command": "env:var:unset",
