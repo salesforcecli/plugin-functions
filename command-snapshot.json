@@ -38,8 +38,7 @@
   {
     "command": "env:logdrain:add",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["drain-url", "environment", "target-compute", "url"],
-    "alias": []
+    "flags": ["drain-url", "environment", "target-compute", "url", "json"]
   },
   {
     "command": "env:logdrain:list",

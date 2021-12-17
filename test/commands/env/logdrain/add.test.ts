@@ -14,6 +14,18 @@ const LOG_DRAIN = {
   url: 'https://logs-r-us.com/1',
 };
 
+const LOG_DRAIN_ENV_ERR = {
+  message: "Couldn't find that app.",
+};
+
+const LOG_DRAIN_INVALID_URL = {
+  message: 'Url is invalid.',
+};
+
+const LOG_DRAIN_ALREADY_USED = {
+  message: 'Url has already been taken',
+};
+
 describe('sf env logdrain add', () => {
   test
     .stdout()
@@ -46,6 +58,57 @@ describe('sf env logdrain add', () => {
     .it('will use url if passed using the old flag (not --drain-url)', (ctx) => {
       expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
         vacuum('--url is deprecated and will be removed in a future release. Please use --drain-url going forward.')
+      );
+    });
+
+  test
+    .stdout()
+    .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
+    .command(['env:logdrain:add', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url, '--json'])
+    .retries(3)
+    .it('will show json output', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '{\n"status": 0,\n"result": [\n{\n"addon": null,\n"id": "1",\n"url": "https://logs-r-us.com/1"\n}\n],\n"warnings": []\n}'
+        )
+      );
+    });
+
+  test
+    .stdout()
+    .nock('https://api.heroku.com', (api) =>
+      api.post('/apps/invalid-environment/log-drains').reply(404, LOG_DRAIN_ENV_ERR)
+    )
+    .command(['env:logdrain:add', '--target-compute', 'invalid-environment', '-u', LOG_DRAIN.url, '--json'])
+    .it('will show json output error with incorrect compute environment', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '{\n"status": 1,\n"name": "NotFound",\n"message": "Could not find environment <invalid-environment>",\n"exitCode": 1,\n"commandName": "env logdrain add"'
+        )
+      );
+    });
+
+  test
+    .stdout()
+    .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(422, LOG_DRAIN_INVALID_URL))
+    .command(['env:logdrain:add', '--target-compute', APP_NAME, '-u', 'invalid-url', '--json'])
+    .it('will show json output error with incorrect drain-url', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum('{\n"status": 1,\n"name": "Error",\n"message": "URL is invalid <invalid-url>"')
+      );
+    });
+
+  test
+    .stdout()
+    .nock('https://api.heroku.com', (api) =>
+      api.post(`/apps/${APP_NAME}/log-drains`).reply(422, LOG_DRAIN_ALREADY_USED)
+    )
+    .command(['env:logdrain:add', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url, '--json'])
+    .it('will show json output error with drain-url already used', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '{\n"status": 1,\n"name": "Error",\n"message": "Logdrain URL is already added <https://logs-r-us.com/1>"'
+        )
       );
     });
 });
