@@ -33,6 +33,7 @@ export default class ConfigUnset extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -52,29 +53,62 @@ export default class ConfigUnset extends Command {
       this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
-    const appName = await resolveAppNameForEnvironment(targetCompute);
-
     if (argv.length === 0) {
       throw new Errors.CLIError('you must enter a config var key (i.e. mykey)');
     }
 
-    const configPairs = argv.reduce((acc, elem) => {
-      return {
-        ...acc,
-        [elem]: null,
-      };
-    }, {});
+    try {
+      const appName = await resolveAppNameForEnvironment(targetCompute);
 
-    cli.action.start(
-      `Unsetting ${Object.keys(configPairs)
-        .map((key) => herokuColor.configVar(key))
-        .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
-    );
+      if (flags.json) {
+        const configPairs = argv.reduce((acc, elem) => {
+          return {
+            ...acc,
+            [elem]: null,
+          };
+        }, {});
 
-    await this.client.patch(`/apps/${appName}/config-vars`, {
-      data: configPairs,
-    });
+        await this.client.patch(`/apps/${appName}/config-vars`, {
+          data: configPairs,
+        });
 
-    cli.action.stop();
+        cli.styledJSON({
+          status: 0,
+          result: null,
+          warnings: [],
+        });
+        return;
+      } else {
+        const configPairs = argv.reduce((acc, elem) => {
+          return {
+            ...acc,
+            [elem]: null,
+          };
+        }, {});
+
+        cli.action.start(
+          `Unsetting ${Object.keys(configPairs)
+            .map((key) => herokuColor.configVar(key))
+            .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
+        );
+
+        await this.client.patch(`/apps/${appName}/config-vars`, {
+          data: configPairs,
+        });
+
+        cli.action.stop();
+      }
+    } catch (err: any) {
+      cli.styledJSON({
+        status: 1,
+        name: 'Error',
+        message: `Couldn't find that app <${targetCompute}>`,
+        exitCode: 1,
+        commandName: 'env var unset',
+        stack: err.stack,
+        warnings: [],
+      });
+      return;
+    }
   }
 }

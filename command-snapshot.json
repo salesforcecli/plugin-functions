@@ -52,7 +52,7 @@
   {
     "command": "env:var:unset",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute"]
+    "flags": ["environment", "target-compute", "json"]
   },
   {
     "command": "generate:function",

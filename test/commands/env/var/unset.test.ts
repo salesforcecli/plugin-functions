@@ -64,4 +64,29 @@ describe('sf env:var:unset', () => {
       expect(error.message).to.contain('you must enter a config var key (i.e. mykey)');
     })
     .it('errors when no argument is given');
+
+  test
+    .stdout()
+    .nock('https://api.heroku.com', (api) =>
+      api
+        .patch('/apps/my-environment/config-vars', {
+          foo: null,
+        })
+        .reply(200)
+    )
+    .command(['env:var:unset', 'foo', '--environment', 'my-environment', '--json'])
+    .it('will show json output', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum('{\n"status": 0,\n"result": null,\n"warnings": []\n}')
+      );
+    });
+
+  test
+    .stdout()
+    .command(['env:var:unset', 'foo', '--environment', 'my-environment2', '--json'])
+    .it('will show json output error with incorrect compute environment', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum('{\n"status": 1,\n"name": "Error",\n"message": "Couldn\'t find that app <my-environment2>"')
+      );
+    });
 });
