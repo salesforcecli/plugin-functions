@@ -24,14 +24,13 @@ export default class Login extends Command {
   async run() {
     const identityUrl = process.env.SALESFORCE_FUNCTIONS_IDENTITY_URL || 'https://cli-auth.heroku.com';
 
-    const req = {
+    const rawResponse = await new Transport().httpRequest({
       method: 'POST',
       url: `${identityUrl}/sfdx/auth`,
       body: JSON.stringify({
         description: 'Login from Sfdx CLI',
       }),
-    };
-    const rawResponse = await new Transport().httpRequest(req);
+    });
 
     const { browser_url, cli_url, token } = JSON.parse(rawResponse.body);
     const browserUrl = identityUrl + browser_url;
