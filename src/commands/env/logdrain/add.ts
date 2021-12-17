@@ -43,6 +43,7 @@ export default class LogDrainAdd extends Command {
       description: messages.getMessage('flags.drain-url.summary'),
       hidden: true,
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -75,16 +76,82 @@ export default class LogDrainAdd extends Command {
       this.warn(messages.getMessage('flags.url.deprecation'));
     }
 
-    const appName = await resolveAppNameForEnvironment(targetCompute);
+    try {
+      const appName = await resolveAppNameForEnvironment(targetCompute);
 
-    cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
+      if (flags.json) {
+        const result = await this.client.post<Heroku.LogDrain>(`apps/${appName}/log-drains`, {
+          data: {
+            url,
+          },
+        });
 
-    await this.client.post<Heroku.LogDrain>(`apps/${appName}/log-drains`, {
-      data: {
-        url,
-      },
-    });
+        cli.styledJSON({
+          status: 0,
+          result: [
+            {
+              addon: null,
+              created_at: result.data.created_at,
+              id: result.data.id,
+              token: result.data.token,
+              updated_at: result.data.updated_at,
+              url: result.data.url,
+            },
+          ],
+          warnings: [],
+        });
+        return;
+      } else {
+        cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
 
-    cli.action.stop();
+        await this.client.post<Heroku.LogDrain>(`apps/${appName}/log-drains`, {
+          data: {
+            url,
+          },
+        });
+
+        cli.action.stop();
+      }
+    } catch (err: any) {
+      const error = err as { body: { message?: string } };
+      if (error.body?.message?.includes("Couldn't find that app.")) {
+        cli.styledJSON({
+          status: 1,
+          name: 'NotFound',
+          message: `Could not find environment <${targetCompute}>`,
+          exitCode: 1,
+          commandName: 'env logdrain add',
+          stack: err.stack,
+          warnings: [],
+        });
+        return;
+      }
+
+      if (error.body?.message?.includes('Url has already been taken')) {
+        cli.styledJSON({
+          status: 1,
+          name: 'Error',
+          message: `Logdrain URL is already added <${url}>`,
+          exitCode: 1,
+          commandName: 'env logdrain add',
+          stack: err.stack,
+          warnings: [],
+        });
+        return;
+      }
+
+      if (error.body?.message?.includes('Url is invalid')) {
+        cli.styledJSON({
+          status: 1,
+          name: 'Error',
+          message: `URL is invalid <${url}>`,
+          exitCode: 1,
+          commandName: 'env logdrain add',
+          stack: err.stack,
+          warnings: [],
+        });
+        return;
+      }
+    }
   }
 }
