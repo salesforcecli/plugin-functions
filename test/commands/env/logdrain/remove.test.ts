@@ -41,14 +41,23 @@ describe('sf env logdrain remove', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .nock('https://api.heroku.com', (api) =>
       api.delete(`/apps/${APP_NAME}/log-drains/${encodeURIComponent(LOG_DRAIN.url)}`).reply(200, LOG_DRAIN)
     )
-    .command(['env:logdrain:remove', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url])
-    .it('will use url if passed using the old flag (not --drain-url)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('--url is deprecated and will be removed in a future release. Please use --drain-url going forward.')
+    .command(['env:logdrain:remove', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url, '--json'])
+    .it('will show json output', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum('{\n"status": 0,\n"result": null,\n"warnings": []\n}')
+      );
+    });
+
+  test
+    .stdout()
+    .command(['env:logdrain:remove', '--target-compute', 'invalid-environment', '-u', LOG_DRAIN.url, '--json'])
+    .it('will show json output error with incorrect compute environment', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum('{\n"status": 1,\n"name": "Error",\n"message": "Couldn\'t find that app <invalid-environment>"')
       );
     });
 });

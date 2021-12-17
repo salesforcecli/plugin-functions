@@ -43,6 +43,7 @@ export default class LogDrainRemove extends Command {
       description: messages.getMessage('flags.drain-url.summary'),
       hidden: true,
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -75,12 +76,36 @@ export default class LogDrainRemove extends Command {
       this.warn(messages.getMessage('flags.url.deprecation'));
     }
 
-    const appName = await resolveAppNameForEnvironment(targetCompute);
+    try {
+      const appName = await resolveAppNameForEnvironment(targetCompute);
 
-    cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
+      if (flags.json) {
+        await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(url)}`);
 
-    await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(url)}`);
+        cli.styledJSON({
+          status: 0,
+          result: null,
+          warnings: [],
+        });
+        return;
+      } else {
+        cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
 
-    cli.action.stop();
+        await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(url)}`);
+
+        cli.action.stop();
+      }
+    } catch (err: any) {
+      cli.styledJSON({
+        status: 1,
+        name: 'Error',
+        message: `Couldn't find that app <${targetCompute}>`,
+        exitCode: 1,
+        commandName: 'env logdrain remove',
+        stack: err.stack,
+        warnings: [],
+      });
+      return;
+    }
   }
 }
