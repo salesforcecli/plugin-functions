@@ -1338,9 +1338,9 @@
   integrity sha512-i1KGxqcvJaLQali+WuypQnXwcplhtNtjs66eNsZpp2P2FL/trJJxx/VWsM0YCL2iMoIJrbXje48lvIQAQ4p2ZA==
 
 "@types/nodegit@^0.27.2":
-  version "0.27.6"
-  resolved "https://registry.yarnpkg.com/@types/nodegit/-/nodegit-0.27.6.tgz#3dd9c716ea74bde7a645ebc752887219523b72ad"
-  integrity sha512-e4v1/klhqoSz92K5LXHH0VyriaXb3J4Ab/mdEg5McycLFxUaB2kVK2ixpDyKBep92Spn8lt0JjWQ4yJji9uDyQ==
+  version "0.27.7"
+  resolved "https://registry.yarnpkg.com/@types/nodegit/-/nodegit-0.27.7.tgz#f63b319832169e54353dcec627af11cb61e67ef8"
+  integrity sha512-9+8MyP/OWMlqnxz4PpwZx8J3eMiRXP39SY5mVgLPfvnGpxFC8WdC0KdQtaFXfHc7SHDawhZcrtQPi3fQ4QsZYg==
   dependencies:
     "@types/node" "*"
 
