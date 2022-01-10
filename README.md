@@ -45,6 +45,7 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 - [`sf logout functions`](#sf-logout-functions)
 - [`sf run function`](#sf-run-function)
 - [`sf run function start`](#sf-run-function-start)
+- [`sf run function start container`](#sf-run-function-start-container)
 - [`sf run function start local`](#sf-run-function-start-local)
 - [`sf whoami functions`](#sf-whoami-functions)
 
@@ -417,11 +418,53 @@ EXAMPLES
 
 ## `sf run function start`
 
-Build and run a Salesforce Function in a container.
+Build and run a Salesforce Function.
 
 ```
 USAGE
   $ sf run function start [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network <value>] [-v]
+
+FLAGS
+  -b, --debug-port=<value>  [default: 9229] Port for remote debugging.
+  -e, --env=<value>...      Set environment variables (provided during build and run).
+  -p, --port=<value>        [default: 8080] Port for running the function.
+  -v, --verbose             Output additional logs.
+  --clear-cache             Clear associated cache before executing.
+  --network=<value>         Connect and build containers to a network. This can be useful to build containers which
+                            require a local resource.
+  --no-pull                 Skip pulling builder image before use.
+
+DESCRIPTION
+  Build and run a Salesforce Function.
+
+  Run this command from the directory of your Salesforce Functions project.
+
+  This command will run the target function in a container. In the future, this command will run the target function on
+  the host operating system (locally) instead. If one mode is preferred over the other, consider using the `container`
+  or `local` subcommand instead.
+
+EXAMPLES
+  Build and run a function:
+
+    $ sf run function start
+
+  Run a function on a specific port with additional logs:
+
+    $ sf run function start --port 5000 --verbose
+
+  Add environment variables and specify a network:
+
+    $ sf run function start --env KEY=VALUE --network host
+```
+
+## `sf run function start container`
+
+Build and run a Salesforce Function in a container.
+
+```
+USAGE
+  $ sf run function start container [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network
+  <value>] [-v]
 
 FLAGS
   -b, --debug-port=<value>  [default: 9229] Port for remote debugging.
@@ -441,15 +484,15 @@ DESCRIPTION
 EXAMPLES
   Build and run a function:
 
-    $ sf run function start
+    $ sf run function start container
 
   Run a function on a specific port with additional logs:
 
-    $ sf run function start --port 5000 --verbose
+    $ sf run function start container --port 5000 --verbose
 
   Add environment variables and specify a network:
 
-    $ sf run function start --env KEY=VALUE --network host
+    $ sf run function start container --env KEY=VALUE --network host
 ```
 
 ## `sf run function start local`

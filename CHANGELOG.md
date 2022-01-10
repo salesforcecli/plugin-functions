@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/salesforcecli/plugin-functions/compare/v1.3.2...v1.4.0) (2022-01-10)
+
+### Features
+
+- alias run function start to run function start container ([#340](https://github.com/salesforcecli/plugin-functions/issues/340)) ([b3a8dd5](https://github.com/salesforcecli/plugin-functions/commit/b3a8dd51a385feac6d3aeedf43a417cf5c40d4b7))
+
 ### [1.3.2](https://github.com/salesforcecli/plugin-functions/compare/v1.3.1...v1.3.2) (2022-01-07)
 
 ### Bug Fixes
