@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/salesforcecli/plugin-functions/compare/v1.4.1...v1.4.2) (2022-01-10)
+
+### Bug Fixes
+
+- **cli:** add content type header to requests ([#341](https://github.com/salesforcecli/plugin-functions/issues/341)) ([4ed82b6](https://github.com/salesforcecli/plugin-functions/commit/4ed82b6988149b458520e758778b2662e090508b))
+
 ### [1.4.1](https://github.com/salesforcecli/plugin-functions/compare/v1.4.0...v1.4.1) (2022-01-10)
 
 ### Bug Fixes
