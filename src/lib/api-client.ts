@@ -48,6 +48,7 @@ export default class APIClient {
 
     options.headers = {
       Accept: 'application/vnd.heroku+json; version=3',
+      'Content-Type': 'application/json',
       ...envHeaders,
       ...options.headers,
     };
