@@ -79,7 +79,7 @@ export default class LogDrainRemove extends Command {
 
     cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
 
-    await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(url)}`);
+    await this.client.delete<Heroku.LogDrain>(`/apps/${appName}/log-drains/${encodeURIComponent(url)}`);
 
     cli.action.stop();
   }
