@@ -29,6 +29,7 @@ export default class Start extends Local {
     }),
     'clear-cache': Flags.boolean({
       description: messages.getMessage('flags.clear-cache.summary'),
+      hidden: true,
     }),
     'debug-port': Flags.integer({
       char: 'b',
@@ -43,6 +44,7 @@ export default class Start extends Local {
       char: 'e',
       description: messages.getMessage('flags.env.summary'),
       multiple: true,
+      hidden: true,
     }),
     language: Flags.enum({
       options: ['javascript', 'typescript', 'java', 'auto'],
@@ -52,6 +54,7 @@ export default class Start extends Local {
     }),
     network: Flags.string({
       description: messages.getMessage('flags.network.summary'),
+      hidden: true,
     }),
     'no-build': Flags.boolean({
       description: messages.getMessage('flags.no-build.summary'),
@@ -59,6 +62,7 @@ export default class Start extends Local {
     }),
     'no-pull': Flags.boolean({
       description: messages.getMessage('flags.no-pull.summary'),
+      hidden: true,
     }),
     'no-run': Flags.boolean({
       description: messages.getMessage('flags.no-run.summary'),
