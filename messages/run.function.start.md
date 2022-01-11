@@ -10,45 +10,9 @@ This command will run the target function locally (on the same operating system 
 
 Previously, this command ran functions in a container. Container mode is still supported via the `container` subcommand. Arguments relevant to container mode are still accepted, but are deprecated, ignored, and will be dropped in a future release.
 
-# flags.builder.summary
-
-Set custom builder image. Deprecated.
-
-# flags.clear-cache.summary
-
-Clear associated cache before executing. Deprecated.
-
-# flags.debug-port.summary
-
-Port for remote debugging.
-
-# flags.descriptor.summary
-
-Path to project descriptor file (project.toml) that contains function and/or bulid configuration. Deprecated.
-
-# flags.env.summary
-
-Set environment variables (provided during build and run). Deprecated.
-
 # flags.language.summary
 
 The language that the function runs in.
-
-# flags.network.summary
-
-Connect and build containers to a network. This can be useful to build containers which require a local resource. Deprecated.
-
-# flags.no-build.summary
-
-Skip building the an image. Deprecated.
-
-# flags.no-pull.summary
-
-Skip pulling builder image before use. Deprecated.
-
-# flags.no-run.summary
-
-Skip running the built image. Deprecated.
 
 # flags.path.summary
 
@@ -58,6 +22,42 @@ Path to function directory.
 
 Port for running the function.
 
+# flags.debug-port.summary
+
+Port for remote debugging.
+
 # flags.verbose.summary
 
 Output additional logs.
+
+# flags.builder.deprecation
+
+--builder is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.clear-cache.deprecation
+
+--clear-cache is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.descriptor.deprecation
+
+--descriptor is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.env.deprecation
+
+--descriptor is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.network.deprecation
+
+--network is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.no-build.deprecation
+
+--no-build is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.no-pull.deprecation
+
+--no-pull is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.no-run.deprecation
+
+--no-run is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.

@@ -7,28 +7,26 @@
 
 import * as path from 'path';
 import { Messages } from '@salesforce/core';
-import { Flags } from '@oclif/core';
-import Local from './start/local';
+import { Command, Flags } from '@oclif/core';
+import { LocalRun } from '@heroku/functions-core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start');
 
-// run:function:start is an alias to run:function:start:local.
+// run:function:start is a synonym command to run:function:start:local.
 // run:function:start previously ran via container mode, so it accepts
 // arguments applicable to the container subcommand, but ignores them and flags
 // them as deprecated. The additional flags may be removed after 04/30/2022.
-export default class Start extends Local {
+export default class Start extends Command {
   static summary = messages.getMessage('summary');
 
   static description = messages.getMessage('description');
 
   static flags = {
     builder: Flags.string({
-      description: messages.getMessage('flags.builder.summary'),
       hidden: true,
     }),
     'clear-cache': Flags.boolean({
-      description: messages.getMessage('flags.clear-cache.summary'),
       hidden: true,
     }),
     'debug-port': Flags.integer({
@@ -37,35 +35,28 @@ export default class Start extends Local {
       default: 9229,
     }),
     descriptor: Flags.string({
-      description: messages.getMessage('flags.descriptor.summary'),
       hidden: true,
     }),
     env: Flags.string({
       char: 'e',
-      description: messages.getMessage('flags.env.summary'),
       multiple: true,
       hidden: true,
     }),
     language: Flags.enum({
       options: ['javascript', 'typescript', 'java', 'auto'],
-      description: messages.getMessage('flags.language.summary'),
       char: 'l',
       default: 'auto',
     }),
     network: Flags.string({
-      description: messages.getMessage('flags.network.summary'),
       hidden: true,
     }),
     'no-build': Flags.boolean({
-      description: messages.getMessage('flags.no-build.summary'),
       hidden: true,
     }),
     'no-pull': Flags.boolean({
-      description: messages.getMessage('flags.no-pull.summary'),
       hidden: true,
     }),
     'no-run': Flags.boolean({
-      description: messages.getMessage('flags.no-run.summary'),
       hidden: true,
     }),
     path: Flags.string({
@@ -83,4 +74,25 @@ export default class Start extends Local {
       description: messages.getMessage('flags.verbose.summary'),
     }),
   };
+
+  async run() {
+    const { flags } = await this.parse(Start);
+    Object.entries(flags).forEach(([flag, val]) => {
+      let msg: string | null = null;
+      try {
+        msg = messages.getMessage(`flags.${flag}.deprecation`);
+        if (val) {
+          this.warn(msg);
+        }
+      } catch {
+        // No deprecation message, flag is not deprecated
+      }
+    });
+    const localRun = new LocalRun(flags.language, {
+      path: flags.path,
+      port: flags.port,
+      debugPort: flags['debug-port'],
+    });
+    await localRun.exec();
+  }
 }
