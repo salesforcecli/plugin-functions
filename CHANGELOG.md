@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3](https://github.com/salesforcecli/plugin-functions/compare/v1.4.2...v1.4.3) (2022-01-12)
+
+### Bug Fixes
+
+- update heroku function-core to 0.2.3 ([#342](https://github.com/salesforcecli/plugin-functions/issues/342)) ([503216d](https://github.com/salesforcecli/plugin-functions/commit/503216d4c08213afc940c7288ac0e5a5204aea91))
+
 ### [1.4.2](https://github.com/salesforcecli/plugin-functions/compare/v1.4.1...v1.4.2) (2022-01-10)
 
 ### Bug Fixes
