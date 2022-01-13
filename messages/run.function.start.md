@@ -44,7 +44,7 @@ Output additional logs.
 
 # flags.env.deprecation
 
---descriptor is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+--env is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
 
 # flags.network.deprecation
 
