@@ -7,17 +7,19 @@
 
 import * as path from 'path';
 import { Messages } from '@salesforce/core';
-import { Command, Flags } from '@oclif/core';
+import { Flags } from '@oclif/core';
 import { LocalRun } from '@heroku/functions-core';
+
+import Local from './start/local';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start');
 
-// run:function:start is a synonym command to run:function:start:local.
-// run:function:start previously ran via container mode, so it accepts
+// run:function:start is an alias command to run:function:start:local.
+// run:function:start previously ran via container mode, so it still accepts
 // arguments applicable to the container subcommand, but ignores them and flags
 // them as deprecated. The additional flags may be removed after 04/30/2022.
-export default class Start extends Command {
+export default class Start extends Local {
   static summary = messages.getMessage('summary');
 
   static description = messages.getMessage('description');
@@ -88,11 +90,6 @@ export default class Start extends Command {
         // No deprecation message, flag is not deprecated
       }
     });
-    const localRun = new LocalRun(flags.language, {
-      path: flags.path,
-      port: flags.port,
-      debugPort: flags['debug-port'],
-    });
-    await localRun.exec();
+    await this.runWithFlags(flags);
   }
 }
