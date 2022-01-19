@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/salesforcecli/plugin-functions/compare/v1.4.3...v1.5.0) (2022-01-19)
+
+### Features
+
+- run:function:start defaults to local mode ([#343](https://github.com/salesforcecli/plugin-functions/issues/343)) ([a2bd50c](https://github.com/salesforcecli/plugin-functions/commit/a2bd50c950cd9fe4f77bd6e6f3d662a977b9946c))
+
 ### [1.4.3](https://github.com/salesforcecli/plugin-functions/compare/v1.4.2...v1.4.3) (2022-01-12)
 
 ### Bug Fixes

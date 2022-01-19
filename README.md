@@ -422,39 +422,34 @@ Build and run a Salesforce Function.
 
 ```
 USAGE
-  $ sf run function start [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network <value>] [-v]
+  $ sf run function start [-b <value>] [-l javascript|typescript|java|auto] [-p <value>] [-v]
 
 FLAGS
-  -b, --debug-port=<value>  [default: 9229] Port for remote debugging.
-  -e, --env=<value>...      Set environment variables (provided during build and run).
-  -p, --port=<value>        [default: 8080] Port for running the function.
-  -v, --verbose             Output additional logs.
-  --clear-cache             Clear associated cache before executing.
-  --network=<value>         Connect and build containers to a network. This can be useful to build containers which
-                            require a local resource.
-  --no-pull                 Skip pulling builder image before use.
+  -b, --debug-port=<value>                          [default: 9229] Port for remote debugging.
+  -l, --language=(javascript|typescript|java|auto)  [default: auto]
+  -p, --port=<value>                                [default: 8080] Port for running the function.
+  -v, --verbose                                     Output additional logs.
 
 DESCRIPTION
   Build and run a Salesforce Function.
 
   Run this command from the directory of your Salesforce Functions project.
 
-  This command will run the target function in a container. In the future, this command will run the target function on
-  the host operating system (locally) instead. If one mode is preferred over the other, consider using the `container`
-  or `local` subcommand instead.
+  This command will run the target function locally (on the same operating system as this CLI), just like the `local`
+  subcommand.
+
+  Previously, this command ran functions in a container. Container mode is still supported via the `container`
+  subcommand. Arguments relevant to container mode are still accepted, but are deprecated, ignored, and will be dropped
+  in a future release.
 
 EXAMPLES
-  Build and run a function:
+  Build a function and start the invoker
 
     $ sf run function start
 
-  Run a function on a specific port with additional logs:
+  Start the invoker with a specific language and port
 
-    $ sf run function start --port 5000 --verbose
-
-  Add environment variables and specify a network:
-
-    $ sf run function start --env KEY=VALUE --network host
+    $ sf run function start --port 5000 --language javascript
 ```
 
 ## `sf run function start container`
