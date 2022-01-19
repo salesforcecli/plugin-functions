@@ -43,6 +43,12 @@ export default class Local extends Command {
 
   async run() {
     const { flags } = await this.parse(Local);
+    await this.runWithFlags(flags);
+  }
+
+  async runWithFlags(
+    flags: { path: string; port: number; 'debug-port': number; language: string } & { json: boolean | undefined }
+  ) {
     const localRun = new LocalRun(flags.language, {
       path: flags.path,
       port: flags.port,
