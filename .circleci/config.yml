@@ -79,6 +79,7 @@ workflows:
       - release-management/test-plugin-inclusion:
           target_cli: sf
       - release-management/release-package:
+          context: AWS
           sign: true
           github-release: true
           tag: prerelease
