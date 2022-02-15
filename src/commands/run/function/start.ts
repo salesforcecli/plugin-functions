@@ -45,6 +45,7 @@ export default class Start extends Local {
       hidden: true,
     }),
     language: Flags.enum({
+      description: messages.getMessage('flags.language.summary'),
       options: ['javascript', 'typescript', 'java', 'auto'],
       char: 'l',
       default: 'auto',
