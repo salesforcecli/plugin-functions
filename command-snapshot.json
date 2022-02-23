@@ -24,6 +24,12 @@
     "alias": []
   },
   {
+    "command": "env:compute:collaborator:add",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["heroku-user"],
+    "alias": []
+  },
+  {
     "command": "env:logdrain:add",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["drain-url", "environment", "target-compute", "url"],
