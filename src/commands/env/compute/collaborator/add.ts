@@ -9,14 +9,14 @@ import * as Heroku from '@heroku-cli/schema';
 import { Errors, Flags } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
-import { FunctionsFlagBuilder } from '../../../lib/flags';
-import Command from '../../../lib/base';
-import { resolveAppNameForEnvironment } from '../../../lib/utils';
+import { FunctionsFlagBuilder } from '../../../../lib/flags';
+import Command from '../../../../lib/base';
+import { resolveAppNameForEnvironment } from '../../../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.logdrain.add');
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.compute.collaborator.add');
 
-export default class LogDrainAdd extends Command {
+export default class ComputeCollaboratorAdd extends Command {
   static summary = messages.getMessage('summary');
 
   static description = messages.getMessage('description');
@@ -25,40 +25,38 @@ export default class LogDrainAdd extends Command {
 
   static flags = {
     'heroku-user': FunctionsFlagBuilder.environment({
-      exclusive: ['environment'],
-    }),
-    environment: FunctionsFlagBuilder.environment({
-      char: 'e',
-      exclusive: ['target-compute'],
-      hidden: true,
+      char: 'h',
+      required: true,
     }),
   };
 
   async run() {
-    const { flags } = await this.parse(LogDrainAdd);
+    const { flags } = await this.parse(ComputeCollaboratorAdd);
     // We support both versions of the flag here for the sake of backward compat
-    const targetCompute = flags['target-compute'] ?? flags.environment;
-    const url = flags['drain-url'] ?? flags.url;
+    const herokuUser = flags['heroku-user'];
 
-    if (!targetCompute) {
+    if (!herokuUser) {
       throw new Errors.CLIError(
         `Missing required flag:
-        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+        -c, --heroku-user heroku-user  ${herokuColor.dim('Environment name.')}
        See more help with --help`
       );
     }
 
-    if (flags.environment) {
-      this.warn(messages.getMessage('flags.environment.deprecation'));
-    }
+    const appName = await resolveAppNameForEnvironment(herokuUser);
 
-    const appName = await resolveAppNameForEnvironment(targetCompute);
+    cli.action.start(`Creating drain for environment ${herokuColor.app(herokuUser)}`);
 
-    cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
+    // Add this POST
+
+    //   curl -v POST https://api.heroku.com/salesforce-orgs/collaborators \
+    // -H 'Accept: application/vnd.heroku+json; version=3.evergreen' \
+    // -H "Authorization: Bearer $FUNCTIONS_TOKEN" \
+    // -d "user=$HEROKU_USER"
 
     await this.client.post<Heroku.LogDrain>(`/apps/${appName}/log-drains`, {
       data: {
-        url,
+        // url,
       },
     });
 
