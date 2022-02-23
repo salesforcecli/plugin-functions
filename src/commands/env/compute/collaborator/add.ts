@@ -38,14 +38,12 @@ export default class ComputeCollaboratorAdd extends Command {
     if (!herokuUser) {
       throw new Errors.CLIError(
         `Missing required flag:
-        -c, --heroku-user heroku-user  ${herokuColor.dim('Environment name.')}
+        -c, --heroku-user heroku-user  ${herokuColor.dim('Heroku user name.')}
        See more help with --help`
       );
     }
 
-    const appName = await resolveAppNameForEnvironment(herokuUser);
-
-    cli.action.start(`Creating drain for environment ${herokuColor.app(herokuUser)}`);
+    cli.action.start(`Adding collaborator ${herokuColor.heroku(herokuUser)} to compute environments.`);
 
     // Add this POST
 
@@ -54,9 +52,13 @@ export default class ComputeCollaboratorAdd extends Command {
     // -H "Authorization: Bearer $FUNCTIONS_TOKEN" \
     // -d "user=$HEROKU_USER"
 
-    await this.client.post<Heroku.LogDrain>(`/apps/${appName}/log-drains`, {
+    await this.client.post<Heroku.Collaborator>('/salesforce-orgs/collaborators', {
+      headers: {
+        Accept: 'application/vnd.heroku+json; version=3.evergreen',
+        Authorization: `Bearer ${this.auth}`,
+      },
       data: {
-        // url,
+        user: herokuUser,
       },
     });
 
