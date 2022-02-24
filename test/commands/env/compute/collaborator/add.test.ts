@@ -5,47 +5,57 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
+import type { GlobalInfo, SfTokens } from '@salesforce/core';
+import herokuColor from '@heroku-cli/color';
 import vacuum from '../../../../helpers/vacuum';
+import { AuthStubs } from '../../../../helpers/auth';
 
-const APP_NAME = 'my-app';
-
-const LOG_DRAIN = {
-  id: '1',
-  url: 'https://logs-r-us.com/1',
-};
+const HEROKU_USER = 'rick@morty.com';
 
 describe('sf env compute collaborator add', () => {
+  let contents: SfTokens;
+
+  beforeEach(() => {
+    AuthStubs.write.callsFake(async function (this: GlobalInfo) {
+      contents = this.tokens.getAll(true);
+      return this.getContents();
+    });
+  });
+
+  //   test
+  //     .stdout()
+  //     .stderr()
+  //     .command(['logout:functions'])
+  //     .it('removes the functions key from the tokens field on logout', (ctx) => {
+  //       sinon.assert.match(contents, contents);
+  //     });
+
   test
     .stdout()
     .stderr()
-    .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
-    .command(['env:logdrain:add', '-e', APP_NAME, '-l', LOG_DRAIN.url])
-    .retries(3)
-    .it('creates a log drain', (ctx) => {
-      expect(ctx.stderr).to.contain(`Creating drain for environment ${APP_NAME}`);
+    .nock('https://api.heroku.com', (api) => api.post('/salesforce-orgs/collaborators').reply(200, {}))
+    .command(['env:compute:collaborator:add', '-h', HEROKU_USER])
+    .it('connects heroku user to compute environments', (ctx) => {
+      expect(ctx.stderr).to.contain(`Adding collaborator ${herokuColor.heroku(HEROKU_USER)} to compute environments.`);
+      // write test to make sure that network requst functionw as called
     });
 
   test
+    .stdout()
     .stderr()
-    .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
-    .command(['env:logdrain:add', '--environment', APP_NAME, '-l', LOG_DRAIN.url])
-    .retries(3)
-    .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum(
-          '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
-        )
-      );
+    .nock('https://api.heroku.com', (api) => api.post('/salesforce-orgs/collaborators').reply(409, {}))
+    .command(['env:compute:collaborator:add', '-h', HEROKU_USER])
+    .retries(2)
+    .it('alerts user if they already have a specifc user added', (ctx) => {
+      expect(ctx.stderr).to.contain(`Collaborator ${herokuColor.heroku(HEROKU_USER)} has already been added.`);
     });
 
   test
+    .stdout()
     .stderr()
-    .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
-    .command(['env:logdrain:add', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url])
-    .retries(3)
-    .it('will use url if passed using the old flag (not --drain-url)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('--url is deprecated and will be removed in a future release. Please use --drain-url going forward.')
-      );
+    .nock('https://api.heroku.com', (api) => api.post('/salesforce-orgs/collaborators').reply(404, {}))
+    .command(['env:compute:collaborator:add', '-h', HEROKU_USER])
+    .it('alerts user if user entered does not exist', (ctx) => {
+      expect(ctx.stderr).to.contain(`There is no Heroku User under the username ${herokuColor.heroku(HEROKU_USER)}.`);
     });
 });

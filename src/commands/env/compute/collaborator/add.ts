@@ -52,15 +52,20 @@ export default class ComputeCollaboratorAdd extends Command {
     // -H "Authorization: Bearer $FUNCTIONS_TOKEN" \
     // -d "user=$HEROKU_USER"
 
-    await this.client.post<Heroku.Collaborator>('/salesforce-orgs/collaborators', {
-      headers: {
-        Accept: 'application/vnd.heroku+json; version=3.evergreen',
-        Authorization: `Bearer ${this.auth}`,
-      },
-      data: {
-        user: herokuUser,
-      },
-    });
+    try {
+      await this.client.post<Heroku.Collaborator>('/salesforce-orgs/collaborators', {
+        headers: {
+          Accept: 'application/vnd.heroku+json; version=3.evergreen',
+          Authorization: `Bearer ${this.auth}`,
+        },
+        data: {
+          user: herokuUser,
+        },
+      });
+    } catch (e) {
+      const error = e as Error;
+      this.error(error.message);
+    }
 
     cli.action.stop();
   }
