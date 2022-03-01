@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/salesforcecli/plugin-functions/compare/v1.5.0...v1.6.0) (2022-03-01)
+
+### Features
+
+- com.salesforce.salesforce-api-version ([#361](https://github.com/salesforcecli/plugin-functions/issues/361)) ([d14c081](https://github.com/salesforcecli/plugin-functions/commit/d14c081964df25a47dc8d7b0f0dc5089f41d23cc))
+
+### Bug Fixes
+
+- add help text for run function start --language ([#362](https://github.com/salesforcecli/plugin-functions/issues/362)) ([069e3af](https://github.com/salesforcecli/plugin-functions/commit/069e3af60a1fed8d4be924bf12304231bc3dc93e))
+
 ## [1.5.0](https://github.com/salesforcecli/plugin-functions/compare/v1.4.3...v1.5.0) (2022-01-19)
 
 ### Features

@@ -426,7 +426,7 @@ USAGE
 
 FLAGS
   -b, --debug-port=<value>                          [default: 9229] Port for remote debugging.
-  -l, --language=(javascript|typescript|java|auto)  [default: auto]
+  -l, --language=(javascript|typescript|java|auto)  [default: auto] The language that the function runs in.
   -p, --port=<value>                                [default: 8080] Port for running the function.
   -v, --verbose                                     Output additional logs.
 
