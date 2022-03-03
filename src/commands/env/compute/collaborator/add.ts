@@ -35,7 +35,7 @@ export default class ComputeCollaboratorAdd extends Command {
     if (!herokuUser) {
       throw new Errors.CLIError(
         `Missing required flag:
-        -h, --heroku-user heroku-email  ${herokuColor.dim('Heroku user email address.')}
+        -h, --heroku-user example@heroku.com  ${herokuColor.dim('Heroku user email address.')}
        See more help with --help`
       );
     }
