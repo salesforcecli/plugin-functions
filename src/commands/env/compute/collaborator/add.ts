@@ -18,13 +18,12 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.comp
 export default class ComputeCollaboratorAdd extends Command {
   static summary = messages.getMessage('summary');
 
-  static description = messages.getMessage('description');
-
   static examples = messages.getMessages('examples');
 
   static flags = {
     'heroku-user': FunctionsFlagBuilder.environment({
       char: 'h',
+      description: messages.getMessage('flags.heroku-user.summary'),
       required: true,
     }),
   };
@@ -36,12 +35,18 @@ export default class ComputeCollaboratorAdd extends Command {
     if (!herokuUser) {
       throw new Errors.CLIError(
         `Missing required flag:
-        -c, --heroku-user heroku-user  ${herokuColor.dim('Heroku user name.')}
+        -c, --heroku-user heroku-user  ${herokuColor.dim('Heroku user email address.')}
        See more help with --help`
       );
     }
 
-    cli.action.start(`Adding collaborator ${herokuColor.heroku(herokuUser)} to compute environments.`);
+    cli.action.start(
+      `Adding Heroku user ${herokuColor.heroku(herokuUser)} as a collaborator on this Functions account`
+    );
+
+    cli.action.stop();
+
+    this.log('For more information about attaching add-ons to your Functions, see Addons:Attach.');
 
     try {
       await this.client.post<Heroku.Collaborator>('/salesforce-orgs/collaborators', {
@@ -57,11 +62,11 @@ export default class ComputeCollaboratorAdd extends Command {
       const error = e as Error;
 
       if (error.message?.includes('409')) {
-        this.error(`Collaborator ${herokuColor.heroku(herokuUser)} has already been added.`);
+        this.error(`${herokuColor.heroku(herokuUser)} is already a collaborator to this Functions account.`);
       }
 
       if (error.message?.includes('404')) {
-        this.error(`There is no Heroku User under the username ${herokuColor.heroku(herokuUser)}.`);
+        this.error(`${herokuColor.heroku(herokuUser)} does not exist.`);
       }
 
       this.error(error.message);

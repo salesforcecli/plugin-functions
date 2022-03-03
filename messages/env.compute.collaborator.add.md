@@ -1,13 +1,13 @@
 # summary
 
-Add heroku user to all compute environments.
-
-# description
-
-You must provide the '--heroku-user' required flag.
+Add a Heroku user as a collaborator on compute environments, allowing them to attach add-ons.
 
 # examples
 
-- Add a heroku user to all compute environments:
+- Add a Heroku user to all compute environments:
 
   <%= config.bin %> <%= command.id %> --heroku-user heroku-user
+
+# flags.heroku-user.summary
+
+Email address of the Heroku user you're adding as a collaborator.

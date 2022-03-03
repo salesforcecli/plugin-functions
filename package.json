@@ -158,7 +158,6 @@
   },
   "repository": "salesforcecli/plugin-functions",
   "scripts": {
-    "rebuild-and-run": "yarn build && ./bin/run",
     "build": "sf-build",
     "clean": "sf-clean",
     "clean-all": "sf-clean all",

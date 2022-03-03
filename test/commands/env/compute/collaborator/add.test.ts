@@ -16,7 +16,9 @@ describe('sf env compute collaborator add', () => {
     .nock('https://api.heroku.com', (api) => api.post('/salesforce-orgs/collaborators').reply(409, {}))
     .command(['env:compute:collaborator:add', '-h', HEROKU_USER])
     .catch((error) => {
-      expect(error.message).contains(`Collaborator ${herokuColor.heroku(HEROKU_USER)} has already been added.`);
+      expect(error.message).contains(
+        `${herokuColor.heroku(HEROKU_USER)} is already a collaborator to this Functions account.`
+      );
     })
     .it('alerts user if they already have a specifc user added');
 
@@ -26,7 +28,9 @@ describe('sf env compute collaborator add', () => {
     .nock('https://api.heroku.com', (api) => api.post('/salesforce-orgs/collaborators').reply(200, {}))
     .command(['env:compute:collaborator:add', '-h', HEROKU_USER])
     .it('connects heroku user to compute environments', (ctx) => {
-      expect(ctx.stderr).to.contain(`Adding collaborator ${herokuColor.heroku(HEROKU_USER)} to compute environments.`);
+      expect(ctx.stderr).to.contain(
+        `Adding Heroku user ${herokuColor.heroku(HEROKU_USER)} as a collaborator on this Functions account`
+      );
     });
 
   test
@@ -35,7 +39,7 @@ describe('sf env compute collaborator add', () => {
     .nock('https://api.heroku.com', (api) => api.post('/salesforce-orgs/collaborators').reply(404, {}))
     .command(['env:compute:collaborator:add', '-h', HEROKU_USER])
     .catch((error) => {
-      expect(error.message).contains(`There is no Heroku User under the username ${herokuColor.heroku(HEROKU_USER)}.`);
+      expect(error.message).contains(`${herokuColor.heroku(HEROKU_USER)} does not exist.`);
     })
     .it('alerts user if user entered does not exist');
 });
