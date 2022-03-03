@@ -35,7 +35,7 @@ export default class ComputeCollaboratorAdd extends Command {
     if (!herokuUser) {
       throw new Errors.CLIError(
         `Missing required flag:
-        -c, --heroku-user heroku-email  ${herokuColor.dim('Heroku user email address.')}
+        -h, --heroku-user heroku-email  ${herokuColor.dim('Heroku user email address.')}
        See more help with --help`
       );
     }
@@ -43,10 +43,6 @@ export default class ComputeCollaboratorAdd extends Command {
     cli.action.start(
       `Adding Heroku user ${herokuColor.heroku(herokuUser)} as a collaborator on this Functions account`
     );
-
-    cli.action.stop();
-
-    this.log('For more information about attaching add-ons to your Functions, see Addons:Attach.');
 
     try {
       await this.client.post<Heroku.Collaborator>('/salesforce-orgs/collaborators', {
@@ -73,5 +69,6 @@ export default class ComputeCollaboratorAdd extends Command {
     }
 
     cli.action.stop();
+    this.log('For more information about attaching add-ons to your Functions, run $ heroku addons:attach --help.');
   }
 }
