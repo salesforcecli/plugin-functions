@@ -6,7 +6,7 @@ Add a Heroku user as a collaborator on this Functions account, allowing them to 
 
 - Add a Heroku user as a collaborator on this Functions account.
 
-  <%= config.bin %> <%= command.id %> --heroku-user heroku-email
+  <%= config.bin %> <%= command.id %> --heroku-user example@heroku.com
 
 # flags.heroku-user.summary
 
