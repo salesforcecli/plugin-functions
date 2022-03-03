@@ -69,6 +69,8 @@ export default class ComputeCollaboratorAdd extends Command {
     }
 
     cli.action.stop();
-    this.log('For more information about attaching Heroku add-ons to your compute environments, run $ heroku addons:attach --help.');
+    this.log(
+      'For more information about attaching Heroku add-ons to your compute environments, run $ heroku addons:attach --help.'
+    );
   }
 }
