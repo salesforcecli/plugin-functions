@@ -1,12 +1,12 @@
 # summary
 
-Add a Heroku user as a collaborator on compute environments, allowing them to attach add-ons.
+Add a Heroku user as a collaborator on this Functions account, allowing them to attach Heroku add-ons to compute environments.
 
 # examples
 
-- Add a Heroku user to all compute environments:
+- Add a Heroku user as a collaborator on this Functions account.
 
-  <%= config.bin %> <%= command.id %> --heroku-user heroku-user
+  <%= config.bin %> <%= command.id %> --heroku-user heroku-email
 
 # flags.heroku-user.summary
 
