@@ -11,7 +11,6 @@ import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../../lib/flags';
 import Command from '../../../../lib/base';
-import { resolveAppNameForEnvironment } from '../../../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.compute.collaborator.add');
@@ -32,7 +31,6 @@ export default class ComputeCollaboratorAdd extends Command {
 
   async run() {
     const { flags } = await this.parse(ComputeCollaboratorAdd);
-    // We support both versions of the flag here for the sake of backward compat
     const herokuUser = flags['heroku-user'];
 
     if (!herokuUser) {
@@ -44,13 +42,6 @@ export default class ComputeCollaboratorAdd extends Command {
     }
 
     cli.action.start(`Adding collaborator ${herokuColor.heroku(herokuUser)} to compute environments.`);
-
-    // Add this POST
-
-    //   curl -v POST https://api.heroku.com/salesforce-orgs/collaborators \
-    // -H 'Accept: application/vnd.heroku+json; version=3.evergreen' \
-    // -H "Authorization: Bearer $FUNCTIONS_TOKEN" \
-    // -d "user=$HEROKU_USER"
 
     try {
       await this.client.post<Heroku.Collaborator>('/salesforce-orgs/collaborators', {
@@ -64,6 +55,15 @@ export default class ComputeCollaboratorAdd extends Command {
       });
     } catch (e) {
       const error = e as Error;
+
+      if (error.message?.includes('409')) {
+        this.error(`Collaborator ${herokuColor.heroku(herokuUser)} has already been added.`);
+      }
+
+      if (error.message?.includes('404')) {
+        this.error(`There is no Heroku User under the username ${herokuColor.heroku(herokuUser)}.`);
+      }
+
       this.error(error.message);
     }
 
