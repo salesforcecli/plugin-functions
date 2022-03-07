@@ -29,6 +29,7 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 <!-- commands -->
 
 - [`sf deploy functions`](#sf-deploy-functions)
+- [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
 - [`sf env create compute`](#sf-env-create-compute)
 - [`sf env delete`](#sf-env-delete)
 - [`sf env log tail`](#sf-env-log-tail)
@@ -61,6 +62,23 @@ FLAGS
                                to.
   -q, --quiet                  Limit the amount of output displayed from the deploy process.
   --force                      Ignore warnings and overwrite remote repository (not allowed in production).
+```
+
+## `sf env compute collaborator add`
+
+Add a Heroku user as a collaborator on this Functions account, allowing them to attach Heroku add-ons to compute environments.
+
+```
+USAGE
+  $ sf env compute collaborator add -h <value>
+
+FLAGS
+  -h, --heroku-user=<value>  (required) Email address of the Heroku user you're adding as a collaborator.
+
+EXAMPLES
+  Add a Heroku user as a collaborator on this Functions account.
+
+    $ sf env compute collaborator add --heroku-user example@heroku.com
 ```
 
 ## `sf env create compute`

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/salesforcecli/plugin-functions/compare/v1.6.1...v1.7.0) (2022-03-07)
+
+### Features
+
+- all commits squashed with feedback given included ([769001b](https://github.com/salesforcecli/plugin-functions/commit/769001b8ba60734eabd6f035a789b6f17d539b26))
+- fixed linting issue ([885c18c](https://github.com/salesforcecli/plugin-functions/commit/885c18ce707073104ea7725dd1ebe81aa857f85c))
+- updated md files with requested copy ([0f17066](https://github.com/salesforcecli/plugin-functions/commit/0f1706695bbfd4574485e7c370e86879cc7ce814))
+- updated short flag to use -k & updated the more information description ([30ce82e](https://github.com/salesforcecli/plugin-functions/commit/30ce82e2fec589771e5c28b79c028673dd4cf341))
+
 ### [1.6.1](https://github.com/salesforcecli/plugin-functions/compare/v1.6.0...v1.6.1) (2022-03-02)
 
 ### Bug Fixes
