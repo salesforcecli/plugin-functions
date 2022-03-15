@@ -29,6 +29,7 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 <!-- commands -->
 
 - [`sf deploy functions`](#sf-deploy-functions)
+- [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
 - [`sf env create compute`](#sf-env-create-compute)
 - [`sf env delete`](#sf-env-delete)
 - [`sf env log tail`](#sf-env-log-tail)
@@ -45,6 +46,7 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 - [`sf logout functions`](#sf-logout-functions)
 - [`sf run function`](#sf-run-function)
 - [`sf run function start`](#sf-run-function-start)
+- [`sf run function start container`](#sf-run-function-start-container)
 - [`sf run function start local`](#sf-run-function-start-local)
 - [`sf whoami functions`](#sf-whoami-functions)
 
@@ -60,6 +62,23 @@ FLAGS
                                to.
   -q, --quiet                  Limit the amount of output displayed from the deploy process.
   --force                      Ignore warnings and overwrite remote repository (not allowed in production).
+```
+
+## `sf env compute collaborator add`
+
+Add a Heroku user as a collaborator on this Functions account, allowing them to attach Heroku add-ons to compute environments.
+
+```
+USAGE
+  $ sf env compute collaborator add -h <value>
+
+FLAGS
+  -h, --heroku-user=<value>  (required) Email address of the Heroku user you're adding as a collaborator.
+
+EXAMPLES
+  Add a Heroku user as a collaborator on this Functions account.
+
+    $ sf env compute collaborator add --heroku-user example@heroku.com
 ```
 
 ## `sf env create compute`
@@ -417,11 +436,48 @@ EXAMPLES
 
 ## `sf run function start`
 
+Build and run a Salesforce Function.
+
+```
+USAGE
+  $ sf run function start [-b <value>] [-l javascript|typescript|java|auto] [-p <value>] [-v]
+
+FLAGS
+  -b, --debug-port=<value>                          [default: 9229] Port for remote debugging.
+  -l, --language=(javascript|typescript|java|auto)  [default: auto] The language that the function runs in.
+  -p, --port=<value>                                [default: 8080] Port for running the function.
+  -v, --verbose                                     Output additional logs.
+
+DESCRIPTION
+  Build and run a Salesforce Function.
+
+  Run this command from the directory of your Salesforce Functions project.
+
+  This command will run the target function locally (on the same operating system as this CLI), just like the `local`
+  subcommand.
+
+  Previously, this command ran functions in a container. Container mode is still supported via the `container`
+  subcommand. Arguments relevant to container mode are still accepted, but are deprecated, ignored, and will be dropped
+  in a future release.
+
+EXAMPLES
+  Build a function and start the invoker
+
+    $ sf run function start
+
+  Start the invoker with a specific language and port
+
+    $ sf run function start --port 5000 --language javascript
+```
+
+## `sf run function start container`
+
 Build and run a Salesforce Function in a container.
 
 ```
 USAGE
-  $ sf run function start [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network <value>] [-v]
+  $ sf run function start container [-p <value>] [-b <value>] [--clear-cache] [--no-pull] [-e <value>] [--network
+  <value>] [-v]
 
 FLAGS
   -b, --debug-port=<value>  [default: 9229] Port for remote debugging.
@@ -441,15 +497,15 @@ DESCRIPTION
 EXAMPLES
   Build and run a function:
 
-    $ sf run function start
+    $ sf run function start container
 
   Run a function on a specific port with additional logs:
 
-    $ sf run function start --port 5000 --verbose
+    $ sf run function start container --port 5000 --verbose
 
   Add environment variables and specify a network:
 
-    $ sf run function start --env KEY=VALUE --network host
+    $ sf run function start container --env KEY=VALUE --network host
 ```
 
 ## `sf run function start local`

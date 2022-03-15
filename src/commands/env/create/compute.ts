@@ -170,10 +170,10 @@ export default class EnvCreateCompute extends Command {
       );
     } catch (err) {
       const DUPLICATE_PROJECT_MESSAGE = 'This org is already connected to a compute environment for this project';
-      const error = err as { body: { message?: string } };
+      const error = err as { data: { message?: string } };
       // If environment creation fails because an environment already exists for this org and project
       // we want to fetch the existing environment so that we can point the user to it
-      if (error.body?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
+      if (error.data?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
         cli.action.stop('error!');
         const app = await fetchAppForProject(this.client, projectName, org.getUsername());
 

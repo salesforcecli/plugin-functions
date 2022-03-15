@@ -2,6 +2,75 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/salesforcecli/plugin-functions/compare/v1.6.1...v1.7.0) (2022-03-07)
+
+### Features
+
+- all commits squashed with feedback given included ([769001b](https://github.com/salesforcecli/plugin-functions/commit/769001b8ba60734eabd6f035a789b6f17d539b26))
+- fixed linting issue ([885c18c](https://github.com/salesforcecli/plugin-functions/commit/885c18ce707073104ea7725dd1ebe81aa857f85c))
+- updated md files with requested copy ([0f17066](https://github.com/salesforcecli/plugin-functions/commit/0f1706695bbfd4574485e7c370e86879cc7ce814))
+- updated short flag to use -k & updated the more information description ([30ce82e](https://github.com/salesforcecli/plugin-functions/commit/30ce82e2fec589771e5c28b79c028673dd4cf341))
+
+### [1.6.1](https://github.com/salesforcecli/plugin-functions/compare/v1.6.0...v1.6.1) (2022-03-02)
+
+### Bug Fixes
+
+- update functions-core to 0.2.6 ([#363](https://github.com/salesforcecli/plugin-functions/issues/363)) ([7f2ce9a](https://github.com/salesforcecli/plugin-functions/commit/7f2ce9afa7e9464c69467eb429d2d6ca392b5b8a))
+
+## [1.6.0](https://github.com/salesforcecli/plugin-functions/compare/v1.5.0...v1.6.0) (2022-03-01)
+
+### Features
+
+- com.salesforce.salesforce-api-version ([#361](https://github.com/salesforcecli/plugin-functions/issues/361)) ([d14c081](https://github.com/salesforcecli/plugin-functions/commit/d14c081964df25a47dc8d7b0f0dc5089f41d23cc))
+
+### Bug Fixes
+
+- add help text for run function start --language ([#362](https://github.com/salesforcecli/plugin-functions/issues/362)) ([069e3af](https://github.com/salesforcecli/plugin-functions/commit/069e3af60a1fed8d4be924bf12304231bc3dc93e))
+
+## [1.5.0](https://github.com/salesforcecli/plugin-functions/compare/v1.4.3...v1.5.0) (2022-01-19)
+
+### Features
+
+- run:function:start defaults to local mode ([#343](https://github.com/salesforcecli/plugin-functions/issues/343)) ([a2bd50c](https://github.com/salesforcecli/plugin-functions/commit/a2bd50c950cd9fe4f77bd6e6f3d662a977b9946c))
+
+### [1.4.3](https://github.com/salesforcecli/plugin-functions/compare/v1.4.2...v1.4.3) (2022-01-12)
+
+### Bug Fixes
+
+- update heroku function-core to 0.2.3 ([#342](https://github.com/salesforcecli/plugin-functions/issues/342)) ([503216d](https://github.com/salesforcecli/plugin-functions/commit/503216d4c08213afc940c7288ac0e5a5204aea91))
+
+### [1.4.2](https://github.com/salesforcecli/plugin-functions/compare/v1.4.1...v1.4.2) (2022-01-10)
+
+### Bug Fixes
+
+- **cli:** add content type header to requests ([#341](https://github.com/salesforcecli/plugin-functions/issues/341)) ([4ed82b6](https://github.com/salesforcecli/plugin-functions/commit/4ed82b6988149b458520e758778b2662e090508b))
+
+### [1.4.1](https://github.com/salesforcecli/plugin-functions/compare/v1.4.0...v1.4.1) (2022-01-10)
+
+### Bug Fixes
+
+- **cli:** switch from axios to jsforce ([#319](https://github.com/salesforcecli/plugin-functions/issues/319)) ([0d0ba65](https://github.com/salesforcecli/plugin-functions/commit/0d0ba659ecb58620f67cb86878ca9de1948c7225))
+
+## [1.4.0](https://github.com/salesforcecli/plugin-functions/compare/v1.3.2...v1.4.0) (2022-01-10)
+
+### Features
+
+- alias run function start to run function start container ([#340](https://github.com/salesforcecli/plugin-functions/issues/340)) ([b3a8dd5](https://github.com/salesforcecli/plugin-functions/commit/b3a8dd51a385feac6d3aeedf43a417cf5c40d4b7))
+
+### [1.3.2](https://github.com/salesforcecli/plugin-functions/compare/v1.3.1...v1.3.2) (2022-01-07)
+
+### Bug Fixes
+
+- add main to package.json ([#339](https://github.com/salesforcecli/plugin-functions/issues/339)) ([791d82c](https://github.com/salesforcecli/plugin-functions/commit/791d82cf8032da3e7efa7a8a5c5c92040e081b3e))
+
+### [1.3.1](https://github.com/salesforcecli/plugin-functions/compare/v1.3.0...v1.3.1) (2022-01-05)
+
+## [1.3.0](https://github.com/salesforcecli/plugin-functions/compare/v1.2.2...v1.3.0) (2021-12-15)
+
+### Features
+
+- **cli:** use jsforce for login ([#312](https://github.com/salesforcecli/plugin-functions/issues/312)) ([0fa0f3f](https://github.com/salesforcecli/plugin-functions/commit/0fa0f3f7d48345dbba69199ffadb0326bfc9888d))
+
 ### [1.2.2](https://github.com/salesforcecli/plugin-functions/compare/v1.2.0...v1.2.2) (2021-11-30)
 
 ## [1.2.0](https://github.com/salesforcecli/plugin-functions/compare/v1.1.7...v1.2.0) (2021-11-30)
