@@ -50,8 +50,7 @@
   {
     "command": "env:var:get",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute"],
-    "alias": []
+    "flags": ["environment", "target-compute", "json"]
   },
   {
     "command": "env:var:list",

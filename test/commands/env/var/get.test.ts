@@ -46,4 +46,34 @@ describe('sf env:var:get', () => {
         )
       );
     });
+
+  test
+    .stdout()
+    .nock('https://api.heroku.com', (api) =>
+      api.get('/apps/my-environment/config-vars').reply(200, {
+        foo: 'bar',
+      })
+    )
+    .command(['env:var:get', 'foo', '--environment', 'my-environment', '--json'])
+    .it('will show json output', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum('{\n"status": 0,\n"result": "bar",\n"warnings": []\n}')
+      );
+    });
+
+  test
+    .stdout()
+    .nock('https://api.heroku.com', (api) =>
+      api.get('/apps/my-environment/config-vars').reply(200, {
+        foo: 'bar',
+      })
+    )
+    .command(['env:var:get', 'doo', '--environment', 'my-environment', '--json'])
+    .it('will show json warning output with incorrect config var', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum(
+          '{\n"status": 0,\n"result": null,\n"warnings": [\n"No config var named doo found for environment <my-environment>"\n]\n}'
+        )
+      );
+    });
 });
