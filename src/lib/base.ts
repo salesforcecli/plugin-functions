@@ -5,14 +5,14 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { URL } from 'url';
-import { Command as Base } from '@oclif/core';
+import { SfCommand } from '@salesforce/sf-plugins-core';
 import { GlobalInfo, Org } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import APIClient, { herokuClientApiUrl } from './api-client';
 import herokuVariant from './heroku-variant';
 import { SfdcAccount } from './sfdc-types';
 
-export default abstract class Command extends Base {
+export default abstract class Command extends SfCommand<any> {
   protected static TOKEN_BEARER_KEY = 'functions-bearer';
   protected static TOKEN_REFRESH_KEY = 'functions-refresh';
   // We want to implement `--json` on a per-command basis, so we disable the global json flag here
