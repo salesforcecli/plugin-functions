@@ -237,10 +237,11 @@ Display a single config variable for an environment.
 
 ```
 USAGE
-  $ sf env var get [KEY] [-e <value> | ]
+  $ sf env var get [KEY] [-e <value> | ] [-j]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
+  -j, --json                    Output list in JSON format.
 
 DESCRIPTION
   Display a single config variable for an environment.
