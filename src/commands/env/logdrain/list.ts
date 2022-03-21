@@ -52,7 +52,7 @@ export default class LogDrainList extends Command {
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
 
-    const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`apps/${appName}/log-drains`);
+    const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`/apps/${appName}/log-drains`);
 
     if (flags.json) {
       if (drains.length === 0) {

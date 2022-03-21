@@ -4,15 +4,10 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as fs from 'fs';
 import * as path from 'path';
-import { Command, Errors, Flags } from '@oclif/core';
-import { runFunction, RunFunctionOptions } from '@heroku/functions-core';
-import { cli } from 'cli-ux';
-import herokuColor from '@heroku-cli/color';
-import { AxiosResponse } from 'axios';
-import { ConfigAggregator, Messages } from '@salesforce/core';
-import LocalRun from '../../../../lib/local-run';
+import { Command, Flags } from '@oclif/core';
+import { LocalRun } from '@heroku/functions-core';
+import { Messages } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start.local');
@@ -48,6 +43,12 @@ export default class Local extends Command {
 
   async run() {
     const { flags } = await this.parse(Local);
+    await this.runWithFlags(flags);
+  }
+
+  async runWithFlags(
+    flags: { path: string; port: number; 'debug-port': number; language: string } & { json: boolean | undefined }
+  ) {
     const localRun = new LocalRun(flags.language, {
       path: flags.path,
       port: flags.port,

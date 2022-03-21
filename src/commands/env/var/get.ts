@@ -8,6 +8,7 @@ import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Messages } from '@salesforce/core';
 import { Errors } from '@oclif/core';
+import { cli } from 'cli-ux';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 import Command from '../../../lib/base';
@@ -32,6 +33,7 @@ export default class VarGet extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   static args = [
@@ -43,6 +45,7 @@ export default class VarGet extends Command {
 
   async run() {
     const { flags, args } = await this.parse(VarGet);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
 
@@ -64,14 +67,30 @@ export default class VarGet extends Command {
 
     const value = config[args.key];
 
-    if (!value) {
-      this.warn(
-        `No config var named ${herokuColor.cyan(args.key as string)} found for environment ${herokuColor.cyan(
-          targetCompute
-        )}`
-      );
-    }
+    if (flags.json) {
+      if (!value) {
+        cli.styledJSON({
+          status: 0,
+          result: null,
+          warnings: [`No config var named ${args.key as string} found for environment <${targetCompute}>`],
+        });
+        return;
+      }
 
-    this.log(value);
+      cli.styledJSON({
+        status: 0,
+        result: value,
+        warnings: [],
+      });
+    } else {
+      if (!value) {
+        this.warn(
+          `No config var named ${herokuColor.cyan(args.key as string)} found for environment ${herokuColor.cyan(
+            targetCompute
+          )}`
+        );
+      }
+      this.log(value);
+    }
   }
 }
