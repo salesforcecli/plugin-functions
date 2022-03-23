@@ -78,7 +78,8 @@ export default class DeployFunctions extends Command {
     let app: ComputeEnvironment;
     try {
       app = await fetchAppForProject(this.client, project.name, flags['connected-org']);
-    } catch (error) {
+    } catch (err) {
+      const error = err as { body: { message?: string } };
       if (error.body.message?.includes("Couldn't find that app")) {
         this.error(
           `No compute environment found for org ${flags['connected-org']}. Please ensure you've created a compute environment before deploying.`
@@ -108,7 +109,8 @@ export default class DeployFunctions extends Command {
 
     try {
       await this.git.exec(pushCommand, flags.quiet);
-    } catch (error) {
+    } catch (err) {
+      const error = err as Error;
       // if they've passed `--quiet` we don't want to show any build server output *unless* there's
       // an error, in which case we want to show all of it
       if (flags.quiet) {

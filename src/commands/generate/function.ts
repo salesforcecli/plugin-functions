@@ -67,7 +67,8 @@ export default class GenerateFunction extends Command {
         this.log(welcomeText);
       }
     } catch (err) {
-      this.error(err.message);
+      const error = err as Error;
+      this.error(error.message);
     }
   }
 }

@@ -86,7 +86,8 @@ export default class EnvCreateCompute extends Command {
           Status,
           Error
           FROM SfFunctionsConnection`);
-      } catch (error: any) {
+      } catch (err) {
+        const error = err as Error;
         // This is obviously heinous, but should only exist short-term until the move from `SfFunctionsConnection`
         // to `FunctionConnection` is complete. Once that's done, we can remove this and go back to a simple
         // query against `FunctionConnection`
@@ -155,12 +156,12 @@ export default class EnvCreateCompute extends Command {
           ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready.`
           : 'Your compute environment is ready.'
       );
-    } catch (error) {
+    } catch (err) {
       const DUPLICATE_PROJECT_MESSAGE = 'This org is already connected to a compute environment for this project';
-
+      const error = err as { data: { message?: string } };
       // If environment creation fails because an environment already exists for this org and project
       // we want to fetch the existing environment so that we can point the user to it
-      if (error.body?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
+      if (error.data?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
         cli.action.stop('error!');
         const app = await fetchAppForProject(this.client, projectName, org.getUsername());
 

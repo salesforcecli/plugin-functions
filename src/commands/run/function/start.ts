@@ -4,26 +4,62 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+
 import * as path from 'path';
-import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
-import { Command, Flags } from '@oclif/core';
-import { getFunctionsBinary, getProjectDescriptor } from '@heroku/functions-core';
-import { cli } from 'cli-ux';
+import { Flags } from '@oclif/core';
+import { LocalRun } from '@heroku/functions-core';
+
+import Local from './start/local';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start');
 
-export default class Start extends Command {
+// run:function:start is an alias command to run:function:start:local.
+// run:function:start previously ran via container mode, so it still accepts
+// arguments applicable to the container subcommand, but ignores them and flags
+// them as deprecated. The additional flags may be removed after 04/30/2022.
+export default class Start extends Local {
   static summary = messages.getMessage('summary');
 
   static description = messages.getMessage('description');
 
-  static examples = messages.getMessages('examples');
-
   static flags = {
     builder: Flags.string({
-      description: messages.getMessage('flags.builder.summary'),
+      hidden: true,
+    }),
+    'clear-cache': Flags.boolean({
+      hidden: true,
+    }),
+    'debug-port': Flags.integer({
+      char: 'b',
+      description: messages.getMessage('flags.debug-port.summary'),
+      default: 9229,
+    }),
+    descriptor: Flags.string({
+      hidden: true,
+    }),
+    env: Flags.string({
+      char: 'e',
+      multiple: true,
+      hidden: true,
+    }),
+    language: Flags.enum({
+      description: messages.getMessage('flags.language.summary'),
+      options: ['javascript', 'typescript', 'java', 'auto'],
+      char: 'l',
+      default: 'auto',
+    }),
+    network: Flags.string({
+      hidden: true,
+    }),
+    'no-build': Flags.boolean({
+      hidden: true,
+    }),
+    'no-pull': Flags.boolean({
+      hidden: true,
+    }),
+    'no-run': Flags.boolean({
       hidden: true,
     }),
     path: Flags.string({
@@ -36,111 +72,25 @@ export default class Start extends Command {
       description: messages.getMessage('flags.port.summary'),
       default: 8080,
     }),
-    'debug-port': Flags.integer({
-      char: 'b',
-      description: messages.getMessage('flags.debug-port.summary'),
-      default: 9229,
-    }),
-    'clear-cache': Flags.boolean({
-      description: messages.getMessage('flags.clear-cache.summary'),
-    }),
-    'no-pull': Flags.boolean({
-      description: messages.getMessage('flags.no-pull.summary'),
-    }),
-    'no-build': Flags.boolean({
-      description: messages.getMessage('flags.no-build.summary'),
-      hidden: true,
-    }),
-    'no-run': Flags.boolean({
-      description: messages.getMessage('flags.no-run.summary'),
-      hidden: true,
-    }),
-    env: Flags.string({
-      char: 'e',
-      description: messages.getMessage('flags.env.summary'),
-      multiple: true,
-    }),
-    network: Flags.string({
-      description: messages.getMessage('flags.network.summary'),
-    }),
     verbose: Flags.boolean({
       char: 'v',
       description: messages.getMessage('flags.verbose.summary'),
-    }),
-    descriptor: Flags.string({
-      description: messages.getMessage('flags.descriptor.summary'),
-      hidden: true,
     }),
   };
 
   async run() {
     const { flags } = await this.parse(Start);
-
-    const buildOpts = {
-      builder: flags.builder,
-      'clear-cache': flags['clear-cache'],
-      'no-pull': flags['no-pull'],
-      network: flags.network,
-      env: flags.env,
-      descriptor: flags.descriptor ?? path.resolve(flags.path, 'project.toml'),
-      path: flags.path,
-    };
-
-    const runOpts = {
-      port: flags.port,
-      'debug-port': flags['debug-port'],
-      env: flags.env,
-    };
-
-    let descriptor;
-    try {
-      descriptor = await getProjectDescriptor(buildOpts.descriptor);
-    } catch (error) {
-      cli.error(error);
-    }
-    const functionName = descriptor.com.salesforce.id;
-
-    const benny = await getFunctionsBinary();
-
-    const writeMsg = (msg: { text: string; timestamp: string }) => {
-      const outputMsg = msg.text;
-
-      if (outputMsg) {
-        cli.info(outputMsg);
-      }
-    };
-    benny.on('pack', writeMsg);
-    benny.on('container', writeMsg);
-
-    benny.on('error', (msg: any) => {
-      cli.error(msg.text, { exit: false });
-    });
-
-    benny.on('log', (msg: any) => {
-      if (msg.level === 'debug' && !flags.verbose) return;
-      if (msg.level === 'error') {
-        cli.exit();
-      }
-
-      if (msg.text) {
-        cli.info(msg.text);
-      }
-
-      // evergreen:benny:message {"type":"log","timestamp":"2021-05-10T10:00:27.953248-05:00","level":"info","fields":{"debugPort":"9229","localImageName":"jvm-fn-init","network":"","port":"8080"}} +21ms
-      if (msg.fields && msg.fields.localImageName) {
-        this.log(`${herokuColor.magenta('Running on port')} :${herokuColor.cyan(msg.fields.port)}`);
-        this.log(`${herokuColor.magenta('Debugger running on port')} :${herokuColor.cyan(msg.fields.debugPort)}`);
+    Object.entries(flags).forEach(([flag, val]) => {
+      let msg: string | null = null;
+      try {
+        msg = messages.getMessage(`flags.${flag}.deprecation`);
+        if (val) {
+          this.warn(msg);
+        }
+      } catch {
+        // No deprecation message, flag is not deprecated
       }
     });
-
-    if (!flags['no-build']) {
-      this.log(`${herokuColor.magenta('Building')} ${herokuColor.cyan(functionName)}`);
-      await benny.build(functionName, buildOpts);
-    }
-
-    if (!flags['no-run']) {
-      this.log(`${herokuColor.magenta('Starting')} ${herokuColor.cyan(functionName)}`);
-      await benny.run(functionName, runOpts);
-    }
+    await this.runWithFlags(flags);
   }
 }

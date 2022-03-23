@@ -167,7 +167,7 @@ export default class LogTail extends Command {
       : this.eventSourceStream(logSessionURL, tail);
     stream.setEncoding('utf8');
 
-    stream.on('data', (data) => {
+    stream.on('data', (data: string) => {
       cli.log(data);
     });
 
