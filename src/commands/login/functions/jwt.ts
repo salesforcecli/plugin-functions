@@ -7,7 +7,9 @@
 import { Flags } from '@oclif/core';
 import { AuthInfo, AuthRemover, SfdxError, Messages } from '@salesforce/core';
 import { getString } from '@salesforce/ts-types';
-import axios from 'axios';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as Transport from 'jsforce/lib/transport';
 import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
 import { herokuVariant } from '../../../lib/heroku-variant';
@@ -193,10 +195,10 @@ export default class JwtLogin extends Command {
     // obtain heroku access_token. This is configurable so that we can also target staging
     const herokuClientId = process.env.SALESFORCE_FUNCTIONS_PUBLIC_OAUTH_CLIENT_ID ?? PUBLIC_CLIENT_ID;
 
-    const response = await axios.request<OAuthToken>({
+    const rawResponse = await new Transport().httpRequest({
+      method: 'POST',
       url: `${process.env.SALESFORCE_FUNCTIONS_API || 'https://api.heroku.com'}/oauth/tokens`,
-      method: 'post',
-      data: {
+      body: JSON.stringify({
         client: {
           id: herokuClientId,
         },
@@ -205,11 +207,12 @@ export default class JwtLogin extends Command {
         },
         subject_token: token,
         subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
-      },
+      }),
       headers: { ...herokuVariant('salesforce_sso') },
     });
 
-    const bearerToken = response.data.access_token.token;
+    const data = JSON.parse(rawResponse.body);
+    const bearerToken = data.access_token.token;
 
     // We have to blow away the auth and API client objects so that they'll fully reinitialize with
     // the new heroku credentials we're about to generate

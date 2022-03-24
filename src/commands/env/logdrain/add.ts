@@ -79,7 +79,7 @@ export default class LogDrainAdd extends Command {
 
     cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
 
-    await this.client.post<Heroku.LogDrain>(`apps/${appName}/log-drains`, {
+    await this.client.post<Heroku.LogDrain>(`/apps/${appName}/log-drains`, {
       data: {
         url,
       },

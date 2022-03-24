@@ -1,28 +1,18 @@
 # summary
 
-Build and run a Salesforce Function in a container.
+Build and run a Salesforce Function.
 
 # description
 
 Run this command from the directory of your Salesforce Functions project.
 
-# examples
+This command will run the target function locally (on the same operating system as this CLI), just like the `local` subcommand.
 
-- Build and run a function:
+Previously, this command ran functions in a container. Container mode is still supported via the `container` subcommand. Arguments relevant to container mode are still accepted, but are deprecated, ignored, and will be dropped in a future release.
 
-  <%= config.bin %> <%= command.id %>
+# flags.language.summary
 
-- Run a function on a specific port with additional logs:
-
-  <%= config.bin %> <%= command.id %> --port 5000 --verbose
-
-- Add environment variables and specify a network:
-
-  <%= config.bin %> <%= command.id %> --env KEY=VALUE --network host
-
-# flags.builder.summary
-
-Set custom builder image.
+The language that the function runs in.
 
 # flags.path.summary
 
@@ -36,34 +26,38 @@ Port for running the function.
 
 Port for remote debugging.
 
-# flags.clear-cache.summary
-
-Clear associated cache before executing.
-
-# flags.no-pull.summary
-
-Skip pulling builder image before use.
-
-# flags.no-build.summary
-
-Skip building the an image.
-
-# flags.no-run.summary
-
-Skip running the built image.
-
-# flags.env.summary
-
-Set environment variables (provided during build and run).
-
-# flags.network.summary
-
-Connect and build containers to a network. This can be useful to build containers which require a local resource.
-
 # flags.verbose.summary
 
 Output additional logs.
 
-# flags.descriptor.summary
+# flags.builder.deprecation
 
-Path to project descriptor file (project.toml) that contains function and/or bulid configuration.
+--builder is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.clear-cache.deprecation
+
+--clear-cache is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.descriptor.deprecation
+
+--descriptor is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.env.deprecation
+
+--env is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.network.deprecation
+
+--network is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.no-build.deprecation
+
+--no-build is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.no-pull.deprecation
+
+--no-pull is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
+
+# flags.no-run.deprecation
+
+--no-run is deprecated and will be removed in a future release. Please discontinue use of this flag or use the `container` subcommand instead.
