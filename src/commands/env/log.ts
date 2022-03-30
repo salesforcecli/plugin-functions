@@ -17,7 +17,7 @@ import * as logStreamUtils from '../../lib/log-stream-utils';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.log');
 
-export default class LogTail extends Command {
+export default class Log extends Command {
   static summary = messages.getMessage('summary');
 
   static examples = messages.getMessages('examples');
