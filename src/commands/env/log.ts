@@ -34,12 +34,12 @@ export default class Log extends Command {
     }),
     num: Flags.integer({
       char: 'n',
-      description: 'number of lines to display',
+      description: messages.getMessage('flags.num.summary'),
     }),
   };
 
   async run() {
-    const { flags } = await this.parse(LogTail);
+    const { flags } = await this.parse(Log);
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
     const logLines = flags.num ?? 100;

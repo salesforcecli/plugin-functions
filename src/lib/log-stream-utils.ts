@@ -10,7 +10,7 @@ import EventSource = require('@heroku/eventsource');
 import axios from 'axios';
 import { cli } from 'cli-ux';
 
-export function lineTransform() {
+function lineTransform() {
   const transform = new Stream.Transform({ objectMode: true, decodeStrings: false });
   let _lastLineData: string;
 
@@ -39,11 +39,7 @@ type EventSourceError = Error & {
   message?: string;
 };
 
-export function eventSourceStream(
-  url: string,
-  eventSourceOptions: EventSourceOptions,
-  tail?: boolean
-): Stream.Readable {
+function eventSourceStream(url: string, eventSourceOptions: EventSourceOptions, tail?: boolean): Stream.Readable {
   let eventSource: EventSource;
 
   const stream = new Stream.Readable({
@@ -86,7 +82,7 @@ export function eventSourceStream(
   return stream;
 }
 
-export async function simpleStreamingStream(logSessionURL: string): Promise<Stream.Readable> {
+async function simpleStreamingStream(logSessionURL: string): Promise<Stream.Readable> {
   const response = await axios({
     method: 'get',
     url: logSessionURL,
@@ -97,7 +93,7 @@ export async function simpleStreamingStream(logSessionURL: string): Promise<Stre
   return response.data.pipe(liner);
 }
 
-export function eventSourceStreamer(logSessionURL: string, tail: boolean): Stream.Readable {
+function eventSourceStreamer(logSessionURL: string, tail: boolean): Stream.Readable {
   return eventSourceStream(logSessionURL, {}, tail);
 }
 
