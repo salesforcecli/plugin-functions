@@ -15,7 +15,7 @@ import { resolveAppNameForEnvironment } from '../../lib/utils';
 import * as logStreamUtils from '../../lib/log-stream-utils';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.log.tail');
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.log');
 
 export default class LogTail extends Command {
   static summary = messages.getMessage('summary');
