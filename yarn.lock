@@ -468,6 +468,15 @@
     ajv-formats "^2.0.2"
     toml "^3.0.0"
 
+"@heroku/project-descriptor@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@heroku/project-descriptor/-/project-descriptor-0.0.6.tgz#5337e7243423b283d0a032dcff25035756341095"
+  integrity sha512-zH1Wx5WQFCnt3ToiQJ9yUWsOXN5woTiGczGUpvQS0zCwwkE42ydKZSRKgSlB/YIwsDmAkFKiUwe97fT+qP45iw==
+  dependencies:
+    ajv "^8.0.0"
+    ajv-formats "^2.0.2"
+    toml "^3.0.0"
+
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"
