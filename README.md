@@ -87,7 +87,7 @@ Create a compute environment for use with Salesforce Functions.
 
 ```
 USAGE
-  $ sf env create compute [-o <value>] [-a <value> | ]
+  $ sf env create compute [-o <value>] [-a <value>]
 
 FLAGS
   -a, --alias=<value>          Alias for the created environment.
