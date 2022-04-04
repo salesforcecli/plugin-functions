@@ -9,7 +9,6 @@ import { Org, SfdxProject } from '@salesforce/core';
 import { AliasAccessor } from '@salesforce/core/lib/globalInfo';
 import * as sinon from 'sinon';
 import { AuthStubs } from '../../../helpers/auth';
-import vacuum from '../../../helpers/vacuum';
 
 const APP_MOCK = {
   id: '1',
@@ -124,32 +123,6 @@ describe('sf env create compute', () => {
       expect(orgStub).to.have.been.calledWith({ aliasOrUsername: ORG_ALIAS });
       expect(aliasSetSpy).to.have.been.calledWith(ENVIRONMENT_ALIAS, APP_MOCK.id);
       expect(aliasWriteSpy).to.have.been.called;
-    });
-
-  test
-    .stderr()
-    .retries(3)
-    .do(() => {
-      orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
-      sandbox.stub(AliasAccessor.prototype, 'set' as any).callsFake(aliasSetSpy);
-      AuthStubs.write.callsFake(aliasWriteSpy);
-    })
-    .finally(() => {
-      sandbox.restore();
-    })
-    .nock('https://api.heroku.com', (api) => {
-      api
-        .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
-          sfdx_project_name: PROJECT_CONFIG_MOCK.name,
-        })
-        .reply(200, APP_MOCK);
-    })
-    .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '--setalias', `${ENVIRONMENT_ALIAS}`])
-    .it('will use setalias if passed using the old flag (not --alias)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('--setalias is deprecated and will be removed in a future release. Please use --alias going forward.')
-      );
     });
 
   test

@@ -29,6 +29,7 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 <!-- commands -->
 
 - [`sf deploy functions`](#sf-deploy-functions)
+- [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
 - [`sf env create compute`](#sf-env-create-compute)
 - [`sf env delete`](#sf-env-delete)
 - [`sf env log tail`](#sf-env-log-tail)
@@ -63,13 +64,30 @@ FLAGS
   --force                      Ignore warnings and overwrite remote repository (not allowed in production).
 ```
 
+## `sf env compute collaborator add`
+
+Add a Heroku user as a collaborator on this Functions account, allowing them to attach Heroku add-ons to compute environments.
+
+```
+USAGE
+  $ sf env compute collaborator add -h <value>
+
+FLAGS
+  -h, --heroku-user=<value>  (required) Email address of the Heroku user you're adding as a collaborator.
+
+EXAMPLES
+  Add a Heroku user as a collaborator on this Functions account.
+
+    $ sf env compute collaborator add --heroku-user example@heroku.com
+```
+
 ## `sf env create compute`
 
 Create a compute environment for use with Salesforce Functions.
 
 ```
 USAGE
-  $ sf env create compute [-o <value>] [-a <value> | ]
+  $ sf env create compute [-o <value>] [-a <value>]
 
 FLAGS
   -a, --alias=<value>          Alias for the created environment.
@@ -219,10 +237,11 @@ Display a single config variable for an environment.
 
 ```
 USAGE
-  $ sf env var get [KEY] [-e <value> | ]
+  $ sf env var get [KEY] [-e <value> | ] [-j]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
+  -j, --json                    Output list in JSON format.
 
 DESCRIPTION
   Display a single config variable for an environment.

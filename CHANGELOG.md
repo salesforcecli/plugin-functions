@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.2](https://github.com/salesforcecli/plugin-functions/compare/v1.7.1...v1.7.2) (2022-04-01)
+
+### Bug Fixes
+
+- update alias for compute cmd ([2610e3e](https://github.com/salesforcecli/plugin-functions/commit/2610e3e16dbe8936aaae6feae983c4bbf095fbf8))
+
+### [1.7.1](https://github.com/salesforcecli/plugin-functions/compare/v1.7.0...v1.7.1) (2022-03-18)
+
+### Bug Fixes
+
+- add caret to @salesforce/core and bump deps ([963e65a](https://github.com/salesforcecli/plugin-functions/commit/963e65a48bd076242cf7dfc87b34ba490db6f849))
+- add json flag with tests ([8302d80](https://github.com/salesforcecli/plugin-functions/commit/8302d807ee5d0a2b525ab27e4cc97953b4306879))
+
+## [1.7.0](https://github.com/salesforcecli/plugin-functions/compare/v1.6.1...v1.7.0) (2022-03-07)
+
+### Features
+
+- all commits squashed with feedback given included ([769001b](https://github.com/salesforcecli/plugin-functions/commit/769001b8ba60734eabd6f035a789b6f17d539b26))
+- fixed linting issue ([885c18c](https://github.com/salesforcecli/plugin-functions/commit/885c18ce707073104ea7725dd1ebe81aa857f85c))
+- updated md files with requested copy ([0f17066](https://github.com/salesforcecli/plugin-functions/commit/0f1706695bbfd4574485e7c370e86879cc7ce814))
+- updated short flag to use -k & updated the more information description ([30ce82e](https://github.com/salesforcecli/plugin-functions/commit/30ce82e2fec589771e5c28b79c028673dd4cf341))
+
 ### [1.6.1](https://github.com/salesforcecli/plugin-functions/compare/v1.6.0...v1.6.1) (2022-03-02)
 
 ### Bug Fixes
