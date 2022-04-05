@@ -14,6 +14,12 @@ import Command from '../../lib/base';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'login.functions');
 
+type FunctionsDataType = {
+  browser_url?: string;
+  cli_url?: string;
+  token?: string;
+};
+
 export default class Login extends Command {
   static summary = messages.getMessage('summary');
 
@@ -32,7 +38,7 @@ export default class Login extends Command {
       }),
     });
 
-    const { browser_url, cli_url, token } = JSON.parse(rawResponse.body);
+    const { browser_url, cli_url, token }: FunctionsDataType = JSON.parse(rawResponse.body);
     const browserUrl = identityUrl + browser_url;
     const cliUrl = identityUrl + cli_url;
 
