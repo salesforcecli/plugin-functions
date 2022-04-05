@@ -55,7 +55,7 @@ parameters:
 
 workflows:
   test-and-release:
-    when: << pipeline.parameters.run-auto-workflows >>
+    # when: << pipeline.parameters.run-auto-workflows >>
     jobs:
       - release-management/validate-pr:
           filters:
