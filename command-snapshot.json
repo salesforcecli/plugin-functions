@@ -30,6 +30,12 @@
     "alias": []
   },
   {
+    "command": "env:log",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "target-compute", "num"],
+    "alias": []
+  },
+  {
     "command": "env:logdrain:add",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["drain-url", "environment", "target-compute", "url"],
