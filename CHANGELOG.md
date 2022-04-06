@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/salesforcecli/plugin-functions/compare/v1.7.2...v1.8.0) (2022-04-06)
+
+### Features
+
+- create sf env log command ([#388](https://github.com/salesforcecli/plugin-functions/issues/388)) ([4f0c0cd](https://github.com/salesforcecli/plugin-functions/commit/4f0c0cd8db6a7ae96eb7fbc096d62be89af822df))
+
+### Bug Fixes
+
+- trigger build ([b159a73](https://github.com/salesforcecli/plugin-functions/commit/b159a7319617859d839d60c706918959f14b4e83))
+
 ### [1.7.2](https://github.com/salesforcecli/plugin-functions/compare/v1.7.1...v1.7.2) (2022-04-01)
 
 ### Bug Fixes
