@@ -436,7 +436,25 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@0.2.8":
+"@heroku/project-descriptor@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@heroku/project-descriptor/-/project-descriptor-0.0.5.tgz#1a305bee7f4d9722818cd5fee2919d7d83953ddb"
+  integrity sha512-E5+MustRcw29xLeHJ1XZubMJDMJOrN1ge20/2/0/ZAwYV2ncD10wcmOLU8G92WY4ZLzX3T1t6/aOtDbQU61zXA==
+  dependencies:
+    ajv "^8.0.0"
+    ajv-formats "^2.0.2"
+    toml "^3.0.0"
+
+"@heroku/project-descriptor@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@heroku/project-descriptor/-/project-descriptor-0.0.6.tgz#5337e7243423b283d0a032dcff25035756341095"
+  integrity sha512-zH1Wx5WQFCnt3ToiQJ9yUWsOXN5woTiGczGUpvQS0zCwwkE42ydKZSRKgSlB/YIwsDmAkFKiUwe97fT+qP45iw==
+  dependencies:
+    ajv "^8.0.0"
+    ajv-formats "^2.0.2"
+    toml "^3.0.0"
+
+"@hk/functions-core@npm:@heroku/functions-core@0.2.8":
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.2.8.tgz#4f8cb2ea8af1b3e6ab390c97a56aa81d1195dcac"
   integrity sha512-7SDXh4PowdqXh2lmQxDtsBYvF4CU9qU5f4PAVIlg+PHBy5eM4VobfXtwjWmdAt6ISnxDOgr/49VVvVHR8f0yOQ==
@@ -458,24 +476,6 @@
     semver "^7.3.5"
     sha256-file "^1.0.0"
     yeoman-environment "~3.3.0"
-
-"@heroku/project-descriptor@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@heroku/project-descriptor/-/project-descriptor-0.0.5.tgz#1a305bee7f4d9722818cd5fee2919d7d83953ddb"
-  integrity sha512-E5+MustRcw29xLeHJ1XZubMJDMJOrN1ge20/2/0/ZAwYV2ncD10wcmOLU8G92WY4ZLzX3T1t6/aOtDbQU61zXA==
-  dependencies:
-    ajv "^8.0.0"
-    ajv-formats "^2.0.2"
-    toml "^3.0.0"
-
-"@heroku/project-descriptor@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@heroku/project-descriptor/-/project-descriptor-0.0.6.tgz#5337e7243423b283d0a032dcff25035756341095"
-  integrity sha512-zH1Wx5WQFCnt3ToiQJ9yUWsOXN5woTiGczGUpvQS0zCwwkE42ydKZSRKgSlB/YIwsDmAkFKiUwe97fT+qP45iw==
-  dependencies:
-    ajv "^8.0.0"
-    ajv-formats "^2.0.2"
-    toml "^3.0.0"
 
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"

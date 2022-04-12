@@ -6,7 +6,7 @@
  */
 import { expect, test } from '@oclif/test';
 import * as sinon from 'sinon';
-import { LocalRun } from '@heroku/functions-core';
+import { LocalRun } from '@hk/functions-core';
 
 describe('run:function:start', () => {
   let sandbox: sinon.SinonSandbox;
