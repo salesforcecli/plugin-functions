@@ -6,15 +6,15 @@
     "alias": []
   },
   {
-    "command": "env:create:compute",
-    "plugin": "@salesforce/plugin-functions",
-    "flags": ["alias", "connected-org"],
-    "alias": []
-  },
-  {
     "command": "env:compute:collaborator:add",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["heroku-user"],
+    "alias": []
+  },
+  {
+    "command": "env:create:compute",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["alias", "connected-org"],
     "alias": []
   },
   {
@@ -56,7 +56,8 @@
   {
     "command": "env:var:get",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute", "json"]
+    "flags": ["environment", "json", "target-compute"],
+    "alias": []
   },
   {
     "command": "env:var:list",
@@ -67,7 +68,7 @@
   {
     "command": "env:var:set",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute"],
+    "flags": ["environment", "json", "target-compute"],
     "alias": []
   },
   {
