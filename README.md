@@ -32,6 +32,7 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 - [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
 - [`sf env create compute`](#sf-env-create-compute)
 - [`sf env delete`](#sf-env-delete)
+- [`sf env log`](#sf-env-log)
 - [`sf env log tail`](#sf-env-log-tail)
 - [`sf env logdrain add`](#sf-env-logdrain-add)
 - [`sf env logdrain list`](#sf-env-logdrain-list)
@@ -87,7 +88,7 @@ Create a compute environment for use with Salesforce Functions.
 
 ```
 USAGE
-  $ sf env create compute [-o <value>] [-a <value> | ]
+  $ sf env create compute [-o <value>] [-a <value>]
 
 FLAGS
   -a, --alias=<value>          Alias for the created environment.
@@ -143,6 +144,24 @@ EXAMPLES
   Delete without a confirmation step:
 
     $ sf env delete --target-compute environment-alias --confirm environment-alias
+```
+
+## `sf env log`
+
+Stream log output for an environment.
+
+```
+USAGE
+  $ sf env log [-e <value> | ] [-n <value>]
+
+FLAGS
+  -e, --target-compute=<value>  Compute environment name to retrieve logs.
+  -n, --num=<value>             Number of lines to display.
+
+EXAMPLES
+  Stream log output:
+
+    $ sf env log --target-compute environment-alias
 ```
 
 ## `sf env log tail`

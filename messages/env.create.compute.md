@@ -10,15 +10,15 @@ Compute environments must be connected to a Salesforce org. By default the comma
 
 - Create a compute environment to run Salesforce Functions:
 
-    <%= config.bin %> <%= command.id %>
+  <%= config.bin %> <%= command.id %>
 
 - Connect the environment to a specific org:
 
-    <%= config.bin %> <%= command.id %> --connected-org=org-alias
+  <%= config.bin %> <%= command.id %> --connected-org=org-alias
 
 - Create an alias for the compute environment:
 
-    <%= config.bin %> <%= command.id %> --alias environment-alias
+  <%= config.bin %> <%= command.id %> --alias environment-alias
 
 # flags.connected-org.summary
 
@@ -27,7 +27,3 @@ The alias or username of the connected Salesforce org.
 # flags.alias.summary
 
 Alias for the created environment.
-
-# flags.setalias.deprecation
-
---setalias is deprecated and will be removed in a future release. Please use --alias going forward.

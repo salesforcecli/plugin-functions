@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-functions",
   "description": "Functions plugin for the SF CLI",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "author": "heroku-front-end@salesforce.com",
   "bin": {
     "functions": "./bin/run"
@@ -13,7 +13,7 @@
     "@heroku/eventsource": "^1.0.7",
     "@heroku/function-toml": "^0.0.3",
     "@heroku/functions-core": "0.3.1",
-    "@heroku/project-descriptor": "0.0.5",
+    "@heroku/project-descriptor": "0.0.6",
     "@oclif/core": "^1.6.0",
     "@salesforce/core": "^3.8.0",
     "@salesforce/plugin-org": "^1.11.2",

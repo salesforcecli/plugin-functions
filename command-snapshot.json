@@ -8,7 +8,7 @@
   {
     "command": "env:create:compute",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["alias", "connected-org", "setalias"],
+    "flags": ["alias", "connected-org"],
     "alias": []
   },
   {
@@ -27,6 +27,12 @@
     "command": "env:log:tail",
     "plugin": "@salesforce/plugin-functions",
     "flags": ["environment", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "env:log",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "target-compute", "num"],
     "alias": []
   },
   {
