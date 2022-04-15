@@ -1,0 +1,171 @@
+[
+  {
+    "command": "deploy:functions",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["branch", "connected-org", "force", "quiet"],
+    "alias": []
+  },
+  {
+    "command": "env:compute:collaborator:add",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["heroku-user"],
+    "alias": []
+  },
+  {
+    "command": "env:create:compute",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["alias", "connected-org"],
+    "alias": []
+  },
+  {
+    "command": "env:delete",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["confirm", "environment", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "env:log",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "num", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "env:log:tail",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "env:logdrain:add",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["drain-url", "environment", "target-compute", "url"],
+    "alias": []
+  },
+  {
+    "command": "env:logdrain:list",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "json", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "env:logdrain:remove",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["drain-url", "environment", "target-compute", "url"],
+    "alias": []
+  },
+  {
+    "command": "env:var:get",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "json", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "env:var:list",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "json", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "env:var:set",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "env:var:unset",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "json", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "generate:function",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["function-name", "language", "name"],
+    "alias": []
+  },
+  {
+    "command": "login:functions",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": [],
+    "alias": []
+  },
+  {
+    "command": "login:functions:jwt",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": [
+      "alias",
+      "clientid",
+      "instance-url",
+      "instanceurl",
+      "json",
+      "keyfile",
+      "set-default",
+      "set-default-dev-hub",
+      "username"
+    ],
+    "alias": []
+  },
+  {
+    "command": "logout:functions",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": [],
+    "alias": []
+  },
+  {
+    "command": "run:function",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["connected-org", "function-url", "headers", "payload", "structured", "url"],
+    "alias": []
+  },
+  {
+    "command": "run:function:start",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": [
+      "builder",
+      "clear-cache",
+      "debug-port",
+      "descriptor",
+      "env",
+      "language",
+      "network",
+      "no-build",
+      "no-pull",
+      "no-run",
+      "path",
+      "port",
+      "verbose"
+    ],
+    "alias": []
+  },
+  {
+    "command": "run:function:start:container",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": [
+      "builder",
+      "clear-cache",
+      "debug-port",
+      "descriptor",
+      "env",
+      "network",
+      "no-build",
+      "no-pull",
+      "no-run",
+      "path",
+      "port",
+      "verbose"
+    ],
+    "alias": []
+  },
+  {
+    "command": "run:function:start:local",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["debug-port", "language", "path", "port"],
+    "alias": []
+  },
+  {
+    "command": "whoami:functions",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["json", "show-token"],
+    "alias": []
+  }
+]
