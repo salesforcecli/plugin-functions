@@ -5,9 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { URL } from 'url';
-import { Errors } from '@oclif/core';
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import * as axiosDebugger from 'axios-debug-log';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as Transport from 'jsforce/lib/transport';
 
 interface APIClientConfig {
   auth: string;
@@ -22,29 +22,9 @@ export interface HerokuAPIErrorOptions {
   url?: string;
 }
 
-export class APIError extends Errors.CLIError {
-  http: AxiosError;
-
-  body: HerokuAPIErrorOptions;
-
-  constructor(httpError: AxiosError) {
-    if (!httpError) throw new Error('invalid error');
-    const options: HerokuAPIErrorOptions = httpError.response?.data;
-    if (!options || !options.message) throw httpError;
-    const info = [];
-    if (options.id) info.push(`Error ID: ${options.id}`);
-    if (options.app && options.app.name) info.push(`App: ${options.app.name}`);
-    if (options.url) info.push(`See ${options.url} for more information.`);
-    if (info.length) super([options.message, ''].concat(info).join('\n'));
-    else super(options.message);
-    this.http = httpError;
-    this.body = options;
-  }
-}
+type ResponseType<T> = { data: T; [key: string]: any };
 
 export default class APIClient {
-  private axios: AxiosInstance;
-
   private auth: string;
 
   private apiUrl: URL;
@@ -52,21 +32,9 @@ export default class APIClient {
   constructor(options: APIClientConfig) {
     this.auth = options.auth;
     this.apiUrl = options.apiUrl;
-
-    const envHeaders = JSON.parse(process.env.SALESFORCE_FUNCTIONS_HEADERS || '{}');
-
-    const opts = {
-      baseURL: `${this.apiUrl.origin}`,
-      headers: {
-        Accept: 'application/vnd.heroku+json; version=3',
-        ...envHeaders,
-      },
-    };
-    this.axios = axios.create(opts);
-    axiosDebugger.addLogger(this.axios);
   }
 
-  async request<T>(url: string, options: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> {
+  async request<T>(url: string, options: any): Promise<ResponseType<T>> {
     options.headers = options.headers || {};
 
     if (
@@ -74,40 +42,56 @@ export default class APIClient {
     ) {
       options.headers.authorization = `Bearer ${this.auth}`;
     }
+    const baseURL = `${this.apiUrl.origin}`;
 
+    const envHeaders = JSON.parse(process.env.SALESFORCE_FUNCTIONS_HEADERS || '{}');
+
+    options.headers = {
+      Accept: 'application/vnd.heroku+json; version=3',
+      'Content-Type': 'application/json',
+      ...envHeaders,
+      ...options.headers,
+    };
+
+    const req = {
+      url: `${baseURL}${url}`,
+      ...options,
+      body: JSON.stringify(options.data),
+    };
+
+    const response = await new Transport().httpRequest(req);
     try {
-      const response = await this.axios.request<T>({
-        url,
-        ...options,
-      });
-
-      return response;
-    } catch (error) {
-      if (!axios.isAxiosError(error)) {
-        throw error;
-      }
-
-      throw new APIError(error);
+      response.data = JSON.parse(response.body);
+    } catch (err) {
+      // not json
     }
+
+    if (response.statusCode >= 400) {
+      const error: any = new Error(`Request failed with status code ${response.statusCode}`);
+      error.data = response.data;
+      throw error;
+    }
+
+    return response;
   }
 
-  get<T>(url: string, options: AxiosRequestConfig = {}) {
+  get<T>(url: string, options: Record<string, unknown> = {}) {
     return this.request<T>(url, { ...options, method: 'GET' });
   }
 
-  post<T>(url: string, options: AxiosRequestConfig = {}) {
+  post<T>(url: string, options: Record<string, unknown> = {}) {
     return this.request<T>(url, { ...options, method: 'POST' });
   }
 
-  put<T>(url: string, options: AxiosRequestConfig = {}) {
+  put<T>(url: string, options: Record<string, unknown> = {}) {
     return this.request<T>(url, { ...options, method: 'PUT' });
   }
 
-  patch<T>(url: string, options: AxiosRequestConfig = {}) {
+  patch<T>(url: string, options: Record<string, unknown> = {}) {
     return this.request<T>(url, { ...options, method: 'PATCH' });
   }
 
-  delete<T>(url: string, options: AxiosRequestConfig = {}) {
+  delete<T>(url: string, options: Record<string, unknown> = {}) {
     return this.request<T>(url, { ...options, method: 'DELETE' });
   }
 }
