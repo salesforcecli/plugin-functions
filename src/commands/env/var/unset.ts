@@ -5,12 +5,14 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import herokuColor from '@heroku-cli/color';
+import * as Heroku from '@heroku-cli/schema';
+import { Messages } from '@salesforce/core';
 import { Errors } from '@oclif/core';
 import { cli } from 'cli-ux';
-import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
-import { resolveAppNameForEnvironment } from '../../../lib/utils';
+
 import Command from '../../../lib/base';
+import { resolveAppNameForEnvironment } from '../../../lib/utils';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.var.unset');
@@ -38,6 +40,7 @@ export default class ConfigUnset extends Command {
 
   async run() {
     const { flags, argv } = await this.parse(ConfigUnset);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
 
@@ -54,61 +57,49 @@ export default class ConfigUnset extends Command {
     }
 
     if (argv.length === 0) {
-      throw new Errors.CLIError('you must enter a config var key (i.e. mykey)');
+      throw new Errors.CLIError('You must enter a config var key (i.e. mykey).');
     }
 
+    const appName = await resolveAppNameForEnvironment(targetCompute);
+
     try {
-      const appName = await resolveAppNameForEnvironment(targetCompute);
-
-      if (flags.json) {
-        const configPairs = argv.reduce((acc, elem) => {
-          return {
-            ...acc,
-            [elem]: null,
-          };
-        }, {});
-
-        await this.client.patch(`/apps/${appName}/config-vars`, {
-          data: configPairs,
-        });
-
-        cli.styledJSON({
-          status: 0,
-          result: null,
-          warnings: [],
-        });
-        return;
-      } else {
-        const configPairs = argv.reduce((acc, elem) => {
-          return {
-            ...acc,
-            [elem]: null,
-          };
-        }, {});
-
-        cli.action.start(
-          `Unsetting ${Object.keys(configPairs)
-            .map((key) => herokuColor.configVar(key))
-            .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
-        );
-
-        await this.client.patch(`/apps/${appName}/config-vars`, {
-          data: configPairs,
-        });
-
-        cli.action.stop();
+      const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
+      const value = config[argv[0]];
+      if (!value) {
+        throw new Error();
       }
-    } catch (err: any) {
+    } catch (error) {
+      // Config var does not exist
+      this.handleError(
+        new Error('Value provided for key does not match a config var found for environment.'),
+        flags.json
+      );
+    }
+
+    const configPairs = argv.reduce((acc: any, elem: any) => {
+      return {
+        ...acc,
+        [elem]: null,
+      };
+    }, {});
+
+    cli.action.start(
+      `Unsetting ${Object.keys(configPairs)
+        .map((key) => herokuColor.configVar(key))
+        .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
+    );
+
+    await this.client.patch(`/apps/${appName}/config-vars`, {
+      data: configPairs,
+    });
+
+    cli.action.stop();
+    if (flags.json) {
       cli.styledJSON({
-        status: 1,
-        name: 'Error',
-        message: `Couldn't find that app <${targetCompute}>`,
-        exitCode: 1,
-        commandName: 'env var unset',
-        stack: err.stack,
+        status: 0,
+        result: null,
         warnings: [],
       });
-      return;
     }
   }
 }
