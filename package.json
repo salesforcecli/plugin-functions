@@ -12,7 +12,7 @@
     "@heroku-cli/schema": "^1.0.25",
     "@heroku/eventsource": "^1.0.7",
     "@heroku/function-toml": "^0.0.3",
-    "@heroku/functions-core": "0.3.1",
+    "@hk/functions-core": "npm:@heroku/functions-core@0.3.1",
     "@heroku/project-descriptor": "0.0.6",
     "@oclif/core": "^1.6.0",
     "@salesforce/core": "^3.8.0",
