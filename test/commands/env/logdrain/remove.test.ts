@@ -4,6 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import { CLIError } from '@oclif/core/lib/errors';
 import { expect, test } from '@oclif/test';
 import vacuum from '../../../helpers/vacuum';
 
@@ -12,6 +13,10 @@ const APP_NAME = 'my-app';
 const LOG_DRAIN = {
   id: '1',
   url: 'https://logs-r-us.com/1',
+};
+
+const LOG_DRAIN_ENV_ERR = {
+  message: "Couldn't find that app.",
 };
 
 describe('sf env logdrain remove', () => {
@@ -54,10 +59,18 @@ describe('sf env logdrain remove', () => {
 
   test
     .stdout()
+    .nock('https://api.heroku.com', (api) =>
+      api
+        .delete(`/apps/invalid-environment/log-drains/${encodeURIComponent(LOG_DRAIN.url)}`)
+        .reply(404, LOG_DRAIN_ENV_ERR)
+    )
     .command(['env:logdrain:remove', '--target-compute', 'invalid-environment', '-u', LOG_DRAIN.url, '--json'])
+    .catch((error) => {
+      expect((error as CLIError).oclif.exit).to.equal(1);
+    })
     .it('will show json output error with incorrect compute environment', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('{\n"status": 1,\n"name": "Error",\n"message": "Couldn\'t find that app <invalid-environment>"')
+        vacuum('{\n"status": 1,\n"message": "Couldn\'t find that app <invalid-environment>",\n"name": "Error"')
       );
     });
 });
