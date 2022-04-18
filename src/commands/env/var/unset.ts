@@ -65,15 +65,25 @@ export default class ConfigUnset extends Command {
     try {
       const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
       const value = config[argv[0]];
+
       if (!value) {
-        throw new Error();
+        this.error('not correct config var', { exit: 401 });
       }
-    } catch (error) {
-      // Config var does not exist
-      this.handleError(
-        new Error('Value provided for key does not match a config var found for environment.'),
-        flags.json
-      );
+    } catch (e) {
+      const error = e as Error;
+
+      if (error.message?.includes('not correct config var')) {
+        this.handleError(
+          new Error(`Value provided for key does not match a config var found for <${appName}>.`),
+          flags.json
+        );
+      }
+      if (error.message?.includes('404')) {
+        this.handleError(new Error(`Couldn't find that app <${appName}>`), flags.json);
+      }
+      if (error.message?.includes('401')) {
+        this.handleError(new Error('Your token has expired, please login with sf login functions'), flags.json);
+      }
     }
 
     const configPairs = argv.reduce((acc: any, elem: any) => {
@@ -83,17 +93,20 @@ export default class ConfigUnset extends Command {
       };
     }, {});
 
-    cli.action.start(
-      `Unsetting ${Object.keys(configPairs)
-        .map((key) => herokuColor.configVar(key))
-        .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
-    );
-
     await this.client.patch(`/apps/${appName}/config-vars`, {
       data: configPairs,
     });
 
-    cli.action.stop();
+    if (!flags.json) {
+      cli.action.start(
+        `Unsetting ${Object.keys(configPairs)
+          .map((key) => herokuColor.configVar(key))
+          .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
+      );
+
+      cli.action.stop();
+    }
+
     if (flags.json) {
       cli.styledJSON({
         status: 0,
