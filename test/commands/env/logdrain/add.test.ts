@@ -4,6 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import { CLIError } from '@oclif/core/lib/errors';
 import { expect, test } from '@oclif/test';
 import vacuum from '../../../helpers/vacuum';
 
@@ -80,11 +81,12 @@ describe('sf env logdrain add', () => {
       api.post('/apps/invalid-environment/log-drains').reply(404, LOG_DRAIN_ENV_ERR)
     )
     .command(['env:logdrain:add', '--target-compute', 'invalid-environment', '-u', LOG_DRAIN.url, '--json'])
+    .catch((error) => {
+      expect((error as CLIError).oclif.exit).to.equal(1);
+    })
     .it('will show json output error with incorrect compute environment', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum(
-          '{\n"status": 1,\n"name": "NotFound",\n"message": "Could not find environment <invalid-environment>",\n"exitCode": 1,\n"commandName": "env logdrain add"'
-        )
+        vacuum('{\n"status": 1,\n"message": "Could not find environment <invalid-environment>"')
       );
     });
 
@@ -92,9 +94,12 @@ describe('sf env logdrain add', () => {
     .stdout()
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(422, LOG_DRAIN_INVALID_URL))
     .command(['env:logdrain:add', '--target-compute', APP_NAME, '-u', 'invalid-url', '--json'])
+    .catch((error) => {
+      expect((error as CLIError).oclif.exit).to.equal(1);
+    })
     .it('will show json output error with incorrect drain-url', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('{\n"status": 1,\n"name": "Error",\n"message": "URL is invalid <invalid-url>"')
+        vacuum('{\n"status": 1,\n"message": "URL is invalid <invalid-url>",\n"name": "Error"')
       );
     });
 
@@ -104,10 +109,13 @@ describe('sf env logdrain add', () => {
       api.post(`/apps/${APP_NAME}/log-drains`).reply(422, LOG_DRAIN_ALREADY_USED)
     )
     .command(['env:logdrain:add', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url, '--json'])
+    .catch((error) => {
+      expect((error as CLIError).oclif.exit).to.equal(1);
+    })
     .it('will show json output error with drain-url already used', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
-          '{\n"status": 1,\n"name": "Error",\n"message": "Logdrain URL is already added <https://logs-r-us.com/1>"'
+          '{\n"status": 1,\n"message": "Logdrain URL is already added <https://logs-r-us.com/1>",\n"name": "Error",'
         )
       );
     });

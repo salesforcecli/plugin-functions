@@ -75,17 +75,16 @@ export default class LogDrainAdd extends Command {
     if (flags.url) {
       this.warn(messages.getMessage('flags.url.deprecation'));
     }
+    const appName = await resolveAppNameForEnvironment(targetCompute);
 
     try {
-      const appName = await resolveAppNameForEnvironment(targetCompute);
+      const result = await this.client.post<Heroku.LogDrain>(`/apps/${appName}/log-drains`, {
+        data: {
+          url,
+        },
+      });
 
       if (flags.json) {
-        const result = await this.client.post<Heroku.LogDrain>(`apps/${appName}/log-drains`, {
-          data: {
-            url,
-          },
-        });
-
         cli.styledJSON({
           status: 0,
           result: [
@@ -104,53 +103,29 @@ export default class LogDrainAdd extends Command {
       } else {
         cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
 
-        await this.client.post<Heroku.LogDrain>(`apps/${appName}/log-drains`, {
-          data: {
-            url,
-          },
-        });
-
         cli.action.stop();
       }
-    } catch (err: any) {
-      const error = err as { body: { message?: string } };
-      if (error.body?.message?.includes("Couldn't find that app.")) {
-        cli.styledJSON({
-          status: 1,
-          name: 'NotFound',
-          message: `Could not find environment <${targetCompute}>`,
-          exitCode: 1,
-          commandName: 'env logdrain add',
-          stack: err.stack,
-          warnings: [],
-        });
-        return;
+    } catch (e) {
+      const error = e as { data: { message?: string } };
+
+      if (error.data?.message?.includes('Url is invalid')) {
+        this.handleError(new Error(`URL is invalid <${url}>`), flags.json);
       }
 
-      if (error.body?.message?.includes('Url has already been taken')) {
-        cli.styledJSON({
-          status: 1,
-          name: 'Error',
-          message: `Logdrain URL is already added <${url}>`,
-          exitCode: 1,
-          commandName: 'env logdrain add',
-          stack: err.stack,
-          warnings: [],
-        });
-        return;
+      if (error.data?.message?.includes('Url has already been taken')) {
+        this.handleError(new Error(`Logdrain URL is already added <${url}>`), flags.json);
       }
 
-      if (error.body?.message?.includes('Url is invalid')) {
-        cli.styledJSON({
-          status: 1,
-          name: 'Error',
-          message: `URL is invalid <${url}>`,
-          exitCode: 1,
-          commandName: 'env logdrain add',
-          stack: err.stack,
-          warnings: [],
-        });
-        return;
+      if (error.data?.message?.includes("Couldn't find that app.")) {
+        this.handleError(new Error(`Could not find environment <${appName}>`), flags.json);
+      }
+
+      if (error.data?.message?.includes("You've reached the limit")) {
+        this.handleError(new Error(`You've reached the limit of 5 log drains on <${appName}>`), flags.json);
+      }
+
+      if (error.data?.message?.includes('401')) {
+        this.handleError(new Error('Your token has expired, please login with sf login functions'), flags.json);
       }
     }
   }
