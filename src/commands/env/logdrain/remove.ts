@@ -61,11 +61,7 @@ export default class LogDrainRemove extends Command {
     }
 
     if (!url) {
-      throw new Errors.CLIError(
-        `Missing required flag:
-       -u, --drain-url DRAIN-URL  ${herokuColor.dim('Logdrain url to remove.')}
-       See more help with --help`
-      );
+      this.handleError(new Error('Missing required flag: -u, --url Logdrain url to remove'), flags.json);
     }
 
     if (flags.environment) {
@@ -76,12 +72,10 @@ export default class LogDrainRemove extends Command {
       this.warn(messages.getMessage('flags.url.deprecation'));
     }
 
+    const appName = await resolveAppNameForEnvironment(targetCompute);
     try {
-      const appName = await resolveAppNameForEnvironment(targetCompute);
-
+      await this.client.delete<Heroku.LogDrain>(`/apps/${appName}/log-drains/${encodeURIComponent(url)}`);
       if (flags.json) {
-        await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(url)}`);
-
         cli.styledJSON({
           status: 0,
           result: null,
@@ -91,20 +85,18 @@ export default class LogDrainRemove extends Command {
       } else {
         cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
 
-        await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(url)}`);
-
         cli.action.stop();
       }
-    } catch (err: any) {
-      cli.styledJSON({
-        status: 1,
-        name: 'Error',
-        message: `Couldn't find that app <${targetCompute}>`,
-        exitCode: 1,
-        commandName: 'env logdrain remove',
-        stack: err.stack,
-        warnings: [],
-      });
+    } catch (e: any) {
+      const error = e as { data: { message?: string } };
+
+      if (error.data?.message?.includes('Url is invalid')) {
+        this.handleError(new Error(`URL is invalid <${url}>`), flags.json);
+      }
+
+      if (error.data?.message?.includes("Couldn't find that app.")) {
+        this.handleError(new Error(`Couldn't find that app  <${appName}>`), flags.json);
+      }
       return;
     }
   }
