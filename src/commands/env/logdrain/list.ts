@@ -41,7 +41,7 @@ export default class LogDrainList extends Command {
     if (!targetCompute) {
       throw new Errors.CLIError(
         `Missing required flag:
-        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+        -e, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
        See more help with --help`
       );
     }
