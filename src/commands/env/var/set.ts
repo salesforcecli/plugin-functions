@@ -66,7 +66,7 @@ export default class ConfigSet extends Command {
     }
 
     if (flags.environment) {
-      this.warn(messages.getMessage('flags.environment.deprecation'));
+      cli.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);

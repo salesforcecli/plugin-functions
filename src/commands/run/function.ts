@@ -63,7 +63,7 @@ export default class Invoke extends Command {
       );
     }
     if (flags.url) {
-      this.warn(messages.getMessage('flags.url.deprecation'));
+      cli.warn(messages.getMessage('flags.url.deprecation'));
     }
     flags.payload = await this.getPayloadData(flags.payload);
     if (!flags.payload) {
@@ -72,7 +72,7 @@ export default class Invoke extends Command {
     const aggregator = await ConfigAggregator.create();
     const targetOrg = aggregator.getPropertyValue('target-org');
     if (!flags['connected-org'] && !targetOrg) {
-      this.warn('No -o connected org or target-org found, context will be partially initialized');
+      cli.warn('No -o connected org or target-org found, context will be partially initialized');
     }
     const aliasOrUser = flags['connected-org'] || `target-org ${targetOrg}`;
     this.log(`Using ${aliasOrUser} login credential to initialize context`);

@@ -141,7 +141,7 @@ export default class JwtLogin extends Command {
     const instanceUrl = flags['instance-url'] ?? flags.instanceurl;
 
     if (flags.instanceurl) {
-      this.warn(messages.getMessage('flags.instanceurl.deprecation'));
+      cli.warn(messages.getMessage('flags.instanceurl.deprecation'));
     }
 
     cli.action.start('Logging in via JWT');
@@ -218,13 +218,13 @@ export default class JwtLogin extends Command {
     // the new heroku credentials we're about to generate
     this.resetClientAuth();
 
-    this.info.tokens.set(Command.TOKEN_BEARER_KEY, {
+    this.globalInfo.tokens.set(Command.TOKEN_BEARER_KEY, {
       token: bearerToken,
       url: this.identityUrl.toString(),
       user: auth.getUsername(),
     });
 
-    await this.info.write();
+    await this.globalInfo.write();
 
     if (flags.json) {
       cli.styledJSON({
