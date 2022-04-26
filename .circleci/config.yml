@@ -79,7 +79,9 @@ workflows:
       - release-management/test-plugin-inclusion:
           target_cli: sf
       - release-management/release-package:
-          context: AWS
+          context:
+            - AWS
+            - release
           sign: true
           github-release: true
           tag: prerelease
@@ -135,4 +137,5 @@ workflows:
               only:
                 - main
     jobs:
-      - release-management/dependabot-automerge
+      - release-management/dependabot-automerge:
+          context: release
