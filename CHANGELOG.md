@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/salesforcecli/plugin-functions/compare/v1.7.2...v1.8.0) (2022-04-06)
+
+### Features
+
+- create sf env log command ([#388](https://github.com/salesforcecli/plugin-functions/issues/388)) ([4f0c0cd](https://github.com/salesforcecli/plugin-functions/commit/4f0c0cd8db6a7ae96eb7fbc096d62be89af822df))
+
+### Bug Fixes
+
+- trigger build ([b159a73](https://github.com/salesforcecli/plugin-functions/commit/b159a7319617859d839d60c706918959f14b4e83))
+
+### [1.7.2](https://github.com/salesforcecli/plugin-functions/compare/v1.7.1...v1.7.2) (2022-04-01)
+
+### Bug Fixes
+
+- update alias for compute cmd ([2610e3e](https://github.com/salesforcecli/plugin-functions/commit/2610e3e16dbe8936aaae6feae983c4bbf095fbf8))
+
+### [1.7.1](https://github.com/salesforcecli/plugin-functions/compare/v1.7.0...v1.7.1) (2022-03-18)
+
+### Bug Fixes
+
+- add caret to @salesforce/core and bump deps ([963e65a](https://github.com/salesforcecli/plugin-functions/commit/963e65a48bd076242cf7dfc87b34ba490db6f849))
+- add json flag with tests ([8302d80](https://github.com/salesforcecli/plugin-functions/commit/8302d807ee5d0a2b525ab27e4cc97953b4306879))
+
 ## [1.7.0](https://github.com/salesforcecli/plugin-functions/compare/v1.6.1...v1.7.0) (2022-03-07)
 
 ### Features
