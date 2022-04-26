@@ -6,6 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
+import { cli } from 'cli-ux';
 import { Errors, Flags } from '@oclif/core';
 import { generateFunction, Language } from '@hk/functions-core';
 import Command from '../../lib/base';
@@ -56,7 +57,7 @@ export default class GenerateFunction extends Command {
     }
 
     if (flags.name) {
-      this.warn(messages.getMessage('flags.name.deprecation'));
+      cli.warn(messages.getMessage('flags.name.deprecation'));
     }
 
     try {

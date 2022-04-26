@@ -58,7 +58,7 @@ export default class VarGet extends Command {
     }
 
     if (flags.environment) {
-      this.warn(messages.getMessage('flags.environment.deprecation'));
+      cli.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
@@ -84,7 +84,7 @@ export default class VarGet extends Command {
       });
     } else {
       if (!value) {
-        this.warn(
+        cli.warn(
           `No config var named ${herokuColor.cyan(args.key as string)} found for environment ${herokuColor.cyan(
             targetCompute
           )}`
