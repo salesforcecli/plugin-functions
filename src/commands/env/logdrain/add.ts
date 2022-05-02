@@ -99,7 +99,6 @@ export default class LogDrainAdd extends Command {
           ],
           warnings: [],
         });
-        return;
       } else {
         cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
 
