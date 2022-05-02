@@ -32,7 +32,7 @@
   {
     "command": "env:log",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute", "num"],
+    "flags": ["drain-url", "environment", "target-compute", "url", "json"],
     "alias": []
   },
   {
