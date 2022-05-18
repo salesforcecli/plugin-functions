@@ -16,7 +16,7 @@ export default abstract class Command extends SfCommand<any> {
   protected static TOKEN_BEARER_KEY = 'functions-bearer';
   protected static TOKEN_REFRESH_KEY = 'functions-refresh';
   // We want to implement `--json` on a per-command basis, so we disable the global json flag here
-  static disableJsonFlag = true;
+  static enableJsonFlag = false;
 
   protected globalInfo!: GlobalInfo;
 
