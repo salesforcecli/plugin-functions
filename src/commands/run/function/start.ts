@@ -8,6 +8,7 @@
 import * as path from 'path';
 import { Messages } from '@salesforce/core';
 import { Flags } from '@oclif/core';
+import { cli } from 'cli-ux';
 
 import Local from './start/local';
 
@@ -84,7 +85,7 @@ export default class Start extends Local {
       try {
         msg = messages.getMessage(`flags.${flag}.deprecation`);
         if (val) {
-          this.warn(msg);
+          cli.warn(msg);
         }
       } catch {
         // No deprecation message, flag is not deprecated
