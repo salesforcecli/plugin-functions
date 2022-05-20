@@ -50,8 +50,7 @@
   {
     "command": "env:logdrain:remove",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["drain-url", "environment", "target-compute", "url"],
-    "alias": []
+    "flags": ["drain-url", "environment", "target-compute", "url", "json"]
   },
   {
     "command": "env:var:get",
