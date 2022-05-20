@@ -24,15 +24,15 @@
     "alias": []
   },
   {
-    "command": "env:log:tail",
+    "command": "env:log",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute"],
+    "flags": ["environment", "num", "target-compute"],
     "alias": []
   },
   {
-    "command": "env:log",
+    "command": "env:log:tail",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute", "num"],
+    "flags": ["environment", "target-compute"],
     "alias": []
   },
   {
@@ -74,7 +74,7 @@
   {
     "command": "env:var:unset",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute"],
+    "flags": ["environment", "json", "target-compute"],
     "alias": []
   },
   {
