@@ -8,8 +8,8 @@ import * as events from 'events';
 import { expect, test } from '@oclif/test';
 import * as sinon from 'sinon';
 
-import * as library from '@heroku/functions-core';
-import { Benny } from '@heroku/functions-core';
+import * as library from '@hk/functions-core';
+import { Benny } from '@hk/functions-core';
 
 describe('function:start:container', () => {
   let sandbox: sinon.SinonSandbox;

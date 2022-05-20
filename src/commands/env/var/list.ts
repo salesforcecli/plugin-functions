@@ -50,7 +50,7 @@ export default class ConfigList extends Command {
     }
 
     if (flags.environment) {
-      this.warn(messages.getMessage('flags.environment.deprecation'));
+      cli.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
@@ -81,7 +81,7 @@ export default class ConfigList extends Command {
       });
     } else {
       if (!configArray.length) {
-        this.warn(`No config vars found for environment ${targetCompute}`);
+        cli.warn(`No config vars found for environment ${targetCompute}`);
         return;
       }
 

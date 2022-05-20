@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-functions",
   "description": "Functions plugin for the SF CLI",
-  "version": "1.7.2",
+  "version": "1.9.0",
   "author": "heroku-front-end@salesforce.com",
   "bin": {
     "functions": "./bin/run"
@@ -12,8 +12,8 @@
     "@heroku-cli/schema": "^1.0.25",
     "@heroku/eventsource": "^1.0.7",
     "@heroku/function-toml": "^0.0.3",
-    "@heroku/functions-core": "0.2.6",
     "@heroku/project-descriptor": "0.0.6",
+    "@hk/functions-core": "npm:@heroku/functions-core@0.2.8",
     "@oclif/core": "^1.6.0",
     "@salesforce/core": "^3.8.0",
     "@salesforce/plugin-org": "^1.11.2",
@@ -65,7 +65,7 @@
     "eslint-config-salesforce-typescript": "^0.2.8",
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jsdoc": "^37.9.7",
+    "eslint-plugin-jsdoc": "^39.2.9",
     "eslint-plugin-prettier": "^4.0.0",
     "globby": "^11.1.0",
     "husky": "^7.0.4",

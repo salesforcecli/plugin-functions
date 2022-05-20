@@ -61,7 +61,7 @@ export class FunctionsDeployable extends Deployable {
   }
 }
 export class FunctionsDeployer extends Deployer {
-  protected info!: GlobalInfo;
+  protected globalInfo!: GlobalInfo;
   protected TOKEN_BEARER_KEY = 'functions-bearer';
   private auth?: string;
   private client?: APIClient;
@@ -84,13 +84,13 @@ export class FunctionsDeployer extends Deployer {
   }
 
   public async setup(flags: Deployer.Flags, options: FunctionsDeployOptions): Promise<Deployer.Options> {
-    this.info = await GlobalInfo.getInstance();
+    this.globalInfo = await GlobalInfo.getInstance();
     const apiKey = process.env.SALESFORCE_FUNCTIONS_API_KEY;
 
     if (apiKey) {
       this.auth = apiKey;
     } else {
-      const token = this.info.tokens.get(this.TOKEN_BEARER_KEY, true)?.token;
+      const token = this.globalInfo.tokens.get(this.TOKEN_BEARER_KEY, true)?.token;
 
       if (!token) {
         throw new Error('Not authenticated. Please login with `sf login functions`.');

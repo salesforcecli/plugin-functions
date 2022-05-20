@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/salesforcecli/plugin-functions/compare/v1.8.0...v1.9.0) (2022-05-19)
+
+### Features
+
+- use sf-plugin-core base class SfCommand ([#421](https://github.com/salesforcecli/plugin-functions/issues/421)) ([846842e](https://github.com/salesforcecli/plugin-functions/commit/846842e7c75e47ac232ec5dad968590b7e45d470)), closes [#409](https://github.com/salesforcecli/plugin-functions/issues/409) [#384](https://github.com/salesforcecli/plugin-functions/issues/384) [#408](https://github.com/salesforcecli/plugin-functions/issues/408) [#384](https://github.com/salesforcecli/plugin-functions/issues/384)
+
+### Bug Fixes
+
+- update functions templates with functions-core 0.2.8 ([#403](https://github.com/salesforcecli/plugin-functions/issues/403)) ([a5f6428](https://github.com/salesforcecli/plugin-functions/commit/a5f64287950d0e33f3ecc5419adc9c3bca4c3963))
+
+## [1.8.0](https://github.com/salesforcecli/plugin-functions/compare/v1.7.2...v1.8.0) (2022-04-06)
+
+### Features
+
+- create sf env log command ([#388](https://github.com/salesforcecli/plugin-functions/issues/388)) ([4f0c0cd](https://github.com/salesforcecli/plugin-functions/commit/4f0c0cd8db6a7ae96eb7fbc096d62be89af822df))
+
+### Bug Fixes
+
+- trigger build ([b159a73](https://github.com/salesforcecli/plugin-functions/commit/b159a7319617859d839d60c706918959f14b4e83))
+
 ### [1.7.2](https://github.com/salesforcecli/plugin-functions/compare/v1.7.1...v1.7.2) (2022-04-01)
 
 ### Bug Fixes
