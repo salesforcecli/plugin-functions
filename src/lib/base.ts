@@ -151,4 +151,19 @@ export default abstract class Command extends SfCommand<any> {
       }
     }
   }
+
+  protected handleError(error: Error, json?: boolean): never {
+    if (json) {
+      const { name, message } = error;
+      cli.styledJSON({
+        status: 1,
+        message,
+        name,
+        warnings: [],
+      });
+      cli.exit(1);
+    } else {
+      this.error(error);
+    }
+  }
 }
