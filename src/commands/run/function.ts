@@ -12,6 +12,7 @@ import herokuColor from '@heroku-cli/color';
 import { AxiosResponse, AxiosError } from 'axios';
 import { ConfigAggregator, Messages } from '@salesforce/core';
 import getStdin from '../../lib/get-stdin';
+import { FunctionsFlagBuilder } from '../../lib/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function');
@@ -50,6 +51,7 @@ export default class Invoke extends Command {
       char: 'o',
       description: messages.getMessage('flags.connected-org.summary'),
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -81,11 +83,20 @@ export default class Invoke extends Command {
       url,
       targetusername: flags['connected-org'] ?? targetOrg,
     };
-    cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
+    const response = await runFunction(runFunctionOptions as RunFunctionOptions);
+
     try {
-      const response = await runFunction(runFunctionOptions as RunFunctionOptions);
-      cli.action.stop(herokuColor.greenBright(response.status.toString()));
-      this.writeResponse(response);
+      if (flags.json) {
+        cli.styledJSON({
+          status: 0,
+          result: [response.data],
+          warnings: [],
+        });
+      } else {
+        cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
+        this.writeResponse(response);
+        cli.action.stop(herokuColor.greenBright(response.status.toString()));
+      }
     } catch (err) {
       const error = err as AxiosError;
       cli.debug(error as unknown as string);
@@ -106,7 +117,6 @@ export default class Invoke extends Command {
     }
     return payload || getStdin();
   }
-
   writeResponse(response: AxiosResponse) {
     const contentType = response.headers['content-type'];
     if (contentType.includes('application/json') || contentType.includes('application/cloudevents+json')) {
