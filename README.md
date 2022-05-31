@@ -359,7 +359,7 @@ DESCRIPTION
 EXAMPLES
   Create a JavaScript function:
 
-    $ sf generate function --function-name MyFunction --language javascript
+    $ sf generate function --function-name myfunction --language javascript
 ```
 
 ## `sf login functions`

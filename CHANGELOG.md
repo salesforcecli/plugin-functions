@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/salesforcecli/plugin-functions/compare/v1.9.0...v1.10.0) (2022-05-31)
+
+### Features
+
+- bump project-descriptor version that includes access attribute ([#399](https://github.com/salesforcecli/plugin-functions/issues/399)) ([04d1c3a](https://github.com/salesforcecli/plugin-functions/commit/04d1c3a7facdba3261439c45f7cbd17c7b4ad2f8))
+
 ## [1.9.0](https://github.com/salesforcecli/plugin-functions/compare/v1.8.0...v1.9.0) (2022-05-19)
 
 ### Features
