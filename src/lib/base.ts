@@ -5,20 +5,20 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { URL } from 'url';
-import { Command as Base } from '@oclif/core';
+import { SfCommand } from '@salesforce/sf-plugins-core';
 import { GlobalInfo, Org } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import APIClient, { herokuClientApiUrl } from './api-client';
 import herokuVariant from './heroku-variant';
 import { SfdcAccount } from './sfdc-types';
 
-export default abstract class Command extends Base {
+export default abstract class Command extends SfCommand<any> {
   protected static TOKEN_BEARER_KEY = 'functions-bearer';
   protected static TOKEN_REFRESH_KEY = 'functions-refresh';
   // We want to implement `--json` on a per-command basis, so we disable the global json flag here
-  static disableJsonFlag = true;
+  static enableJsonFlag = false;
 
-  protected info!: GlobalInfo;
+  protected globalInfo!: GlobalInfo;
 
   private _client?: APIClient;
 
@@ -26,7 +26,7 @@ export default abstract class Command extends Base {
 
   protected async init(): Promise<void> {
     await super.init();
-    this.info = await GlobalInfo.getInstance();
+    this.globalInfo = await GlobalInfo.getInstance();
   }
 
   protected get identityUrl(): URL {
@@ -37,7 +37,7 @@ export default abstract class Command extends Base {
   }
 
   protected get username() {
-    return this.info.tokens.get(Command.TOKEN_BEARER_KEY)?.user;
+    return this.globalInfo.tokens.get(Command.TOKEN_BEARER_KEY)?.user;
   }
 
   protected resetClientAuth() {
@@ -52,7 +52,7 @@ export default abstract class Command extends Base {
       if (apiKey) {
         this._auth = apiKey;
       } else {
-        const token = this.info.tokens.get(Command.TOKEN_BEARER_KEY, true)?.token;
+        const token = this.globalInfo.tokens.get(Command.TOKEN_BEARER_KEY, true)?.token;
 
         if (!token) {
           throw new Error(`Not authenticated. Please login with \`${this.config.bin} login functions\`.`);
@@ -138,7 +138,7 @@ export default abstract class Command extends Base {
     const confirmedValue = this.fetchConfirmationValue(name, confirm);
     if (name !== confirmedValue) {
       warningMessage = warningMessage || `This will delete the ${type} ${name}`;
-      this.warn(`${warningMessage}\nTo proceed, enter the ${type} name (${name}) again in the prompt below:`);
+      cli.warn(`${warningMessage}\nTo proceed, enter the ${type} name (${name}) again in the prompt below:`);
       // This is a workaround for cli-ux
       // & fancy-test stubbing issues
       // cli-ux mocks itself incorrectly (tbd why)

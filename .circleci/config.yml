@@ -79,7 +79,9 @@ workflows:
       - release-management/test-plugin-inclusion:
           target_cli: sf
       - release-management/release-package:
-          context: AWS
+          context:
+            - AWS
+            - release
           sign: true
           github-release: true
           tag: prerelease
@@ -102,17 +104,6 @@ workflows:
           filters:
             branches:
               only: main
-  test-ts-update:
-    triggers:
-      - schedule:
-          cron: 0 0 * * *
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - release-management/test-ts-update:
-          es_target: ES2021
   just-nuts:
     when: << pipeline.parameters.run-just-nuts >>
     jobs:
@@ -135,4 +126,5 @@ workflows:
               only:
                 - main
     jobs:
-      - release-management/dependabot-automerge
+      - release-management/dependabot-automerge:
+          context: release
