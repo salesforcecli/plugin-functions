@@ -84,11 +84,14 @@ export default abstract class Command extends SfCommand<any> {
     } else {
       if (this.argv.includes('--json')) {
         const json = {
-          stack: err.stack.toString(),
+          name: err.name,
           message: err.message,
-          code: err.code,
+          exitCode: err.exitCode,
+          status: 1,
+          warnings: [],
         };
         cli.styledJSON(json);
+        cli.exit(1);
       } else {
         throw err;
       }
