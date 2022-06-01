@@ -56,6 +56,7 @@ export async function resolveFunctionReferences(project: SfdxProjectConfig) {
       const projectTomlPath = path.join(fnPath, 'project.toml');
       const projectToml: any = await parseProjectToml(projectTomlPath);
       const fnName = projectToml.com.salesforce.id;
+      const access = projectToml.com.salesforce.access;
 
       const fnReference: FunctionReference = {
         fullName: `${project.name}-${fnName}`,
@@ -67,6 +68,10 @@ export async function resolveFunctionReferences(project: SfdxProjectConfig) {
 
       if (permissionSet) {
         fnReference.permissionSet = permissionSet;
+      }
+
+      if (access) {
+        fnReference.access = access;
       }
 
       return fnReference;

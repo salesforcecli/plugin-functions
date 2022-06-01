@@ -37,25 +37,13 @@ export default class EnvCreateCompute extends Command {
     alias: Flags.string({
       char: 'a',
       description: messages.getMessage('flags.alias.summary'),
-      exclusive: ['setalias'],
-    }),
-
-    setalias: Flags.string({
-      char: 'a',
-      description: messages.getMessage('flags.alias.summary'),
-      exclusive: ['alias'],
-      hidden: true,
     }),
   };
 
   async run() {
     const { flags } = await this.parse(EnvCreateCompute);
 
-    const alias = flags.alias ?? flags.setalias;
-
-    if (flags.setalias) {
-      this.warn(messages.getMessage('flags.setalias.deprecation'));
-    }
+    const alias = flags.alias;
 
     // if `--connected-org` is null here, fetchOrg will pull the default org from the surrounding environment
     const org = await fetchOrg(flags['connected-org']);
@@ -156,9 +144,9 @@ export default class EnvCreateCompute extends Command {
       cli.action.start('Connecting environments');
 
       if (alias) {
-        this.info.aliases.set(alias, app.id!);
+        this.globalInfo.aliases.set(alias, app.id!);
 
-        await this.info.write();
+        await this.globalInfo.write();
       }
 
       cli.action.stop();
@@ -170,10 +158,10 @@ export default class EnvCreateCompute extends Command {
       );
     } catch (err) {
       const DUPLICATE_PROJECT_MESSAGE = 'This org is already connected to a compute environment for this project';
-      const error = err as { body: { message?: string } };
+      const error = err as { data: { message?: string } };
       // If environment creation fails because an environment already exists for this org and project
       // we want to fetch the existing environment so that we can point the user to it
-      if (error.body?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
+      if (error.data?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
         cli.action.stop('error!');
         const app = await fetchAppForProject(this.client, projectName, org.getUsername());
 

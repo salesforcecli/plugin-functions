@@ -47,12 +47,12 @@ export default class LogDrainList extends Command {
     }
 
     if (flags.environment) {
-      this.warn(messages.getMessage('flags.environment.deprecation'));
+      cli.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
 
-    const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`apps/${appName}/log-drains`);
+    const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`/apps/${appName}/log-drains`);
 
     if (flags.json) {
       if (drains.length === 0) {

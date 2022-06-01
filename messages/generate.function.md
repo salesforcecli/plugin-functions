@@ -10,7 +10,7 @@ Both '--language' and '--name' are required flags. Function names must start wit
 
 - Create a JavaScript function:
 
-  <%= config.bin %> <%= command.id %> --function-name MyFunction --language javascript
+  <%= config.bin %> <%= command.id %> --function-name myfunction --language javascript
 
 # flags.function-name.summary
 

@@ -68,18 +68,18 @@ export default class LogDrainRemove extends Command {
     }
 
     if (flags.environment) {
-      this.warn(messages.getMessage('flags.environment.deprecation'));
+      cli.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     if (flags.url) {
-      this.warn(messages.getMessage('flags.url.deprecation'));
+      cli.warn(messages.getMessage('flags.url.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
 
     cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
 
-    await this.client.delete<Heroku.LogDrain>(`apps/${appName}/log-drains/${encodeURIComponent(url)}`);
+    await this.client.delete<Heroku.LogDrain>(`/apps/${appName}/log-drains/${encodeURIComponent(url)}`);
 
     cli.action.stop();
   }
