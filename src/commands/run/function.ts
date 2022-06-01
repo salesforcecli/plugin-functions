@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as fs from 'fs';
-import { Command, Errors, Flags } from '@oclif/core';
+import { Errors, Flags } from '@oclif/core';
 import { runFunction, RunFunctionOptions } from '@hk/functions-core';
 import { cli } from 'cli-ux';
 import herokuColor from '@heroku-cli/color';
@@ -13,6 +13,7 @@ import { AxiosResponse, AxiosError } from 'axios';
 import { ConfigAggregator, Messages } from '@salesforce/core';
 import getStdin from '../../lib/get-stdin';
 import { FunctionsFlagBuilder } from '../../lib/flags';
+import Command from '../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function');
@@ -83,9 +84,10 @@ export default class Invoke extends Command {
       url,
       targetusername: flags['connected-org'] ?? targetOrg,
     };
-    const response = await runFunction(runFunctionOptions as RunFunctionOptions);
 
     try {
+      const response = await runFunction(runFunctionOptions as RunFunctionOptions);
+
       if (flags.json) {
         cli.styledJSON({
           status: 0,
@@ -97,16 +99,12 @@ export default class Invoke extends Command {
         this.writeResponse(response);
         cli.action.stop(herokuColor.greenBright(response.status.toString()));
       }
-    } catch (err) {
-      const error = err as AxiosError;
-      cli.debug(error as unknown as string);
+    } catch (e) {
+      const error = e as AxiosError;
       if (error.response) {
-        cli.action.stop(herokuColor.redBright(`${error.response.status} ${error.response.statusText}`));
-        this.debug(error.response);
-        this.error(error.response.data as string);
+        this.handleError(new Error(`${error.response.status} ${error.response.statusText}`), flags.json);
       } else {
-        cli.action.stop(herokuColor.redBright('Error'));
-        this.error(error);
+        this.handleError(new Error(`${error.message}`), flags.json);
       }
     }
   }
