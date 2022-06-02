@@ -60,6 +60,27 @@ describe('env:delete', () => {
 
   test
     .stderr()
+    .stdout()
+    .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
+    .do(() => {
+      sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(Utils, 'findOrgExpirationStatus' as any).returns(false);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .command(['env:delete', `--target-compute=${COMPUTE_ENV_NAME}`, `--confirm=${COMPUTE_ENV_NAME}`, '--json'])
+    .it('deletes an environment and returns json', (ctx) => {
+      expect(ctx.stderr).to.include(`Deleting environment ${COMPUTE_ENV_NAME}... done`);
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum('{\n"status": 0,\n"result": "Environment deleted.",\n"warnings": []\n}')
+      );
+    });
+
+  test
+    .stderr()
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
       sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
@@ -82,9 +103,9 @@ describe('env:delete', () => {
     .nock('https://api.heroku.com', (api) => api.delete(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .do(() => {
-      sandbox.stub(Utils, 'resolveOrg' as any).throws('Attempted to resolve an org without a valid org ID');
+      sandbox.stub(Utils, 'findOrgExpirationStatus' as any).throws('This function should not have been called');
     })
-    .add('projectResolveStub', () => {
+    .add('findOrgStub', () => {
       return sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
@@ -96,7 +117,7 @@ describe('env:delete', () => {
       expect(output).to.include(`Deleting environment ${COMPUTE_ENV_NAME}... done`);
       // If they're deleting the environment after deleting the org, the command shouldn't attempt
       // to clean up function references, and therefore it shouldn't attempt to resolve the project
-      expect(ctx.projectResolveStub).to.not.have.been.called;
+      expect(ctx.findOrgStub).to.not.have.been.called;
     });
 
   test

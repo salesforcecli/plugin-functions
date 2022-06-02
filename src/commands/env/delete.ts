@@ -40,6 +40,7 @@ export default class EnvDelete extends Command {
       hidden: true,
     }),
     confirm: confirmationFlag,
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -159,7 +160,7 @@ export default class EnvDelete extends Command {
     if (flags.json) {
       cli.styledJSON({
         status: 0,
-        result: null,
+        result: 'Environment deleted.',
         warnings: [],
       });
     }
