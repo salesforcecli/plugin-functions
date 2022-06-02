@@ -65,7 +65,7 @@ export default class Invoke extends Command {
        See more help with --help`
       );
     }
-    if (flags.url) {
+    if (flags.url && !flags.json) {
       cli.warn(messages.getMessage('flags.url.deprecation'));
     }
     flags.payload = await this.getPayloadData(flags.payload);
@@ -78,7 +78,9 @@ export default class Invoke extends Command {
       cli.warn('No -o connected org or target-org found, context will be partially initialized');
     }
     const aliasOrUser = flags['connected-org'] || `target-org ${targetOrg}`;
-    this.log(`Using ${aliasOrUser} login credential to initialize context`);
+    if (!flags.json) {
+      cli.log(`Using ${aliasOrUser} login credential to initialize context`);
+    }
     const runFunctionOptions = {
       ...flags,
       url,
@@ -87,11 +89,10 @@ export default class Invoke extends Command {
 
     try {
       const response = await runFunction(runFunctionOptions as RunFunctionOptions);
-
       if (flags.json) {
         cli.styledJSON({
           status: 0,
-          result: [response.data],
+          result: response.data,
           warnings: [],
         });
       } else {
