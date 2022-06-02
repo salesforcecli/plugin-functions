@@ -80,6 +80,7 @@ export default class Invoke extends Command {
     const aliasOrUser = flags['connected-org'] || `target-org ${targetOrg}`;
     if (!flags.json) {
       cli.log(`Using ${aliasOrUser} login credential to initialize context`);
+      cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
     }
     const runFunctionOptions = {
       ...flags,
@@ -96,7 +97,6 @@ export default class Invoke extends Command {
           warnings: [],
         });
       } else {
-        cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
         this.writeResponse(response);
         cli.action.stop(herokuColor.greenBright(response.status.toString()));
       }
