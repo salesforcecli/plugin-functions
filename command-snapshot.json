@@ -20,7 +20,7 @@
   {
     "command": "env:delete",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["confirm", "environment", "target-compute"],
+    "flags": ["confirm", "environment", "target-compute", "json"],
     "alias": []
   },
   {

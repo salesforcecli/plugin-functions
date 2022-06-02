@@ -40,6 +40,7 @@ export default class EnvDelete extends Command {
       hidden: true,
     }),
     confirm: confirmationFlag,
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -80,7 +81,7 @@ export default class EnvDelete extends Command {
         // If the error is the one we throw above, then we will send the error to the user.
         // If not (meaning the environment name provided might be a compute environment) then we swallow the error and proceed.
         if (error.message.includes(`The environment ${herokuColor.cyan(targetCompute)} is a Salesforce org.`)) {
-          this.error(error);
+          this.handleError(error, flags.json);
         }
       }
     }
@@ -92,21 +93,25 @@ export default class EnvDelete extends Command {
 
     try {
       // If app exists, it will be deleted
-      app = await this.client.get<Heroku.App>(`/apps/${appName}`, {
+      const response = await this.client.get<Heroku.App>(`/apps/${appName}`, {
         headers: {
           Accept: 'application/vnd.heroku+json; version=3.evergreen',
         },
       });
+      app = response.data;
     } catch (error) {
       // App with name does not exist
-      this.error(
-        'Value provided for environment does not match a compute environment name or an alias to a compute environment.'
+      this.handleError(
+        new Error(
+          'Value provided for environment does not match a compute environment name or an alias to a compute environment.'
+        ),
+        flags.json
       );
     }
 
     let connectedOrg: Org | null = null;
     try {
-      connectedOrg = await resolveOrg(app.data.sales_org_connection?.sales_org_id as string | undefined);
+      connectedOrg = await resolveOrg(app?.sales_org_connection?.sales_org_id as string | undefined);
     } catch (err) {
       const error = err as Error;
       // It's possible that they are deleting the compute environment after deleting the org it was
@@ -114,7 +119,7 @@ export default class EnvDelete extends Command {
       // of cleaning up functon refs since they're all already gone. Otherwise, something else has
       // gone wrong and we go ahead and bail out.
       if (error.message !== 'Attempted to resolve an org without a valid org ID') {
-        this.error;
+        this.handleError(error, flags.json);
       }
     }
 
@@ -151,5 +156,13 @@ export default class EnvDelete extends Command {
     });
 
     cli.action.stop();
+
+    if (flags.json) {
+      cli.styledJSON({
+        status: 0,
+        result: 'Environment deleted.',
+        warnings: [],
+      });
+    }
   }
 }
