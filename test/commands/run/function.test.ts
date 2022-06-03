@@ -48,10 +48,9 @@ describe('run:function', () => {
   context('with payload and other arguments', () => {
     beforeEach(async () => {
       testData = new MockTestOrgData();
-      $$.configStubs.GlobalInfo = { contents: { orgs: { [testData.username]: await testData.getConfig() } } };
-
+      await $$.stubAuths(testData);
       const config = await Config.create(Config.getDefaultOptions(true));
-      await config.set(OrgConfigProperties.TARGET_ORG, testData.username);
+      config.set(OrgConfigProperties.TARGET_ORG, testData.username);
       await config.write();
     });
 

@@ -218,13 +218,13 @@ export default class JwtLogin extends Command {
     // the new heroku credentials we're about to generate
     this.resetClientAuth();
 
-    this.globalInfo.tokens.set(Command.TOKEN_BEARER_KEY, {
+    this.stateAggregator.tokens.set(Command.TOKEN_BEARER_KEY, {
       token: bearerToken,
       url: this.identityUrl.toString(),
       user: auth.getUsername(),
     });
 
-    await this.globalInfo.write();
+    await this.stateAggregator.tokens.write();
 
     if (flags.json) {
       cli.styledJSON({

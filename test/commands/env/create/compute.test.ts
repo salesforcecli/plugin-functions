@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
-import { Org, SfdxProject } from '@salesforce/core';
-import { AliasAccessor } from '@salesforce/core/lib/globalInfo';
+import { Org, SfProject } from '@salesforce/core';
+import { AliasAccessor } from '@salesforce/core/lib/stateAggregator';
 import * as sinon from 'sinon';
 import { AuthStubs } from '../../../helpers/auth';
 
@@ -71,7 +71,7 @@ describe('sf env create compute', () => {
     .retries(3)
     .do(() => {
       sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -94,6 +94,7 @@ describe('sf env create compute', () => {
 
   const aliasSetSpy = sandbox.spy();
   const aliasWriteSpy = sandbox.spy();
+  // const setAliasSpy = sandbox.spy();
 
   test
     .stdout()
@@ -101,9 +102,9 @@ describe('sf env create compute', () => {
     .retries(3)
     .do(() => {
       orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(AliasAccessor.prototype, 'set' as any).callsFake(aliasSetSpy);
-      AuthStubs.write.callsFake(aliasWriteSpy);
+      AuthStubs.aliasesWrite.callsFake(aliasWriteSpy);
     })
     .finally(() => {
       sandbox.restore();
@@ -130,7 +131,7 @@ describe('sf env create compute', () => {
     .stderr()
     .do(() => {
       orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK_NO_NAME);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK_NO_NAME);
     })
     .finally(() => {
       sandbox.restore();
@@ -146,7 +147,7 @@ describe('sf env create compute', () => {
     .stderr()
     .do(() => {
       orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -173,9 +174,9 @@ describe('sf env create compute', () => {
     .stderr()
     .retries(3)
     .do(() => {
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(AliasAccessor.prototype, 'set' as any).callsFake(aliasSetSpy);
-      AuthStubs.write.callsFake(aliasWriteSpy);
+      AuthStubs.aliasesWrite.callsFake(aliasWriteSpy);
     })
     .add('queryStub', () => {
       const queryStub = sinon.stub();
@@ -233,7 +234,7 @@ describe('sf env create compute', () => {
     .stderr()
     .do(() => {
       orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       CONN_MOCK.metadata.list = sinon.stub().throws('INVALID_TYPE');
     })
     .finally(() => {

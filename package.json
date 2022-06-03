@@ -15,7 +15,7 @@
     "@heroku/project-descriptor": "0.0.6",
     "@hk/functions-core": "npm:@heroku/functions-core@0.2.8",
     "@oclif/core": "^1.6.0",
-    "@salesforce/core": "^3.8.0",
+    "@salesforce/core": "^3.19.4",
     "@salesforce/plugin-org": "^1.11.2",
     "@salesforce/sf-plugins-core": "^1.7.2",
     "@salesforce/ts-sinon": "^1.3.21",

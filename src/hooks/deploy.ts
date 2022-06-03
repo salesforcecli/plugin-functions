@@ -6,7 +6,7 @@
  */
 
 import { join, basename } from 'path';
-import { SfdxProject, GlobalInfo } from '@salesforce/core';
+import { SfProject, StateAggregator } from '@salesforce/core';
 import herokuColor from '@heroku-cli/color';
 import { UpsertResult } from 'jsforce';
 import { Deployer, Deployable, SfHook } from '@salesforce/sf-plugins-core';
@@ -61,7 +61,7 @@ export class FunctionsDeployable extends Deployable {
   }
 }
 export class FunctionsDeployer extends Deployer {
-  protected globalInfo!: GlobalInfo;
+  protected stateAggregator!: StateAggregator;
   protected TOKEN_BEARER_KEY = 'functions-bearer';
   private auth?: string;
   private client?: APIClient;
@@ -84,13 +84,13 @@ export class FunctionsDeployer extends Deployer {
   }
 
   public async setup(flags: Deployer.Flags, options: FunctionsDeployOptions): Promise<Deployer.Options> {
-    this.globalInfo = await GlobalInfo.getInstance();
+    this.stateAggregator = await StateAggregator.getInstance();
     const apiKey = process.env.SALESFORCE_FUNCTIONS_API_KEY;
 
     if (apiKey) {
       this.auth = apiKey;
     } else {
-      const token = this.globalInfo.tokens.get(this.TOKEN_BEARER_KEY, true)?.token;
+      const token = this.stateAggregator.tokens.get(this.TOKEN_BEARER_KEY, true)?.token;
 
       if (!token) {
         throw new Error('Not authenticated. Please login with `sf login functions`.');
@@ -325,7 +325,7 @@ export class FunctionsDeployer extends Deployer {
 }
 
 const hook: SfHook.Deploy<FunctionsDeployer> = async function (options) {
-  const project = await SfdxProject.resolve();
+  const project = await SfProject.resolve();
   const functionsPath = join(project.getPath(), 'functions');
   return [new FunctionsDeployer(functionsPath)];
 };
