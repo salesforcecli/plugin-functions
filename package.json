@@ -119,7 +119,7 @@
         "description": "Commands to manage your environments, such as orgs and compute environments.",
         "subtopics": {
           "create": {
-            "description": "Commands to create a compute environment for use with Salesforce Functions."
+            "description": "Commands to create environments."
           },
           "log": {
             "description": "Commands to stream log output for an environment."
