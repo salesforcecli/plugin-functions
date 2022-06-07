@@ -42,8 +42,7 @@ export default class Local extends Command {
     }),
   };
 
-  // using a static to override the LocalRun constructor based on suggestion from
-  // https://github.com/oclif/oclif/issues/41
+  // using a static to override the LocalRun constructor based on suggestion from https://github.com/oclif/oclif/issues/41
   static createLocalRun = (lang?: string, runnerOpts?: LangRunnerOpts) => {
     return new LocalRun(lang, runnerOpts);
   };
