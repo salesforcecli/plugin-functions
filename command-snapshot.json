@@ -108,7 +108,7 @@
   {
     "command": "logout:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": [],
+    "flags": ["json"],
     "alias": []
   },
   {
