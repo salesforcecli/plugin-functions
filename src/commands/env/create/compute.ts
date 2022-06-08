@@ -11,6 +11,7 @@ import { Messages } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
 import { cli } from 'cli-ux';
 import { format } from 'date-fns';
+import { handle } from '@oclif/core/lib/errors';
 import Command from '../../../lib/base';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import pollForResult from '../../../lib/poll-for-result';
@@ -38,6 +39,7 @@ export default class EnvCreateCompute extends Command {
       char: 'a',
       description: messages.getMessage('flags.alias.summary'),
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -62,14 +64,15 @@ export default class EnvCreateCompute extends Command {
           )} to the "features" list in your scratch org definition JSON file, e.g. "features": ["Functions"]`
       );
     }
-
-    cli.action.start(`Creating compute environment for org ID ${orgId}`);
+    if (!flags.json) {
+      cli.action.start(`Creating compute environment for org ID ${orgId}`);
+    }
 
     const project = await fetchSfdxProject();
     const projectName = project.name;
 
     if (!projectName) {
-      this.error('No project name found in sfdx-project.json.');
+      this.handleError(new Error('No project name found in sfdx-project.json.'), flags.json);
     }
 
     const connection = org.getConnection();
@@ -92,7 +95,7 @@ export default class EnvCreateCompute extends Command {
         // to `FunctionConnection` is complete. Once that's done, we can remove this and go back to a simple
         // query against `FunctionConnection`
         if (!error.message.includes("sObject type 'SfFunctionsConnection' is not supported.")) {
-          this.error(error);
+          this.handleError(error, flags.json);
         }
         response = await connection.query<FunctionConnectionRecord>(`SELECT
             Id,
@@ -119,7 +122,8 @@ export default class EnvCreateCompute extends Command {
       // If there is any other error besides the one mentioned above, something is actually wrong
       // and we should bail
       if (record.Error) {
-        this.error(record.Error);
+        // this.error(record.Error);
+        this.handleError(new Error(`${record.Error}`), flags.json);
       }
 
       // This is the go signal. Once we have this status it means that the connection is fully up
@@ -139,9 +143,11 @@ export default class EnvCreateCompute extends Command {
 
       cli.action.stop();
 
-      this.log(`New compute environment created with ID ${app.name}`);
+      if (!flags.json) {
+        this.log(`New compute environment created with ID ${app.name}`);
 
-      cli.action.start('Connecting environments');
+        cli.action.start('Connecting environments');
+      }
 
       if (alias) {
         this.globalInfo.aliases.set(alias, app.id!);
@@ -176,5 +182,16 @@ export default class EnvCreateCompute extends Command {
 
       throw error;
     }
+    cli.styledJSON({
+      status: 0,
+      result: {
+        alias: 'Prod_Env_Prod_Mod',
+        projectName: 'GA_Bug_Bash_Prod_Update',
+        connectedOrgAlias: '',
+        connectedOrgId: '00DB0000000KfQ5MAK',
+        computeEnvironmentName: 'ga-bug-00db0000000kfq5mak-908',
+      },
+      warnings: [],
+    });
   }
 }
