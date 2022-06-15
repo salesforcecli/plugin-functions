@@ -7,7 +7,7 @@
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Flags } from '@oclif/core';
-import { Messages } from '@salesforce/core';
+import { Org, Messages } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
 import { cli } from 'cli-ux';
 import { format } from 'date-fns';
@@ -48,7 +48,14 @@ export default class EnvCreateCompute extends Command {
     const alias = flags.alias;
 
     // if `--connected-org` is null here, fetchOrg will pull the default org from the surrounding environment
-    const org = await fetchOrg(flags['connected-org']);
+    let org: Org | null;
+    try {
+      org = await fetchOrg(flags['connected-org']);
+    } catch (err) {
+      const error = err as Error;
+      this.handleError(error, flags.json);
+    }
+
     const orgId = org.getOrgId();
 
     if (!(await this.isFunctionsEnabled(org))) {
@@ -76,7 +83,6 @@ export default class EnvCreateCompute extends Command {
     }
 
     const connection = org.getConnection();
-
     await pollForResult(async () => {
       // This query allows us to verify that the org connection has actually been created before
       // attempting to create a compute environment. If we don't wait for this to happen, environment
@@ -163,35 +169,38 @@ export default class EnvCreateCompute extends Command {
           : 'Your compute environment is ready.'
       );
     } catch (err) {
-      const DUPLICATE_PROJECT_MESSAGE = 'This org is already connected to a compute environment for this project';
+      const DUPLICATE_PROJECT_MESSAGE =
+        'There is already a project with the same name in the same namespace for this org';
       const error = err as { data: { message?: string } };
       // If environment creation fails because an environment already exists for this org and project
       // we want to fetch the existing environment so that we can point the user to it
       if (error.data?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
         cli.action.stop('error!');
-        const app = await fetchAppForProject(this.client, projectName, org.getUsername());
-
-        this.log(`${DUPLICATE_PROJECT_MESSAGE}:`);
-        this.log(`Compute Environment ID: ${app.name}`);
-        if (app.created_at) {
-          this.log(`Created on: ${format(new Date(app.created_at), 'E LLL d HH:mm:ss O y')}`);
-        }
-
-        return;
+        this.handleError(
+          new Error('This org is already connected to a compute environment for this project'),
+          flags.json
+        );
       }
-
-      throw error;
     }
-    cli.styledJSON({
-      status: 0,
-      result: {
-        alias: 'Prod_Env_Prod_Mod',
-        projectName: 'GA_Bug_Bash_Prod_Update',
-        connectedOrgAlias: '',
-        connectedOrgId: '00DB0000000KfQ5MAK',
-        computeEnvironmentName: 'ga-bug-00db0000000kfq5mak-908',
-      },
-      warnings: [],
-    });
+    const app = await fetchAppForProject(this.client, projectName, org.getUsername());
+    this.log(`Compute Environment ID: ${app.name}`);
+
+    if (app.created_at) {
+      this.log(`Created on: ${format(new Date(app.created_at), 'E LLL d HH:mm:ss O y')}`);
+    }
+
+    if (flags.json) {
+      cli.styledJSON({
+        status: 0,
+        result: {
+          alias,
+          projectName,
+          connectedOrgAlias: '',
+          connectedOrgId: orgId,
+          computeEnvironmentName: app.name,
+        },
+        warnings: [],
+      });
+    }
   }
 }
