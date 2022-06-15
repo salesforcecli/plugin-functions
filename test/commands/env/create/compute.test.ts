@@ -81,6 +81,8 @@ describe('sf env create compute', () => {
         .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
           sfdx_project_name: PROJECT_CONFIG_MOCK.name,
         })
+        .reply(200, APP_MOCK)
+        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
         .reply(200, APP_MOCK);
     })
     .command(['env:create:compute'])
@@ -113,6 +115,8 @@ describe('sf env create compute', () => {
         .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
           sfdx_project_name: PROJECT_CONFIG_MOCK.name,
         })
+        .reply(200, APP_MOCK)
+        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
         .reply(200, APP_MOCK);
     })
     .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`])
@@ -157,16 +161,14 @@ describe('sf env create compute', () => {
           sfdx_project_name: PROJECT_CONFIG_MOCK.name,
         })
         .reply(422, {
-          message: 'This org is already connected to a compute environment for this project',
-        })
-        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
-        .reply(200, APP_MOCK);
+          message: 'Sfdx project name There is already a project with the same name in the same namespace for this org',
+        });
     })
     .command(['env:create:compute'])
-    .it('displays an informative error message when environment already exists for a given project', (ctx) => {
-      expect(ctx.stderr).to.contain('error!');
-      expect(ctx.stdout).to.contain(`Compute Environment ID: ${APP_MOCK.name}`);
-    });
+    .catch((error) => {
+      expect(error.message).to.contain('This org is already connected to a compute environment for this project');
+    })
+    .it('displays an informative error message when environment already exists for a given project');
 
   test
     .stdout()
@@ -213,6 +215,8 @@ describe('sf env create compute', () => {
         .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
           sfdx_project_name: PROJECT_CONFIG_MOCK.name,
         })
+        .reply(200, APP_MOCK)
+        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
         .reply(200, APP_MOCK);
     })
     .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`])
