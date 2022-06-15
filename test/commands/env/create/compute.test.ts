@@ -9,6 +9,7 @@ import { Org, SfdxProject } from '@salesforce/core';
 import { AliasAccessor } from '@salesforce/core/lib/globalInfo';
 import * as sinon from 'sinon';
 import { AuthStubs } from '../../../helpers/auth';
+import vacuum from '../../../helpers/vacuum';
 
 const APP_MOCK = {
   id: '1',
@@ -61,6 +62,18 @@ const PROJECT_MOCK_NO_NAME = {
 
 const ORG_ALIAS = 'my-cool-alias';
 const ENVIRONMENT_ALIAS = 'my-cool-environment';
+
+const jsonSuccess = {
+  status: 0,
+  result: {
+    alias: ENVIRONMENT_ALIAS,
+    projectName: PROJECT_CONFIG_MOCK.name,
+    connectedOrgAlias: '',
+    connectedOrgId: ORG_MOCK.id,
+    computeEnvironmentName: APP_MOCK.name,
+  },
+  warnings: [],
+};
 
 describe('sf env create compute', () => {
   const sandbox = sinon.createSandbox();
@@ -120,13 +133,43 @@ describe('sf env create compute', () => {
         .reply(200, APP_MOCK);
     })
     .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`])
-    .it('creates a compute environment using and sets an alias using values passed in flags', (ctx) => {
+    .it('creates a compute environment and sets an alias using values passed in flags', (ctx) => {
       expect(ctx.stderr).to.contain(`Creating compute environment for org ID ${ORG_MOCK.id}`);
       expect(ctx.stdout).to.contain(`New compute environment created with ID ${APP_MOCK.name}`);
       expect(ctx.stdout).to.contain(`Your compute environment with local alias ${ENVIRONMENT_ALIAS} is ready`);
       expect(orgStub).to.have.been.calledWith({ aliasOrUsername: ORG_ALIAS });
       expect(aliasSetSpy).to.have.been.calledWith(ENVIRONMENT_ALIAS, APP_MOCK.id);
       expect(aliasWriteSpy).to.have.been.called;
+    });
+
+  test
+    .stdout()
+    .stderr()
+    .retries(3)
+    .do(() => {
+      orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(AliasAccessor.prototype, 'set' as any).callsFake(aliasSetSpy);
+      AuthStubs.write.callsFake(aliasWriteSpy);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .nock('https://api.heroku.com', (api) => {
+      api
+        .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
+          sfdx_project_name: PROJECT_CONFIG_MOCK.name,
+        })
+        .reply(200, APP_MOCK)
+        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
+        .reply(200, APP_MOCK);
+    })
+    .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`, '-j'])
+    .it('will show json output with success', (ctx) => {
+      const succJSON = JSON.parse(ctx.stdout);
+
+      expect(succJSON.status).to.deep.equal(jsonSuccess.status);
+      expect(succJSON.result).to.eql(jsonSuccess.result);
     });
 
   test

@@ -162,12 +162,13 @@ export default class EnvCreateCompute extends Command {
       }
 
       cli.action.stop();
-
-      this.log(
-        alias
-          ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready.`
-          : 'Your compute environment is ready.'
-      );
+      if (!flags.json) {
+        this.log(
+          alias
+            ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready.`
+            : 'Your compute environment is ready.'
+        );
+      }
     } catch (err) {
       const DUPLICATE_PROJECT_MESSAGE =
         'There is already a project with the same name in the same namespace for this org';
@@ -183,11 +184,6 @@ export default class EnvCreateCompute extends Command {
       }
     }
     const app = await fetchAppForProject(this.client, projectName, org.getUsername());
-    this.log(`Compute Environment ID: ${app.name}`);
-
-    if (app.created_at) {
-      this.log(`Created on: ${format(new Date(app.created_at), 'E LLL d HH:mm:ss O y')}`);
-    }
 
     if (flags.json) {
       cli.styledJSON({
