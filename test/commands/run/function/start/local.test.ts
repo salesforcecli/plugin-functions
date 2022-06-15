@@ -5,9 +5,14 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
+import { ChildProcess } from 'child_process';
+import { EventEmitter } from 'events';
 import { expect, test } from '@oclif/test';
-import * as execa from 'execa';
 import * as sinon from 'sinon';
+import { LocalRun, LocalRunProcess } from '@hk/functions-core';
+import { SinonStub, SinonStubbedInstance } from 'sinon';
+import { LangRunnerOpts } from '@hk/functions-core/dist/lang-runner';
+import Local from '../../../../../src/commands/run/function/start/local';
 
 describe('run:function:start:local', () => {
   const fixturesPath = path.resolve(__dirname, '../../../../fixtures');
@@ -16,13 +21,24 @@ describe('run:function:start:local', () => {
   const tsPath = path.resolve(fixturesPath, 'typescripttemplate');
 
   let sandbox: sinon.SinonSandbox;
-  let commandSpy: any;
+  let localRunConstructor: SinonStub<[lang?: string | undefined, runnerOpts?: LangRunnerOpts | undefined], LocalRun>;
+  let localRun: SinonStubbedInstance<LocalRun>;
+  let childProcess: ChildProcess;
+
   beforeEach(() => {
     sandbox = sinon.createSandbox();
-    // execa provided types are incorrect about 'command' return values.
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    commandSpy = sandbox.stub(execa, 'command').resolves({ stdout: 'v16.0.0', stderr: 'openjdk "16.0.1+9-25"' });
+
+    childProcess = new EventEmitter() as ChildProcess;
+
+    localRun = sandbox.createStubInstance(LocalRun);
+
+    localRun.exec.callsFake(() => {
+      const localProcessRun = new LocalRunProcess(childProcess);
+      setTimeout(() => childProcess.emit('close'), 100);
+      return Promise.resolve(localProcessRun);
+    });
+
+    localRunConstructor = sandbox.stub(Local, 'createLocalRun').returns(localRun);
   });
 
   afterEach(() => {
@@ -33,7 +49,11 @@ describe('run:function:start:local', () => {
     test
       .command(['run:function:start:local', '--path', jsPath])
       .it('should start the Node.js invoker runtime', (ctx) => {
-        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+        expect(localRunConstructor).to.have.been.calledWith('auto', {
+          port: 8080,
+          debugPort: 9229,
+          path: jsPath,
+        });
       });
   });
 
@@ -41,7 +61,11 @@ describe('run:function:start:local', () => {
     test
       .command(['run:function:start:local', '--language', 'auto', '--path', jsPath])
       .it('should start the Node.js invoker runtime', (ctx) => {
-        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+        expect(localRunConstructor).to.have.been.calledWith('auto', {
+          port: 8080,
+          debugPort: 9229,
+          path: jsPath,
+        });
       });
   });
 
@@ -49,7 +73,11 @@ describe('run:function:start:local', () => {
     test
       .command(['run:function:start:local', '--path', javaPath])
       .it('should start the Java invoker runtime', (ctx) => {
-        expect(commandSpy).to.have.been.calledWith(sinon.match('sf-fx-runtime-java'));
+        expect(localRunConstructor).to.have.been.calledWith('auto', {
+          port: 8080,
+          debugPort: 9229,
+          path: javaPath,
+        });
       });
   });
 
@@ -57,7 +85,11 @@ describe('run:function:start:local', () => {
     test
       .command(['run:function:start:local', '--language', 'auto', '--path', javaPath])
       .it('should start the Java invoker runtime', (ctx) => {
-        expect(commandSpy).to.have.been.calledWith(sinon.match('sf-fx-runtime-java'));
+        expect(localRunConstructor).to.have.been.calledWith('auto', {
+          port: 8080,
+          debugPort: 9229,
+          path: javaPath,
+        });
       });
   });
 
@@ -65,7 +97,11 @@ describe('run:function:start:local', () => {
     test
       .command(['run:function:start:local', '--path', jsPath, '-l', 'javascript'])
       .it('should start the Node.js invoker runtime', (ctx) => {
-        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+        expect(localRunConstructor).to.have.been.calledWith('javascript', {
+          port: 8080,
+          debugPort: 9229,
+          path: jsPath,
+        });
       });
   });
 
@@ -73,7 +109,11 @@ describe('run:function:start:local', () => {
     test
       .command(['run:function:start:local', '--path', tsPath, '-l', 'typescript'])
       .it('should start the Node.js invoker runtime', (ctx) => {
-        expect(commandSpy).to.have.been.calledWith(sinon.match('@heroku/sf-fx-runtime-nodejs'));
+        expect(localRunConstructor).to.have.been.calledWith('typescript', {
+          port: 8080,
+          debugPort: 9229,
+          path: tsPath,
+        });
       });
   });
 
@@ -81,7 +121,11 @@ describe('run:function:start:local', () => {
     test
       .command(['run:function:start:local', '--path', javaPath, '-l', 'java'])
       .it('should start the Java invoker runtime', (ctx) => {
-        expect(commandSpy).to.have.been.calledWith(sinon.match('sf-fx-runtime-java'));
+        expect(localRunConstructor).to.have.been.calledWith('java', {
+          port: 8080,
+          debugPort: 9229,
+          path: javaPath,
+        });
       });
   });
 });
