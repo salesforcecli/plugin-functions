@@ -10,8 +10,6 @@ import { Flags } from '@oclif/core';
 import { Org, Messages } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
 import { cli } from 'cli-ux';
-import { format } from 'date-fns';
-import { handle } from '@oclif/core/lib/errors';
 import Command from '../../../lib/base';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import pollForResult from '../../../lib/poll-for-result';
@@ -74,8 +72,13 @@ export default class EnvCreateCompute extends Command {
     if (!flags.json) {
       cli.action.start(`Creating compute environment for org ID ${orgId}`);
     }
-
-    const project = await fetchSfdxProject();
+    let project = null;
+    try {
+      project = await fetchSfdxProject();
+    } catch (err) {
+      const error = err as Error;
+      this.handleError(error, flags.json);
+    }
     const projectName = project.name;
 
     if (!projectName) {
@@ -172,9 +175,21 @@ export default class EnvCreateCompute extends Command {
     } catch (err) {
       const DUPLICATE_PROJECT_MESSAGE =
         'There is already a project with the same name in the same namespace for this org';
+      const INVALID_PROJECT_NAME =
+        "Sfdx project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter.";
       const error = err as { data: { message?: string } };
       // If environment creation fails because an environment already exists for this org and project
       // we want to fetch the existing environment so that we can point the user to it
+      // console.log('sara error', error);
+      if (error.data?.message?.includes(INVALID_PROJECT_NAME)) {
+        cli.action.stop('error!');
+        this.handleError(
+          new Error(
+            "Project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter"
+          ),
+          flags.json
+        );
+      }
       if (error.data?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
         cli.action.stop('error!');
         this.handleError(

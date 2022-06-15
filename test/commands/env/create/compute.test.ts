@@ -9,7 +9,6 @@ import { Org, SfdxProject } from '@salesforce/core';
 import { AliasAccessor } from '@salesforce/core/lib/globalInfo';
 import * as sinon from 'sinon';
 import { AuthStubs } from '../../../helpers/auth';
-import vacuum from '../../../helpers/vacuum';
 
 const APP_MOCK = {
   id: '1',
@@ -212,6 +211,34 @@ describe('sf env create compute', () => {
       expect(error.message).to.contain('This org is already connected to a compute environment for this project');
     })
     .it('displays an informative error message when environment already exists for a given project');
+
+  test
+    .stdout()
+    .stderr()
+    .do(() => {
+      orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .nock('https://api.heroku.com', (api) => {
+      api
+        .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
+          sfdx_project_name: PROJECT_CONFIG_MOCK.name,
+        })
+        .reply(422, {
+          message:
+            "Sfdx project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter.",
+        });
+    })
+    .command(['env:create:compute'])
+    .catch((error) => {
+      expect(error.message).to.contain(
+        "Project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter"
+      );
+    })
+    .it('displays an informative error message when the project name is invalid');
 
   test
     .stdout()
