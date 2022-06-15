@@ -178,11 +178,11 @@ export default class EnvCreateCompute extends Command {
       const INVALID_PROJECT_NAME =
         "Sfdx project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter.";
       const error = err as { data: { message?: string } };
+      cli.action.stop('error!');
       // If environment creation fails because an environment already exists for this org and project
       // we want to fetch the existing environment so that we can point the user to it
-      // console.log('sara error', error);
+
       if (error.data?.message?.includes(INVALID_PROJECT_NAME)) {
-        cli.action.stop('error!');
         this.handleError(
           new Error(
             "Project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter"
@@ -191,12 +191,12 @@ export default class EnvCreateCompute extends Command {
         );
       }
       if (error.data?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
-        cli.action.stop('error!');
         this.handleError(
           new Error('This org is already connected to a compute environment for this project'),
           flags.json
         );
       }
+      this.handleError(new Error(`${error.data.message}`), flags.json);
     }
     const app = await fetchAppForProject(this.client, projectName, org.getUsername());
 
