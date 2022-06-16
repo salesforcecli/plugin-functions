@@ -131,7 +131,6 @@ export default class EnvCreateCompute extends Command {
       // If there is any other error besides the one mentioned above, something is actually wrong
       // and we should bail
       if (record.Error) {
-        // this.error(record.Error);
         this.handleError(new Error(`${record.Error}`), flags.json);
       }
 
@@ -179,8 +178,6 @@ export default class EnvCreateCompute extends Command {
         "Sfdx project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter.";
       const error = err as { data: { message?: string } };
       cli.action.stop('error!');
-      // If environment creation fails because an environment already exists for this org and project
-      // we want to fetch the existing environment so that we can point the user to it
 
       if (error.data?.message?.includes(INVALID_PROJECT_NAME)) {
         this.handleError(
@@ -190,16 +187,18 @@ export default class EnvCreateCompute extends Command {
           flags.json
         );
       }
+      // If environment creation fails because an environment already exists for this org and project
+      // we want to fetch the existing environment so that we can point the user to it
       if (error.data?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
+        const app = await fetchAppForProject(this.client, projectName, org.getUsername());
         this.handleError(
-          new Error('This org is already connected to a compute environment for this project'),
+          new Error(`This org is already connected to a compute environment for this project -> ${app.name}`),
           flags.json
         );
       }
       this.handleError(new Error(`${error.data.message}`), flags.json);
     }
     const app = await fetchAppForProject(this.client, projectName, org.getUsername());
-
     if (flags.json) {
       cli.styledJSON({
         status: 0,

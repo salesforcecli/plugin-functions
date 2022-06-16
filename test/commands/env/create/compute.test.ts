@@ -204,7 +204,9 @@ describe('sf env create compute', () => {
         })
         .reply(422, {
           message: 'Sfdx project name There is already a project with the same name in the same namespace for this org',
-        });
+        })
+        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
+        .reply(200, APP_MOCK);
     })
     .command(['env:create:compute'])
     .catch((error) => {
