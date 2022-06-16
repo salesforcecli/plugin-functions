@@ -47,6 +47,7 @@ export default class DeployFunctions extends Command {
       description: messages.getMessage('flags.quiet.summary'),
       char: 'q',
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
