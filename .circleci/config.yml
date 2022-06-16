@@ -97,6 +97,8 @@ workflows:
             branches:
               only: main
       - release-management/promote-package:
+          context:
+            - release
           target: latest
           candidate: prerelease
           requires:
