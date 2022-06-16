@@ -6,7 +6,8 @@
  */
 import { CLIError } from '@oclif/core/lib/errors';
 import { expect, test } from '@oclif/test';
-import { AuthInfo, GlobalInfo, SfdxProject, SfTokens } from '@salesforce/core';
+import { AuthInfo, SfProject, SfTokens } from '@salesforce/core';
+import { TokenAccessor } from '@salesforce/core/lib/stateAggregator';
 import * as sinon from 'sinon';
 import { AuthStubs } from '../../../helpers/auth';
 import vacuum from '../../../helpers/vacuum';
@@ -42,9 +43,9 @@ describe('sf login functions jwt', () => {
   let contents: SfTokens;
 
   beforeEach(() => {
-    AuthStubs.write.callsFake(async function (this: GlobalInfo) {
-      contents = this.tokens.getAll(true);
-      return this.getContents();
+    AuthStubs.tokensWrite.callsFake(async function (this: TokenAccessor) {
+      contents = this.getAll(true);
+      return contents;
     });
   });
 
@@ -53,7 +54,7 @@ describe('sf login functions jwt', () => {
     .stderr()
     .do(() => {
       sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
-      sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sinon.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
       sinon.restore();
@@ -176,7 +177,7 @@ describe('sf login functions jwt', () => {
     .stdout()
     .stderr()
     .do(() => {
-      sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sinon.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .add('AuthInfoCreateStub', () => {
       return sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
@@ -213,7 +214,7 @@ describe('sf login functions jwt', () => {
     .stdout()
     .stderr()
     .do(() => {
-      sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sinon.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
     })
     .finally(() => {
@@ -271,7 +272,7 @@ describe('sf login functions jwt', () => {
           privateKey: PRIVATE_KEY_PATH,
         }),
       });
-      sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sinon.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
       sinon.restore();
@@ -325,7 +326,7 @@ describe('sf login functions jwt', () => {
         name: 'JwtAuthError',
         message: 'oops no auth',
       });
-      sinon.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sinon.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
       sinon.restore();

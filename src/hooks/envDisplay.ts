@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { GlobalInfo } from '@salesforce/core';
+import { StateAggregator } from '@salesforce/core';
 import { SfHook } from '@salesforce/sf-plugins-core';
 import APIClient, { herokuClientApiUrl } from '../lib/api-client';
 import { ensureArray } from '../lib/function-reference-utils';
@@ -34,14 +34,14 @@ interface ComputeEnv {
 }
 
 const hook: SfHook.EnvDisplay<ComputeEnv> = async function (opts) {
-  const info = await GlobalInfo.getInstance();
+  const stateAggregator = await StateAggregator.getInstance();
   const apiKey = process.env.SALESFORCE_FUNCTIONS_API_KEY;
   let auth;
 
   if (apiKey) {
     auth = apiKey;
   } else {
-    const token = info.tokens.get('functions-bearer', true)?.token;
+    const token = stateAggregator.tokens.get('functions-bearer', true)?.token;
 
     if (!token) {
       throw new Error('Not authenticated. Please login with `sf login functions`.');

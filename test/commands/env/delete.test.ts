@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
-import { Org, SfdxProject } from '@salesforce/core';
-import { AliasAccessor } from '@salesforce/core/lib/globalInfo';
+import { Org, SfProject } from '@salesforce/core';
+import { AliasAccessor } from '@salesforce/core/lib/stateAggregator';
 import * as sinon from 'sinon';
 import * as Utils from '../../../src/lib/utils';
 import vacuum from '../../helpers/vacuum';
@@ -46,7 +46,7 @@ describe('env:delete', () => {
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Utils, 'findOrgExpirationStatus' as any).returns(false);
     })
     .finally(() => {
@@ -62,7 +62,7 @@ describe('env:delete', () => {
     .stderr()
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(AliasAccessor.prototype, 'getValue').returns(COMPUTE_ENV_NAME);
       sandbox.stub(Utils, 'findOrgExpirationStatus' as any).returns(false);
     })
@@ -85,7 +85,7 @@ describe('env:delete', () => {
       sandbox.stub(Utils, 'resolveOrg' as any).throws('Attempted to resolve an org without a valid org ID');
     })
     .add('projectResolveStub', () => {
-      return sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      return sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
       sandbox.restore();
@@ -104,7 +104,7 @@ describe('env:delete', () => {
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(404))
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns({});
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Utils, 'fetchOrg' as any).returns(ORG_MOCK);
     })
     .finally(() => {
@@ -144,7 +144,7 @@ describe('env:delete', () => {
     .stderr()
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(AliasAccessor.prototype, 'getValue').returns(COMPUTE_ENV_NAME);
       sandbox.stub(Utils, 'findOrgExpirationStatus' as any).returns(false);
     })

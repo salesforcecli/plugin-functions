@@ -62,23 +62,23 @@ export default class Login extends Command {
 
     const refreshToken = data.refresh_token;
 
-    this.globalInfo.tokens.set(Command.TOKEN_BEARER_KEY, { token: bearerToken, url: this.identityUrl.toString() });
+    this.stateAggregator.tokens.set(Command.TOKEN_BEARER_KEY, { token: bearerToken, url: this.identityUrl.toString() });
 
-    await this.globalInfo.write();
+    await this.stateAggregator.tokens.write();
 
     const account = await this.fetchAccount();
 
-    this.globalInfo.tokens.update(Command.TOKEN_BEARER_KEY, { user: account.salesforce_username });
+    this.stateAggregator.tokens.update(Command.TOKEN_BEARER_KEY, { user: account.salesforce_username });
 
     if (refreshToken) {
-      this.globalInfo.tokens.set(Command.TOKEN_REFRESH_KEY, {
+      this.stateAggregator.tokens.set(Command.TOKEN_REFRESH_KEY, {
         token: refreshToken,
         url: this.identityUrl.toString(),
         user: account.salesforce_username,
       });
     }
 
-    await this.globalInfo.write();
+    await this.stateAggregator.tokens.write();
 
     cli.action.stop();
   }

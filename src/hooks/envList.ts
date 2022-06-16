@@ -6,7 +6,7 @@
  */
 
 import { SfHook, EnvList } from '@salesforce/sf-plugins-core';
-import { AuthInfo, GlobalInfo, ConfigEntry, OrgAuthorization } from '@salesforce/core';
+import { AuthInfo, StateAggregator, ConfigEntry, OrgAuthorization } from '@salesforce/core';
 import herokuVariant from '../lib/heroku-variant';
 import { ComputeEnvironment, Dictionary, SfdcAccount } from '../lib/sfdc-types';
 import { fetchSfdxProject } from '../lib/utils';
@@ -32,14 +32,14 @@ async function fetchAccount(client: APIClient) {
 }
 
 async function resolveEnvironments(orgs: OrgAuthorization[]): Promise<ComputeEnvironment[]> {
-  const info = await GlobalInfo.getInstance();
+  const stateAggregator = await StateAggregator.getInstance();
   const apiKey = process.env.SALESFORCE_FUNCTIONS_API_KEY;
   let auth;
 
   if (apiKey) {
     auth = apiKey;
   } else {
-    const token = info.tokens.get('functions-bearer', true)?.token;
+    const token = stateAggregator.tokens.get('functions-bearer', true)?.token;
 
     if (!token) {
       throw new Error('Not authenticated. Please login with `sf login functions`.');
@@ -93,9 +93,9 @@ async function resolveAliasForValue(environmentName: string, entries: ConfigEntr
 }
 
 async function resolveAliasesForComputeEnvironments(envs: ComputeEnvironment[]) {
-  const info = await GlobalInfo.getInstance();
+  const stateAggregator = await StateAggregator.getInstance();
 
-  const entries = Object.entries(info.aliases.getAll());
+  const entries = Object.entries(stateAggregator.aliases.getAll()) as ConfigEntry[];
 
   return Promise.all(
     envs.map(async (env) => {

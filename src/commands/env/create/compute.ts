@@ -144,9 +144,8 @@ export default class EnvCreateCompute extends Command {
       cli.action.start('Connecting environments');
 
       if (alias) {
-        this.globalInfo.aliases.set(alias, app.id!);
-
-        await this.globalInfo.write();
+        this.stateAggregator.aliases.set(alias, app.id!);
+        await this.stateAggregator.aliases.write();
       }
 
       cli.action.stop();
