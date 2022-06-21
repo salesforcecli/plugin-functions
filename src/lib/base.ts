@@ -6,7 +6,7 @@
  */
 import { URL } from 'url';
 import { SfCommand } from '@salesforce/sf-plugins-core';
-import { GlobalInfo, Org } from '@salesforce/core';
+import { StateAggregator, Org } from '@salesforce/core';
 import { cli } from 'cli-ux';
 import APIClient, { herokuClientApiUrl } from './api-client';
 import herokuVariant from './heroku-variant';
@@ -18,7 +18,7 @@ export default abstract class Command extends SfCommand<any> {
   // We want to implement `--json` on a per-command basis, so we disable the global json flag here
   static enableJsonFlag = false;
 
-  protected globalInfo!: GlobalInfo;
+  protected stateAggregator!: StateAggregator;
 
   private _client?: APIClient;
 
@@ -26,7 +26,7 @@ export default abstract class Command extends SfCommand<any> {
 
   protected async init(): Promise<void> {
     await super.init();
-    this.globalInfo = await GlobalInfo.getInstance();
+    this.stateAggregator = await StateAggregator.getInstance();
   }
 
   protected get identityUrl(): URL {
@@ -37,7 +37,7 @@ export default abstract class Command extends SfCommand<any> {
   }
 
   protected get username() {
-    return this.globalInfo.tokens.get(Command.TOKEN_BEARER_KEY)?.user;
+    return this.stateAggregator.tokens.get(Command.TOKEN_BEARER_KEY)?.user;
   }
 
   protected resetClientAuth() {
@@ -52,7 +52,7 @@ export default abstract class Command extends SfCommand<any> {
       if (apiKey) {
         this._auth = apiKey;
       } else {
-        const token = this.globalInfo.tokens.get(Command.TOKEN_BEARER_KEY, true)?.token;
+        const token = this.stateAggregator.tokens.get(Command.TOKEN_BEARER_KEY, true)?.token;
 
         if (!token) {
           throw new Error(`Not authenticated. Please login with \`${this.config.bin} login functions\`.`);

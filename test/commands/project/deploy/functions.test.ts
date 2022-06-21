@@ -35,6 +35,7 @@ const FUNCTION_REFS_MOCK = [
     fullName: 'sweet_project-fn2',
     label: 'fn2',
     description: 'description',
+    access: 'global',
   },
 ];
 

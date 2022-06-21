@@ -8,6 +8,7 @@ import * as path from 'path';
 import { Command, Flags } from '@oclif/core';
 import { LocalRun } from '@hk/functions-core';
 import { Messages } from '@salesforce/core';
+import { LangRunnerOpts } from '@hk/functions-core/dist/lang-runner';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start.local');
@@ -41,6 +42,11 @@ export default class Local extends Command {
     }),
   };
 
+  // using a static to override the LocalRun constructor based on suggestion from https://github.com/oclif/oclif/issues/41
+  static createLocalRun = (lang?: string, runnerOpts?: LangRunnerOpts) => {
+    return new LocalRun(lang, runnerOpts);
+  };
+
   async run() {
     const { flags } = await this.parse(Local);
     await this.runWithFlags(flags);
@@ -49,11 +55,24 @@ export default class Local extends Command {
   async runWithFlags(
     flags: { path: string; port: number; 'debug-port': number; language: string } & { json: boolean | undefined }
   ) {
-    const localRun = new LocalRun(flags.language, {
+    this.debug('running function locally');
+
+    const localRun = Local.createLocalRun(flags.language, {
       path: flags.path,
       port: flags.port,
       debugPort: flags['debug-port'],
     });
-    await localRun.exec();
+
+    const localRunProcess = await localRun.exec();
+
+    process.on('SIGINT', () => {
+      localRunProcess.cancel();
+    });
+
+    await new Promise<void>((resolve) => {
+      localRunProcess.on('close', resolve);
+    });
+
+    this.debug('locally running function finished');
   }
 }

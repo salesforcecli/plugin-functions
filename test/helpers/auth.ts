@@ -5,8 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { GlobalInfo } from '@salesforce/core';
-import { TokenAccessor } from '@salesforce/core/lib/globalInfo';
+import { AliasAccessor, TokenAccessor } from '@salesforce/core/lib/stateAggregator';
 import { stubMethod } from '@salesforce/ts-sinon';
 import { createSandbox, SinonStub } from 'sinon';
 import NetrcMachine from '../../src/lib/netrc';
@@ -15,7 +14,8 @@ const sandbox = createSandbox();
 
 export const AuthStubs: {
   getToken: SinonStub;
-  write: SinonStub;
+  tokensWrite: SinonStub;
+  aliasesWrite: SinonStub;
   netrc: SinonStub;
 } = {} as any; // set to any - will be initialized later
 
@@ -27,7 +27,8 @@ process.nextTick(() => {
       user: 'login',
     });
     // Ensure we don't do an actual write
-    AuthStubs.write = stubMethod(sandbox, GlobalInfo.prototype, 'write');
+    AuthStubs.tokensWrite = stubMethod(sandbox, TokenAccessor.prototype, 'write');
+    AuthStubs.aliasesWrite = stubMethod(sandbox, AliasAccessor.prototype, 'write');
 
     // Make sure this returns nothing, it should use it from global info
     AuthStubs.netrc = sandbox.stub(NetrcMachine.prototype, 'get' as any);

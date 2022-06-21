@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/salesforcecli/plugin-functions/compare/v1.11.2...v1.12.0) (2022-06-16)
+
+### Features
+
+- use StateAggregator ([#438](https://github.com/salesforcecli/plugin-functions/issues/438)) ([36858fd](https://github.com/salesforcecli/plugin-functions/commit/36858fd5ac79577980ad98926f3e20c6e17531d9))
+
+### [1.11.2](https://github.com/salesforcecli/plugin-functions/compare/v1.11.1...v1.11.2) (2022-06-15)
+
+### Bug Fixes
+
+- update local runner for sf functions ([#406](https://github.com/salesforcecli/plugin-functions/issues/406)) ([ac508ee](https://github.com/salesforcecli/plugin-functions/commit/ac508ee29391553b811732151160da88e510c371))
+
+### [1.11.1](https://github.com/salesforcecli/plugin-functions/compare/v1.11.0...v1.11.1) (2022-06-06)
+
+### Bug Fixes
+
+- commands indicate the wrong argument flag in error msg ([#404](https://github.com/salesforcecli/plugin-functions/issues/404)) ([815cc6b](https://github.com/salesforcecli/plugin-functions/commit/815cc6b21436a2ac47a8ef88beb4eeda6c044943))
+
+## [1.11.0](https://github.com/salesforcecli/plugin-functions/compare/v1.9.0...v1.11.0) (2022-06-03)
+
+### Features
+
+- bump project-descriptor version that includes access attribute ([#399](https://github.com/salesforcecli/plugin-functions/issues/399)) ([04d1c3a](https://github.com/salesforcecli/plugin-functions/commit/04d1c3a7facdba3261439c45f7cbd17c7b4ad2f8))
+
+### Bug Fixes
+
+- generalize the description of the "env create" topic ([#437](https://github.com/salesforcecli/plugin-functions/issues/437)) ([ecb4d4e](https://github.com/salesforcecli/plugin-functions/commit/ecb4d4e2dd0579863995e2ec849a3b4ffde73540))
+
 ## [1.9.0](https://github.com/salesforcecli/plugin-functions/compare/v1.8.0...v1.9.0) (2022-05-19)
 
 ### Features

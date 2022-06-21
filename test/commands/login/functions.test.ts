@@ -5,7 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect, test } from '@oclif/test';
-import type { GlobalInfo, SfTokens } from '@salesforce/core';
+import type { SfTokens } from '@salesforce/core';
+import { TokenAccessor } from '@salesforce/core/lib/stateAggregator';
 import { cli } from 'cli-ux';
 import * as sinon from 'sinon';
 import { AuthStubs } from '../../helpers/auth';
@@ -16,9 +17,9 @@ describe('sf login functions', () => {
 
   beforeEach(() => {
     windowOpenStub = sinon.stub();
-    AuthStubs.write.callsFake(async function (this: GlobalInfo) {
-      contents = this.tokens.getAll(true);
-      return this.getContents();
+    AuthStubs.tokensWrite.callsFake(async function (this: TokenAccessor) {
+      contents = this.getAll(true);
+      return contents;
     });
   });
 

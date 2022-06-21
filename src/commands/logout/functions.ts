@@ -26,8 +26,8 @@ export default class Login extends Command {
     const { flags } = await this.parse(Login);
     cli.action.start(messages.getMessage('action.start'));
 
-    this.globalInfo.tokens.unset(Command.TOKEN_BEARER_KEY);
-    await this.globalInfo.write();
+    this.stateAggregator.tokens.unset(Command.TOKEN_BEARER_KEY);
+    await this.stateAggregator.tokens.write();
 
     cli.action.stop();
     if (flags.json) {
