@@ -14,6 +14,7 @@ import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
 import { herokuVariant } from '../../../lib/heroku-variant';
 import { fetchSfdxProject } from '../../../lib/utils';
+import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 // This is a public Oauth client created expressly for the purpose of headless auth in the functions CLI.
 // It does not require a client secret, is marked as public in the database and scoped accordingly
@@ -71,9 +72,7 @@ export default class JwtLogin extends Command {
       exclusive: ['instance-url'],
       hidden: true,
     }),
-    json: Flags.boolean({
-      description: messages.getMessage('flags.json.summary'),
-    }),
+    json: FunctionsFlagBuilder.json,
     alias: Flags.string({
       char: 'a',
       description: messages.getMessage('flags.alias.summary'),
@@ -136,6 +135,8 @@ export default class JwtLogin extends Command {
 
   async run() {
     const { flags } = await this.parse(JwtLogin);
+    this.postParseHook(flags);
+
     const { clientid, username, keyfile } = flags;
     // We support both versions of the flag here for the sake of backward compat
     const instanceUrl = flags['instance-url'] ?? flags.instanceurl;

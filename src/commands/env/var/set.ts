@@ -127,6 +127,8 @@ export default class ConfigSet extends Command {
 
   async run() {
     const { flags, argv } = await this.parse(ConfigSet);
+    this.postParseHook(flags);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
 

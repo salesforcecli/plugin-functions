@@ -40,6 +40,7 @@ export default class ConfigUnset extends Command {
 
   async run() {
     const { flags, argv } = await this.parse(ConfigUnset);
+    this.postParseHook(flags);
 
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
@@ -73,16 +74,13 @@ export default class ConfigUnset extends Command {
       const error = e as Error;
 
       if (error.message?.includes('not correct config var')) {
-        this.handleError(
-          new Error(`Value provided for key does not match a config var found for <${appName}>.`),
-          flags.json
-        );
+        this.error(new Error(`Value provided for key does not match a config var found for <${appName}>.`));
       }
       if (error.message?.includes('404')) {
-        this.handleError(new Error(`Couldn't find that app <${appName}>`), flags.json);
+        this.error(new Error(`Couldn't find that app <${appName}>`));
       }
       if (error.message?.includes('401')) {
-        this.handleError(new Error('Your token has expired, please login with sf login functions'), flags.json);
+        this.error(new Error('Your token has expired, please login with sf login functions'));
       }
     }
 
