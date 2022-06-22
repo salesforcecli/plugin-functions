@@ -106,9 +106,8 @@ export default class Invoke extends Command {
       const error = e as AxiosError;
       if (error.response) {
         this.error(new Error(`${error.response.status} ${error.response.statusText}`));
-      } else {
-        this.error(new Error(`${error.message}`));
       }
+      this.error(new Error(`${error.message}`));
     }
   }
 

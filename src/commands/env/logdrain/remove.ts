@@ -89,7 +89,7 @@ export default class LogDrainRemove extends Command {
 
         cli.action.stop();
       }
-    } catch (e: any) {
+    } catch (e) {
       const error = e as { data: { message?: string } };
 
       if (error.data?.message?.includes('Url is invalid')) {
@@ -99,7 +99,8 @@ export default class LogDrainRemove extends Command {
       if (error.data?.message?.includes("Couldn't find that app.")) {
         this.error(new Error(`Couldn't find that app  <${appName}>`));
       }
-      return;
+
+      this.error(e as Error);
     }
   }
 }

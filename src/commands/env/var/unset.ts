@@ -82,6 +82,7 @@ export default class ConfigUnset extends Command {
       if (error.message?.includes('401')) {
         this.error(new Error('Your token has expired, please login with sf login functions'));
       }
+      this.error(error);
     }
 
     const configPairs = argv.reduce((acc: any, elem: any) => {

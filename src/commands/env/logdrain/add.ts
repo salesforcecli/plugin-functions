@@ -128,6 +128,8 @@ export default class LogDrainAdd extends Command {
       if (error.data?.message?.includes('401')) {
         this.error(new Error('Your token has expired, please login with sf login functions'));
       }
+
+      this.error(e as Error);
     }
   }
 }

@@ -116,9 +116,9 @@ export default class JwtLogin extends Command {
         username,
         oauth2Options,
       });
-    } catch (error) {
-      const err = error as SfdxError;
-      if (err.name === 'AuthInfoOverwriteError') {
+    } catch (err) {
+      const error = err as Error;
+      if (error.name === 'AuthInfoOverwriteError') {
         const remover = await AuthRemover.create();
         await remover.removeAuth(username);
         authInfo = await AuthInfo.create({
@@ -126,7 +126,7 @@ export default class JwtLogin extends Command {
           oauth2Options,
         });
       } else {
-        throw err;
+        this.error(error);
       }
     }
     await authInfo.save();
@@ -149,24 +149,7 @@ export default class JwtLogin extends Command {
 
     // Use keyfile, clientid, and username to auth with salesforce via the same workflow
     // as sfdx auth:jwt:grant --json
-    let auth;
-
-    try {
-      auth = await this.initAuthInfo(username, clientid, keyfile, instanceUrl);
-    } catch (error) {
-      const err = error as SfdxError;
-      if (flags.json) {
-        cli.styledJSON({
-          status: 1,
-          exitCode: err.exitCode,
-          name: err.name,
-          message: err.message,
-          warnings: [],
-        });
-        cli.exit(1);
-      }
-      throw err;
-    }
+    const auth = await this.initAuthInfo(username, clientid, keyfile, instanceUrl);
 
     // Take care of any alias/default setting that needs to happen for the sfdx credential
     // before we move on to the heroku stuff
