@@ -46,7 +46,7 @@ export default class EnvCreateCompute extends Command {
     const alias = flags.alias;
 
     // if `--connected-org` is null here, fetchOrg will pull the default org from the surrounding environment
-    let org: Org | null;
+    let org: Org;
     try {
       org = await fetchOrg(flags['connected-org']);
     } catch (err) {
