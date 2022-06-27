@@ -145,10 +145,10 @@ export default class DeployFunctions extends Command {
     results.forEach((result) => {
       if (!result.success) {
         shouldExitNonZero = true;
-        this.handleError(new Error(`Unable to deploy FunctionReference for ${result.fullName}.`), flags.json);
+        cli.error(`Unable to deploy FunctionReference for ${result.fullName}.`, { exit: false });
       }
 
-      if (!flags.quiet) {
+      if (!flags.quiet && !flags.json) {
         this.log(
           `Reference for ${result.fullName} ${
             result.created ? herokuColor.cyan('created') : herokuColor.green('updated')
@@ -188,6 +188,15 @@ export default class DeployFunctions extends Command {
 
     if (shouldExitNonZero) {
       cli.exit(1);
+    }
+    if (flags.json) {
+      cli.styledJSON({
+        status: 0,
+        result: {
+          results,
+        },
+        warnings: [],
+      });
     }
   }
 }

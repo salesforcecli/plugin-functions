@@ -85,6 +85,25 @@ const ORG_MOCK_WITH_DELETED_FUNCTION = {
   ...ORG_MOCK,
 };
 
+const jsonSuccess = {
+  status: 0,
+  result: {
+    results: [
+      {
+        created: true,
+        fullName: 'sweet_project-fn1',
+        success: true,
+      },
+      {
+        created: true,
+        fullName: 'sweet_project-fn2',
+        success: true,
+      },
+    ],
+  },
+  warnings: [],
+};
+
 ORG_MOCK_WITH_DELETED_FUNCTION.getConnection = function () {
   return {
     metadata: {
@@ -148,6 +167,33 @@ describe('sf project deploy functions', () => {
       expect(ctx.stdout).to.include('Reference for sweet_project-fn1 created');
       expect(ctx.stdout).to.include('Reference for sweet_project-fn2 created');
       expect(ctx.stdout).to.not.include('Removing the following functions that were deleted locally:');
+    });
+
+  test
+    .stdout()
+    .stderr()
+    .do(() => {
+      sandbox.stub(Git.prototype as any, 'hasUnpushedFiles').returns(false);
+      sandbox.stub(Git.prototype, 'status' as any).returns('On branch main');
+      const gitExecStub = sandbox.stub(Git.prototype, 'exec' as any);
+      gitExecStub.withArgs(sinon.match.array.startsWith(['push'])).returns({ stdout: '', stderr: '' });
+
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
+
+      sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .nock('https://api.heroku.com', (api) => {
+      api.get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`).reply(200, ENVIRONMENT_MOCK);
+    })
+    .command(['deploy:functions', '--connected-org=my-scratch-org', '--json'])
+    .it('will show json output with success', (ctx) => {
+      const succJSON = JSON.parse(ctx.stdout);
+      expect(succJSON.status).to.deep.equal(jsonSuccess.status);
+      expect(succJSON.result).to.eql(jsonSuccess.result);
     });
 
   // When specifying another branch
