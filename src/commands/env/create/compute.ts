@@ -7,10 +7,9 @@
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Flags } from '@oclif/core';
-import { Messages } from '@salesforce/core';
+import { Org, Messages } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
 import { cli } from 'cli-ux';
-import { format } from 'date-fns';
 import Command from '../../../lib/base';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import pollForResult from '../../../lib/poll-for-result';
@@ -38,6 +37,7 @@ export default class EnvCreateCompute extends Command {
       char: 'a',
       description: messages.getMessage('flags.alias.summary'),
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -46,7 +46,14 @@ export default class EnvCreateCompute extends Command {
     const alias = flags.alias;
 
     // if `--connected-org` is null here, fetchOrg will pull the default org from the surrounding environment
-    const org = await fetchOrg(flags['connected-org']);
+    let org: Org;
+    try {
+      org = await fetchOrg(flags['connected-org']);
+    } catch (err) {
+      const error = err as Error;
+      this.handleError(error, flags.json);
+    }
+
     const orgId = org.getOrgId();
 
     if (!(await this.isFunctionsEnabled(org))) {
@@ -62,18 +69,23 @@ export default class EnvCreateCompute extends Command {
           )} to the "features" list in your scratch org definition JSON file, e.g. "features": ["Functions"]`
       );
     }
-
-    cli.action.start(`Creating compute environment for org ID ${orgId}`);
-
-    const project = await fetchSfdxProject();
+    if (!flags.json) {
+      cli.action.start(`Creating compute environment for org ID ${orgId}`);
+    }
+    let project = null;
+    try {
+      project = await fetchSfdxProject();
+    } catch (err) {
+      const error = err as Error;
+      this.handleError(error, flags.json);
+    }
     const projectName = project.name;
 
     if (!projectName) {
-      this.error('No project name found in sfdx-project.json.');
+      this.handleError(new Error('No project name found in sfdx-project.json.'), flags.json);
     }
 
     const connection = org.getConnection();
-
     await pollForResult(async () => {
       // This query allows us to verify that the org connection has actually been created before
       // attempting to create a compute environment. If we don't wait for this to happen, environment
@@ -92,7 +104,7 @@ export default class EnvCreateCompute extends Command {
         // to `FunctionConnection` is complete. Once that's done, we can remove this and go back to a simple
         // query against `FunctionConnection`
         if (!error.message.includes("sObject type 'SfFunctionsConnection' is not supported.")) {
-          this.error(error);
+          this.handleError(error, flags.json);
         }
         response = await connection.query<FunctionConnectionRecord>(`SELECT
             Id,
@@ -119,7 +131,7 @@ export default class EnvCreateCompute extends Command {
       // If there is any other error besides the one mentioned above, something is actually wrong
       // and we should bail
       if (record.Error) {
-        this.error(record.Error);
+        this.handleError(new Error(`${record.Error}`), flags.json);
       }
 
       // This is the go signal. Once we have this status it means that the connection is fully up
@@ -139,9 +151,11 @@ export default class EnvCreateCompute extends Command {
 
       cli.action.stop();
 
-      this.log(`New compute environment created with ID ${app.name}`);
+      if (!flags.json) {
+        this.log(`New compute environment created with ID ${app.name}`);
 
-      cli.action.start('Connecting environments');
+        cli.action.start('Connecting environments');
+      }
 
       if (alias) {
         this.stateAggregator.aliases.set(alias, app.id!);
@@ -149,31 +163,53 @@ export default class EnvCreateCompute extends Command {
       }
 
       cli.action.stop();
-
-      this.log(
-        alias
-          ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready.`
-          : 'Your compute environment is ready.'
-      );
+      if (!flags.json) {
+        this.log(
+          alias
+            ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready.`
+            : 'Your compute environment is ready.'
+        );
+      }
     } catch (err) {
-      const DUPLICATE_PROJECT_MESSAGE = 'This org is already connected to a compute environment for this project';
+      const DUPLICATE_PROJECT_MESSAGE =
+        'There is already a project with the same name in the same namespace for this org';
+      const INVALID_PROJECT_NAME =
+        "Sfdx project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter.";
       const error = err as { data: { message?: string } };
+      cli.action.stop('error!');
+
+      if (error.data?.message?.includes(INVALID_PROJECT_NAME)) {
+        this.handleError(
+          new Error(
+            "Project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter"
+          ),
+          flags.json
+        );
+      }
       // If environment creation fails because an environment already exists for this org and project
       // we want to fetch the existing environment so that we can point the user to it
       if (error.data?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
-        cli.action.stop('error!');
         const app = await fetchAppForProject(this.client, projectName, org.getUsername());
-
-        this.log(`${DUPLICATE_PROJECT_MESSAGE}:`);
-        this.log(`Compute Environment ID: ${app.name}`);
-        if (app.created_at) {
-          this.log(`Created on: ${format(new Date(app.created_at), 'E LLL d HH:mm:ss O y')}`);
-        }
-
-        return;
+        this.handleError(
+          new Error(`This org is already connected to a compute environment for this project -> ${app.name}`),
+          flags.json
+        );
       }
-
-      throw error;
+      this.handleError(new Error(`${error.data.message}`), flags.json);
+    }
+    const app = await fetchAppForProject(this.client, projectName, org.getUsername());
+    if (flags.json) {
+      cli.styledJSON({
+        status: 0,
+        result: {
+          alias,
+          projectName,
+          connectedOrgAlias: '',
+          connectedOrgId: orgId,
+          computeEnvironmentName: app.name,
+        },
+        warnings: [],
+      });
     }
   }
 }
