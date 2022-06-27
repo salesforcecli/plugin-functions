@@ -62,6 +62,18 @@ const PROJECT_MOCK_NO_NAME = {
 const ORG_ALIAS = 'my-cool-alias';
 const ENVIRONMENT_ALIAS = 'my-cool-environment';
 
+const jsonSuccess = {
+  status: 0,
+  result: {
+    alias: ENVIRONMENT_ALIAS,
+    projectName: PROJECT_CONFIG_MOCK.name,
+    connectedOrgAlias: '',
+    connectedOrgId: ORG_MOCK.id,
+    computeEnvironmentName: APP_MOCK.name,
+  },
+  warnings: [],
+};
+
 describe('sf env create compute', () => {
   const sandbox = sinon.createSandbox();
 
@@ -81,6 +93,8 @@ describe('sf env create compute', () => {
         .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
           sfdx_project_name: PROJECT_CONFIG_MOCK.name,
         })
+        .reply(200, APP_MOCK)
+        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
         .reply(200, APP_MOCK);
     })
     .command(['env:create:compute'])
@@ -114,16 +128,48 @@ describe('sf env create compute', () => {
         .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
           sfdx_project_name: PROJECT_CONFIG_MOCK.name,
         })
+        .reply(200, APP_MOCK)
+        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
         .reply(200, APP_MOCK);
     })
     .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`])
-    .it('creates a compute environment using and sets an alias using values passed in flags', (ctx) => {
+    .it('creates a compute environment and sets an alias using values passed in flags', (ctx) => {
       expect(ctx.stderr).to.contain(`Creating compute environment for org ID ${ORG_MOCK.id}`);
       expect(ctx.stdout).to.contain(`New compute environment created with ID ${APP_MOCK.name}`);
       expect(ctx.stdout).to.contain(`Your compute environment with local alias ${ENVIRONMENT_ALIAS} is ready`);
       expect(orgStub).to.have.been.calledWith({ aliasOrUsername: ORG_ALIAS });
       expect(aliasSetSpy).to.have.been.calledWith(ENVIRONMENT_ALIAS, APP_MOCK.id);
       expect(aliasWriteSpy).to.have.been.called;
+    });
+
+  test
+    .stdout()
+    .stderr()
+    .retries(3)
+    .do(() => {
+      orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(AliasAccessor.prototype, 'set' as any).callsFake(aliasSetSpy);
+      AuthStubs.write.callsFake(aliasWriteSpy);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .nock('https://api.heroku.com', (api) => {
+      api
+        .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
+          sfdx_project_name: PROJECT_CONFIG_MOCK.name,
+        })
+        .reply(200, APP_MOCK)
+        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
+        .reply(200, APP_MOCK);
+    })
+    .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`, '-j'])
+    .it('will show json output with success', (ctx) => {
+      const succJSON = JSON.parse(ctx.stdout);
+
+      expect(succJSON.status).to.deep.equal(jsonSuccess.status);
+      expect(succJSON.result).to.eql(jsonSuccess.result);
     });
 
   test
@@ -158,16 +204,44 @@ describe('sf env create compute', () => {
           sfdx_project_name: PROJECT_CONFIG_MOCK.name,
         })
         .reply(422, {
-          message: 'This org is already connected to a compute environment for this project',
+          message: 'Sfdx project name There is already a project with the same name in the same namespace for this org',
         })
         .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
         .reply(200, APP_MOCK);
     })
     .command(['env:create:compute'])
-    .it('displays an informative error message when environment already exists for a given project', (ctx) => {
-      expect(ctx.stderr).to.contain('error!');
-      expect(ctx.stdout).to.contain(`Compute Environment ID: ${APP_MOCK.name}`);
-    });
+    .catch((error) => {
+      expect(error.message).to.contain('This org is already connected to a compute environment for this project');
+    })
+    .it('displays an informative error message when environment already exists for a given project');
+
+  test
+    .stdout()
+    .stderr()
+    .do(() => {
+      orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
+      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+    })
+    .finally(() => {
+      sandbox.restore();
+    })
+    .nock('https://api.heroku.com', (api) => {
+      api
+        .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
+          sfdx_project_name: PROJECT_CONFIG_MOCK.name,
+        })
+        .reply(422, {
+          message:
+            "Sfdx project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter.",
+        });
+    })
+    .command(['env:create:compute'])
+    .catch((error) => {
+      expect(error.message).to.contain(
+        "Project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter"
+      );
+    })
+    .it('displays an informative error message when the project name is invalid');
 
   test
     .stdout()
@@ -214,6 +288,8 @@ describe('sf env create compute', () => {
         .post(`/sales-org-connections/${ORG_MOCK.id}/apps`, {
           sfdx_project_name: PROJECT_CONFIG_MOCK.name,
         })
+        .reply(200, APP_MOCK)
+        .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
         .reply(200, APP_MOCK);
     })
     .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`])
