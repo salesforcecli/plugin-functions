@@ -1,16 +1,49 @@
 # plugin-functions
 
-Functions plugin for the SF CLI
-
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![NPM](https://img.shields.io/npm/v/@salesforce/plugin-functions.svg?label=@salesforce/functions)](https://www.npmjs.com/package/@salesforce/functions) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-functions.svg)](https://npmjs.org/package/@salesforce/plugin-functions) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-functions/main/LICENSE.txt)
+[![NPM](https://img.shields.io/npm/v/@salesforce/plugin-functions.svg?label=@salesforce/functions)](https://www.npmjs.com/package/@salesforce/plugin-functions) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-functions.svg)](https://npmjs.org/package/@salesforce/plugin-functions) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-functions/main/LICENSE.txt)
+
+Functions plugin for the SF CLI
+This project is available as a scoped [npm package on npmjs](https://www.npmjs.com/package/@salesforce/plugin-functions), is also a plugin by itself.
 
 <!-- toc -->
 
 - [plugin-functions](#plugin-functions)
 - [Usage](#usage)
+- [Issues](#issues)
+- [Contributing](#contributing)
+- [Build](#build)
+- [Releases](#releases)
+  - [Version Bump](#version-bump)
+    - [`--prerelease`](#--prerelease)
+  - [Changelogs](#changelogs)
+  - [Build](#build-1)
+  - [Signing](#signing)
+  - [Publishing](#publishing)
 - [Commands](#commands)
-<!-- tocstop -->
+  - [`sf deploy functions`](#sf-deploy-functions)
+  - [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
+  - [`sf env create compute`](#sf-env-create-compute)
+  - [`sf env delete`](#sf-env-delete)
+  - [`sf env log`](#sf-env-log)
+  - [`sf env log tail`](#sf-env-log-tail)
+  - [`sf env logdrain add`](#sf-env-logdrain-add)
+  - [`sf env logdrain list`](#sf-env-logdrain-list)
+  - [`sf env logdrain remove`](#sf-env-logdrain-remove)
+  - [`sf env var get KEY`](#sf-env-var-get-key)
+  - [`sf env var list`](#sf-env-var-list)
+  - [`sf env var set`](#sf-env-var-set)
+  - [`sf env var unset`](#sf-env-var-unset)
+  - [`sf generate function`](#sf-generate-function)
+  - [`sf login functions`](#sf-login-functions)
+  - [`sf login functions jwt`](#sf-login-functions-jwt)
+  - [`sf logout functions`](#sf-logout-functions)
+  - [`sf run function`](#sf-run-function)
+  - [`sf run function start`](#sf-run-function-start)
+  - [`sf run function start container`](#sf-run-function-start-container)
+  - [`sf run function start local`](#sf-run-function-start-local)
+  - [`sf whoami functions`](#sf-whoami-functions)
+  <!-- tocstop -->
 
 # Usage
 
@@ -24,32 +57,117 @@ running command...
 
 Now you should be able to run functions commands, e.g. `sf generate project`, `sf login functions`
 
+# Issues
+
+Please report any issues at https://github.com/forcedotcom/cli/issues
+
+# Contributing
+
+1. Please read our [Code of Conduct](CODE_OF_CONDUCT.md)
+2. Create a new issue before starting your project so that we can keep track of
+   what you are trying to add/fix. That way, we can also offer suggestions or
+   let you know if there is already an effort in progress.
+3. Fork this repository.
+4. [Build the plugin locally](#build)
+5. Create a _topic_ branch in your fork. Note, this step is recommended but technically not required if contributing using a fork.
+6. Edit the code in your fork.
+7. Write appropriate tests for your changes. Try to achieve at least 95% code coverage on any new code. No pull request will be accepted without unit tests.
+8. Sign CLA (see [CLA](#cla) below).
+9. Send us a pull request when you are done. We'll review your code, suggest any needed changes, and merge it in.
+
+# Build
+
+To build the plugin locally, make sure to have yarn installed and run the following commands:
+
+```bash
+# Clone the repository
+git clone git@github.com:salesforcecli/plugin-functions
+
+# Install the dependencies and compile
+yarn install
+yarn build
+```
+
+To use your plugin, run using the local `./bin/run` or `./bin/run.cmd` file.
+
+```bash
+# Run using local run file.
+./bin/run npm
+```
+
+# Releases
+
+The following steps are automated for package releases
+
+## Version Bump
+
+We use [standard-version](https://github.com/conventional-changelog/standard-version) to determine the next version that will be published. This means that all commits **must** adhere to the [conventional commits specification](https://www.conventionalcommits.org/en/v1.0.0/) in order for `standard-version` to work.
+
+In the case that you have manually bumped the version in the package.json, then the plugin will respect that and publish that version instead of using `standard-version` to determine the next version.
+
+NOTE: We consider the `chore`, `style`, `docs`, `ci`, `test` commit types to be "non-releasable", meaning that if all the commits are of those types then we do not publish a new version. However, if you've manually bumped the version in the package.json then the plugin will publish that version regardless of the commit types.
+
+### `--prerelease`
+
+1. If you've manually bumped the version in the package.json, the prerelease tag will not be added if it's not already there. For example, if you want to do a prerelease for a new major version, you will want to update the package version to `X.0.0-<your-prerelease-tag>`.
+
+2. When using the `--prerelease` flag, `standard-version` will bump both the prerelease version and the package version, e.g. `3.0.0-alpha.0` => `3.0.1-alpha.1`. See https://github.com/conventional-changelog/standard-version#release-as-a-pre-release for more
+
+## Changelogs
+
+`standard-version` automatically handles this for us as well. Again you must adhere to the [conventional commits specification](https://www.conventionalcommits.org/en/v1.0.0/) in order for the changelog generation to work.
+
+## Build
+
+After determining the next version, the plugin builds the package using `yarn build`. This means that you must have a `build` script included in the package.json
+
+## Signing
+
+If you pass the `--sign (-s)` flag into the release command, then the plugin will sign the package and verify that the signature exists in S3.
+
+## Publishing
+
+Once the package has been built and signed it will be published to npm. The command will not exit until the new version is found on the npm registry.
+
 # Commands
 
 <!-- commands -->
 
-- [`sf deploy functions`](#sf-deploy-functions)
-- [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
-- [`sf env create compute`](#sf-env-create-compute)
-- [`sf env delete`](#sf-env-delete)
-- [`sf env log`](#sf-env-log)
-- [`sf env log tail`](#sf-env-log-tail)
-- [`sf env logdrain add`](#sf-env-logdrain-add)
-- [`sf env logdrain list`](#sf-env-logdrain-list)
-- [`sf env logdrain remove`](#sf-env-logdrain-remove)
-- [`sf env var get KEY`](#sf-env-var-get-key)
-- [`sf env var list`](#sf-env-var-list)
-- [`sf env var set`](#sf-env-var-set)
-- [`sf env var unset`](#sf-env-var-unset)
-- [`sf generate function`](#sf-generate-function)
-- [`sf login functions`](#sf-login-functions)
-- [`sf login functions jwt`](#sf-login-functions-jwt)
-- [`sf logout functions`](#sf-logout-functions)
-- [`sf run function`](#sf-run-function)
-- [`sf run function start`](#sf-run-function-start)
-- [`sf run function start container`](#sf-run-function-start-container)
-- [`sf run function start local`](#sf-run-function-start-local)
-- [`sf whoami functions`](#sf-whoami-functions)
+- [plugin-functions](#plugin-functions)
+- [Usage](#usage)
+- [Issues](#issues)
+- [Contributing](#contributing)
+- [Build](#build)
+- [Releases](#releases)
+  - [Version Bump](#version-bump)
+    - [`--prerelease`](#--prerelease)
+  - [Changelogs](#changelogs)
+  - [Build](#build-1)
+  - [Signing](#signing)
+  - [Publishing](#publishing)
+- [Commands](#commands)
+  - [`sf deploy functions`](#sf-deploy-functions)
+  - [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
+  - [`sf env create compute`](#sf-env-create-compute)
+  - [`sf env delete`](#sf-env-delete)
+  - [`sf env log`](#sf-env-log)
+  - [`sf env log tail`](#sf-env-log-tail)
+  - [`sf env logdrain add`](#sf-env-logdrain-add)
+  - [`sf env logdrain list`](#sf-env-logdrain-list)
+  - [`sf env logdrain remove`](#sf-env-logdrain-remove)
+  - [`sf env var get KEY`](#sf-env-var-get-key)
+  - [`sf env var list`](#sf-env-var-list)
+  - [`sf env var set`](#sf-env-var-set)
+  - [`sf env var unset`](#sf-env-var-unset)
+  - [`sf generate function`](#sf-generate-function)
+  - [`sf login functions`](#sf-login-functions)
+  - [`sf login functions jwt`](#sf-login-functions-jwt)
+  - [`sf logout functions`](#sf-logout-functions)
+  - [`sf run function`](#sf-run-function)
+  - [`sf run function start`](#sf-run-function-start)
+  - [`sf run function start container`](#sf-run-function-start-container)
+  - [`sf run function start local`](#sf-run-function-start-local)
+  - [`sf whoami functions`](#sf-whoami-functions)
 
 ## `sf deploy functions`
 
