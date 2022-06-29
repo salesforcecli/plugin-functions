@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.12.1](https://github.com/salesforcecli/plugin-functions/compare/v1.12.0...v1.12.1) (2022-06-29)
+
+### Bug Fixes
+
+- add delete command-group description ([#448](https://github.com/salesforcecli/plugin-functions/issues/448)) ([af6fce5](https://github.com/salesforcecli/plugin-functions/commit/af6fce5b108001c991948fc36078e2adb852db29))
+
 ## [1.12.0](https://github.com/salesforcecli/plugin-functions/compare/v1.11.2...v1.12.0) (2022-06-16)
 
 ### Features
