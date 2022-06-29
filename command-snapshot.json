@@ -2,7 +2,7 @@
   {
     "command": "deploy:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["branch", "connected-org", "force", "quiet"],
+    "flags": ["branch", "connected-org", "force", "json", "quiet"],
     "alias": []
   },
   {
