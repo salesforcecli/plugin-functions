@@ -121,6 +121,9 @@
           "create": {
             "description": "Commands to create environments."
           },
+          "delete": {
+            "description": "Commands to delete environments."
+          },
           "log": {
             "description": "Commands to stream log output for an environment."
           },
