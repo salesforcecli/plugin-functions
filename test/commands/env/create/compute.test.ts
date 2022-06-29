@@ -148,9 +148,9 @@ describe('sf env create compute', () => {
     .retries(3)
     .do(() => {
       orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(AliasAccessor.prototype, 'set' as any).callsFake(aliasSetSpy);
-      AuthStubs.write.callsFake(aliasWriteSpy);
+      AuthStubs.aliasesWrite.callsFake(aliasWriteSpy);
     })
     .finally(() => {
       sandbox.restore();
@@ -220,7 +220,7 @@ describe('sf env create compute', () => {
     .stderr()
     .do(() => {
       orgStub = sandbox.stub(Org, 'create' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
     .finally(() => {
       sandbox.restore();
