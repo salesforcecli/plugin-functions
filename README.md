@@ -10,8 +10,8 @@ This project is available as a scoped [npm package on npmjs](https://www.npmjs.c
 
 - [plugin-functions](#plugin-functions)
 - [Usage](#usage)
-- [Issues](#issues)
 - [Contributing](#contributing)
+  - [CLA](#cla)
 - [Build](#build)
 - [Releases](#releases)
   - [Version Bump](#version-bump)
@@ -57,10 +57,6 @@ running command...
 
 Now you should be able to run functions commands, e.g. `sf generate project`, `sf login functions`
 
-# Issues
-
-Please report any issues at https://github.com/forcedotcom/cli/issues
-
 # Contributing
 
 1. Please read our [Code of Conduct](CODE_OF_CONDUCT.md)
@@ -71,9 +67,15 @@ Please report any issues at https://github.com/forcedotcom/cli/issues
 4. [Build the plugin locally](#build)
 5. Create a _topic_ branch in your fork. Note, this step is recommended but technically not required if contributing using a fork.
 6. Edit the code in your fork.
-7. Write appropriate tests for your changes. Try to achieve at least 95% code coverage on any new code. No pull request will be accepted without unit tests.
-8. Sign CLA (see [CLA](#cla) below).
-9. Send us a pull request when you are done. We'll review your code, suggest any needed changes, and merge it in.
+7. Create commit messages that adhere to the [conventional commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
+8. Write appropriate tests for your changes. Try to achieve at least 95% code coverage on any new code. No pull request will be accepted without unit tests.
+9. Sign CLA (see [CLA](#cla) below).
+10. Send us a pull request when you are done. We'll review your code, suggest any needed changes, and merge it in.
+
+## CLA
+
+External contributors will be required to sign a Contributor's License
+Agreement. You can do so by going to https://cla.salesforce.com/sign-cla.
 
 # Build
 
@@ -135,8 +137,8 @@ Once the package has been built and signed it will be published to npm. The comm
 
 - [plugin-functions](#plugin-functions)
 - [Usage](#usage)
-- [Issues](#issues)
 - [Contributing](#contributing)
+  - [CLA](#cla)
 - [Build](#build)
 - [Releases](#releases)
   - [Version Bump](#version-bump)
