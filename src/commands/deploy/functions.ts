@@ -32,6 +32,12 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'project.
 export default class DeployFunctions extends Command {
   private git?: Git;
 
+  static summary = messages.getMessage('summary');
+
+  static description = messages.getMessage('description');
+
+  static examples = messages.getMessages('examples');
+
   static flags = {
     'connected-org': FunctionsFlagBuilder.connectedOrg({
       required: true,
