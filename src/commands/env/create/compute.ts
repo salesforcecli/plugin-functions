@@ -86,14 +86,14 @@ export default class EnvCreateCompute extends Command {
           Id,
           Status,
           Error
-          FROM SfFunctionsConnection`);
+          FROM FunctionsConnection`);
       } catch (err) {
         const error = err as Error;
-        // This is obviously heinous, but should only exist short-term until the move from `SfFunctionsConnection`
+        // This is obviously heinous, but should only exist short-term until the move from `FunctionsConnection`
         // to `FunctionConnection` is complete. Once that's done, we can remove this and go back to a simple
         // query against `FunctionConnection`
-        if (!error.message.includes("sObject type 'SfFunctionsConnection' is not supported.")) {
-          this.error(error);
+        if (!error.message.includes("sObject type 'FunctionsConnection' is not supported.")) {
+          this.handleError(error, flags.json);
         }
         response = await connection.query<FunctionConnectionRecord>(`SELECT
             Id,
