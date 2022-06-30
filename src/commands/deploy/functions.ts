@@ -32,6 +32,12 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'project.
 export default class DeployFunctions extends Command {
   private git?: Git;
 
+  static summary = messages.getMessage('summary');
+
+  static description = messages.getMessage('description');
+
+  static examples = messages.getMessages('examples');
+
   static flags = {
     'connected-org': FunctionsFlagBuilder.connectedOrg({
       required: true,
@@ -47,6 +53,7 @@ export default class DeployFunctions extends Command {
       description: messages.getMessage('flags.quiet.summary'),
       char: 'q',
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -60,8 +67,11 @@ export default class DeployFunctions extends Command {
     // We don't want to deploy anything if they've got work that hasn't been committed yet because
     // it could end up being really confusing since the user isn't calling git directly
     if (await this.git.hasUnpushedFiles()) {
-      this.error(
-        'Your repo has files that have not been committed yet. Please either commit or stash them before deploying your project.'
+      this.handleError(
+        new Error(
+          'Your repo has files that have not been committed yet. Please either commit or stash them before deploying your project.'
+        ),
+        flags.json
       );
     }
 
@@ -81,8 +91,11 @@ export default class DeployFunctions extends Command {
     } catch (err) {
       const error = err as { body: { message?: string } };
       if (error.body.message?.includes("Couldn't find that app")) {
-        this.error(
-          `No compute environment found for org ${flags['connected-org']}. Please ensure you've created a compute environment before deploying.`
+        this.handleError(
+          new Error(
+            `No compute environment found for org ${flags['connected-org']}. Please ensure you've created a compute environment before deploying.`
+          ),
+          flags.json
         );
       }
 
@@ -90,7 +103,7 @@ export default class DeployFunctions extends Command {
     }
 
     if (flags.force && app.sales_org_connection?.sales_org_stage === 'prod') {
-      this.error('You cannot use the `--force` flag with a production org.');
+      this.handleError(new Error('You cannot use the `--force` flag with a production org.'), flags.json);
     }
 
     const remote = await this.git.getRemote(app, redactedToken, this.username);
@@ -114,12 +127,12 @@ export default class DeployFunctions extends Command {
       // if they've passed `--quiet` we don't want to show any build server output *unless* there's
       // an error, in which case we want to show all of it
       if (flags.quiet) {
-        this.error(error.message.replace(redactedToken, '<REDACTED>'));
+        this.handleError(new Error(error.message.replace(redactedToken, '<REDACTED>')), flags.json);
       }
 
       // In this case, they have not passed `--quiet`, in which case we have already streamed
       // the entirety of the build server output and don't need to show it again
-      this.error('There was an issue when deploying your functions.');
+      this.handleError(new Error('There was an issue when deploying your functions.'), flags.json);
     }
 
     debug('pushing function references', references);
@@ -141,7 +154,7 @@ export default class DeployFunctions extends Command {
         cli.error(`Unable to deploy FunctionReference for ${result.fullName}.`, { exit: false });
       }
 
-      if (!flags.quiet) {
+      if (!flags.quiet && !flags.json) {
         this.log(
           `Reference for ${result.fullName} ${
             result.created ? herokuColor.cyan('created') : herokuColor.green('updated')
@@ -181,6 +194,15 @@ export default class DeployFunctions extends Command {
 
     if (shouldExitNonZero) {
       cli.exit(1);
+    }
+    if (flags.json) {
+      cli.styledJSON({
+        status: 0,
+        result: {
+          results,
+        },
+        warnings: [],
+      });
     }
   }
 }

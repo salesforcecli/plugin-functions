@@ -2,7 +2,7 @@
   {
     "command": "deploy:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["branch", "connected-org", "force", "quiet"],
+    "flags": ["branch", "connected-org", "force", "json", "quiet"],
     "alias": []
   },
   {
@@ -14,13 +14,13 @@
   {
     "command": "env:create:compute",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["alias", "connected-org"],
+    "flags": ["alias", "connected-org", "json"],
     "alias": []
   },
   {
     "command": "env:delete",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["confirm", "environment", "target-compute", "json"],
+    "flags": ["confirm", "environment", "json", "target-compute"],
     "alias": []
   },
   {
