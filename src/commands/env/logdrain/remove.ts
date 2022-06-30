@@ -48,6 +48,8 @@ export default class LogDrainRemove extends Command {
 
   async run() {
     const { flags } = await this.parse(LogDrainRemove);
+    this.postParseHook(flags);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
     const url = flags['drain-url'] ?? flags.url;
@@ -61,7 +63,7 @@ export default class LogDrainRemove extends Command {
     }
 
     if (!url) {
-      this.handleError(new Error('Missing required flag: -u, --url Logdrain url to remove'), flags.json);
+      this.error(new Error('Missing required flag: -u, --url Logdrain url to remove'));
     }
 
     if (flags.environment) {
@@ -87,17 +89,18 @@ export default class LogDrainRemove extends Command {
 
         cli.action.stop();
       }
-    } catch (e: any) {
+    } catch (e) {
       const error = e as { data: { message?: string } };
 
       if (error.data?.message?.includes('Url is invalid')) {
-        this.handleError(new Error(`URL is invalid <${url}>`), flags.json);
+        this.error(new Error(`URL is invalid <${url}>`));
       }
 
       if (error.data?.message?.includes("Couldn't find that app.")) {
-        this.handleError(new Error(`Couldn't find that app  <${appName}>`), flags.json);
+        this.error(new Error(`Couldn't find that app  <${appName}>`));
       }
-      return;
+
+      this.error(e as Error);
     }
   }
 }

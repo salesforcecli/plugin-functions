@@ -65,17 +65,9 @@ export default class ConfigSet extends Command {
     if (isInvalidEnvironment) {
       const errorStackStartIndex = errObj.indexOf('at');
       const errStack = errObj.substr(errorStackStartIndex);
-
-      cli.styledJSON({
-        status: 1,
-        name: 'Error',
-        message: `Couldn't find that app <${targetCompute}>`,
-        exitCode: 1,
-        commandName: 'env var set',
-        stack: errStack,
-        warnings: [],
-      });
-      return;
+      errorObject.message = `Couldn't find that app <${targetCompute}>`;
+      errorObject.stack = errStack;
+      this.error(errObj);
     }
 
     if (isInvalidInput) {
@@ -96,37 +88,24 @@ export default class ConfigSet extends Command {
         .replace(/\u001b\[.*?m\r?\n|\r/g, '')
         .replace('    ', '');
 
-      cli.styledJSON({
-        status: 1,
-        name: 'Error',
-        message: errMessage,
-        exitCode: 1,
-        commandName: 'env var set',
-        stack: errStack,
-        warnings: [],
-      });
-      return;
+      errorObject.message = errMessage;
+      errorObject.stack = errStack;
+      this.error(errObj);
     }
 
     if (hasNoInput) {
       const errorStackStartIndex = errObj.indexOf('at');
       const errStack = errObj.substr(errorStackStartIndex);
-
-      cli.styledJSON({
-        status: 1,
-        name: 'Error',
-        message: 'Must specify KEY and VALUE to set.',
-        exitCode: 1,
-        commandName: 'env var set',
-        stack: errStack,
-        warnings: [],
-      });
-      return;
+      errorObject.message = 'Must specify KEY and VALUE to set.';
+      errorObject.stack = errStack;
+      this.error(errObj);
     }
   }
 
   async run() {
     const { flags, argv } = await this.parse(ConfigSet);
+    this.postParseHook(flags);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
 

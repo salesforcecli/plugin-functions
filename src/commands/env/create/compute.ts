@@ -7,7 +7,7 @@
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Flags } from '@oclif/core';
-import { Org, Messages } from '@salesforce/core';
+import { Messages } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
 import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
@@ -42,17 +42,12 @@ export default class EnvCreateCompute extends Command {
 
   async run() {
     const { flags } = await this.parse(EnvCreateCompute);
+    this.postParseHook(flags);
 
     const alias = flags.alias;
 
     // if `--connected-org` is null here, fetchOrg will pull the default org from the surrounding environment
-    let org: Org;
-    try {
-      org = await fetchOrg(flags['connected-org']);
-    } catch (err) {
-      const error = err as Error;
-      this.handleError(error, flags.json);
-    }
+    const org = await fetchOrg(flags['connected-org']);
 
     const orgId = org.getOrgId();
 
@@ -72,17 +67,11 @@ export default class EnvCreateCompute extends Command {
     if (!flags.json) {
       cli.action.start(`Creating compute environment for org ID ${orgId}`);
     }
-    let project = null;
-    try {
-      project = await fetchSfdxProject();
-    } catch (err) {
-      const error = err as Error;
-      this.handleError(error, flags.json);
-    }
+    const project = await fetchSfdxProject();
     const projectName = project.name;
 
     if (!projectName) {
-      this.handleError(new Error('No project name found in sfdx-project.json.'), flags.json);
+      this.error('No project name found in sfdx-project.json.');
     }
 
     const connection = org.getConnection();
@@ -104,7 +93,7 @@ export default class EnvCreateCompute extends Command {
         // to `FunctionConnection` is complete. Once that's done, we can remove this and go back to a simple
         // query against `FunctionConnection`
         if (!error.message.includes("sObject type 'SfFunctionsConnection' is not supported.")) {
-          this.handleError(error, flags.json);
+          this.error(error);
         }
         response = await connection.query<FunctionConnectionRecord>(`SELECT
             Id,
@@ -131,7 +120,7 @@ export default class EnvCreateCompute extends Command {
       // If there is any other error besides the one mentioned above, something is actually wrong
       // and we should bail
       if (record.Error) {
-        this.handleError(new Error(`${record.Error}`), flags.json);
+        this.error(`${record.Error}`);
       }
 
       // This is the go signal. Once we have this status it means that the connection is fully up
@@ -179,23 +168,17 @@ export default class EnvCreateCompute extends Command {
       cli.action.stop('error!');
 
       if (error.data?.message?.includes(INVALID_PROJECT_NAME)) {
-        this.handleError(
-          new Error(
-            "Project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter"
-          ),
-          flags.json
+        this.error(
+          "Project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter"
         );
       }
       // If environment creation fails because an environment already exists for this org and project
       // we want to fetch the existing environment so that we can point the user to it
       if (error.data?.message?.includes(DUPLICATE_PROJECT_MESSAGE)) {
         const app = await fetchAppForProject(this.client, projectName, org.getUsername());
-        this.handleError(
-          new Error(`This org is already connected to a compute environment for this project -> ${app.name}`),
-          flags.json
-        );
+        this.error(`This org is already connected to a compute environment for this project -> ${app.name}`);
       }
-      this.handleError(new Error(`${error.data.message}`), flags.json);
+      this.error(`${error.data.message}`);
     }
     const app = await fetchAppForProject(this.client, projectName, org.getUsername());
     if (flags.json) {

@@ -24,6 +24,8 @@ export default class Login extends Command {
 
   async run() {
     const { flags } = await this.parse(Login);
+    this.postParseHook(flags);
+
     cli.action.start(messages.getMessage('action.start'));
 
     this.stateAggregator.tokens.unset(Command.TOKEN_BEARER_KEY);

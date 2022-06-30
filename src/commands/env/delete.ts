@@ -45,6 +45,8 @@ export default class EnvDelete extends Command {
 
   async run() {
     const { flags } = await this.parse(EnvDelete);
+    this.postParseHook(flags);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
 
@@ -81,7 +83,7 @@ export default class EnvDelete extends Command {
         // If the error is the one we throw above, then we will send the error to the user.
         // If not (meaning the environment name provided might be a compute environment) then we swallow the error and proceed.
         if (error.message.includes(`The environment ${herokuColor.cyan(targetCompute)} is a Salesforce org.`)) {
-          this.handleError(error, flags.json);
+          this.error(error);
         }
       }
     }
@@ -101,11 +103,10 @@ export default class EnvDelete extends Command {
       app = response.data;
     } catch (error) {
       // App with name does not exist
-      this.handleError(
+      this.error(
         new Error(
           'Value provided for environment does not match a compute environment name or an alias to a compute environment.'
-        ),
-        flags.json
+        )
       );
     }
 
@@ -119,7 +120,7 @@ export default class EnvDelete extends Command {
       // of cleaning up functon refs since they're all already gone. Otherwise, something else has
       // gone wrong and we go ahead and bail out.
       if (error.message !== 'Attempted to resolve an org without a valid org ID') {
-        this.handleError(error, flags.json);
+        this.error(error);
       }
     }
 

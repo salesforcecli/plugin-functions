@@ -322,7 +322,6 @@ describe('sf login functions jwt', () => {
     .stderr()
     .do(() => {
       sinon.stub(AuthInfo, 'create' as any).throws({
-        exitCode: 1,
         name: 'JwtAuthError',
         message: 'oops no auth',
       });
@@ -344,7 +343,6 @@ describe('sf login functions jwt', () => {
     .it('returns the correct json payload when --json is used and sfdx auth errors', (ctx) => {
       expect(JSON.parse(ctx.stdout)).to.deep.equal({
         status: 1,
-        exitCode: 1,
         name: 'JwtAuthError',
         message: 'oops no auth',
         warnings: [],
