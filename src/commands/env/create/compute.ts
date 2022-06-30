@@ -93,7 +93,7 @@ export default class EnvCreateCompute extends Command {
         // to `FunctionConnection` is complete. Once that's done, we can remove this and go back to a simple
         // query against `FunctionConnection`
         if (!error.message.includes("sObject type 'FunctionsConnection' is not supported.")) {
-          this.handleError(error, flags.json);
+          this.error(error);
         }
         response = await connection.query<FunctionConnectionRecord>(`SELECT
             Id,
