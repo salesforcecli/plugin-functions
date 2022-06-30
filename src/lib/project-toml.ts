@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { ProjectDescriptor } from '@heroku/project-descriptor';
-import { cli } from 'cli-ux';
 
 export async function parseProjectToml(fnTomlPath: string): Promise<any> {
   const parser = new ProjectDescriptor();
@@ -14,9 +13,9 @@ export async function parseProjectToml(fnTomlPath: string): Promise<any> {
   } catch (err) {
     const error = err as Error;
     if (error.message.includes('File Not Found')) {
-      cli.error(error.message + ' Are you in the correct working directory?');
+      throw new Error(error.message + ' Are you in the correct working directory?');
     } else {
-      cli.error(error.message);
+      throw new Error(error.message);
     }
   }
 }

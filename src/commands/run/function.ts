@@ -57,6 +57,8 @@ export default class Invoke extends Command {
 
   async run() {
     const { flags } = await this.parse(Invoke);
+    this.postParseHook(flags);
+
     const url = flags['function-url'] ?? flags.url;
     if (!url) {
       throw new Errors.CLIError(
@@ -103,10 +105,9 @@ export default class Invoke extends Command {
     } catch (e) {
       const error = e as AxiosError;
       if (error.response) {
-        this.handleError(new Error(`${error.response.status} ${error.response.statusText}`), flags.json);
-      } else {
-        this.handleError(new Error(`${error.message}`), flags.json);
+        this.error(new Error(`${error.response.status} ${error.response.statusText}`));
       }
+      this.error(new Error(`${error.message}`));
     }
   }
 

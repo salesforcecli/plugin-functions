@@ -45,6 +45,7 @@ export default class VarGet extends Command {
 
   async run() {
     const { flags, args } = await this.parse(VarGet);
+    this.postParseHook(flags);
 
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;

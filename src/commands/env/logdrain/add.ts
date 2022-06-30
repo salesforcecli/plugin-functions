@@ -48,6 +48,8 @@ export default class LogDrainAdd extends Command {
 
   async run() {
     const { flags } = await this.parse(LogDrainAdd);
+    this.postParseHook(flags);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
     const url = flags['drain-url'] ?? flags.url;
@@ -108,24 +110,26 @@ export default class LogDrainAdd extends Command {
       const error = e as { data: { message?: string } };
 
       if (error.data?.message?.includes('Url is invalid')) {
-        this.handleError(new Error(`URL is invalid <${url}>`), flags.json);
+        this.error(new Error(`URL is invalid <${url}>`));
       }
 
       if (error.data?.message?.includes('Url has already been taken')) {
-        this.handleError(new Error(`Logdrain URL is already added <${url}>`), flags.json);
+        this.error(new Error(`Logdrain URL is already added <${url}>`));
       }
 
       if (error.data?.message?.includes("Couldn't find that app.")) {
-        this.handleError(new Error(`Could not find environment <${appName}>`), flags.json);
+        this.error(new Error(`Could not find environment <${appName}>`));
       }
 
       if (error.data?.message?.includes("You've reached the limit")) {
-        this.handleError(new Error(`You've reached the limit of 5 log drains on <${appName}>`), flags.json);
+        this.error(new Error(`You've reached the limit of 5 log drains on <${appName}>`));
       }
 
       if (error.data?.message?.includes('401')) {
-        this.handleError(new Error('Your token has expired, please login with sf login functions'), flags.json);
+        this.error(new Error('Your token has expired, please login with sf login functions'));
       }
+
+      this.error(e as Error);
     }
   }
 }

@@ -58,6 +58,7 @@ export default class DeployFunctions extends Command {
 
   async run() {
     const { flags } = await this.parse(DeployFunctions);
+    this.postParseHook(flags);
 
     // We pass the api token value to the Git constructor so that it will redact it from any of
     // the server logs
@@ -67,11 +68,8 @@ export default class DeployFunctions extends Command {
     // We don't want to deploy anything if they've got work that hasn't been committed yet because
     // it could end up being really confusing since the user isn't calling git directly
     if (await this.git.hasUnpushedFiles()) {
-      this.handleError(
-        new Error(
-          'Your repo has files that have not been committed yet. Please either commit or stash them before deploying your project.'
-        ),
-        flags.json
+      this.error(
+        'Your repo has files that have not been committed yet. Please either commit or stash them before deploying your project.'
       );
     }
 
@@ -91,11 +89,8 @@ export default class DeployFunctions extends Command {
     } catch (err) {
       const error = err as { body: { message?: string } };
       if (error.body.message?.includes("Couldn't find that app")) {
-        this.handleError(
-          new Error(
-            `No compute environment found for org ${flags['connected-org']}. Please ensure you've created a compute environment before deploying.`
-          ),
-          flags.json
+        this.error(
+          `No compute environment found for org ${flags['connected-org']}. Please ensure you've created a compute environment before deploying.`
         );
       }
 
@@ -103,7 +98,7 @@ export default class DeployFunctions extends Command {
     }
 
     if (flags.force && app.sales_org_connection?.sales_org_stage === 'prod') {
-      this.handleError(new Error('You cannot use the `--force` flag with a production org.'), flags.json);
+      this.error('You cannot use the `--force` flag with a production org.');
     }
 
     const remote = await this.git.getRemote(app, redactedToken, this.username);
@@ -127,12 +122,12 @@ export default class DeployFunctions extends Command {
       // if they've passed `--quiet` we don't want to show any build server output *unless* there's
       // an error, in which case we want to show all of it
       if (flags.quiet) {
-        this.handleError(new Error(error.message.replace(redactedToken, '<REDACTED>')), flags.json);
+        this.error(error.message.replace(redactedToken, '<REDACTED>'));
       }
 
       // In this case, they have not passed `--quiet`, in which case we have already streamed
       // the entirety of the build server output and don't need to show it again
-      this.handleError(new Error('There was an issue when deploying your functions.'), flags.json);
+      this.error('There was an issue when deploying your functions.');
     }
 
     debug('pushing function references', references);
