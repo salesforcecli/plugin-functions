@@ -255,8 +255,8 @@ describe('sf env create compute', () => {
     .add('queryStub', () => {
       const queryStub = sinon.stub();
       queryStub
-        .withArgs(sinon.match('SfFunctionsConnection'))
-        .throws({ message: "sObject type 'SfFunctionsConnection' is not supported." });
+        .withArgs(sinon.match('FunctionsConnection'))
+        .throws({ message: "sObject type 'FunctionsConnection' is not supported." });
 
       queryStub.withArgs(sinon.match('FunctionConnection')).returns({
         records: [
@@ -293,7 +293,7 @@ describe('sf env create compute', () => {
         .reply(200, APP_MOCK);
     })
     .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`])
-    .it('still creates a compute env even if SfFunctionsConnection is not supported', (ctx) => {
+    .it('still creates a compute env even if FunctionsConnection is not supported', (ctx) => {
       expect(ctx.stderr).to.contain(`Creating compute environment for org ID ${ORG_MOCK.id}`);
       expect(ctx.stdout).to.contain(`New compute environment created with ID ${APP_MOCK.name}`);
       expect(ctx.stdout).to.contain(`Your compute environment with local alias ${ENVIRONMENT_ALIAS} is ready`);
