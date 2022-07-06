@@ -43,10 +43,13 @@ export default class LogDrainRemove extends Command {
       description: messages.getMessage('flags.drain-url.summary'),
       hidden: true,
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
     const { flags } = await this.parse(LogDrainRemove);
+    this.postParseHook(flags);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
     const url = flags['drain-url'] ?? flags.url;
@@ -60,11 +63,7 @@ export default class LogDrainRemove extends Command {
     }
 
     if (!url) {
-      throw new Errors.CLIError(
-        `Missing required flag:
-       -u, --drain-url DRAIN-URL  ${herokuColor.dim('Logdrain url to remove.')}
-       See more help with --help`
-      );
+      this.error(new Error('Missing required flag: -u, --url Logdrain url to remove'));
     }
 
     if (flags.environment) {
@@ -76,11 +75,32 @@ export default class LogDrainRemove extends Command {
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
+    try {
+      await this.client.delete<Heroku.LogDrain>(`/apps/${appName}/log-drains/${encodeURIComponent(url)}`);
+      if (flags.json) {
+        cli.styledJSON({
+          status: 0,
+          result: null,
+          warnings: [],
+        });
+        return;
+      } else {
+        cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
 
-    cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
+        cli.action.stop();
+      }
+    } catch (e) {
+      const error = e as { data: { message?: string } };
 
-    await this.client.delete<Heroku.LogDrain>(`/apps/${appName}/log-drains/${encodeURIComponent(url)}`);
+      if (error.data?.message?.includes('Url is invalid')) {
+        this.error(new Error(`URL is invalid <${url}>`));
+      }
 
-    cli.action.stop();
+      if (error.data?.message?.includes("Couldn't find that app.")) {
+        this.error(new Error(`Couldn't find that app  <${appName}>`));
+      }
+
+      this.error(e as Error);
+    }
   }
 }

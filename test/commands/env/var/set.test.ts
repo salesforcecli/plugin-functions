@@ -105,4 +105,23 @@ describe('sf env:var:set', () => {
       expect(error.message).to.contain('foobar is invalid. Please use the format key=value');
     })
     .it('fails when arguments are not in the correct format');
+
+  test
+    .stdout()
+    // Adding retries here because there is some kind of race condition that causes fancy-test to not
+    // fully capture the value of stderr when running in CI (╯°□°)╯︵ ┻━┻
+    .retries(2)
+    .nock('https://api.heroku.com', (api) =>
+      api
+        .patch('/apps/my-environment/config-vars', {
+          foo: 'bar',
+        })
+        .reply(200)
+    )
+    .command(['env:var:set', 'foo=bar', '--target-compute', 'my-environment', '--json'])
+    .it('will show json output', (ctx) => {
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+        vacuum('{\n"status": 0,\n"result": null,\n"warnings": []\n}')
+      );
+    });
 });

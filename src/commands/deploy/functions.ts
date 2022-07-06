@@ -32,6 +32,12 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'project.
 export default class DeployFunctions extends Command {
   private git?: Git;
 
+  static summary = messages.getMessage('summary');
+
+  static description = messages.getMessage('description');
+
+  static examples = messages.getMessages('examples');
+
   static flags = {
     'connected-org': FunctionsFlagBuilder.connectedOrg({
       required: true,
@@ -47,10 +53,12 @@ export default class DeployFunctions extends Command {
       description: messages.getMessage('flags.quiet.summary'),
       char: 'q',
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
     const { flags } = await this.parse(DeployFunctions);
+    this.postParseHook(flags);
 
     // We pass the api token value to the Git constructor so that it will redact it from any of
     // the server logs
@@ -141,7 +149,7 @@ export default class DeployFunctions extends Command {
         cli.error(`Unable to deploy FunctionReference for ${result.fullName}.`, { exit: false });
       }
 
-      if (!flags.quiet) {
+      if (!flags.quiet && !flags.json) {
         this.log(
           `Reference for ${result.fullName} ${
             result.created ? herokuColor.cyan('created') : herokuColor.green('updated')
@@ -181,6 +189,15 @@ export default class DeployFunctions extends Command {
 
     if (shouldExitNonZero) {
       cli.exit(1);
+    }
+    if (flags.json) {
+      cli.styledJSON({
+        status: 0,
+        result: {
+          results,
+        },
+        warnings: [],
+      });
     }
   }
 }
