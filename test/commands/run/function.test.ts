@@ -11,7 +11,7 @@ import { cli } from 'cli-ux';
 import { MockTestOrgData, testSetup } from '@salesforce/core/lib/testSetup';
 import * as sinon from 'sinon';
 
-import * as library from '@heroku/functions-core';
+import * as library from '@hk/functions-core';
 import vacuum from '../../helpers/vacuum';
 
 describe('run:function', () => {
@@ -22,6 +22,7 @@ describe('run:function', () => {
   let sandbox: sinon.SinonSandbox;
   let runFunctionStub: sinon.SinonStub;
   let stopActionSub: sinon.SinonStub;
+
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     runFunctionStub = sandbox.stub(library, 'runFunction');
@@ -48,13 +49,20 @@ describe('run:function', () => {
   context('with payload and other arguments', () => {
     beforeEach(async () => {
       testData = new MockTestOrgData();
-      $$.configStubs.GlobalInfo = { contents: { orgs: { [testData.username]: await testData.getConfig() } } };
-
+      await $$.stubAuths(testData);
       const config = await Config.create(Config.getDefaultOptions(true));
-      await config.set(OrgConfigProperties.TARGET_ORG, testData.username);
+      config.set(OrgConfigProperties.TARGET_ORG, testData.username);
       await config.write();
     });
-
+    test
+      .stdout()
+      .stderr()
+      .command(['run:function', '-l', targetUrl, '-p', userpayload, '-j'])
+      .it('will show json output', (ctx) => {
+        expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
+          vacuum('{\n"status": 0,\n"result": "Something happened!",\n"warnings": []\n}')
+        );
+      });
     test
       .stdout()
       .stderr()
@@ -79,6 +87,7 @@ describe('run:function', () => {
         '--structured',
         '-o',
         OrgConfigProperties.TARGET_ORG,
+        '-j',
       ])
       .it('Should call the library with all arguments', async () => {
         sinon.assert.calledWith(
@@ -89,8 +98,10 @@ describe('run:function', () => {
             .and(sinon.match.has('headers', ['TestHeader']))
             .and(sinon.match.has('structured', true))
             .and(sinon.match.has('targetusername', OrgConfigProperties.TARGET_ORG))
+            .and(sinon.match.has('json', true))
         );
       });
+
     test
       .stdout()
       .stderr()
@@ -117,6 +128,7 @@ describe('run:function', () => {
       .it('Should log response', async (ctx) => {
         expect(ctx.stdout).to.contain('Something happened!');
       });
+
     test
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
       .it('Should stop spinner and display status code', async () => {
@@ -140,9 +152,9 @@ describe('run:function', () => {
       .stderr()
       .stub(process, 'exit', () => '')
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
-      .catch((error) => expect(error.message).to.contain('Something bad happened!'))
+      .catch((error) => expect(error.message).to.contain('500 undefined'))
       .finally(() => {
-        sinon.assert.calledWith(stopActionSub, sinon.match('500'));
+        sinon.assert.calledWith(stopActionSub, sinon.match('failed'));
       })
       .it('Should log response and stop spinner with status code');
   });
@@ -160,7 +172,7 @@ describe('run:function', () => {
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
       .catch((error) => expect(error.message).to.contain(errorMessage))
       .finally(() => {
-        sinon.assert.calledWith(stopActionSub, sinon.match('Error'));
+        sinon.assert.calledWith(stopActionSub, sinon.match('failed'));
       })
       .it('Should log error and stop spinner with status code');
   });

@@ -35,19 +35,21 @@ export default class LogDrainList extends Command {
 
   async run() {
     const { flags } = await this.parse(LogDrainList);
+    this.postParseHook(flags);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
 
     if (!targetCompute) {
       throw new Errors.CLIError(
         `Missing required flag:
-        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+        -e, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
        See more help with --help`
       );
     }
 
     if (flags.environment) {
-      this.warn(messages.getMessage('flags.environment.deprecation'));
+      cli.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);

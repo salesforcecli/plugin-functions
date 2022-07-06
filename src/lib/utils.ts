@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { AuthInfo, GlobalInfo, Org, OrgAuthorization, SfdxProject } from '@salesforce/core';
+import { AuthInfo, StateAggregator, Org, OrgAuthorization, SfdxProject } from '@salesforce/core';
 import APIClient from './api-client';
 import herokuVariant from './heroku-variant';
 import { ComputeEnvironment, SfdxProjectConfig } from './sfdc-types';
@@ -43,8 +43,8 @@ export async function fetchAppForProject(client: APIClient, projectName: string,
 
 export async function resolveAppNameForEnvironment(appNameOrAlias: string): Promise<string> {
   // Check if the environment provided is an alias or not, to determine what app name we use to attempt deletion
-  const info = await GlobalInfo.getInstance();
-  const matchingAlias = info.aliases.getValue(appNameOrAlias);
+  const stateAggregator = await StateAggregator.getInstance();
+  const matchingAlias = stateAggregator.aliases.getValue(appNameOrAlias);
   let appName: string;
   if (matchingAlias) {
     appName = matchingAlias;
@@ -74,8 +74,8 @@ export async function getOrgUsername(orgId: string): Promise<string | undefined>
 }
 
 export async function getOrgAlias(orgId: string): Promise<string | undefined> {
-  const info = await GlobalInfo.getInstance();
-  const entries = Object.entries(info.aliases.getAll());
+  const stateAggregator = await StateAggregator.getInstance();
+  const entries = Object.entries(stateAggregator.aliases.getAll());
   const username = await getOrgUsername(orgId);
   const matchingAlias = entries.find((entry) => entry[1] === username);
 

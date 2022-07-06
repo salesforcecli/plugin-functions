@@ -8,16 +8,17 @@ import herokuColor from '@heroku-cli/color';
 import { cli } from 'cli-ux';
 import * as Heroku from '@heroku-cli/schema';
 import { Messages } from '@salesforce/core';
-import { Errors } from '@oclif/core';
-import { FunctionsFlagBuilder } from '../../../lib/flags';
-import Command from '../../../lib/base';
-import { resolveAppNameForEnvironment } from '../../../lib/utils';
-import * as logStreamUtils from '../../../lib/log-stream-utils';
+import { Errors, Flags } from '@oclif/core';
+import { FunctionsFlagBuilder } from '../../lib/flags';
+import Command from '../../lib/base';
+import { resolveAppNameForEnvironment } from '../../lib/utils';
+import * as logStreamUtils from '../../lib/log-stream-utils';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.log.tail');
+const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.log');
 
-export default class LogTail extends Command {
+export default class Log extends Command {
+  public static readonly state = 'beta';
   static summary = messages.getMessage('summary');
 
   static examples = messages.getMessages('examples');
@@ -32,17 +33,22 @@ export default class LogTail extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
+    num: Flags.integer({
+      char: 'n',
+      description: messages.getMessage('flags.num.summary'),
+    }),
   };
 
   async run() {
-    const { flags } = await this.parse(LogTail);
+    const { flags } = await this.parse(Log);
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
+    const logLines = flags.num ?? 100;
 
     if (!targetCompute) {
       throw new Errors.CLIError(
         `Missing required flag:
-        -e, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
+        -c, --target-compute TARGET-COMPUTE  ${herokuColor.dim('Environment name.')}
        See more help with --help`
       );
     }
@@ -55,14 +61,15 @@ export default class LogTail extends Command {
 
     const response = await this.client.post<Heroku.LogSession>(`/apps/${appName}/log-sessions`, {
       data: {
-        tail: true,
+        tail: false,
+        lines: logLines,
       },
     });
 
     const logURL = response.data.logplex_url;
 
     if (logURL) {
-      await logStreamUtils.readLogs(logURL, true);
+      await logStreamUtils.readLogs(logURL, false);
     } else {
       this.error("Couldn't retreive logs");
     }

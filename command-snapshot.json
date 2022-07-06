@@ -2,19 +2,31 @@
   {
     "command": "deploy:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["branch", "connected-org", "force", "quiet"],
+    "flags": ["branch", "connected-org", "force", "json", "quiet"],
+    "alias": []
+  },
+  {
+    "command": "env:compute:collaborator:add",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["heroku-user"],
     "alias": []
   },
   {
     "command": "env:create:compute",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["alias", "connected-org", "setalias"],
+    "flags": ["alias", "connected-org", "json"],
     "alias": []
   },
   {
     "command": "env:delete",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["confirm", "environment", "target-compute"],
+    "flags": ["confirm", "environment", "json", "target-compute"],
+    "alias": []
+  },
+  {
+    "command": "env:log",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["environment", "num", "target-compute"],
     "alias": []
   },
   {
@@ -26,7 +38,7 @@
   {
     "command": "env:logdrain:add",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["drain-url", "environment", "target-compute", "url"],
+    "flags": ["drain-url", "environment", "json", "target-compute", "url"],
     "alias": []
   },
   {
@@ -38,13 +50,13 @@
   {
     "command": "env:logdrain:remove",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["drain-url", "environment", "target-compute", "url"],
+    "flags": ["drain-url", "environment", "json", "target-compute", "url"],
     "alias": []
   },
   {
     "command": "env:var:get",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute"],
+    "flags": ["environment", "json", "target-compute"],
     "alias": []
   },
   {
@@ -56,13 +68,13 @@
   {
     "command": "env:var:set",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute"],
+    "flags": ["environment", "json", "target-compute"],
     "alias": []
   },
   {
     "command": "env:var:unset",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["environment", "target-compute"],
+    "flags": ["environment", "json", "target-compute"],
     "alias": []
   },
   {
@@ -96,13 +108,13 @@
   {
     "command": "logout:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": [],
+    "flags": ["json"],
     "alias": []
   },
   {
     "command": "run:function",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["connected-org", "function-url", "headers", "payload", "structured", "url"],
+    "flags": ["connected-org", "function-url", "headers", "json", "payload", "structured", "url"],
     "alias": []
   },
   {

@@ -46,6 +46,7 @@ export interface FunctionReference {
   label: string;
   description: string;
   permissionSet?: string;
+  access?: string;
 }
 
 export interface ScratchOrgFields {

@@ -8,7 +8,7 @@ import * as path from 'path';
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
 import { Command, Flags } from '@oclif/core';
-import { getFunctionsBinary, getProjectDescriptor } from '@heroku/functions-core';
+import { getFunctionsBinary, getProjectDescriptor } from '@hk/functions-core';
 import { cli } from 'cli-ux';
 import { JsonMap } from '@salesforce/ts-types';
 
@@ -93,12 +93,8 @@ export default class Container extends Command {
       env: flags.env,
     };
 
-    let descriptor;
-    try {
-      descriptor = await getProjectDescriptor(buildOpts.descriptor);
-    } catch (error) {
-      cli.error(error as Error);
-    }
+    const descriptor = await getProjectDescriptor(buildOpts.descriptor);
+
     const functionName = descriptor.com.salesforce.id as string;
 
     const benny = await getFunctionsBinary();

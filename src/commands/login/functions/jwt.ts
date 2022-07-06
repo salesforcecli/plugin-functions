@@ -14,6 +14,7 @@ import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
 import { herokuVariant } from '../../../lib/heroku-variant';
 import { fetchSfdxProject } from '../../../lib/utils';
+import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 // This is a public Oauth client created expressly for the purpose of headless auth in the functions CLI.
 // It does not require a client secret, is marked as public in the database and scoped accordingly
@@ -71,9 +72,7 @@ export default class JwtLogin extends Command {
       exclusive: ['instance-url'],
       hidden: true,
     }),
-    json: Flags.boolean({
-      description: messages.getMessage('flags.json.summary'),
-    }),
+    json: FunctionsFlagBuilder.json,
     alias: Flags.string({
       char: 'a',
       description: messages.getMessage('flags.alias.summary'),
@@ -117,9 +116,9 @@ export default class JwtLogin extends Command {
         username,
         oauth2Options,
       });
-    } catch (error) {
-      const err = error as SfdxError;
-      if (err.name === 'AuthInfoOverwriteError') {
+    } catch (err) {
+      const error = err as Error;
+      if (error.name === 'AuthInfoOverwriteError') {
         const remover = await AuthRemover.create();
         await remover.removeAuth(username);
         authInfo = await AuthInfo.create({
@@ -127,7 +126,7 @@ export default class JwtLogin extends Command {
           oauth2Options,
         });
       } else {
-        throw err;
+        this.error(error);
       }
     }
     await authInfo.save();
@@ -136,36 +135,21 @@ export default class JwtLogin extends Command {
 
   async run() {
     const { flags } = await this.parse(JwtLogin);
+    this.postParseHook(flags);
+
     const { clientid, username, keyfile } = flags;
     // We support both versions of the flag here for the sake of backward compat
     const instanceUrl = flags['instance-url'] ?? flags.instanceurl;
 
     if (flags.instanceurl) {
-      this.warn(messages.getMessage('flags.instanceurl.deprecation'));
+      cli.warn(messages.getMessage('flags.instanceurl.deprecation'));
     }
 
     cli.action.start('Logging in via JWT');
 
     // Use keyfile, clientid, and username to auth with salesforce via the same workflow
     // as sfdx auth:jwt:grant --json
-    let auth;
-
-    try {
-      auth = await this.initAuthInfo(username, clientid, keyfile, instanceUrl);
-    } catch (error) {
-      const err = error as SfdxError;
-      if (flags.json) {
-        cli.styledJSON({
-          status: 1,
-          exitCode: err.exitCode,
-          name: err.name,
-          message: err.message,
-          warnings: [],
-        });
-        cli.exit(1);
-      }
-      throw err;
-    }
+    const auth = await this.initAuthInfo(username, clientid, keyfile, instanceUrl);
 
     // Take care of any alias/default setting that needs to happen for the sfdx credential
     // before we move on to the heroku stuff
@@ -218,13 +202,13 @@ export default class JwtLogin extends Command {
     // the new heroku credentials we're about to generate
     this.resetClientAuth();
 
-    this.info.tokens.set(Command.TOKEN_BEARER_KEY, {
+    this.stateAggregator.tokens.set(Command.TOKEN_BEARER_KEY, {
       token: bearerToken,
       url: this.identityUrl.toString(),
       user: auth.getUsername(),
     });
 
-    await this.info.write();
+    await this.stateAggregator.tokens.write();
 
     if (flags.json) {
       cli.styledJSON({

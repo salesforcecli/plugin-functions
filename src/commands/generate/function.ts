@@ -6,8 +6,9 @@
  */
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
+import { cli } from 'cli-ux';
 import { Errors, Flags } from '@oclif/core';
-import { generateFunction, Language } from '@heroku/functions-core';
+import { generateFunction, Language } from '@hk/functions-core';
 import Command from '../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);
@@ -56,19 +57,14 @@ export default class GenerateFunction extends Command {
     }
 
     if (flags.name) {
-      this.warn(messages.getMessage('flags.name.deprecation'));
+      cli.warn(messages.getMessage('flags.name.deprecation'));
     }
 
-    try {
-      const { name, path, language, welcomeText } = await generateFunction(fnName, flags.language as Language);
-      this.log(`Created ${language} function ${herokuColor.green(name)} in ${herokuColor.green(path)}.`);
-      if (welcomeText) {
-        this.log('');
-        this.log(welcomeText);
-      }
-    } catch (err) {
-      const error = err as Error;
-      this.error(error.message);
+    const { name, path, language, welcomeText } = await generateFunction(fnName, flags.language as Language);
+    this.log(`Created ${language} function ${herokuColor.green(name)} in ${herokuColor.green(path)}.`);
+    if (welcomeText) {
+      this.log('');
+      this.log(welcomeText);
     }
   }
 }
