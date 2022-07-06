@@ -65,7 +65,7 @@ describe('env:delete', () => {
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
-      sandbox.stub(SfdxProject, 'resolve' as any).returns(PROJECT_MOCK);
+      sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
       sandbox.stub(Utils, 'findOrgExpirationStatus' as any).returns(false);
     })
     .finally(() => {
