@@ -13,6 +13,7 @@ This project is available as a scoped [npm package on npmjs](https://www.npmjs.c
 - [Contributing](#contributing)
   - [CLA](#cla)
 - [Build](#build)
+- [Update README.md](#update-readmemd)
 - [Releases](#releases)
   - [Version Bump](#version-bump)
     - [`--prerelease`](#--prerelease)
@@ -97,6 +98,10 @@ To use your plugin, run using the local `./bin/run` or `./bin/run.cmd` file.
 ./bin/run npm
 ```
 
+# Update README.md
+
+To manually regenerate commands in the README.md file after adding or updating run `npx oclif readme`
+
 # Releases
 
 The following steps are automated for package releases
@@ -140,6 +145,7 @@ Once the package has been built and signed it will be published to npm. The comm
 - [Contributing](#contributing)
   - [CLA](#cla)
 - [Build](#build)
+- [Update README.md](#update-readmemd)
 - [Releases](#releases)
   - [Version Bump](#version-bump)
     - [`--prerelease`](#--prerelease)
