@@ -6,10 +6,9 @@ Functions plugin for the SF CLI
 [![NPM](https://img.shields.io/npm/v/@salesforce/plugin-functions.svg?label=@salesforce/functions)](https://www.npmjs.com/package/@salesforce/functions) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-functions/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-functions.svg)](https://npmjs.org/package/@salesforce/plugin-functions) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-functions/main/LICENSE.txt)
 
 <!-- toc -->
-
-- [plugin-functions](#plugin-functions)
-- [Usage](#usage)
-- [Commands](#commands)
+* [plugin-functions](#plugin-functions)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
@@ -27,29 +26,28 @@ Now you should be able to run functions commands, e.g. `sf generate project`, `s
 # Commands
 
 <!-- commands -->
-
-- [`sf deploy functions`](#sf-deploy-functions)
-- [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
-- [`sf env create compute`](#sf-env-create-compute)
-- [`sf env delete`](#sf-env-delete)
-- [`sf env log`](#sf-env-log)
-- [`sf env log tail`](#sf-env-log-tail)
-- [`sf env logdrain add`](#sf-env-logdrain-add)
-- [`sf env logdrain list`](#sf-env-logdrain-list)
-- [`sf env logdrain remove`](#sf-env-logdrain-remove)
-- [`sf env var get KEY`](#sf-env-var-get-key)
-- [`sf env var list`](#sf-env-var-list)
-- [`sf env var set`](#sf-env-var-set)
-- [`sf env var unset`](#sf-env-var-unset)
-- [`sf generate function`](#sf-generate-function)
-- [`sf login functions`](#sf-login-functions)
-- [`sf login functions jwt`](#sf-login-functions-jwt)
-- [`sf logout functions`](#sf-logout-functions)
-- [`sf run function`](#sf-run-function)
-- [`sf run function start`](#sf-run-function-start)
-- [`sf run function start container`](#sf-run-function-start-container)
-- [`sf run function start local`](#sf-run-function-start-local)
-- [`sf whoami functions`](#sf-whoami-functions)
+* [`sf deploy functions`](#sf-deploy-functions)
+* [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
+* [`sf env create compute`](#sf-env-create-compute)
+* [`sf env delete`](#sf-env-delete)
+* [`sf env log`](#sf-env-log)
+* [`sf env log tail`](#sf-env-log-tail)
+* [`sf env logdrain add`](#sf-env-logdrain-add)
+* [`sf env logdrain list`](#sf-env-logdrain-list)
+* [`sf env logdrain remove`](#sf-env-logdrain-remove)
+* [`sf env var get KEY`](#sf-env-var-get-key)
+* [`sf env var list`](#sf-env-var-list)
+* [`sf env var set`](#sf-env-var-set)
+* [`sf env var unset`](#sf-env-var-unset)
+* [`sf generate function`](#sf-generate-function)
+* [`sf login functions`](#sf-login-functions)
+* [`sf login functions jwt`](#sf-login-functions-jwt)
+* [`sf logout functions`](#sf-logout-functions)
+* [`sf run function`](#sf-run-function)
+* [`sf run function start`](#sf-run-function-start)
+* [`sf run function start container`](#sf-run-function-start-container)
+* [`sf run function start local`](#sf-run-function-start-local)
+* [`sf whoami functions`](#sf-whoami-functions)
 
 ## `sf deploy functions`
 
@@ -611,5 +609,4 @@ EXAMPLES
 
     $ sf whoami functions --show-token --json
 ```
-
 <!-- commandsstop -->
