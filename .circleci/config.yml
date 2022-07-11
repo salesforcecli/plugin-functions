@@ -26,6 +26,7 @@ jobs:
     docker:
       - image: node:latest
     steps:
+      - checkout
       - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
         # if you try to use yarn here, it will attempt to use the wrong registry and throw 401s
       - run: npm run promote-dist-tags
