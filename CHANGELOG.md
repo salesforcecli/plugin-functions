@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.0](https://github.com/salesforcecli/plugin-functions/compare/v1.12.2...v1.13.0) (2022-07-11)
+
+### Features
+
+- update README and release json flag feature ([#460](https://github.com/salesforcecli/plugin-functions/issues/460)) ([64b9828](https://github.com/salesforcecli/plugin-functions/commit/64b9828d4377cd61a80f1751a5b529e82d33cf21))
+
 ### [1.12.2](https://github.com/salesforcecli/plugin-functions/compare/v1.12.1...v1.12.2) (2022-07-06)
 
 ### [1.12.1](https://github.com/salesforcecli/plugin-functions/compare/v1.12.0...v1.12.1) (2022-06-29)
