@@ -462,10 +462,10 @@
     ajv-formats "^2.0.2"
     toml "^3.0.0"
 
-"@hk/functions-core@npm:@heroku/functions-core@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.3.1.tgz#239eba5be5df1e3c5a021e0a629a68b7010ef551"
-  integrity sha512-8/7vO3QDCAbmg/Us47jtvlAR3m2zXTD6b1ocoCFcp40SHBBCRtLgpjRpUgzgtiZgOE4zbUWEadFIZSabrEO8cQ==
+"@hk/functions-core@npm:@heroku/functions-core@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.3.2.tgz#9f68935250de9ecb9c3ccf69a0bad0e62d60303e"
+  integrity sha512-X4MybSJMYPrGEl29v+QzqhZDWYLAeUWHMziVMwrmWEsDfMJVNSi2YWSg9tqaIvts6+iIhJiIzkNnxMm/2WrSMg==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku/project-descriptor" "0.0.5"
