@@ -24,6 +24,9 @@ describe('sf env:var:unset', () => {
   test
     .stdout()
     .stderr()
+    // Adding retries here because there is some kind of race condition that causes fancy-test to not
+    // fully capture the value of stderr when running in CI (╯°□°)╯︵ ┻━┻
+    .retries(2)
     .nock('https://api.heroku.com', (api) =>
       api
         .patch('/apps/my-environment/config-vars', {
