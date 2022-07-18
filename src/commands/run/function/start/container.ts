@@ -93,12 +93,8 @@ export default class Container extends Command {
       env: flags.env,
     };
 
-    let descriptor;
-    try {
-      descriptor = await getProjectDescriptor(buildOpts.descriptor);
-    } catch (error) {
-      cli.error(error as Error);
-    }
+    const descriptor = await getProjectDescriptor(buildOpts.descriptor);
+
     const functionName = descriptor.com.salesforce.id as string;
 
     const benny = await getFunctionsBinary();

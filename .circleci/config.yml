@@ -21,6 +21,16 @@ jobs:
               evergreen-canary-keeper -run \
               -name eg-canary-function-cli \
               sfdx-cli-plugins="@salesforce/plugin-functions@prerelease"
+
+  promote-package:
+    docker:
+      - image: node:latest
+    steps:
+      - checkout
+      - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+        # if you try to use yarn here, it will attempt to use the wrong registry and throw 401s
+      - run: npm run promote-dist-tags
+
 parameters:
   run-auto-workflows:
     description: >
@@ -96,11 +106,9 @@ workflows:
           filters:
             branches:
               only: main
-      - release-management/promote-package:
+      - promote-package:
           context:
             - release
-          target: latest
-          candidate: prerelease
           requires:
             - canaries
           filters:

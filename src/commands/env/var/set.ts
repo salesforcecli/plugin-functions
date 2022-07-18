@@ -32,6 +32,7 @@ export default class ConfigSet extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   parseKeyValuePairs(pairs: string[]) {
@@ -52,8 +53,59 @@ export default class ConfigSet extends Command {
     }, {});
   }
 
+  parseErrors(errorObject: any, targetCompute: string) {
+    // may have create a cleaner way to parse the errors
+    // to fit the sfdx json error object, but this currently works
+
+    const errObj = errorObject.stack;
+    const isInvalidEnvironment = errObj.includes("Error: Couldn't");
+    const hasNoInput = errObj.includes('Error: Usage:');
+    const isInvalidInput = !hasNoInput;
+
+    if (isInvalidEnvironment) {
+      const errorStackStartIndex = errObj.indexOf('at');
+      const errStack = errObj.substr(errorStackStartIndex);
+      errorObject.message = `Couldn't find that app <${targetCompute}>`;
+      errorObject.stack = errStack;
+      this.error(errObj);
+    }
+
+    if (isInvalidInput) {
+      const errorIndex = errObj.indexOf(':') + 1;
+      const keyValueIndex = errObj.indexOf('value') + 5;
+
+      // eslint-disable-next-line no-control-regex
+      const errMessage = errObj
+        .substr(errorIndex, keyValueIndex)
+        // eslint-disable-next-line no-control-regex
+        .replace(/\u001b\[.*?m/g, '')
+        .replace('\n', '')
+        .replace(' ', '');
+      // eslint-disable-next-line no-control-regex
+      const errStack = errObj
+        .substr(keyValueIndex)
+        // eslint-disable-next-line no-control-regex
+        .replace(/\u001b\[.*?m\r?\n|\r/g, '')
+        .replace('    ', '');
+
+      errorObject.message = errMessage;
+      errorObject.stack = errStack;
+      this.error(errObj);
+    }
+
+    if (hasNoInput) {
+      const errorStackStartIndex = errObj.indexOf('at');
+      const errStack = errObj.substr(errorStackStartIndex);
+      errorObject.message = 'Must specify KEY and VALUE to set.';
+      errorObject.stack = errStack;
+      this.error(errObj);
+    }
+  }
+
   async run() {
     const { flags, argv } = await this.parse(ConfigSet);
+    this.postParseHook(flags);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
 
@@ -70,18 +122,38 @@ export default class ConfigSet extends Command {
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
-    const configPairs = this.parseKeyValuePairs(argv);
 
-    cli.action.start(
-      `Setting ${Object.keys(configPairs)
-        .map((key) => herokuColor.configVar(key))
-        .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
-    );
+    if (flags.json) {
+      try {
+        const configPairs = this.parseKeyValuePairs(argv);
 
-    await this.client.patch(`/apps/${appName}/config-vars`, {
-      data: configPairs,
-    });
+        await this.client.patch(`/apps/${appName}/config-vars`, {
+          data: configPairs,
+        });
 
-    cli.action.stop();
+        cli.styledJSON({
+          status: 0,
+          result: null,
+          warnings: [],
+        });
+        return;
+      } catch (err: any) {
+        this.parseErrors(err, targetCompute);
+      }
+    } else {
+      const configPairs = this.parseKeyValuePairs(argv);
+
+      cli.action.start(
+        `Setting ${Object.keys(configPairs)
+          .map((key) => herokuColor.configVar(key))
+          .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
+      );
+
+      await this.client.patch(`/apps/${appName}/config-vars`, {
+        data: configPairs,
+      });
+
+      cli.action.stop();
+    }
   }
 }

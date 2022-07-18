@@ -36,6 +36,8 @@ export default class WhoAmI extends Command {
 
   async run(): Promise<FunctionsInformation> {
     const { flags } = await this.parse(WhoAmI);
+    this.postParseHook(flags);
+
     const ret: FunctionsInformation = {};
     const account = await this.fetchAccount();
 

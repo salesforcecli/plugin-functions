@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { URL } from 'url';
+import { Interfaces } from '@oclif/core';
 import { SfCommand } from '@salesforce/sf-plugins-core';
 import { StateAggregator, Org } from '@salesforce/core';
 import { cli } from 'cli-ux';
@@ -23,6 +24,8 @@ export default abstract class Command extends SfCommand<any> {
   private _client?: APIClient;
 
   private _auth?: string;
+
+  protected outputJSON = false;
 
   protected async init(): Promise<void> {
     await super.init();
@@ -150,5 +153,31 @@ export default abstract class Command extends SfCommand<any> {
         this.error('Confirmation name does not match');
       }
     }
+  }
+
+  // This interface is copied from oclif/core
+  error(input: string | Error, options: { code?: string; exit: false } & Interfaces.PrettyPrintableError): void;
+  error(input: string | Error, options?: { code?: string; exit?: number } & Interfaces.PrettyPrintableError): never;
+  error(
+    input: string | Error,
+    options: { code?: string; exit?: number | false } & Interfaces.PrettyPrintableError = {}
+  ): void {
+    if (this.outputJSON) {
+      if (typeof input === 'string') input = new Error(input);
+      const { message, name } = input;
+      cli.styledJSON({
+        status: 1,
+        message,
+        name,
+        warnings: [],
+      });
+      cli.exit(1);
+    } else {
+      super.error(input, options as any);
+    }
+  }
+
+  protected postParseHook(flags: { [name: string]: string | boolean | number | string[] | undefined }) {
+    this.outputJSON = flags.json as boolean;
   }
 }

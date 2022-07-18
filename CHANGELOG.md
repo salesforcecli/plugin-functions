@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.1](https://github.com/salesforcecli/plugin-functions/compare/v1.13.0...v1.13.1) (2022-07-12)
+
+### Bug Fixes
+
+- update function-core to 0.3.2 ([#459](https://github.com/salesforcecli/plugin-functions/issues/459)) ([e3535f8](https://github.com/salesforcecli/plugin-functions/commit/e3535f8f7a06c1ec2e29eb420f4c6cfb8e3be342))
+
+## [1.13.0](https://github.com/salesforcecli/plugin-functions/compare/v1.12.2...v1.13.0) (2022-07-11)
+
+### Features
+
+- update README and release json flag feature ([#460](https://github.com/salesforcecli/plugin-functions/issues/460)) ([64b9828](https://github.com/salesforcecli/plugin-functions/commit/64b9828d4377cd61a80f1751a5b529e82d33cf21))
+
+### [1.12.2](https://github.com/salesforcecli/plugin-functions/compare/v1.12.1...v1.12.2) (2022-07-06)
+
+### [1.12.1](https://github.com/salesforcecli/plugin-functions/compare/v1.12.0...v1.12.1) (2022-06-29)
+
+### Bug Fixes
+
+- add delete command-group description ([#448](https://github.com/salesforcecli/plugin-functions/issues/448)) ([af6fce5](https://github.com/salesforcecli/plugin-functions/commit/af6fce5b108001c991948fc36078e2adb852db29))
+
 ## [1.12.0](https://github.com/salesforcecli/plugin-functions/compare/v1.11.2...v1.12.0) (2022-06-16)
 
 ### Features

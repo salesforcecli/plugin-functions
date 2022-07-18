@@ -5,13 +5,15 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as fs from 'fs';
-import { Command, Errors, Flags } from '@oclif/core';
+import { Errors, Flags } from '@oclif/core';
 import { runFunction, RunFunctionOptions } from '@hk/functions-core';
 import { cli } from 'cli-ux';
 import herokuColor from '@heroku-cli/color';
 import { AxiosResponse, AxiosError } from 'axios';
 import { ConfigAggregator, Messages } from '@salesforce/core';
 import getStdin from '../../lib/get-stdin';
+import { FunctionsFlagBuilder } from '../../lib/flags';
+import Command from '../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function');
@@ -50,10 +52,13 @@ export default class Invoke extends Command {
       char: 'o',
       description: messages.getMessage('flags.connected-org.summary'),
     }),
+    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
     const { flags } = await this.parse(Invoke);
+    this.postParseHook(flags);
+
     const url = flags['function-url'] ?? flags.url;
     if (!url) {
       throw new Errors.CLIError(
@@ -62,7 +67,7 @@ export default class Invoke extends Command {
        See more help with --help`
       );
     }
-    if (flags.url) {
+    if (flags.url && !flags.json) {
       cli.warn(messages.getMessage('flags.url.deprecation'));
     }
     flags.payload = await this.getPayloadData(flags.payload);
@@ -75,28 +80,34 @@ export default class Invoke extends Command {
       cli.warn('No -o connected org or target-org found, context will be partially initialized');
     }
     const aliasOrUser = flags['connected-org'] || `target-org ${targetOrg}`;
-    this.log(`Using ${aliasOrUser} login credential to initialize context`);
+    if (!flags.json) {
+      cli.log(`Using ${aliasOrUser} login credential to initialize context`);
+      cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
+    }
     const runFunctionOptions = {
       ...flags,
       url,
       targetusername: flags['connected-org'] ?? targetOrg,
     };
-    cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
+
     try {
       const response = await runFunction(runFunctionOptions as RunFunctionOptions);
-      cli.action.stop(herokuColor.greenBright(response.status.toString()));
-      this.writeResponse(response);
-    } catch (err) {
-      const error = err as AxiosError;
-      cli.debug(error as unknown as string);
-      if (error.response) {
-        cli.action.stop(herokuColor.redBright(`${error.response.status} ${error.response.statusText}`));
-        this.debug(error.response);
-        this.error(error.response.data as string);
+      if (flags.json) {
+        cli.styledJSON({
+          status: 0,
+          result: response.data,
+          warnings: [],
+        });
       } else {
-        cli.action.stop(herokuColor.redBright('Error'));
-        this.error(error);
+        this.writeResponse(response);
+        cli.action.stop(herokuColor.greenBright(response.status.toString()));
       }
+    } catch (e) {
+      const error = e as AxiosError;
+      if (error.response) {
+        this.error(new Error(`${error.response.status} ${error.response.statusText}`));
+      }
+      this.error(new Error(`${error.message}`));
     }
   }
 
@@ -106,7 +117,6 @@ export default class Invoke extends Command {
     }
     return payload || getStdin();
   }
-
   writeResponse(response: AxiosResponse) {
     const contentType = response.headers['content-type'];
     if (contentType.includes('application/json') || contentType.includes('application/cloudevents+json')) {

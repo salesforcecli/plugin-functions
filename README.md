@@ -18,6 +18,7 @@ Functions plugin for the SF CLI
   - [Signing](#signing)
   - [Publishing](#publishing)
 - [Commands](#commands)
+
 <!-- tocstop -->
 
 # Usage
@@ -116,42 +117,63 @@ Once the package has been built and signed it will be published to npm. The comm
 # Commands
 
 <!-- commands -->
-
-- [`sf deploy functions`](#sf-deploy-functions)
-- [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
-- [`sf env create compute`](#sf-env-create-compute)
-- [`sf env delete`](#sf-env-delete)
-- [`sf env log`](#sf-env-log)
-- [`sf env log tail`](#sf-env-log-tail)
-- [`sf env logdrain add`](#sf-env-logdrain-add)
-- [`sf env logdrain list`](#sf-env-logdrain-list)
-- [`sf env logdrain remove`](#sf-env-logdrain-remove)
-- [`sf env var get KEY`](#sf-env-var-get-key)
-- [`sf env var list`](#sf-env-var-list)
-- [`sf env var set`](#sf-env-var-set)
-- [`sf env var unset`](#sf-env-var-unset)
-- [`sf generate function`](#sf-generate-function)
-- [`sf login functions`](#sf-login-functions)
-- [`sf login functions jwt`](#sf-login-functions-jwt)
-- [`sf logout functions`](#sf-logout-functions)
-- [`sf run function`](#sf-run-function)
-- [`sf run function start`](#sf-run-function-start)
-- [`sf run function start container`](#sf-run-function-start-container)
-- [`sf run function start local`](#sf-run-function-start-local)
-- [`sf whoami functions`](#sf-whoami-functions)
+* [`sf deploy functions`](#sf-deploy-functions)
+* [`sf env compute collaborator add`](#sf-env-compute-collaborator-add)
+* [`sf env create compute`](#sf-env-create-compute)
+* [`sf env delete`](#sf-env-delete)
+* [`sf env log`](#sf-env-log)
+* [`sf env log tail`](#sf-env-log-tail)
+* [`sf env logdrain add`](#sf-env-logdrain-add)
+* [`sf env logdrain list`](#sf-env-logdrain-list)
+* [`sf env logdrain remove`](#sf-env-logdrain-remove)
+* [`sf env var get KEY`](#sf-env-var-get-key)
+* [`sf env var list`](#sf-env-var-list)
+* [`sf env var set`](#sf-env-var-set)
+* [`sf env var unset`](#sf-env-var-unset)
+* [`sf generate function`](#sf-generate-function)
+* [`sf login functions`](#sf-login-functions)
+* [`sf login functions jwt`](#sf-login-functions-jwt)
+* [`sf logout functions`](#sf-logout-functions)
+* [`sf run function`](#sf-run-function)
+* [`sf run function start`](#sf-run-function-start)
+* [`sf run function start container`](#sf-run-function-start-container)
+* [`sf run function start local`](#sf-run-function-start-local)
+* [`sf whoami functions`](#sf-whoami-functions)
 
 ## `sf deploy functions`
 
+Deploy a Salesforce Function to an org from your local project.
+
 ```
 USAGE
-  $ sf deploy functions -o <value> [-b <value>] [--force] [-q]
+  $ sf deploy functions -o <value> [-b <value>] [--force] [-q] [-j]
 
 FLAGS
   -b, --branch=<value>         Deploy the latest commit from a branch different from the currently active branch.
+  -j, --json                   Output list in JSON format.
   -o, --connected-org=<value>  (required) Username or alias for the org that the compute environment should be connected
                                to.
   -q, --quiet                  Limit the amount of output displayed from the deploy process.
   --force                      Ignore warnings and overwrite remote repository (not allowed in production).
+
+DESCRIPTION
+  Deploy a Salesforce Function to an org from your local project.
+
+  You must run this command from within a git repository. Only committed changes to Functions are deployed. The active
+  branch is deployed unless specified otherwise with `--branch`.
+
+EXAMPLES
+  Deploy a Salesforce Function:
+
+    $ sf deploy functions --connected-org org-alias
+
+  Deploy to 'deploy-branch':
+
+    $ sf deploy functions --connected-org org-alias --branch deploy-branch
+
+  Overwrite the remote repository:
+
+    $ sf deploy functions --connected-org org-alias --force
 ```
 
 ## `sf env compute collaborator add`
@@ -177,10 +199,11 @@ Create a compute environment for use with Salesforce Functions.
 
 ```
 USAGE
-  $ sf env create compute [-o <value>] [-a <value>]
+  $ sf env create compute [-o <value>] [-a <value>] [-j]
 
 FLAGS
   -a, --alias=<value>          Alias for the created environment.
+  -j, --json                   Output list in JSON format.
   -o, --connected-org=<value>  Username or alias for the org that the compute environment should be connected to.
 
 DESCRIPTION
@@ -210,10 +233,11 @@ Delete an environment.
 
 ```
 USAGE
-  $ sf env delete [-e <value> | ] [--confirm <value>]
+  $ sf env delete [-e <value> | ] [--confirm <value>] [-j]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
+  -j, --json                    Output list in JSON format.
   --confirm=name...             Confirmation name.
 
 DESCRIPTION
@@ -276,10 +300,11 @@ Add log drain to a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain add [-e <value> | ] [-l <value> | ]
+  $ sf env logdrain add [-e <value> | ] [-l <value> | ] [-j]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
+  -j, --json                    Output list in JSON format.
   -l, --drain-url=<value>       Endpoint that will receive sent logs.
 
 DESCRIPTION
@@ -322,10 +347,11 @@ Remove log drain from a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain remove [-e <value> | ] [-l <value> | ]
+  $ sf env logdrain remove [-e <value> | ] [-l <value> | ] [-j]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
+  -j, --json                    Output list in JSON format.
   -l, --drain-url=<value>       Log drain url to remove.
 
 DESCRIPTION
@@ -395,10 +421,11 @@ Set a single config value for an environment.
 
 ```
 USAGE
-  $ sf env var set [-e <value> | ]
+  $ sf env var set [-e <value> | ] [-j]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
+  -j, --json                    Output list in JSON format.
 
 EXAMPLES
   Set a config value:
@@ -412,10 +439,11 @@ Unset a single config value for an environment.
 
 ```
 USAGE
-  $ sf env var unset [-e <value> | ]
+  $ sf env var unset [-e <value> | ] [-j]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
+  -j, --json                    Output list in JSON format.
 
 DESCRIPTION
   Unset a single config value for an environment.
@@ -476,17 +504,17 @@ Login using JWT instead of default web-based flow. This will authenticate you wi
 
 ```
 USAGE
-  $ sf login functions jwt -u <value> -f <value> -i <value> [-l <value> | ] [--json] [-a <value>] [-d] [-v]
+  $ sf login functions jwt -u <value> -f <value> -i <value> [-l <value> | ] [-j] [-a <value>] [-d] [-v]
 
 FLAGS
   -a, --alias=<value>         Alias for the org.
   -d, --set-default           Set the org as the default that all org-related commands run against.
   -f, --keyfile=<value>       (required) Path to JWT keyfile.
   -i, --clientid=<value>      (required) OAuth client ID.
+  -j, --json                  Output list in JSON format.
   -l, --instance-url=<value>  The login URL of the instance the org lives on.
   -u, --username=<value>      (required) Authentication username.
   -v, --set-default-dev-hub   Set the org as the default Dev Hub for scratch org creation.
-  --json                      Format output as JSON.
 
 DESCRIPTION
   Login using JWT instead of default web-based flow. This will authenticate you with both sf and Salesforce Functions.
@@ -510,7 +538,10 @@ Log out of your Salesforce Functions account.
 
 ```
 USAGE
-  $ sf logout functions
+  $ sf logout functions [-j]
+
+FLAGS
+  -j, --json  Output list in JSON format.
 
 EXAMPLES
   Log out:
@@ -524,10 +555,11 @@ Send a cloudevent to a function.
 
 ```
 USAGE
-  $ sf run function [-l <value> | ] [-H <value>] [-p <value>] [-s] [-o <value>]
+  $ sf run function [-l <value> | ] [-H <value>] [-p <value>] [-s] [-o <value>] [-j]
 
 FLAGS
   -H, --headers=<value>...     Set headers.
+  -j, --json                   Output list in JSON format.
   -l, --function-url=<value>   URL of the function to run.
   -o, --connected-org=<value>  Username or alias for the target org; overrides default target org.
   -p, --payload=<value>        Set the payload of the cloudevent as a JSON object or a path to a file via @file.json.
@@ -668,5 +700,4 @@ EXAMPLES
 
     $ sf whoami functions --show-token --json
 ```
-
 <!-- commandsstop -->

@@ -60,16 +60,11 @@ export default class GenerateFunction extends Command {
       cli.warn(messages.getMessage('flags.name.deprecation'));
     }
 
-    try {
-      const { name, path, language, welcomeText } = await generateFunction(fnName, flags.language as Language);
-      this.log(`Created ${language} function ${herokuColor.green(name)} in ${herokuColor.green(path)}.`);
-      if (welcomeText) {
-        this.log('');
-        this.log(welcomeText);
-      }
-    } catch (err) {
-      const error = err as Error;
-      this.error(error.message);
+    const { name, path, language, welcomeText } = await generateFunction(fnName, flags.language as Language);
+    this.log(`Created ${language} function ${herokuColor.green(name)} in ${herokuColor.green(path)}.`);
+    if (welcomeText) {
+      this.log('');
+      this.log(welcomeText);
     }
   }
 }

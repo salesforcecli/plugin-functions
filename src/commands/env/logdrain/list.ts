@@ -35,6 +35,8 @@ export default class LogDrainList extends Command {
 
   async run() {
     const { flags } = await this.parse(LogDrainList);
+    this.postParseHook(flags);
+
     // We support both versions of the flag here for the sake of backward compat
     const targetCompute = flags['target-compute'] ?? flags.environment;
 

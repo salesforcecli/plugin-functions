@@ -1,0 +1,2 @@
+CLI_RC_VERSION=$(npm show @salesforce/plugin-functions@prerelease version)
+npm dist-tag add @salesforce/plugin-functions@${CLI_RC_VERSION} latest
