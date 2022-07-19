@@ -53,58 +53,6 @@ export default class ConfigSet extends Command {
     }, {});
   }
 
-  // keep this here for context
-  // delete by 1/1/2023
-  //
-  // parseErrors(errorObject: any, targetCompute: string) {
-  //   // may have create a cleaner way to parse the errors
-  //   // to fit the sfdx json error object, but this currently works
-
-  //   const errObj = errorObject.stack;
-  //   const isInvalidEnvironment = errObj.includes("Error: Couldn't");
-  //   const hasNoInput = errObj.includes('Error: Usage:');
-  //   const isInvalidInput = !hasNoInput;
-
-  //   if (isInvalidEnvironment) {
-  //     const errorStackStartIndex = errObj.indexOf('at');
-  //     const errStack = errObj.substr(errorStackStartIndex);
-  //     errorObject.message = `Couldn't find that app <${targetCompute}>`;
-  //     errorObject.stack = errStack;
-  //     this.error(errObj);
-  //   }
-
-  //   if (isInvalidInput) {
-  //     const errorIndex = errObj.indexOf(':') + 1;
-  //     const keyValueIndex = errObj.indexOf('value') + 5;
-
-  //     // eslint-disable-next-line no-control-regex
-  //     const errMessage = errObj
-  //       .substr(errorIndex, keyValueIndex)
-  //       // eslint-disable-next-line no-control-regex
-  //       .replace(/\u001b\[.*?m/g, '')
-  //       .replace('\n', '')
-  //       .replace(' ', '');
-  //     // eslint-disable-next-line no-control-regex
-  //     const errStack = errObj
-  //       .substr(keyValueIndex)
-  //       // eslint-disable-next-line no-control-regex
-  //       .replace(/\u001b\[.*?m\r?\n|\r/g, '')
-  //       .replace('    ', '');
-
-  //     errorObject.message = errMessage;
-  //     errorObject.stack = errStack;
-  //     this.error(errObj);
-  //   }
-
-  //   if (hasNoInput) {
-  //     const errorStackStartIndex = errObj.indexOf('at');
-  //     const errStack = errObj.substr(errorStackStartIndex);
-  //     errorObject.message = 'Must specify KEY and VALUE to set.';
-  //     errorObject.stack = errStack;
-  //     this.error(errObj);
-  //   }
-  // }
-
   async run() {
     const { flags, argv } = await this.parse(ConfigSet);
     this.postParseHook(flags);
