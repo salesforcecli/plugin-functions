@@ -35,7 +35,6 @@ export default class ConfigUnset extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {

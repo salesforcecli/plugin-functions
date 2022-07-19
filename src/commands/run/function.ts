@@ -52,7 +52,6 @@ export default class Invoke extends Command {
       char: 'o',
       description: messages.getMessage('flags.connected-org.summary'),
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {

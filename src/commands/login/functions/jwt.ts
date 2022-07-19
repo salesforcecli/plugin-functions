@@ -72,7 +72,6 @@ export default class JwtLogin extends Command {
       exclusive: ['instance-url'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
     alias: Flags.string({
       char: 'a',
       description: messages.getMessage('flags.alias.summary'),

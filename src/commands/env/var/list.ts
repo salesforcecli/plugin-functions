@@ -33,7 +33,6 @@ export default class ConfigList extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {

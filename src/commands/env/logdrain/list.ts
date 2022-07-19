@@ -30,7 +30,6 @@ export default class LogDrainList extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {

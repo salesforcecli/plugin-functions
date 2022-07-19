@@ -18,6 +18,8 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'generate
  * Based on given language, create function project with specific scaffolding.
  */
 export default class GenerateFunction extends Command {
+  static enableJsonFlag = false;
+
   static summary = messages.getMessage('summary');
 
   static description = messages.getMessage('description');

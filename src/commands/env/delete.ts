@@ -40,7 +40,6 @@ export default class EnvDelete extends Command {
       hidden: true,
     }),
     confirm: confirmationFlag,
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {

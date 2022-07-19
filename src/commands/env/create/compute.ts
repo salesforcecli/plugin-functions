@@ -37,7 +37,6 @@ export default class EnvCreateCompute extends Command {
       char: 'a',
       description: messages.getMessage('flags.alias.summary'),
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {

@@ -43,7 +43,6 @@ export default class LogDrainAdd extends Command {
       description: messages.getMessage('flags.drain-url.summary'),
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {

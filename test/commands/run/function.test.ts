@@ -57,7 +57,7 @@ describe('run:function', () => {
     test
       .stdout()
       .stderr()
-      .command(['run:function', '-l', targetUrl, '-p', userpayload, '-j'])
+      .command(['run:function', '-l', targetUrl, '-p', userpayload, '--json'])
       .it('will show json output', (ctx) => {
         expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
           vacuum('{\n"status": 0,\n"result": "Something happened!",\n"warnings": []\n}')
@@ -87,7 +87,7 @@ describe('run:function', () => {
         '--structured',
         '-o',
         OrgConfigProperties.TARGET_ORG,
-        '-j',
+        '--json',
       ])
       .it('Should call the library with all arguments', async () => {
         sinon.assert.calledWith(

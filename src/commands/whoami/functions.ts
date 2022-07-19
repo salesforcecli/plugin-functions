@@ -31,7 +31,6 @@ export default class WhoAmI extends Command {
       description: messages.getMessage('flags.show-token.summary'),
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run(): Promise<FunctionsInformation> {

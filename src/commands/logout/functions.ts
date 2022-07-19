@@ -18,9 +18,7 @@ export default class Login extends Command {
 
   static examples = messages.getMessages('examples');
 
-  static flags = {
-    json: FunctionsFlagBuilder.json,
-  };
+  static flags = {};
 
   async run() {
     const { flags } = await this.parse(Login);

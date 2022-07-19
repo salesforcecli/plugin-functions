@@ -32,7 +32,6 @@ export default class ConfigSet extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   parseKeyValuePairs(pairs: string[]) {

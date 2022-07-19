@@ -31,7 +31,7 @@ describe('sf logout functions', () => {
   test
     .stdout()
     .stderr()
-    .command(['logout:functions', '-j'])
+    .command(['logout:functions', '--json'])
     .it('will show json output', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum('{\n"status": 0,\n"result": [],\n"warnings": []\n}')

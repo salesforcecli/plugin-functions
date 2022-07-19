@@ -33,7 +33,6 @@ export default class VarGet extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   static args = [

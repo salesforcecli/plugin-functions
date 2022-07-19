@@ -18,6 +18,8 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.log.tail');
 
 export default class LogTail extends Command {
+  static enableJsonFlag = false;
+
   static summary = messages.getMessage('summary');
 
   static examples = messages.getMessages('examples');
