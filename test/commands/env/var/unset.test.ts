@@ -17,7 +17,7 @@ describe('sf env:var:unset', () => {
   const jsonAppError = {
     status: 1,
     name: 'Error',
-    message: "Couldn't find that app <my-environment>",
+    message: "Couldn't find that app my-environment",
     warnings: [],
   };
 
@@ -103,7 +103,7 @@ describe('sf env:var:unset', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .nock('https://api.heroku.com', (api) =>
       api
         .patch('/apps/my-environment/config-vars', {
@@ -118,7 +118,7 @@ describe('sf env:var:unset', () => {
     )
     .command(['env:var:unset', 'foo', '--environment', 'my-environment'])
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
         )
@@ -137,7 +137,7 @@ describe('sf env:var:unset', () => {
     .stdout()
     .command(['env:var:unset', 'foo', '--environment', 'my-environment2'])
     .catch((error) => {
-      expect(error.message).to.contain("Couldn't find that app <my-environment2>");
+      expect(error.message).to.contain("Couldn't find that app my-environment2");
     })
     .it('errors with incorrect compute environment');
 });

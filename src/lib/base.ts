@@ -139,7 +139,7 @@ export default abstract class Command extends SfCommand<any> {
     const confirmedValue = this.fetchConfirmationValue(name, confirm);
     if (name !== confirmedValue) {
       warningMessage = warningMessage || `This will delete the ${type} ${name}`;
-      cli.warn(`${warningMessage}\nTo proceed, enter the ${type} name (${name}) again in the prompt below:`);
+      this.warn(`${warningMessage}\nTo proceed, enter the ${type} name (${name}) again in the prompt below:`);
       // This is a workaround for cli-ux
       // & fancy-test stubbing issues
       // cli-ux mocks itself incorrectly (tbd why)
@@ -169,7 +169,7 @@ export default abstract class Command extends SfCommand<any> {
         name,
         warnings: [],
       });
-      cli.exit(1);
+      this.exit(1);
     } else {
       super.error(input, options as any);
     }

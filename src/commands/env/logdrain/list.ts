@@ -48,41 +48,35 @@ export default class LogDrainList extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
 
     const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`/apps/${appName}/log-drains`);
 
-    if (flags.json) {
-      if (drains.length === 0) {
-        this.warn(`No logdrain found for environment <${appName}>`);
-      }
-
-      return drains;
+    if (drains.length === 0) {
+      this.warn(`No log-drains found for environment ${targetCompute}`);
     } else {
-      if (drains.length === 0) {
-        this.log(`No log drains found for environment ${targetCompute}.`);
-      } else {
-        cli.table<Heroku.LogDrain>(
-          drains,
-          {
-            id: {
-              header: 'ID',
-              get: (row) => row.id,
-            },
-            url: {
-              header: 'URL',
-              get: (row) => row.url,
-            },
+      cli.table<Heroku.LogDrain>(
+        drains,
+        {
+          id: {
+            header: 'ID',
+            get: (row) => row.id,
           },
-          {
-            printLine: this.log.bind(this),
-            ...flags,
-          }
-        );
-      }
+          url: {
+            header: 'URL',
+            get: (row) => row.url,
+          },
+        },
+        {
+          printLine: this.log.bind(this),
+          ...flags,
+        }
+      );
     }
+
+    return drains;
   }
 }

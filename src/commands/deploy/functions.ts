@@ -187,10 +187,9 @@ export default class DeployFunctions extends Command {
     cli.action.stop();
 
     if (shouldExitNonZero) {
-      cli.exit(1);
+      this.exit(1);
     }
-    if (flags.json) {
-      return results;
-    }
+
+    return results;
   }
 }

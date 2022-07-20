@@ -140,7 +140,7 @@ export default class JwtLogin extends Command {
     const instanceUrl = flags['instance-url'] ?? flags.instanceurl;
 
     if (flags.instanceurl) {
-      cli.warn(messages.getMessage('flags.instanceurl.deprecation'));
+      this.warn(messages.getMessage('flags.instanceurl.deprecation'));
     }
 
     cli.action.start('Logging in via JWT');
@@ -210,15 +210,13 @@ export default class JwtLogin extends Command {
 
     cli.action.stop();
 
-    if (flags.json) {
-      return {
-        username: authFields.username,
-        sfdxAccessToken: token,
-        functionsAccessToken: bearerToken,
-        instanceUrl: authFields.instanceUrl,
-        orgId: authFields.orgId,
-        privateKey: authFields.privateKey,
-      };
-    }
+    return {
+      username: authFields.username,
+      sfdxAccessToken: token,
+      functionsAccessToken: bearerToken,
+      instanceUrl: authFields.instanceUrl,
+      orgId: authFields.orgId,
+      privateKey: authFields.privateKey,
+    };
   }
 }

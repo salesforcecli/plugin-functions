@@ -31,8 +31,6 @@ export default class Login extends Command {
 
     cli.action.stop();
 
-    if (flags.json) {
-      return [];
-    }
+    return [];
   }
 }

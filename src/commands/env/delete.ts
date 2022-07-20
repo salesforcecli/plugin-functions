@@ -58,7 +58,7 @@ export default class EnvDelete extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     await this.confirmRemovePrompt('environment', targetCompute, flags.confirm);
@@ -157,8 +157,6 @@ export default class EnvDelete extends Command {
 
     cli.action.stop();
 
-    if (flags.json) {
-      return 'Environment deleted.';
-    }
+    return 'Environment deleted.';
   }
 }

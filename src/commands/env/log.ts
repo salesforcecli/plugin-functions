@@ -56,7 +56,7 @@ export default class Log extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);

@@ -68,7 +68,7 @@ export default class ConfigSet extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
@@ -92,7 +92,7 @@ export default class ConfigSet extends Command {
     } catch (error: any) {
       cli.action.stop('failed');
       if (error.data?.message?.includes("Couldn't find that app")) {
-        this.error(new Error(`Could not find environment <${appName}>`));
+        this.error(new Error(`Could not find environment ${appName}`));
       }
       this.error(error);
     }

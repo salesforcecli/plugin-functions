@@ -59,7 +59,7 @@ export default class GenerateFunction extends Command {
     }
 
     if (flags.name) {
-      cli.warn(messages.getMessage('flags.name.deprecation'));
+      this.warn(messages.getMessage('flags.name.deprecation'));
     }
 
     const { name, path, language, welcomeText } = await generateFunction(fnName, flags.language as Language);

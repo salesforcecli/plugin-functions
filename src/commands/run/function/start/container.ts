@@ -116,7 +116,7 @@ export default class Container extends Command {
     benny.on('log', (msg: { text: string; level: string; fields: JsonMap }) => {
       if (msg.level === 'debug' && !flags.verbose) return;
       if (msg.level === 'error') {
-        cli.exit();
+        this.exit();
       }
 
       if (msg.text) {

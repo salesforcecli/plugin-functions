@@ -58,7 +58,7 @@ export default class VarGet extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
@@ -67,23 +67,20 @@ export default class VarGet extends Command {
 
     const value = config[args.key];
 
-    if (flags.json) {
-      if (!value) {
-        this.warn(`No config var named ${args.key as string} found for environment <${targetCompute}>`);
-        return []; // Can't return falsy to json handler
-      }
-
-      return value;
-    } else {
-      if (!value) {
-        cli.warn(
+    if (!value) {
+      if (flags.json) {
+        this.warn(`No config var named ${args.key as string} found for environment ${targetCompute}`);
+      } else {
+        this.warn(
           `No config var named ${herokuColor.cyan(args.key as string)} found for environment ${herokuColor.cyan(
             targetCompute
           )}`
         );
-      } else {
-        this.log(value);
       }
+    } else {
+      this.log(value);
     }
+
+    return value || []; // can't return falsy to json handler
   }
 }

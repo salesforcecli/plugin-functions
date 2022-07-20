@@ -51,7 +51,7 @@ export default class ConfigList extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
@@ -65,34 +65,27 @@ export default class ConfigList extends Command {
       };
     });
 
-    if (flags.json) {
-      if (configArray.length === 0) {
-        this.warn(`No config vars found for environment <${targetCompute}>`);
-      }
-
-      return config;
+    if (configArray.length === 0) {
+      this.warn(`No config vars found for environment ${targetCompute}`);
     } else {
-      if (!configArray.length) {
-        cli.warn(`No config vars found for environment ${targetCompute}`);
-      } else {
-        cli.table(
-          configArray,
-          {
-            key: {
-              header: 'Key',
-              get: (configVar) => configVar.key,
-            },
-            value: {
-              header: 'Value',
-              get: (configVar) => configVar.value,
-            },
+      cli.table(
+        configArray,
+        {
+          key: {
+            header: 'Key',
+            get: (configVar) => configVar.key,
           },
-          {
-            printLine: this.log.bind(this),
-            ...flags,
-          }
-        );
-      }
+          value: {
+            header: 'Value',
+            get: (configVar) => configVar.value,
+          },
+        },
+        {
+          printLine: this.log.bind(this),
+          ...flags,
+        }
+      );
     }
+    return config;
   }
 }

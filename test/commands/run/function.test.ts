@@ -56,7 +56,7 @@ describe('run:function', () => {
     });
     test
       .stdout()
-      .stderr()
+      .retries(2)
       .command(['run:function', '-l', targetUrl, '-p', userpayload, '--json'])
       .it('will show json output', (ctx) => {
         expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
@@ -111,10 +111,10 @@ describe('run:function', () => {
       });
 
     test
-      .stderr()
+      .stdout()
       .command(['run:function', '--url', targetUrl, '-p', userpayload])
       .it('will use url if passed using the old flag (not --function-url)', (ctx) => {
-        expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+        expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
           vacuum(
             '--url is deprecated and will be removed in a future release. Please use --function-url going forward.'
           )
@@ -183,11 +183,10 @@ describe('run:function', () => {
 
     test
       .stdout()
-      .stderr()
       .command(['run:function', '-l', targetUrl, '-p {"id":12345}'])
       .it('should output the response from the server', (ctx) => {
         expect(ctx.stdout).to.contain('Something happened!');
-        expect(ctx.stderr).to.contain('Warning: No -o connected org or target-org found');
+        expect(ctx.stdout).to.contain('Warning: No -o connected org or target-org found');
       });
   });
 });

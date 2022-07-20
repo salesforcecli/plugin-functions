@@ -39,7 +39,7 @@ describe('sf generate:function', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .do(() => {
       generateFunctionStub.returns({
         name,
@@ -50,7 +50,7 @@ describe('sf generate:function', () => {
     })
     .command(['generate:function', `--name=${name}`, '--language=javascript'])
     .it('will use name if passed using the old flag (not --function-name)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--name is deprecated and will be removed in a future release. Please use --function-name going forward.'
         )

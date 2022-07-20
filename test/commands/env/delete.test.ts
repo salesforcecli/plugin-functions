@@ -162,7 +162,7 @@ describe('env:delete', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .do(() => {
       sandbox.stub(Utils, 'resolveOrg' as any).returns(ORG_MOCK);
       sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
@@ -176,7 +176,7 @@ describe('env:delete', () => {
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${COMPUTE_ENV_NAME}`).reply(200))
     .command(['env:delete', `--environment=${COMPUTE_ENV_ALIAS}`, `--confirm=${COMPUTE_ENV_ALIAS}`])
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
         )

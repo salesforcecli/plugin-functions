@@ -66,32 +66,31 @@ export default class LogDrainRemove extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     if (flags.url) {
-      cli.warn(messages.getMessage('flags.url.deprecation'));
+      this.warn(messages.getMessage('flags.url.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
     try {
-      await this.client.delete<Heroku.LogDrain>(`/apps/${appName}/log-drains/${encodeURIComponent(url)}`);
-      if (flags.json) {
-        return [];
-      } else {
-        cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
+      cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
 
-        cli.action.stop();
-      }
+      await this.client.delete<Heroku.LogDrain>(`/apps/${appName}/log-drains/${encodeURIComponent(url)}`);
+
+      cli.action.stop();
+
+      return [];
     } catch (e) {
       const error = e as { data: { message?: string } };
 
       if (error.data?.message?.includes('Url is invalid')) {
-        this.error(new Error(`URL is invalid <${url}>`));
+        this.error(new Error(`URL is invalid ${url}`));
       }
 
       if (error.data?.message?.includes("Couldn't find that app.")) {
-        this.error(new Error(`Couldn't find that app  <${appName}>`));
+        this.error(new Error(`Couldn't find that app  ${appName}`));
       }
 
       this.error(e as Error);

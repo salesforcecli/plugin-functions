@@ -47,7 +47,7 @@ describe('logs', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .nock(logSessionURLBase, {}, (api) =>
       api.get(logSessionURLAddress).reply(200, (_uri: any, _requestBody: any) => {
         return fs.createReadStream('test/helpers/logoutput.txt');
@@ -56,7 +56,7 @@ describe('logs', () => {
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${appName}/log-sessions`).reply(200, fakeResponseData))
     .command(['env:log', `--environment=${appName}`])
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
         )
