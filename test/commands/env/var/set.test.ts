@@ -7,7 +7,7 @@
 import { expect, test } from '@oclif/test';
 import vacuum from '../../../helpers/vacuum';
 
-describe('sf env:var:set', () => {
+describe('sf env var set', () => {
   test
     .stdout()
     .stderr()
@@ -121,7 +121,7 @@ describe('sf env:var:set', () => {
     .command(['env:var:set', 'foo=bar', '--target-compute', 'my-environment', '--json'])
     .it('will show json output', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('{\n"status": 0,\n"result": [],\n"warnings": []\n}')
+        vacuum('{\n"status": 0,\n"result": "Set env var",\n"warnings": []\n}')
       );
     });
 });

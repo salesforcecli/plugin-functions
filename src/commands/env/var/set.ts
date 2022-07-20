@@ -88,7 +88,7 @@ export default class ConfigSet extends Command {
 
       cli.action.stop();
 
-      return [];
+      return 'Set env var';
     } catch (error: any) {
       cli.action.stop('failed');
       if (error.data?.message?.includes("Couldn't find that app")) {

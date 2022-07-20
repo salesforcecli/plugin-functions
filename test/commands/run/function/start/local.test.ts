@@ -14,7 +14,7 @@ import { SinonStub, SinonStubbedInstance } from 'sinon';
 import { LangRunnerOpts } from '@hk/functions-core/dist/lang-runner';
 import Local from '../../../../../src/commands/run/function/start/local';
 
-describe('run:function:start:local', () => {
+describe('sf run function start local', () => {
   const fixturesPath = path.resolve(__dirname, '../../../../fixtures');
   const jsPath = path.resolve(fixturesPath, 'javascripttemplate');
   const javaPath = path.resolve(fixturesPath, 'javatemplate');

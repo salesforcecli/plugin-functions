@@ -14,7 +14,7 @@ import * as sinon from 'sinon';
 import * as library from '@hk/functions-core';
 import vacuum from '../../helpers/vacuum';
 
-describe('run:function', () => {
+describe('sf run function', () => {
   const $$ = testSetup();
   const targetUrl = 'http://localhost';
   const userpayload = '{"id":654321,"field1":"somefield"}';

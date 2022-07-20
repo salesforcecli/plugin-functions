@@ -37,7 +37,7 @@ const ORG_MOCK = {
   getOrgId: () => 'fakeid',
 };
 
-describe('env:delete', () => {
+describe('sf env delete', () => {
   const sandbox = sinon.createSandbox();
 
   test

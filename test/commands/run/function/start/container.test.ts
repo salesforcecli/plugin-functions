@@ -11,7 +11,7 @@ import * as sinon from 'sinon';
 import * as library from '@hk/functions-core';
 import { Benny } from '@hk/functions-core';
 
-describe('function:start:container', () => {
+describe('sd function start container', () => {
   let sandbox: sinon.SinonSandbox;
   let bennyRunStub: sinon.SinonStub;
   let bennyBuildStub: sinon.SinonStub;

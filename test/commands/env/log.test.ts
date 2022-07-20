@@ -9,7 +9,7 @@ import { expect, test } from '@oclif/test';
 import vacuum from '../../helpers/vacuum';
 const fs = require('fs');
 
-describe('logs', () => {
+describe('sf env logs', () => {
   const logSessionURLAddress = '/stream/5634e5b9-f9d4-48de-8c8c-4e368e5d40ff?srv=example';
   const logSessionURLBase = 'https://va.logs.heroku.com';
   const appName = 'foo-app-bar';

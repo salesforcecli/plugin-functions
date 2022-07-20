@@ -8,7 +8,6 @@ import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 
 import Command from '../../lib/base';
-import { FunctionsFlagBuilder } from '../../lib/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'logout.functions');
@@ -31,6 +30,6 @@ export default class Login extends Command {
 
     cli.action.stop();
 
-    return [];
+    return 'Logged out';
   }
 }

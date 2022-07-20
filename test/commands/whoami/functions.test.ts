@@ -6,7 +6,7 @@
  */
 import { expect, test } from '@oclif/test';
 
-describe('sf whoami:functions', () => {
+describe('sf whoami functions', () => {
   test
     .stdout()
     .stderr()

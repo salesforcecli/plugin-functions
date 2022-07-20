@@ -8,10 +8,10 @@ import { CLIError } from '@oclif/core/lib/errors';
 import { expect, test } from '@oclif/test';
 import vacuum from '../../../helpers/vacuum';
 
-describe('sf env:var:unset', () => {
+describe('sf env var unset', () => {
   const jsonSuccess = {
     status: 0,
-    result: [],
+    result: 'Unset env var',
     warnings: [],
   };
   const jsonAppError = {

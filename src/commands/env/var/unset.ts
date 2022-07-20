@@ -102,6 +102,6 @@ export default class ConfigUnset extends Command {
 
     cli.action.stop();
 
-    return [];
+    return 'Unset env var';
   }
 }

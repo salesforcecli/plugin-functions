@@ -62,7 +62,7 @@ export default class LogDrainRemove extends Command {
     }
 
     if (!url) {
-      this.error(new Error('Missing required flag: -u, --url Logdrain url to remove'));
+      this.error(new Error('Missing required flag: -l, --drain-url Logdrain url to remove'));
     }
 
     if (flags.environment) {
@@ -81,7 +81,7 @@ export default class LogDrainRemove extends Command {
 
       cli.action.stop();
 
-      return [];
+      return 'Removed drain-url';
     } catch (e) {
       const error = e as { data: { message?: string } };
 

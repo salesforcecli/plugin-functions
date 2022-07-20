@@ -7,7 +7,7 @@
 import { expect, test } from '@oclif/test';
 import vacuum from '../../../helpers/vacuum';
 
-describe('sf env:var:get', () => {
+describe('sf env var get', () => {
   test
     .stdout()
     .stderr()

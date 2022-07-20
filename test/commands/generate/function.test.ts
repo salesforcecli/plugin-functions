@@ -9,7 +9,7 @@ import * as sinon from 'sinon';
 import * as library from '@hk/functions-core';
 import vacuum from '../../helpers/vacuum';
 
-describe('sf generate:function', () => {
+describe('sf generate function', () => {
   const sandbox: sinon.SinonSandbox = sinon.createSandbox();
   let generateFunctionStub: sinon.SinonStub;
   const path = 'some/functions/path';
