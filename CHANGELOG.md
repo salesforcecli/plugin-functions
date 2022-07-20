@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.3](https://github.com/salesforcecli/plugin-functions/compare/v1.13.2...v1.13.3) (2022-07-20)
+
+### Bug Fixes
+
+- handle login functions jwt token request http errors more helpfully ([#466](https://github.com/salesforcecli/plugin-functions/issues/466)) ([208e3f7](https://github.com/salesforcecli/plugin-functions/commit/208e3f7a4cc7f96b084bd0f92080e17c8e9ca7d6))
+
 ### [1.13.2](https://github.com/salesforcecli/plugin-functions/compare/v1.13.1...v1.13.2) (2022-07-20)
 
 ### Bug Fixes
