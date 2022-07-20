@@ -179,21 +179,37 @@ export default class JwtLogin extends Command {
     // obtain heroku access_token. This is configurable so that we can also target staging
     const herokuClientId = process.env.SALESFORCE_FUNCTIONS_PUBLIC_OAUTH_CLIENT_ID ?? PUBLIC_CLIENT_ID;
 
-    const rawResponse = await new Transport().httpRequest({
-      method: 'POST',
-      url: `${process.env.SALESFORCE_FUNCTIONS_API || 'https://api.heroku.com'}/oauth/tokens`,
-      body: JSON.stringify({
-        client: {
-          id: herokuClientId,
-        },
-        grant: {
-          type: 'urn:ietf:params:oauth:grant-type:token-exchange',
-        },
-        subject_token: token,
-        subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
-      }),
-      headers: { ...herokuVariant('salesforce_sso') },
-    });
+    let rawResponse;
+
+    try {
+      rawResponse = await new Transport().httpRequest({
+        method: 'POST',
+        url: `${process.env.SALESFORCE_FUNCTIONS_API || 'https://api.heroku.com'}/oauth/tokens`,
+        body: JSON.stringify({
+          client: {
+            id: herokuClientId,
+          },
+          grant: {
+            type: 'urn:ietf:params:oauth:grant-type:token-exchange',
+          },
+          subject_token: token,
+          subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+        }),
+        headers: { ...herokuVariant('salesforce_sso') },
+      });
+    } catch (e: any) {
+      const error = e as Error;
+
+      if (error.message?.includes('404')) {
+        this.error('No functions connection');
+      }
+
+      if (error.message?.includes('403')) {
+        this.error('User has not been provisioned yet, try $ sf login functions');
+      }
+
+      this.error(error);
+    }
 
     const data = JSON.parse(rawResponse.body);
     const bearerToken = data.access_token.token;
