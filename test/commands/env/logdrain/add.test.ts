@@ -39,12 +39,12 @@ describe('sf env logdrain add', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
     .command(['env:logdrain:add', '--environment', APP_NAME, '-l', LOG_DRAIN.url])
     .retries(3)
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
         )
@@ -52,12 +52,12 @@ describe('sf env logdrain add', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
     .command(['env:logdrain:add', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url])
     .retries(3)
     .it('will use url if passed using the old flag (not --drain-url)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum('--url is deprecated and will be removed in a future release. Please use --drain-url going forward.')
       );
     });
@@ -65,7 +65,7 @@ describe('sf env logdrain add', () => {
   test
     .stdout()
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAIN))
-    .command(['env:logdrain:add', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url, '--json'])
+    .command(['env:logdrain:add', '--target-compute', APP_NAME, '-l', LOG_DRAIN.url, '--json'])
     .retries(3)
     .it('will show json output', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
@@ -86,7 +86,7 @@ describe('sf env logdrain add', () => {
     })
     .it('will show json output error with incorrect compute environment', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('{\n"status": 1,\n"message": "Could not find environment <invalid-environment>"')
+        vacuum('{\n"status": 1,\n"message": "Could not find environment invalid-environment"')
       );
     });
 
@@ -99,7 +99,7 @@ describe('sf env logdrain add', () => {
     })
     .it('will show json output error with incorrect drain-url', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('{\n"status": 1,\n"message": "URL is invalid <invalid-url>",\n"name": "Error"')
+        vacuum('{\n"status": 1,\n"message": "URL is invalid invalid-url",\n"name": "Error"')
       );
     });
 
@@ -115,7 +115,7 @@ describe('sf env logdrain add', () => {
     .it('will show json output error with drain-url already used', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
-          '{\n"status": 1,\n"message": "Logdrain URL is already added <https://logs-r-us.com/1>",\n"name": "Error",'
+          '{\n"status": 1,\n"message": "Logdrain URL is already added https://logs-r-us.com/1",\n"name": "Error",\n"'
         )
       );
     });

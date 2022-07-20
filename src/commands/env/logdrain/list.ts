@@ -30,7 +30,6 @@ export default class LogDrainList extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -49,35 +48,16 @@ export default class LogDrainList extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
 
     const { data: drains } = await this.client.get<Heroku.LogDrain[]>(`/apps/${appName}/log-drains`);
 
-    if (flags.json) {
-      if (drains.length === 0) {
-        cli.styledJSON({
-          status: 0,
-          result: [],
-          warnings: [`No logdrain found for environment <${appName}>`],
-        });
-        return;
-      }
-
-      cli.styledJSON({
-        status: 0,
-        result: drains,
-        warnings: [],
-      });
-      return;
+    if (drains.length === 0) {
+      this.warn(`No log-drains found for environment ${targetCompute}`);
     } else {
-      if (drains.length === 0) {
-        this.log(`No log drains found for environment ${targetCompute}.`);
-        return;
-      }
-
       cli.table<Heroku.LogDrain>(
         drains,
         {
@@ -96,5 +76,7 @@ export default class LogDrainList extends Command {
         }
       );
     }
+
+    return drains;
   }
 }

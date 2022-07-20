@@ -88,20 +88,18 @@ const ORG_MOCK_WITH_DELETED_FUNCTION = {
 
 const jsonSuccess = {
   status: 0,
-  result: {
-    results: [
-      {
-        created: true,
-        fullName: 'sweet_project-fn1',
-        success: true,
-      },
-      {
-        created: true,
-        fullName: 'sweet_project-fn2',
-        success: true,
-      },
-    ],
-  },
+  result: [
+    {
+      created: true,
+      fullName: 'sweet_project-fn1',
+      success: true,
+    },
+    {
+      created: true,
+      fullName: 'sweet_project-fn2',
+      success: true,
+    },
+  ],
   warnings: [],
 };
 

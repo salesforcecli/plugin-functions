@@ -53,7 +53,6 @@ export default class DeployFunctions extends Command {
       description: messages.getMessage('flags.quiet.summary'),
       char: 'q',
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -187,16 +186,9 @@ export default class DeployFunctions extends Command {
     cli.action.stop();
 
     if (shouldExitNonZero) {
-      cli.exit(1);
+      this.exit(1);
     }
-    if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: {
-          results,
-        },
-        warnings: [],
-      });
-    }
+
+    return results;
   }
 }

@@ -23,6 +23,7 @@ describe('sf env logdrain remove', () => {
   test
     .stdout()
     .stderr()
+    .retries(2)
     .nock('https://api.heroku.com', (api) =>
       api.delete(`/apps/${APP_NAME}/log-drains/${encodeURIComponent(LOG_DRAIN.url)}`).reply(200, LOG_DRAIN)
     )
@@ -32,13 +33,13 @@ describe('sf env logdrain remove', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .nock('https://api.heroku.com', (api) =>
       api.delete(`/apps/${APP_NAME}/log-drains/${encodeURIComponent(LOG_DRAIN.url)}`).reply(200, LOG_DRAIN)
     )
     .command(['env:logdrain:remove', '--environment', APP_NAME, '-l', LOG_DRAIN.url])
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
         )
@@ -50,10 +51,10 @@ describe('sf env logdrain remove', () => {
     .nock('https://api.heroku.com', (api) =>
       api.delete(`/apps/${APP_NAME}/log-drains/${encodeURIComponent(LOG_DRAIN.url)}`).reply(200, LOG_DRAIN)
     )
-    .command(['env:logdrain:remove', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url, '--json'])
+    .command(['env:logdrain:remove', '--target-compute', APP_NAME, '-l', LOG_DRAIN.url, '--json'])
     .it('will show json output', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('{\n"status": 0,\n"result": null,\n"warnings": []\n}')
+        vacuum('{\n"status": 0,\n"result": "Removed drain-url",\n"warnings": []\n}')
       );
     });
 
@@ -70,7 +71,7 @@ describe('sf env logdrain remove', () => {
     })
     .it('will show json output error with incorrect compute environment', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('{\n"status": 1,\n"message": "Couldn\'t find that app <invalid-environment>",\n"name": "Error"')
+        vacuum('{\n"status": 1,\n"message": "Couldn\'t find that app invalid-environment",\n"name": "Error"')
       );
     });
 });

@@ -40,7 +40,6 @@ export default class EnvDelete extends Command {
       hidden: true,
     }),
     confirm: confirmationFlag,
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -59,7 +58,7 @@ export default class EnvDelete extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     await this.confirmRemovePrompt('environment', targetCompute, flags.confirm);
@@ -158,12 +157,6 @@ export default class EnvDelete extends Command {
 
     cli.action.stop();
 
-    if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: 'Environment deleted.',
-        warnings: [],
-      });
-    }
+    return 'Environment deleted.';
   }
 }

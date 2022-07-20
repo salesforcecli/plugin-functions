@@ -8,7 +8,6 @@ import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
 
 import Command from '../../lib/base';
-import { FunctionsFlagBuilder } from '../../lib/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'logout.functions');
@@ -18,9 +17,7 @@ export default class Login extends Command {
 
   static examples = messages.getMessages('examples');
 
-  static flags = {
-    json: FunctionsFlagBuilder.json,
-  };
+  static flags = {};
 
   async run() {
     const { flags } = await this.parse(Login);
@@ -32,12 +29,7 @@ export default class Login extends Command {
     await this.stateAggregator.tokens.write();
 
     cli.action.stop();
-    if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: [],
-        warnings: [],
-      });
-    }
+
+    return 'Logged out';
   }
 }

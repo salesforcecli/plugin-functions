@@ -161,7 +161,7 @@ describe('sf login functions jwt', () => {
       '--instanceurl=foo.com',
     ])
     .it('will use an instance URL if passed using the old flag (no dash)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.include(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.include(
         vacuum(
           '--instanceurl is deprecated and will be removed in a future release. Please use --instance-url going forward.'
         )

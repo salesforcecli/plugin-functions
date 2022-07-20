@@ -48,16 +48,16 @@ describe('sf env logdrain list', () => {
     .stderr()
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, []))
     .command(['env:logdrain:list', '-e', APP_NAME])
-    .it('shows a list of log drains', (ctx) => {
-      expect(ctx.stdout).to.contain(`No log drains found for environment ${APP_NAME}.`);
+    .it('warns on an empty list of log drains', (ctx) => {
+      expect(ctx.stdout).to.contain(`Warning: No log-drains found for environment ${APP_NAME}`);
     });
 
   test
-    .stderr()
+    .stdout()
     .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, LOG_DRAINS))
     .command(['env:logdrain:list', '--environment', APP_NAME])
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
         )
@@ -71,5 +71,18 @@ describe('sf env logdrain list', () => {
     .command(['env:logdrain:list', '-e', APP_NAME, '--json'])
     .it('shows log drains in JSON when --json is passed', (ctx) => {
       expect(JSON.parse(ctx.stdout)).to.deep.equal(SUCCESS_OUTPUT);
+    });
+
+  test
+    .stdout()
+    .stderr()
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, []))
+    .command(['env:logdrain:list', '-e', APP_NAME, '--json'])
+    .it('warns when log drains is empty when --json is passed', (ctx) => {
+      expect(JSON.parse(ctx.stdout)).to.deep.equal({
+        status: 0,
+        result: [],
+        warnings: ['No log-drains found for environment my-app'],
+      });
     });
 });

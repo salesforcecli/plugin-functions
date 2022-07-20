@@ -52,7 +52,6 @@ export default class Invoke extends Command {
       char: 'o',
       description: messages.getMessage('flags.connected-org.summary'),
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -67,8 +66,8 @@ export default class Invoke extends Command {
        See more help with --help`
       );
     }
-    if (flags.url && !flags.json) {
-      cli.warn(messages.getMessage('flags.url.deprecation'));
+    if (flags.url) {
+      this.warn(messages.getMessage('flags.url.deprecation'));
     }
     flags.payload = await this.getPayloadData(flags.payload);
     if (!flags.payload) {
@@ -77,36 +76,36 @@ export default class Invoke extends Command {
     const aggregator = await ConfigAggregator.create();
     const targetOrg = aggregator.getPropertyValue('target-org');
     if (!flags['connected-org'] && !targetOrg) {
-      cli.warn('No -o connected org or target-org found, context will be partially initialized');
+      this.warn('No -o connected org or target-org found, context will be partially initialized');
     }
     const aliasOrUser = flags['connected-org'] || `target-org ${targetOrg}`;
-    if (!flags.json) {
-      cli.log(`Using ${aliasOrUser} login credential to initialize context`);
-      cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
-    }
+    this.log(`Using ${aliasOrUser} login credential to initialize context`);
+
+    cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
+
     const runFunctionOptions = {
       ...flags,
       url,
       targetusername: flags['connected-org'] ?? targetOrg,
     };
 
+    let response;
+
     try {
-      const response = await runFunction(runFunctionOptions as RunFunctionOptions);
-      if (flags.json) {
-        cli.styledJSON({
-          status: 0,
-          result: response.data,
-          warnings: [],
-        });
-      } else {
+      response = await runFunction(runFunctionOptions as RunFunctionOptions);
+      cli.action.stop(herokuColor.greenBright(response.status.toString()));
+
+      if (!flags.json) {
         this.writeResponse(response);
-        cli.action.stop(herokuColor.greenBright(response.status.toString()));
       }
+      return response.data;
     } catch (e) {
       const error = e as AxiosError;
+
       if (error.response) {
         this.error(new Error(`${error.response.status} ${error.response.statusText}`));
       }
+
       this.error(new Error(`${error.message}`));
     }
   }
@@ -120,7 +119,7 @@ export default class Invoke extends Command {
   writeResponse(response: AxiosResponse) {
     const contentType = response.headers['content-type'];
     if (contentType.includes('application/json') || contentType.includes('application/cloudevents+json')) {
-      cli.styledJSON(response.data);
+      this.styledJSON(response.data);
     } else {
       this.log(response.data as string);
     }

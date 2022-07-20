@@ -9,7 +9,7 @@ import { expect, test } from '@oclif/test';
 import vacuum from '../../helpers/vacuum';
 const fs = require('fs');
 
-describe('logs', () => {
+describe('sf env logs', () => {
   const logSessionURLAddress = '/stream/5634e5b9-f9d4-48de-8c8c-4e368e5d40ff?srv=example';
   const logSessionURLBase = 'https://va.logs.heroku.com';
   const appName = 'foo-app-bar';
@@ -47,7 +47,7 @@ describe('logs', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .nock(logSessionURLBase, {}, (api) =>
       api.get(logSessionURLAddress).reply(200, (_uri: any, _requestBody: any) => {
         return fs.createReadStream('test/helpers/logoutput.txt');
@@ -56,7 +56,7 @@ describe('logs', () => {
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${appName}/log-sessions`).reply(200, fakeResponseData))
     .command(['env:log', `--environment=${appName}`])
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
         )

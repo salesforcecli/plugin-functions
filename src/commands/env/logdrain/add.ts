@@ -43,7 +43,6 @@ export default class LogDrainAdd extends Command {
       description: messages.getMessage('flags.drain-url.summary'),
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -71,58 +70,52 @@ export default class LogDrainAdd extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     if (flags.url) {
-      cli.warn(messages.getMessage('flags.url.deprecation'));
+      this.warn(messages.getMessage('flags.url.deprecation'));
     }
     const appName = await resolveAppNameForEnvironment(targetCompute);
 
     try {
+      cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
+
       const result = await this.client.post<Heroku.LogDrain>(`/apps/${appName}/log-drains`, {
         data: {
           url,
         },
       });
 
-      if (flags.json) {
-        cli.styledJSON({
-          status: 0,
-          result: [
-            {
-              addon: null,
-              created_at: result.data.created_at,
-              id: result.data.id,
-              token: result.data.token,
-              updated_at: result.data.updated_at,
-              url: result.data.url,
-            },
-          ],
-          warnings: [],
-        });
-      } else {
-        cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
+      cli.action.stop();
 
-        cli.action.stop();
-      }
+      return [
+        {
+          addon: null,
+          created_at: result.data.created_at,
+          id: result.data.id,
+          token: result.data.token,
+          updated_at: result.data.updated_at,
+          url: result.data.url,
+        },
+      ];
     } catch (e) {
       const error = e as { data: { message?: string } };
 
       if (error.data?.message?.includes('Url is invalid')) {
-        this.error(new Error(`URL is invalid <${url}>`));
+        this.error(new Error(`URL is invalid ${url}`));
       }
 
       if (error.data?.message?.includes('Url has already been taken')) {
-        this.error(new Error(`Logdrain URL is already added <${url}>`));
+        this.error(new Error(`Logdrain URL is already added ${url}`));
       }
 
-      if (error.data?.message?.includes("Couldn't find that app.")) {
-        this.error(new Error(`Could not find environment <${appName}>`));
+      if (error.data?.message?.includes("Couldn't find that app")) {
+        this.error(new Error(`Could not find environment ${appName}`));
       }
 
       if (error.data?.message?.includes("You've reached the limit")) {
-        this.error(new Error(`You've reached the limit of 5 log drains on <${appName}>`));
+        this.error(new Error(`You've reached the limit of 5 log drains on ${appName}`));
       }
 
       if (error.data?.message?.includes('401')) {

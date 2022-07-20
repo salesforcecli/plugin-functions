@@ -37,7 +37,6 @@ export default class EnvCreateCompute extends Command {
       char: 'a',
       description: messages.getMessage('flags.alias.summary'),
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -64,9 +63,7 @@ export default class EnvCreateCompute extends Command {
           )} to the "features" list in your scratch org definition JSON file, e.g. "features": ["Functions"]`
       );
     }
-    if (!flags.json) {
-      cli.action.start(`Creating compute environment for org ID ${orgId}`);
-    }
+    cli.action.start(`Creating compute environment for org ID ${orgId}`);
     const project = await fetchSfdxProject();
     const projectName = project.name;
 
@@ -140,11 +137,9 @@ export default class EnvCreateCompute extends Command {
 
       cli.action.stop();
 
-      if (!flags.json) {
-        this.log(`New compute environment created with ID ${app.name}`);
+      this.log(`New compute environment created with ID ${app.name}`);
 
-        cli.action.start('Connecting environments');
-      }
+      cli.action.start('Connecting environments');
 
       if (alias) {
         this.stateAggregator.aliases.set(alias, app.id!);
@@ -152,13 +147,11 @@ export default class EnvCreateCompute extends Command {
       }
 
       cli.action.stop();
-      if (!flags.json) {
-        this.log(
-          alias
-            ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready.`
-            : 'Your compute environment is ready.'
-        );
-      }
+      this.log(
+        alias
+          ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready.`
+          : 'Your compute environment is ready.'
+      );
     } catch (err) {
       const DUPLICATE_PROJECT_MESSAGE =
         'There is already a project with the same name in the same namespace for this org';
@@ -181,18 +174,12 @@ export default class EnvCreateCompute extends Command {
       this.error(`${error.data.message}`);
     }
     const app = await fetchAppForProject(this.client, projectName, org.getUsername());
-    if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: {
-          alias,
-          projectName,
-          connectedOrgAlias: '',
-          connectedOrgId: orgId,
-          computeEnvironmentName: app.name,
-        },
-        warnings: [],
-      });
-    }
+    return {
+      alias,
+      projectName,
+      connectedOrgAlias: '',
+      connectedOrgId: orgId,
+      computeEnvironmentName: app.name,
+    };
   }
 }

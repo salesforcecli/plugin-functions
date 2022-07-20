@@ -19,6 +19,8 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.log'
 
 export default class Log extends Command {
   public static readonly state = 'beta';
+  static enableJsonFlag = false;
+
   static summary = messages.getMessage('summary');
 
   static examples = messages.getMessages('examples');
@@ -54,7 +56,7 @@ export default class Log extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);

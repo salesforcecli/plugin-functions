@@ -35,7 +35,6 @@ export default class ConfigUnset extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -54,7 +53,7 @@ export default class ConfigUnset extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     if (argv.length === 0) {
@@ -74,10 +73,10 @@ export default class ConfigUnset extends Command {
       const error = e as Error;
 
       if (error.message?.includes('not correct config var')) {
-        this.error(new Error(`Value provided for key does not match a config var found for <${appName}>.`));
+        this.error(new Error(`Value provided for key does not match a config var found for ${appName}`));
       }
       if (error.message?.includes('404')) {
-        this.error(new Error(`Couldn't find that app <${appName}>`));
+        this.error(new Error(`Couldn't find that app ${appName}`));
       }
       if (error.message?.includes('401')) {
         this.error(new Error('Your token has expired, please login with sf login functions'));
@@ -92,26 +91,17 @@ export default class ConfigUnset extends Command {
       };
     }, {});
 
+    const message = `Unsetting ${Object.keys(configPairs)
+      .map((key) => herokuColor.configVar(key))
+      .join(', ')} and restarting ${herokuColor.app(targetCompute)}`;
+    cli.action.start(message);
+
     await this.client.patch(`/apps/${appName}/config-vars`, {
       data: configPairs,
     });
 
-    if (!flags.json) {
-      cli.action.start(
-        `Unsetting ${Object.keys(configPairs)
-          .map((key) => herokuColor.configVar(key))
-          .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
-      );
+    cli.action.stop();
 
-      cli.action.stop();
-    }
-
-    if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: null,
-        warnings: [],
-      });
-    }
+    return 'Unset env var';
   }
 }

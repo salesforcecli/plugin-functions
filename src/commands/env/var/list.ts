@@ -33,7 +33,6 @@ export default class ConfigList extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -52,7 +51,7 @@ export default class ConfigList extends Command {
     }
 
     if (flags.environment) {
-      cli.warn(messages.getMessage('flags.environment.deprecation'));
+      this.warn(messages.getMessage('flags.environment.deprecation'));
     }
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
@@ -66,27 +65,9 @@ export default class ConfigList extends Command {
       };
     });
 
-    if (flags.json) {
-      if (!configArray.length) {
-        cli.styledJSON({
-          status: 0,
-          result: [],
-          warnings: [`No config vars found for environment <${targetCompute}>`],
-        });
-        return;
-      }
-
-      cli.styledJSON({
-        status: 0,
-        result: config,
-        warnings: [],
-      });
+    if (configArray.length === 0) {
+      this.warn(`No config vars found for environment ${targetCompute}`);
     } else {
-      if (!configArray.length) {
-        cli.warn(`No config vars found for environment ${targetCompute}`);
-        return;
-      }
-
       cli.table(
         configArray,
         {
@@ -105,5 +86,6 @@ export default class ConfigList extends Command {
         }
       );
     }
+    return config;
   }
 }

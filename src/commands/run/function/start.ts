@@ -85,7 +85,7 @@ export default class Start extends Local {
       try {
         msg = messages.getMessage(`flags.${flag}.deprecation`);
         if (val) {
-          cli.warn(msg);
+          this.warn(msg);
         }
       } catch {
         // No deprecation message, flag is not deprecated

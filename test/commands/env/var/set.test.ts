@@ -7,7 +7,7 @@
 import { expect, test } from '@oclif/test';
 import vacuum from '../../../helpers/vacuum';
 
-describe('sf env:var:set', () => {
+describe('sf env var set', () => {
   test
     .stdout()
     .stderr()
@@ -61,9 +61,9 @@ describe('sf env:var:set', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     // Adding retries here because there is some kind of race condition that causes fancy-test to not
-    // fully capture the value of stderr when running in CI (╯°□°)╯︵ ┻━┻
+    // fully capture the value of stdout when running in CI (╯°□°)╯︵ ┻━┻
     .retries(2)
     .nock('https://api.heroku.com', (api) =>
       api
@@ -74,7 +74,7 @@ describe('sf env:var:set', () => {
     )
     .command(['env:var:set', 'foo=bar', '--environment', 'my-environment'])
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
         )
@@ -121,7 +121,7 @@ describe('sf env:var:set', () => {
     .command(['env:var:set', 'foo=bar', '--target-compute', 'my-environment', '--json'])
     .it('will show json output', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('{\n"status": 0,\n"result": null,\n"warnings": []\n}')
+        vacuum('{\n"status": 0,\n"result": "Set env var",\n"warnings": []\n}')
       );
     });
 });

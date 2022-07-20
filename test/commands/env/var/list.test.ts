@@ -8,7 +8,7 @@ import { expect, test } from '@oclif/test';
 
 import vacuum from '../../../helpers/vacuum';
 
-describe('sf env:var:list', () => {
+describe('sf env var list', () => {
   test
     .stdout()
     .stderr()
@@ -36,7 +36,7 @@ describe('sf env:var:list', () => {
     .nock('https://api.heroku.com', (api) => api.get('/apps/my-environment/config-vars').reply(200, {}))
     .command(['env:var:list', '--target-compute', 'my-environment'])
     .it('shows a message when there are no config vars', (ctx) => {
-      expect(ctx.stderr).to.include('Warning: No config vars found for environment my-environment');
+      expect(ctx.stdout).to.include('Warning: No config vars found for environment my-environment');
     });
   test
     .stdout()
@@ -60,7 +60,7 @@ describe('sf env:var:list', () => {
     });
 
   test
-    .stderr()
+    .stdout()
     .nock('https://api.heroku.com', (api) =>
       api.get('/apps/my-environment/config-vars').reply(200, {
         foo: 'bar',
@@ -69,7 +69,7 @@ describe('sf env:var:list', () => {
     )
     .command(['env:var:list', '--environment', 'my-environment'])
     .it('will use a compute environment if passed using the old flag (not --target-compute)', (ctx) => {
-      expect(vacuum(ctx.stderr).replace(/\n[›»]/gm, '')).to.contain(
+      expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
           '--environment is deprecated and will be removed in a future release. Please use --target-compute going forward.'
         )
