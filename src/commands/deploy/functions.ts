@@ -86,9 +86,8 @@ export default class DeployFunctions extends Command {
     let app: ComputeEnvironment;
     try {
       app = await fetchAppForProject(this.client, project.name, flags['connected-org']);
-    } catch (err) {
-      const error = err as { body: { message?: string } };
-      if (error.body.message?.includes("Couldn't find that app")) {
+    } catch (error: any) {
+      if (error.body?.message?.includes("Couldn't find that app")) {
         this.error(
           `No compute environment found for org ${flags['connected-org']}. Please ensure you've created a compute environment before deploying.`
         );
