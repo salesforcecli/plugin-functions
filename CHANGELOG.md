@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.2](https://github.com/salesforcecli/plugin-functions/compare/v1.13.1...v1.13.2) (2022-07-20)
+
+### Bug Fixes
+
+- bubble up deploy functions auth error ([#467](https://github.com/salesforcecli/plugin-functions/issues/467)) ([89f1fce](https://github.com/salesforcecli/plugin-functions/commit/89f1fce2f1f2263fec5788b84df30117ed0b60c3))
+
 ### [1.13.1](https://github.com/salesforcecli/plugin-functions/compare/v1.13.0...v1.13.1) (2022-07-12)
 
 ### Bug Fixes
