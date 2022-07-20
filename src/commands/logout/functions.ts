@@ -30,12 +30,9 @@ export default class Login extends Command {
     await this.stateAggregator.tokens.write();
 
     cli.action.stop();
+
     if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: [],
-        warnings: [],
-      });
+      return [];
     }
   }
 }

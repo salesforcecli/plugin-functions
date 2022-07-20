@@ -130,12 +130,7 @@ export default class ConfigSet extends Command {
           data: configPairs,
         });
 
-        cli.styledJSON({
-          status: 0,
-          result: null,
-          warnings: [],
-        });
-        return;
+        return [];
       } catch (err: any) {
         this.parseErrors(err, targetCompute);
       }

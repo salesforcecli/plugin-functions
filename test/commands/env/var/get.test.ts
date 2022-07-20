@@ -72,7 +72,7 @@ describe('sf env:var:get', () => {
     .it('will show json warning output with incorrect config var', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
         vacuum(
-          '{\n"status": 0,\n"result": null,\n"warnings": [\n"No config var named doo found for environment <my-environment>"\n]\n}'
+          '{\n"status": 0,\n"result": [],\n"warnings": [\n"No config var named doo found for environment <my-environment>"\n]\n}'
         )
       );
     });

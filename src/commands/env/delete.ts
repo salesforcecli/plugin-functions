@@ -158,11 +158,7 @@ export default class EnvDelete extends Command {
     cli.action.stop();
 
     if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: 'Environment deleted.',
-        warnings: [],
-      });
+      return 'Environment deleted.';
     }
   }
 }

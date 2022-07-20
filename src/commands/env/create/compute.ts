@@ -181,17 +181,13 @@ export default class EnvCreateCompute extends Command {
     }
     const app = await fetchAppForProject(this.client, projectName, org.getUsername());
     if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: {
-          alias,
-          projectName,
-          connectedOrgAlias: '',
-          connectedOrgId: orgId,
-          computeEnvironmentName: app.name,
-        },
-        warnings: [],
-      });
+      return {
+        alias,
+        projectName,
+        connectedOrgAlias: '',
+        connectedOrgId: orgId,
+        computeEnvironmentName: app.name,
+      };
     }
   }
 }

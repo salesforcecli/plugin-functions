@@ -72,4 +72,17 @@ describe('sf env logdrain list', () => {
     .it('shows log drains in JSON when --json is passed', (ctx) => {
       expect(JSON.parse(ctx.stdout)).to.deep.equal(SUCCESS_OUTPUT);
     });
+
+  test
+    .stdout()
+    .stderr()
+    .nock('https://api.heroku.com', (api) => api.get(`/apps/${APP_NAME}/log-drains`).reply(200, []))
+    .command(['env:logdrain:list', '-e', APP_NAME, '--json'])
+    .it('warns when log drains is empty when --json is passed', (ctx) => {
+      expect(JSON.parse(ctx.stdout)).to.deep.equal({
+        status: 0,
+        result: [],
+        warnings: ['No logdrain found for environment <my-app>'],
+      });
+    });
 });

@@ -92,14 +92,10 @@ export default class Invoke extends Command {
     try {
       const response = await runFunction(runFunctionOptions as RunFunctionOptions);
       if (flags.json) {
-        cli.styledJSON({
-          status: 0,
-          result: response.data,
-          warnings: [],
-        });
+        return response.data;
       } else {
-        this.writeResponse(response);
         cli.action.stop(herokuColor.greenBright(response.status.toString()));
+        this.writeResponse(response);
       }
     } catch (e) {
       const error = e as AxiosError;

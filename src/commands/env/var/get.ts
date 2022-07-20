@@ -69,19 +69,11 @@ export default class VarGet extends Command {
 
     if (flags.json) {
       if (!value) {
-        cli.styledJSON({
-          status: 0,
-          result: null,
-          warnings: [`No config var named ${args.key as string} found for environment <${targetCompute}>`],
-        });
-        return;
+        this.warn(`No config var named ${args.key as string} found for environment <${targetCompute}>`);
+        return []; // Can't return falsy to json handler
       }
 
-      cli.styledJSON({
-        status: 0,
-        result: value,
-        warnings: [],
-      });
+      return value;
     } else {
       if (!value) {
         cli.warn(
@@ -89,8 +81,9 @@ export default class VarGet extends Command {
             targetCompute
           )}`
         );
+      } else {
+        this.log(value);
       }
-      this.log(value);
     }
   }
 }

@@ -106,11 +106,7 @@ export default class ConfigUnset extends Command {
     }
 
     if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: null,
-        warnings: [],
-      });
+      return [];
     }
   }
 }
