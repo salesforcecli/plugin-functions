@@ -16,8 +16,6 @@ import { SfdcAccount } from './sfdc-types';
 export default abstract class Command extends SfCommand<any> {
   protected static TOKEN_BEARER_KEY = 'functions-bearer';
   protected static TOKEN_REFRESH_KEY = 'functions-refresh';
-  // We want to implement `--json` on a per-command basis, so we disable the global json flag here
-  static enableJsonFlag = false;
 
   protected stateAggregator!: StateAggregator;
 

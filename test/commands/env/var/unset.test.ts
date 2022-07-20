@@ -11,7 +11,7 @@ import vacuum from '../../../helpers/vacuum';
 describe('sf env:var:unset', () => {
   const jsonSuccess = {
     status: 0,
-    result: null,
+    result: [],
     warnings: [],
   };
   const jsonAppError = {

@@ -53,7 +53,7 @@ describe('sf env logdrain remove', () => {
     .command(['env:logdrain:remove', '--target-compute', APP_NAME, '-u', LOG_DRAIN.url, '--json'])
     .it('will show json output', (ctx) => {
       expect(vacuum(ctx.stdout).replace(/\n[›»]/gm, '')).to.contain(
-        vacuum('{\n"status": 0,\n"result": null,\n"warnings": []\n}')
+        vacuum('{\n"status": 0,\n"result": [],\n"warnings": []\n}')
       );
     });
 

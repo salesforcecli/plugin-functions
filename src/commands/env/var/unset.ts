@@ -35,7 +35,6 @@ export default class ConfigUnset extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -107,11 +106,7 @@ export default class ConfigUnset extends Command {
     }
 
     if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: null,
-        warnings: [],
-      });
+      return [];
     }
   }
 }

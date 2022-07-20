@@ -32,7 +32,6 @@ export default class ConfigSet extends Command {
       exclusive: ['target-compute'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   parseKeyValuePairs(pairs: string[]) {
@@ -89,13 +88,7 @@ export default class ConfigSet extends Command {
 
       cli.action.stop();
 
-      if (flags.json) {
-        cli.styledJSON({
-          status: 0,
-          result: null,
-          warnings: [],
-        });
-      }
+      return [];
     } catch (error: any) {
       cli.action.stop('failed');
       if (error.data?.message?.includes("Couldn't find that app")) {

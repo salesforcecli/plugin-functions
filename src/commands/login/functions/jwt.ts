@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { Flags } from '@oclif/core';
-import { AuthInfo, AuthRemover, SfdxError, Messages } from '@salesforce/core';
+import { AuthInfo, AuthRemover, Messages } from '@salesforce/core';
 import { getString } from '@salesforce/ts-types';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -14,7 +14,6 @@ import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
 import { herokuVariant } from '../../../lib/heroku-variant';
 import { fetchSfdxProject } from '../../../lib/utils';
-import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 // This is a public Oauth client created expressly for the purpose of headless auth in the functions CLI.
 // It does not require a client secret, is marked as public in the database and scoped accordingly
@@ -72,7 +71,6 @@ export default class JwtLogin extends Command {
       exclusive: ['instance-url'],
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
     alias: Flags.string({
       char: 'a',
       description: messages.getMessage('flags.alias.summary'),
@@ -210,21 +208,17 @@ export default class JwtLogin extends Command {
 
     await this.stateAggregator.tokens.write();
 
-    if (flags.json) {
-      cli.styledJSON({
-        status: 0,
-        result: {
-          username: authFields.username,
-          sfdxAccessToken: token,
-          functionsAccessToken: bearerToken,
-          instanceUrl: authFields.instanceUrl,
-          orgId: authFields.orgId,
-          privateKey: authFields.privateKey,
-        },
-        warnings: [],
-      });
-    }
-
     cli.action.stop();
+
+    if (flags.json) {
+      return {
+        username: authFields.username,
+        sfdxAccessToken: token,
+        functionsAccessToken: bearerToken,
+        instanceUrl: authFields.instanceUrl,
+        orgId: authFields.orgId,
+        privateKey: authFields.privateKey,
+      };
+    }
   }
 }

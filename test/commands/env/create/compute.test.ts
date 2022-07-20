@@ -164,7 +164,7 @@ describe('sf env create compute', () => {
         .get(`/sales-org-connections/${ORG_MOCK.id}/apps/${PROJECT_CONFIG_MOCK.name}`)
         .reply(200, APP_MOCK);
     })
-    .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`, '-j'])
+    .command(['env:create:compute', '-o', `${ORG_ALIAS}`, '-a', `${ENVIRONMENT_ALIAS}`, '--json'])
     .it('will show json output with success', (ctx) => {
       const succJSON = JSON.parse(ctx.stdout);
 

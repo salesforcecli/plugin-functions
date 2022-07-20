@@ -31,10 +31,9 @@ export default class WhoAmI extends Command {
       description: messages.getMessage('flags.show-token.summary'),
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
-  async run(): Promise<FunctionsInformation> {
+  async run() {
     const { flags } = await this.parse(WhoAmI);
     this.postParseHook(flags);
 
@@ -49,24 +48,16 @@ export default class WhoAmI extends Command {
       });
 
       if (flags['show-token']) {
-        cli.styledJSON({
-          status: 0,
-          result: {
-            functionsEmail: ret['email'],
-            functionsId: ret['id'],
-            functionsToken: this.auth,
-          },
-          warnings: [],
-        });
+        return {
+          functionsEmail: ret['email'],
+          functionsId: ret['id'],
+          functionsToken: this.auth,
+        };
       } else {
-        cli.styledJSON({
-          status: 0,
-          result: {
-            functionsEmail: ret['email'],
-            functionsId: ret['id'],
-          },
-          warnings: [],
-        });
+        return {
+          functionsEmail: ret['email'],
+          functionsId: ret['id'],
+        };
       }
     } else {
       this.log(`Hello ${account.name} 👋 \n`);

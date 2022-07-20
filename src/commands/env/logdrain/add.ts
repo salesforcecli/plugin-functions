@@ -43,7 +43,6 @@ export default class LogDrainAdd extends Command {
       description: messages.getMessage('flags.drain-url.summary'),
       hidden: true,
     }),
-    json: FunctionsFlagBuilder.json,
   };
 
   async run() {
@@ -87,20 +86,16 @@ export default class LogDrainAdd extends Command {
       });
 
       if (flags.json) {
-        cli.styledJSON({
-          status: 0,
-          result: [
-            {
-              addon: null,
-              created_at: result.data.created_at,
-              id: result.data.id,
-              token: result.data.token,
-              updated_at: result.data.updated_at,
-              url: result.data.url,
-            },
-          ],
-          warnings: [],
-        });
+        return [
+          {
+            addon: null,
+            created_at: result.data.created_at,
+            id: result.data.id,
+            token: result.data.token,
+            updated_at: result.data.updated_at,
+            url: result.data.url,
+          },
+        ];
       } else {
         cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
 
