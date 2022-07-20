@@ -146,15 +146,17 @@ Deploy a Salesforce Function to an org from your local project.
 
 ```
 USAGE
-  $ sf deploy functions -o <value> [-b <value>] [--force] [-q] [-j]
+  $ sf deploy functions -o <value> [--json] [-b <value>] [--force] [-q]
 
 FLAGS
   -b, --branch=<value>         Deploy the latest commit from a branch different from the currently active branch.
-  -j, --json                   Output list in JSON format.
   -o, --connected-org=<value>  (required) Username or alias for the org that the compute environment should be connected
                                to.
   -q, --quiet                  Limit the amount of output displayed from the deploy process.
   --force                      Ignore warnings and overwrite remote repository (not allowed in production).
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Deploy a Salesforce Function to an org from your local project.
@@ -199,12 +201,14 @@ Create a compute environment for use with Salesforce Functions.
 
 ```
 USAGE
-  $ sf env create compute [-o <value>] [-a <value>] [-j]
+  $ sf env create compute [--json] [-o <value>] [-a <value>]
 
 FLAGS
   -a, --alias=<value>          Alias for the created environment.
-  -j, --json                   Output list in JSON format.
   -o, --connected-org=<value>  Username or alias for the org that the compute environment should be connected to.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Create a compute environment for use with Salesforce Functions.
@@ -233,12 +237,14 @@ Delete an environment.
 
 ```
 USAGE
-  $ sf env delete [-e <value> | ] [--confirm <value>] [-j]
+  $ sf env delete [--json] [-e <value> | ] [--confirm <value>]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
-  -j, --json                    Output list in JSON format.
   --confirm=name...             Confirmation name.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Delete an environment.
@@ -300,12 +306,14 @@ Add log drain to a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain add [-e <value> | ] [-l <value> | ] [-j]
+  $ sf env logdrain add [--json] [-e <value> | ] [-l <value> | ]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
-  -j, --json                    Output list in JSON format.
   -l, --drain-url=<value>       Endpoint that will receive sent logs.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Add log drain to a specified environment.
@@ -325,11 +333,13 @@ List log drains connected to a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain list [-e <value> | ] [-j]
+  $ sf env logdrain list [--json] [-e <value> | ]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
-  -j, --json                    Output list in JSON format.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 EXAMPLES
   List log drains:
@@ -347,12 +357,14 @@ Remove log drain from a specified environment.
 
 ```
 USAGE
-  $ sf env logdrain remove [-e <value> | ] [-l <value> | ] [-j]
+  $ sf env logdrain remove [--json] [-e <value> | ] [-l <value> | ]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
-  -j, --json                    Output list in JSON format.
   -l, --drain-url=<value>       Log drain url to remove.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Remove log drain from a specified environment.
@@ -371,11 +383,13 @@ Display a single config variable for an environment.
 
 ```
 USAGE
-  $ sf env var get [KEY] [-e <value> | ] [-j]
+  $ sf env var get [KEY] [--json] [-e <value> | ]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
-  -j, --json                    Output list in JSON format.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Display a single config variable for an environment.
@@ -394,11 +408,13 @@ List your environment's config vars in a table.
 
 ```
 USAGE
-  $ sf env var list [-e <value> | ] [-j]
+  $ sf env var list [--json] [-e <value> | ]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
-  -j, --json                    Output list in JSON format.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   List your environment's config vars in a table.
@@ -421,11 +437,13 @@ Set a single config value for an environment.
 
 ```
 USAGE
-  $ sf env var set [-e <value> | ] [-j]
+  $ sf env var set [--json] [-e <value> | ]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
-  -j, --json                    Output list in JSON format.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 EXAMPLES
   Set a config value:
@@ -439,11 +457,13 @@ Unset a single config value for an environment.
 
 ```
 USAGE
-  $ sf env var unset [-e <value> | ] [-j]
+  $ sf env var unset [--json] [-e <value> | ]
 
 FLAGS
   -e, --target-compute=<value>  Environment name.
-  -j, --json                    Output list in JSON format.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Unset a single config value for an environment.
@@ -504,17 +524,19 @@ Login using JWT instead of default web-based flow. This will authenticate you wi
 
 ```
 USAGE
-  $ sf login functions jwt -u <value> -f <value> -i <value> [-l <value> | ] [-j] [-a <value>] [-d] [-v]
+  $ sf login functions jwt -u <value> -f <value> -i <value> [--json] [-l <value> | ] [-a <value>] [-d] [-v]
 
 FLAGS
   -a, --alias=<value>         Alias for the org.
   -d, --set-default           Set the org as the default that all org-related commands run against.
   -f, --keyfile=<value>       (required) Path to JWT keyfile.
   -i, --clientid=<value>      (required) OAuth client ID.
-  -j, --json                  Output list in JSON format.
   -l, --instance-url=<value>  The login URL of the instance the org lives on.
   -u, --username=<value>      (required) Authentication username.
   -v, --set-default-dev-hub   Set the org as the default Dev Hub for scratch org creation.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Login using JWT instead of default web-based flow. This will authenticate you with both sf and Salesforce Functions.
@@ -538,10 +560,10 @@ Log out of your Salesforce Functions account.
 
 ```
 USAGE
-  $ sf logout functions [-j]
+  $ sf logout functions [--json]
 
-FLAGS
-  -j, --json  Output list in JSON format.
+GLOBAL FLAGS
+  --json  Format output as json.
 
 EXAMPLES
   Log out:
@@ -555,15 +577,17 @@ Send a cloudevent to a function.
 
 ```
 USAGE
-  $ sf run function [-l <value> | ] [-H <value>] [-p <value>] [-s] [-o <value>] [-j]
+  $ sf run function [--json] [-l <value> | ] [-H <value>] [-p <value>] [-s] [-o <value>]
 
 FLAGS
   -H, --headers=<value>...     Set headers.
-  -j, --json                   Output list in JSON format.
   -l, --function-url=<value>   URL of the function to run.
   -o, --connected-org=<value>  Username or alias for the target org; overrides default target org.
   -p, --payload=<value>        Set the payload of the cloudevent as a JSON object or a path to a file via @file.json.
   -s, --structured             Set the cloudevent to be emitted as a structured JSON cloudevent.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 EXAMPLES
   Run a function:
@@ -681,10 +705,10 @@ Show information on your Salesforce Functions login.
 
 ```
 USAGE
-  $ sf whoami functions [-j]
+  $ sf whoami functions [--json]
 
-FLAGS
-  -j, --json  Output list in JSON format.
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Show information on your Salesforce Functions login.

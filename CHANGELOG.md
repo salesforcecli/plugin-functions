@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.4](https://github.com/salesforcecli/plugin-functions/compare/v1.13.3...v1.13.4) (2022-07-20)
+
+### Bug Fixes
+
+- remove short flag -j for json and return response to global json handler ([#465](https://github.com/salesforcecli/plugin-functions/issues/465)) ([e63ff43](https://github.com/salesforcecli/plugin-functions/commit/e63ff43943c0943609126acb33d21e66d6d35818))
+
 ### [1.13.3](https://github.com/salesforcecli/plugin-functions/compare/v1.13.2...v1.13.3) (2022-07-20)
 
 ### Bug Fixes
