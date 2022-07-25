@@ -125,7 +125,7 @@
             "description": "Commands to manage compute environments.",
             "subtopics": {
               "collaborator": {
-                "description": "Commands to collaborate with Heroku."
+                "description": "Commands to manage collaboration with Heroku users."
               }
             }
           },
