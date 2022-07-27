@@ -132,9 +132,6 @@
           "delete": {
             "description": "Commands to delete environments."
           },
-          "resume": {
-            "description": "Commands to resume environment creation."
-          },
           "log": {
             "description": "Commands to stream log output for an environment."
           },
