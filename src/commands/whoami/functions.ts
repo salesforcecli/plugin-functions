@@ -14,7 +14,7 @@ import Command from '../../lib/base';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'whoami.functions');
 
-const FIELDS = <const>['id', 'email', 'token'];
+const FIELDS = <const>['id', 'salesforce_username', 'salesforce_email', 'token'];
 
 export type FunctionsInformationKey = typeof FIELDS[number];
 export type FunctionsInformation = { [key in FunctionsInformationKey]?: string };
@@ -49,13 +49,15 @@ export default class WhoAmI extends Command {
 
       if (flags['show-token']) {
         return {
-          functionsEmail: ret['email'],
+          functionsEmail: ret['salesforce_email'],
+          functionsUsername: ret['salesforce_username'],
           functionsId: ret['id'],
           functionsToken: this.auth,
         };
       } else {
         return {
-          functionsEmail: ret['email'],
+          functionsEmail: ret['salesforce_email'],
+          functionsUsername: ret['salesforce_username'],
           functionsId: ret['id'],
         };
       }
