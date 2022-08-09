@@ -121,6 +121,14 @@
           "create": {
             "description": "Commands to create environments."
           },
+          "compute": {
+            "description": "Commands to manage compute environments.",
+            "subtopics": {
+              "collaborator": {
+                "description": "Commands to manage collaboration with Heroku users."
+              }
+            }
+          },
           "delete": {
             "description": "Commands to delete environments."
           },
