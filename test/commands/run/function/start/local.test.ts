@@ -65,11 +65,33 @@ describe('sf run function start local', () => {
       });
   });
 
+  context('with -l java', () => {
+    test.command(['run:function:start:local', '-l', 'java']).it('should start the local runner in java mode', (ctx) => {
+      expect(localRunConstructor).to.have.been.calledWith('java', {
+        port: 8080,
+        debugPort: 9229,
+        path: defaultFunctionPath,
+      });
+    });
+  });
+
   context('with -l javascript', () => {
     test
       .command(['run:function:start:local', '-l', 'javascript'])
       .it('should start the local runner in javascript mode', (ctx) => {
         expect(localRunConstructor).to.have.been.calledWith('javascript', {
+          port: 8080,
+          debugPort: 9229,
+          path: defaultFunctionPath,
+        });
+      });
+  });
+
+  context('with -l python', () => {
+    test
+      .command(['run:function:start:local', '-l', 'python'])
+      .it('should start the local runner in python mode', (ctx) => {
+        expect(localRunConstructor).to.have.been.calledWith('python', {
           port: 8080,
           debugPort: 9229,
           path: defaultFunctionPath,
@@ -87,16 +109,6 @@ describe('sf run function start local', () => {
           path: defaultFunctionPath,
         });
       });
-  });
-
-  context('with -l java', () => {
-    test.command(['run:function:start:local', '-l', 'java']).it('should start the local runner in java mode', (ctx) => {
-      expect(localRunConstructor).to.have.been.calledWith('java', {
-        port: 8080,
-        debugPort: 9229,
-        path: defaultFunctionPath,
-      });
-    });
   });
 
   context('with --path', () => {

@@ -30,4 +30,4 @@ Port to use for debbugging the function.
 
 # flags.language.summary
 
-The language that the function runs in.
+The language in which the function is written.

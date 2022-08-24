@@ -35,7 +35,7 @@ export default class Local extends Command {
       default: 9229,
     }),
     language: Flags.enum({
-      options: ['javascript', 'typescript', 'java', 'auto'],
+      options: ['auto', 'java', 'javascript', 'python', 'typescript'],
       description: messages.getMessage('flags.language.summary'),
       char: 'l',
       default: 'auto',

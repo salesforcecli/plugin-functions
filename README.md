@@ -482,11 +482,11 @@ Create a Salesforce Function with basic scaffolding specific to a given language
 
 ```
 USAGE
-  $ sf generate function -l javascript|typescript|java [-n <value> | ]
+  $ sf generate function -l java|javascript|python|typescript [-n <value> | ]
 
 FLAGS
-  -l, --language=(javascript|typescript|java)  (required) Language. Can be one of: javascript, typescript, java.
-  -n, --function-name=<value>                  Function name. Must start with a capital letter.
+  -l, --language=(java|javascript|python|typescript)  (required) The language in which the function is written.
+  -n, --function-name=<value>                         Function name. Must start with a capital letter.
 
 DESCRIPTION
   Create a Salesforce Function with basic scaffolding specific to a given language.
@@ -605,13 +605,13 @@ Build and run a Salesforce Function.
 
 ```
 USAGE
-  $ sf run function start [-b <value>] [-l javascript|typescript|java|auto] [-p <value>] [-v]
+  $ sf run function start [-b <value>] [-l auto|java|javascript|python|typescript] [-p <value>] [-v]
 
 FLAGS
-  -b, --debug-port=<value>                          [default: 9229] Port for remote debugging.
-  -l, --language=(javascript|typescript|java|auto)  [default: auto] The language that the function runs in.
-  -p, --port=<value>                                [default: 8080] Port for running the function.
-  -v, --verbose                                     Output additional logs.
+  -b, --debug-port=<value>                                 [default: 9229] Port for remote debugging.
+  -l, --language=(auto|java|javascript|python|typescript)  [default: auto] The language that the function runs in.
+  -p, --port=<value>                                       [default: 8080] Port for running the function.
+  -v, --verbose                                            Output additional logs.
 
 DESCRIPTION
   Build and run a Salesforce Function.
@@ -679,12 +679,13 @@ Build and run a Salesforce Function locally.
 
 ```
 USAGE
-  $ sf run function start local [-p <value>] [-b <value>] [-l javascript|typescript|java|auto]
+  $ sf run function start local [-p <value>] [-b <value>] [-l auto|java|javascript|python|typescript]
 
 FLAGS
-  -b, --debug-port=<value>                          [default: 9229] Port to use for debbugging the function.
-  -l, --language=(javascript|typescript|java|auto)  [default: auto] The language that the function runs in.
-  -p, --port=<value>                                [default: 8080] Port to bind the invoker to.
+  -b, --debug-port=<value>                                 [default: 9229] Port to use for debbugging the function.
+  -l, --language=(auto|java|javascript|python|typescript)  [default: auto] The language in which the function is
+                                                           written.
+  -p, --port=<value>                                       [default: 8080] Port to bind the invoker to.
 
 DESCRIPTION
   Build and run a Salesforce Function locally.
