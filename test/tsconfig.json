@@ -1,7 +1,6 @@
 {
   "extends": "@salesforce/dev-config/tsconfig-test",
   "include": ["./**/*.ts"],
-  "exclude": ["fixtures"],
   "compilerOptions": {
     "noEmit": true,
     "skipLibCheck": true
