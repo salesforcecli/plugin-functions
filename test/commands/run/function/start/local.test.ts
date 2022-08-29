@@ -15,10 +15,8 @@ import { LangRunnerOpts } from '@hk/functions-core/dist/lang-runner';
 import Local from '../../../../../src/commands/run/function/start/local';
 
 describe('sf run function start local', () => {
-  const fixturesPath = path.resolve(__dirname, '../../../../fixtures');
-  const jsPath = path.resolve(fixturesPath, 'javascripttemplate');
-  const javaPath = path.resolve(fixturesPath, 'javatemplate');
-  const tsPath = path.resolve(fixturesPath, 'typescripttemplate');
+  const defaultFunctionPath = path.resolve('.');
+  const customFunctionPath = 'some/functions/path';
 
   let sandbox: sinon.SinonSandbox;
   let localRunConstructor: SinonStub<[lang?: string | undefined, runnerOpts?: LangRunnerOpts | undefined], LocalRun>;
@@ -45,86 +43,94 @@ describe('sf run function start local', () => {
     sandbox.restore();
   });
 
-  context('without a language argument and a package.json', () => {
+  context('without any arguments', () => {
+    test.command(['run:function:start:local']).it('should start the local runner with default options', (ctx) => {
+      expect(localRunConstructor).to.have.been.calledWith('auto', {
+        port: 8080,
+        debugPort: 9229,
+        path: defaultFunctionPath,
+      });
+    });
+  });
+
+  context('with --language=auto', () => {
     test
-      .command(['run:function:start:local', '--path', jsPath])
-      .it('should start the Node.js invoker runtime', (ctx) => {
+      .command(['run:function:start:local', '--language', 'auto'])
+      .it('should start the local runner in auto mode', (ctx) => {
         expect(localRunConstructor).to.have.been.calledWith('auto', {
           port: 8080,
           debugPort: 9229,
-          path: jsPath,
+          path: defaultFunctionPath,
         });
       });
   });
 
-  context('with --language=auto and a package.json', () => {
+  context('with -l javascript', () => {
     test
-      .command(['run:function:start:local', '--language', 'auto', '--path', jsPath])
-      .it('should start the Node.js invoker runtime', (ctx) => {
-        expect(localRunConstructor).to.have.been.calledWith('auto', {
-          port: 8080,
-          debugPort: 9229,
-          path: jsPath,
-        });
-      });
-  });
-
-  context('without a language argument and a pom.xml', () => {
-    test
-      .command(['run:function:start:local', '--path', javaPath])
-      .it('should start the Java invoker runtime', (ctx) => {
-        expect(localRunConstructor).to.have.been.calledWith('auto', {
-          port: 8080,
-          debugPort: 9229,
-          path: javaPath,
-        });
-      });
-  });
-
-  context('without --language=auto and a pom.xml', () => {
-    test
-      .command(['run:function:start:local', '--language', 'auto', '--path', javaPath])
-      .it('should start the Java invoker runtime', (ctx) => {
-        expect(localRunConstructor).to.have.been.calledWith('auto', {
-          port: 8080,
-          debugPort: 9229,
-          path: javaPath,
-        });
-      });
-  });
-
-  context('with --language javascript', () => {
-    test
-      .command(['run:function:start:local', '--path', jsPath, '-l', 'javascript'])
-      .it('should start the Node.js invoker runtime', (ctx) => {
+      .command(['run:function:start:local', '-l', 'javascript'])
+      .it('should start the local runner in javascript mode', (ctx) => {
         expect(localRunConstructor).to.have.been.calledWith('javascript', {
           port: 8080,
           debugPort: 9229,
-          path: jsPath,
+          path: defaultFunctionPath,
         });
       });
   });
 
-  context('with --language typescript', () => {
+  context('with -l typescript', () => {
     test
-      .command(['run:function:start:local', '--path', tsPath, '-l', 'typescript'])
-      .it('should start the Node.js invoker runtime', (ctx) => {
+      .command(['run:function:start:local', '-l', 'typescript'])
+      .it('should start the local runner in typescript mode', (ctx) => {
         expect(localRunConstructor).to.have.been.calledWith('typescript', {
           port: 8080,
           debugPort: 9229,
-          path: tsPath,
+          path: defaultFunctionPath,
         });
       });
   });
 
-  context('with --language java', () => {
+  context('with -l java', () => {
+    test.command(['run:function:start:local', '-l', 'java']).it('should start the local runner in java mode', (ctx) => {
+      expect(localRunConstructor).to.have.been.calledWith('java', {
+        port: 8080,
+        debugPort: 9229,
+        path: defaultFunctionPath,
+      });
+    });
+  });
+
+  context('with --path', () => {
     test
-      .command(['run:function:start:local', '--path', javaPath, '-l', 'java'])
-      .it('should start the Java invoker runtime', (ctx) => {
-        expect(localRunConstructor).to.have.been.calledWith('java', {
+      .command(['run:function:start:local', '--language', 'auto', '--path', customFunctionPath])
+      .it('should start the local runner with a custom path', (ctx) => {
+        expect(localRunConstructor).to.have.been.calledWith('auto', {
           port: 8080,
           debugPort: 9229,
-          path: javaPath,
+          path: customFunctionPath,
+        });
+      });
+  });
+
+  context('with --port and --debug-port', () => {
+    test
+      .command(['run:function:start:local', '--port', '1111', '--debug-port', '2222'])
+      .it('should start the local runner with custom ports', (ctx) => {
+        expect(localRunConstructor).to.have.been.calledWith('auto', {
+          port: 1111,
+          debugPort: 2222,
+          path: defaultFunctionPath,
+        });
+      });
+  });
+
+  context('with -p and -b', () => {
+    test
+      .command(['run:function:start:local', '-p', '1111', '-b', '2222'])
+      .it('should start the local runner with custom ports', (ctx) => {
+        expect(localRunConstructor).to.have.been.calledWith('auto', {
+          port: 1111,
+          debugPort: 2222,
+          path: defaultFunctionPath,
         });
       });
   });
