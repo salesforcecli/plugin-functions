@@ -1,0 +1,145 @@
+remote: Compressing source files... done.        
+remote: Building source:        
+remote: [unitofworkfunction] heroku/nodejs-engine           0.8.7        
+remote: [unitofworkfunction] heroku/nodejs-npm              0.5.2        
+remote: [unitofworkfunction] heroku/nodejs-function-invoker 0.3.3        
+remote: [anotherfunction] heroku/nodejs-engine           0.8.7        
+remote: [anotherfunction] heroku/nodejs-npm              0.5.2        
+remote: [anotherfunction] heroku/nodejs-function-invoker 0.3.3        
+remote: [anotherfunction] Previous image with name "*****/b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/anotherfunction" not found        
+remote: [anotherfunction] Layer cache not found        
+remote: [unitofworkfunction] Restoring metadata for "heroku/nodejs-engine:dist" from app image        
+remote: [unitofworkfunction] Restoring metadata for "heroku/nodejs-engine:web_env" from app image        
+remote: [unitofworkfunction] Restoring metadata for "heroku/nodejs-npm:node_modules" from cache        
+remote: [unitofworkfunction] Restoring metadata for "heroku/nodejs-npm:toolbox" from cache        
+remote: [unitofworkfunction] Restoring metadata for "heroku/nodejs-function-invoker:runtime" from app image        
+remote: [anotherfunction] Layer cache not found        
+remote: [unitofworkfunction] Restoring data for "heroku/nodejs-engine:dist" from cache        
+remote: [unitofworkfunction] Restoring data for "heroku/nodejs-npm:node_modules" from cache        
+remote: [unitofworkfunction] Restoring data for "heroku/nodejs-npm:toolbox" from cache        
+remote: [unitofworkfunction] Restoring data for "heroku/nodejs-function-invoker:runtime" from cache        
+remote: [anotherfunction]         
+remote: [anotherfunction] [Heroku Node.js Engine Buildpack]        
+remote: [anotherfunction]         
+remote: [anotherfunction] [Checking Node.js version]        
+remote: [anotherfunction] Detected Node.js version range: >=16.9.0 <17.0.0-0        
+remote: [anotherfunction] Resolved Node.js version: 16.16.0        
+remote: [anotherfunction] 
+remote: [anotherfunction] [Installing Node.js distribution]        
+remote: [anotherfunction] Downloading Node.js 16.16.0        
+remote: [anotherfunction] Extracting Node.js 16.16.0        
+remote: [anotherfunction] Installing Node.js 16.16.0        
+remote: [anotherfunction] [INFO] Installing toolbox        
+remote: [anotherfunction] [INFO] - yj        
+remote: [anotherfunction] [INFO] Using npm v8.11.0 from Node        
+remote: [anotherfunction] [INFO] Installing node modules        
+remote: [anotherfunction] npm WARN config production Use `--omit=dev` instead.        
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction] [Heroku Node.js Engine Buildpack]        
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction] [Checking Node.js version]        
+remote: [unitofworkfunction] Detected Node.js version range: >=16.9.0 <17.0.0-0        
+remote: [unitofworkfunction] Resolved Node.js version: 16.16.0        
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction] [Installing Node.js distribution]        
+remote: [unitofworkfunction] Downloading Node.js 16.16.0        
+remote: [unitofworkfunction] Extracting Node.js 16.16.0        
+remote: [unitofworkfunction] Installing Node.js 16.16.0        
+remote: [unitofworkfunction] [INFO] Installing toolbox        
+remote: [unitofworkfunction] [INFO] Using npm v8.11.0 from Node        
+remote: [unitofworkfunction] [INFO] Installing node modules from ./package-lock.json        
+remote: [unitofworkfunction] npm WARN config production Use `--omit=dev` instead.        
+remote: [anotherfunction]         
+remote: [anotherfunction] added 275 packages, and audited 276 packages in 10s        
+remote: [anotherfunction]         
+remote: [anotherfunction] 38 packages are looking for funding        
+remote: [anotherfunction]   run `npm fund` for details        
+remote: [anotherfunction]         
+remote: [anotherfunction] 2 moderate severity vulnerabilities        
+remote: [anotherfunction]         
+remote: [anotherfunction] To address all issues (including breaking changes), run:        
+remote: [anotherfunction]   npm audit fix --force        
+remote: [anotherfunction]         
+remote: [anotherfunction] Run `npm audit` for details.        
+remote: [anotherfunction] npm notice         
+remote: [anotherfunction] npm notice New minor version of npm available! 8.11.0 -> 8.18.0        
+remote: [anotherfunction] npm notice Changelog: <https://github.com/npm/cli/releases/tag/v8.18.0>        
+remote: [anotherfunction] npm notice Run `npm install -g npm@8.18.0` to update!        
+remote: [anotherfunction] npm notice         
+remote: [anotherfunction]         
+remote: [anotherfunction] > anotherfunction-function@0.0.1 build        
+remote: [anotherfunction] > tsc        
+remote: [anotherfunction]         
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction] added 243 packages, and audited 244 packages in 5s        
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction] 43 packages are looking for funding        
+remote: [unitofworkfunction]   run `npm fund` for details        
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction] found 0 vulnerabilities        
+remote: [unitofworkfunction] npm notice         
+remote: [unitofworkfunction] npm notice New minor version of npm available! 8.11.0 -> 8.18.0        
+remote: [unitofworkfunction] npm notice Changelog: <https://github.com/npm/cli/releases/tag/v8.18.0>        
+remote: [unitofworkfunction] npm notice Run `npm install -g npm@8.18.0` to update!        
+remote: [unitofworkfunction] npm notice         
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction] > unitofworkfunction-function@0.0.1 build        
+remote: [unitofworkfunction] > tsc        
+remote: [unitofworkfunction]         
+remote: [anotherfunction]         
+remote: [anotherfunction] [Warning: Skip pruning because NODE_ENV is not 'production'.]        
+remote: [anotherfunction]         
+remote: [anotherfunction]         
+remote: [anotherfunction] [Heroku Node.js Function Invoker Buildpack]        
+remote: [anotherfunction] Checking for function file        
+remote: [anotherfunction] Installing Node.js Function Invoker Runtime @heroku/sf-fx-runtime-nodejs@0.11.2        
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction] [Warning: Skip pruning because NODE_ENV is not 'production'.]        
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction]         
+remote: [unitofworkfunction] [Heroku Node.js Function Invoker Buildpack]        
+remote: [unitofworkfunction] Checking for function file        
+remote: [unitofworkfunction] Installing Node.js Function Invoker Runtime @heroku/sf-fx-runtime-nodejs@0.11.2        
+remote: [anotherfunction] Adding layer 'heroku/nodejs-engine:dist'        
+remote: [anotherfunction] Adding layer 'heroku/nodejs-engine:web_env'        
+remote: [anotherfunction] Adding layer 'heroku/nodejs-function-invoker:runtime'        
+remote: [anotherfunction] Adding 1/1 app layer(s)        
+remote: [anotherfunction] Adding layer 'launcher'        
+remote: [anotherfunction] Adding layer 'config'        
+remote: [anotherfunction] Adding layer 'process-types'        
+remote: [anotherfunction] Adding label 'io.buildpacks.lifecycle.metadata'        
+remote: [anotherfunction] Adding label 'io.buildpacks.build.metadata'        
+remote: [anotherfunction] Adding label 'io.buildpacks.project.metadata'        
+remote: [anotherfunction] Setting default process type 'web'        
+remote: [anotherfunction] Saving *****/b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/anotherfunction...        
+remote: [anotherfunction] *** Images (sha256:35a72790a6bb7391e0027313343d3113a5fac90715947d382e5ae422f29327fa):        
+remote: [anotherfunction]       *****/b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/anotherfunction:3b328335-c9c1-47ce-aabd-1aaaee800303        
+remote: [anotherfunction] Layer cache not found        
+remote: [anotherfunction] Adding cache layer 'heroku/nodejs-engine:dist'        
+remote: [anotherfunction] Adding cache layer 'heroku/nodejs-npm:toolbox'        
+remote: [anotherfunction] Adding cache layer 'heroku/nodejs-function-invoker:runtime'        
+remote: [unitofworkfunction] Reusing layers from image '*****/b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/unitofworkfunction@sha256:a8895b844c92aa9def0f929c4d8ac27f4456546b5515f8dfc576ee90978ab885'        
+remote: [unitofworkfunction] Adding layer 'heroku/nodejs-engine:dist'        
+remote: [unitofworkfunction] Adding layer 'heroku/nodejs-engine:web_env'        
+remote: [unitofworkfunction] Adding layer 'heroku/nodejs-function-invoker:runtime'        
+remote: [unitofworkfunction] Adding 1/1 app layer(s)        
+remote: [unitofworkfunction] Adding layer 'launcher'        
+remote: [unitofworkfunction] Adding layer 'config'        
+remote: [unitofworkfunction] Reusing layer 'process-types'        
+remote: [unitofworkfunction] Adding label 'io.buildpacks.lifecycle.metadata'        
+remote: [unitofworkfunction] Adding label 'io.buildpacks.build.metadata'        
+remote: [unitofworkfunction] Adding label 'io.buildpacks.project.metadata'        
+remote: [unitofworkfunction] Setting default process type 'web'        
+remote: [unitofworkfunction] Saving *****/b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/unitofworkfunction...        
+remote: [unitofworkfunction] *** Images (sha256:8b0c27ddb53286474069f5f2737bdfd43a29913eae52a59e43fcdd0363782be8):        
+remote: [unitofworkfunction]       *****/b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/unitofworkfunction:3b328335-c9c1-47ce-aabd-1aaaee800303        
+remote: [unitofworkfunction] Adding cache layer 'heroku/nodejs-engine:dist'        
+remote: [unitofworkfunction] Reusing cache layer 'heroku/nodejs-npm:node_modules'        
+remote: [unitofworkfunction] Reusing cache layer 'heroku/nodejs-npm:toolbox'        
+remote: [unitofworkfunction] Adding cache layer 'heroku/nodejs-function-invoker:runtime'        
+remote: [unitofworkfunction] Unable to delete previous cache image: DELETE https://*****/v2/b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/unitofworkfunction/manifests/sha256:3f071e508379de9cc9c02c0e2b2bd2a90ccd11cd943ce24ae611978e48bc2dc2: unexpected status code 404 Not FoundVerifying deploy... done.        
+To https://git.staging.herokudev.com/sfhxhel-00dro0000009afx2ai-425.git
+   f5df401..74995f7  cwall/functions-packaging -> master
+Reference for sfhxhello-anotherfunction created
+Reference for sfhxhello-unitofworkfunction updated
+Pushing changes to functions... done

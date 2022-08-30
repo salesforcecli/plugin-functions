@@ -4,6 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import * as path from 'path';
 import { expect, test } from '@oclif/test';
 import { CLIError } from '@oclif/errors';
 import { Org, SfdxProject } from '@salesforce/core';
@@ -12,6 +13,7 @@ import Git from '../../../../src/lib/git';
 import { AuthStubs } from '../../../helpers/auth';
 import DeployFunctionsCommand from '../../../../src/commands/deploy/functions';
 import * as FunctionReferenceUtils from '../../../../src/lib/function-reference-utils';
+import { FunctionReference } from '../../../../src/lib/sfdc-types';
 
 const sandbox = sinon.createSandbox();
 
@@ -461,4 +463,35 @@ describe('sf project deploy functions', () => {
       expect(ctx.stderr).to.include('Unable to deploy FunctionReference for sweet_project-fnerror.');
       expect(ctx.stderr).to.not.include('Reference for sweet_project-fnerror created');
     });
+
+  it('parse build output to obtain image digests', async () => {
+    const fs = require('fs');
+    const buildDeployOutput = fs.readFileSync(path.resolve(__dirname, '../../../fixtures/deploy.out'), {
+      encoding: 'utf8',
+      flag: 'r',
+    });
+    const functionReferences: FunctionReference[] = [
+      {
+        description: '',
+        fullName: 'sfhxhello-unitofworkfunction',
+        label: 'unitofworkfunction',
+      },
+      {
+        description: '',
+        fullName: 'sfhxhello-anotherfunction',
+        label: 'anotherfunction',
+      },
+    ];
+    functionReferences.forEach((fr) => {
+      // Eg "b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/unitofworkfunction:3b328335-c9c1-47ce-aabd-1aaaee800303"
+      // where the first UUID is the ComputeEnv and 2nd is the image digest
+      const found = [...buildDeployOutput.matchAll(new RegExp(`[a-z0-9-]*/${fr.label}:([a-z0-9-]*)`, 'gm'))];
+      if (found && found.length === 1 && found[0].length === 2) {
+        fr.imageReference = found[0][1];
+      }
+    });
+    // Ensure that all FR.ImageReferences are set
+    const missingImageReferences = functionReferences.filter((fr) => !fr.imageReference);
+    expect(missingImageReferences).to.be.an('array').that.is.empty;
+  });
 });

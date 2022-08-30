@@ -14,7 +14,7 @@ import { cyan } from 'chalk';
 import debugFactory from 'debug';
 import APIClient, { herokuClientApiUrl } from '../lib/api-client';
 import Git from '../lib/git';
-import { ComputeEnvironment, FunctionReference } from '../lib/sfdc-types';
+import { ComputeEnvironment, Formation, FunctionReference } from '../lib/sfdc-types';
 import { fetchAppForProject, fetchOrg, fetchSfdxProject } from '../lib/utils';
 import {
   ensureArray,
@@ -24,6 +24,7 @@ import {
   splitFullName,
 } from '../lib/function-reference-utils';
 import batchCall from '../lib/batch-call';
+import herokuVariant from '../lib/heroku-variant';
 
 const debug = debugFactory('deploy');
 
@@ -37,6 +38,7 @@ export interface FunctionsDeployOptions {
   branch?: string;
   force?: boolean;
   quiet?: boolean;
+  isPackageVersionCreate?: boolean; // True if caller is creating a package version
 }
 
 export class FunctionsDeployable extends Deployable {
@@ -60,6 +62,7 @@ export class FunctionsDeployable extends Deployable {
     return this.parent;
   }
 }
+
 export class FunctionsDeployer extends Deployer {
   protected stateAggregator!: StateAggregator;
   protected TOKEN_BEARER_KEY = 'functions-bearer';
@@ -73,6 +76,7 @@ export class FunctionsDeployer extends Deployer {
   private branch!: string;
   private force!: boolean;
   private quiet!: boolean;
+  private isPackageVersionCreate!: boolean;
 
   public constructor(private functionsDir: string) {
     super();
@@ -108,7 +112,11 @@ export class FunctionsDeployer extends Deployer {
     const redactedToken = this.auth;
     this.git = new Git([redactedToken ?? '']);
 
+    this.isPackageVersionCreate = options.isPackageVersionCreate || false;
+
     if (flags.interactive) {
+      // TODO [FunctionsPackaging]: If isPackageVersionCreate is defined, interactive should not be supported.
+
       this.username = await this.promptForUsername();
       this.branch = await this.promptForBranch();
       this.force = await this.promptForForce();
@@ -120,15 +128,24 @@ export class FunctionsDeployer extends Deployer {
       this.quiet = typeof options.quiet === 'boolean' ? options.quiet : await this.promptForQuiet();
     }
 
+    // TODO [FunctionsPackaging]: If isPackageVersionCreate is defined and quiet==true and until image_ref==null is fixed,
+    //   fail as we need to parse the build out for image digests.
+
     return {
       username: this.username,
       branch: this.branch,
       force: this.force,
       quiet: this.quiet,
+      isPackageVersionCreate: this.isPackageVersionCreate,
     };
   }
 
   public async deploy(): Promise<void> {
+    await this.deployForPackaging();
+  }
+
+  // TODO: If functionsToBuild is provided, build and publish only given function dirs
+  public async deployForPackaging(functionsToBuild: string[] = []): Promise<FunctionReference[]> {
     this.log();
     this.log(`Deploying ${cyan.bold(basename(this.functionsDir))}`);
 
@@ -137,6 +154,7 @@ export class FunctionsDeployer extends Deployer {
       branch: this.branch,
       force: this.force,
       quiet: this.quiet,
+      isPackageVersionCreate: this.isPackageVersionCreate,
     };
 
     // We don't want to deploy anything if they've got work that hasn't been committed yet because
@@ -155,7 +173,7 @@ export class FunctionsDeployer extends Deployer {
     // FunctionReferences: create function reference using info from function.toml and project info
     // we do this early on because we don't want to bother with anything else if it turns out
     // there are no functions to deploy
-    const references = await resolveFunctionReferences(project);
+    const functionReferences = await resolveFunctionReferences(project);
 
     let app: ComputeEnvironment;
     try {
@@ -187,8 +205,10 @@ export class FunctionsDeployer extends Deployer {
       pushCommand.push('--force');
     }
 
+    let buildDeployOutput: any;
     try {
-      await this.git!.exec(pushCommand, flags.quiet);
+      const { stderr } = await this.git!.exec(pushCommand, flags.quiet);
+      buildDeployOutput = stderr.toString();
     } catch (err) {
       const error = err as Error;
       // if they've passed `--quiet` we don't want to show any build server output *unless* there's
@@ -202,57 +222,108 @@ export class FunctionsDeployer extends Deployer {
       throw new Error('There was an issue when deploying your functions.');
     }
 
-    debug('pushing function references', references);
-
-    const connection = org.getConnection();
-
-    // Since the metadata upsert API can only handle 10 records at a time AND needs to run in sequence, we need to
-    // make sure that we're only submitting 10 records at once and then waiting for that batch to complete before
-    // submitting more
-    const results = await batchCall<FunctionReference, UpsertResult>(references, (chunk) =>
-      connection.metadata.upsert('FunctionReference', chunk)
-    );
-
-    results.forEach((result) => {
-      if (!result.success) {
-        throw new Error(`Unable to deploy FunctionReference for ${result.fullName}.`);
+    // Gather and set FunctionReference.ImageReference values for package version create requests
+    if (this.isPackageVersionCreate) {
+      // TODO: Currently, formation.docker_image.image_ref is missing.  See link below for bug to fix.
+      //   Until then, we'll parse the build output.  But, if function source was not updated, build
+      //   output will be 'Everything up-to-date'. If so, then customers need to change source to force
+      //   a function build for this to work.
+      //   https://salesforce-internal.slack.com/archives/C01068P24S3/p1661791353086689?thread_ts=1661787637.467259&cid=C01068P24S3
+      //   https://gus.lightning.force.com/lightning/r/ADM_Work__c/a07EE000015GsvYYAS/view
+      if (buildDeployOutput && buildDeployOutput !== 'Everything up-to-date') {
+        // Parse the build output finding each function's image digest
+        functionReferences.forEach((fr) => {
+          // Eg "b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/unitofworkfunction:3b328335-c9c1-47ce-aabd-1aaaee800303"
+          // where the first UUID is the ComputeEnv and 2nd is the image digest
+          const found = [...buildDeployOutput.matchAll(new RegExp(`[a-z0-9-]*/${fr.label}:([a-z0-9-]*)`, 'gm'))];
+          if (found && found.length === 1 && found[0].length === 2) {
+            fr.imageReference = found[0][1];
+          }
+        });
+      } else {
+        // Get image references for successfully deployed functions
+        const { data } = await this.client!.get<Formation[]>(`/apps/${app.id}/formation`, {
+          headers: {
+            ...herokuVariant('docker-releases'),
+          },
+        });
+        // Now set API's formation.docker_image.image_ref to FR.ImageReference
+        functionReferences.forEach((fr) => {
+          const formation = data.find(({ type }) => type === fr.label);
+          if (formation && formation.docker_image) {
+            fr.imageReference =
+              formation.docker_image.image_ref === null
+                ? 'TODO: image_ref value is missing'
+                : formation.docker_image.image_ref;
+          }
+        });
       }
 
-      if (!flags.quiet) {
-        this.log(
-          `Reference for ${result.fullName} ${
-            result.created ? herokuColor.cyan('created') : herokuColor.green('updated')
-          }`
+      // Ensure that all FR.ImageReferences are set
+      const missingImageReferences = functionReferences.filter((fr) => !fr.imageReference);
+      if (missingImageReferences.length > 0) {
+        throw new Error(
+          `ImageReference is missing for functions: ${missingImageReferences.map(({ label }) => label).join(',')}`
         );
       }
-    });
+    } else {
+      // REVIEWME: Not deploying FRs to Org for package version create requests
 
-    // Remove any function references for functions that no longer exist
-    const successfulReferences = results.reduce((acc: FullNameReference[], result) => {
-      if (result.success) {
-        acc.push(splitFullName(result.fullName));
-      }
+      debug('pushing function references', functionReferences);
 
-      return acc;
-    }, []);
-    let refList = await connection.metadata.list({ type: 'FunctionReference' });
-    refList = ensureArray(refList);
+      const connection = org.getConnection();
 
-    const allReferences = refList.reduce((acc: FullNameReference[], ref) => {
-      acc.push(splitFullName(ref.fullName));
+      // Since the metadata upsert API can only handle 10 records at a time AND needs to run in sequence, we need to
+      // make sure that we're only submitting 10 records at once and then waiting for that batch to complete before
+      // submitting more
+      const results = await batchCall<FunctionReference, UpsertResult>(functionReferences, (chunk) =>
+        connection.metadata.upsert('FunctionReference', chunk)
+      );
 
-      return acc;
-    }, []);
+      results.forEach((result) => {
+        if (!result.success) {
+          throw new Error(`Unable to deploy FunctionReference for ${result.fullName}.`);
+        }
 
-    const referencesToRemove = filterProjectReferencesToRemove(allReferences, successfulReferences, project.name);
-
-    if (referencesToRemove.length) {
-      this.log('Removing the following functions that were deleted locally:');
-      referencesToRemove.forEach((ref) => {
-        this.log(ref);
+        if (!flags.quiet) {
+          this.log(
+            `Reference for ${result.fullName} ${
+              result.created ? herokuColor.cyan('created') : herokuColor.green('updated')
+            }`
+          );
+        }
       });
-      await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
+
+      // Remove any function references for functions that no longer exist
+      const successfulReferences = results.reduce((acc: FullNameReference[], result) => {
+        if (result.success) {
+          acc.push(splitFullName(result.fullName));
+        }
+
+        return acc;
+      }, []);
+      let refList = await connection.metadata.list({ type: 'FunctionReference' });
+      refList = ensureArray(refList);
+
+      const allReferences = refList.reduce((acc: FullNameReference[], ref) => {
+        acc.push(splitFullName(ref.fullName));
+
+        return acc;
+      }, []);
+
+      const referencesToRemove = filterProjectReferencesToRemove(allReferences, successfulReferences, project.name);
+
+      if (referencesToRemove.length) {
+        this.log('Removing the following functions that were deleted locally:');
+        referencesToRemove.forEach((ref) => {
+          this.log(ref);
+        });
+        await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
+      }
     }
+
+    // Return all (REVIEWME: Exclude removed?)
+    return functionReferences;
   }
 
   public async promptForUsername(): Promise<string> {

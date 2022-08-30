@@ -32,6 +32,24 @@ export interface ComputeEnvironment extends Heroku.App {
   };
 }
 
+export interface Formation {
+  app: {
+    id: string;
+    name: string;
+  };
+  command: string;
+  created_at: string;
+  id: string;
+  type: string;
+  quantity: number;
+  size: string;
+  updated_at: string;
+  docker_image: {
+    id: string;
+    image_ref: string;
+  };
+}
+
 export type Dictionary<T> = {
   [key: string]: T;
 };
@@ -47,6 +65,7 @@ export interface FunctionReference {
   description: string;
   permissionSet?: string;
   access?: string;
+  imageReference?: string;
 }
 
 export interface ScratchOrgFields {
