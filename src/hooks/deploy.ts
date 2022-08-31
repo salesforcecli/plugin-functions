@@ -38,7 +38,7 @@ export interface FunctionsDeployOptions {
   branch?: string;
   force?: boolean;
   quiet?: boolean;
-  isPackageVersionCreate?: boolean; // True if caller is creating a package version
+  packageVersionCreate?: boolean; // True if caller is creating a package version
 }
 
 export class FunctionsDeployable extends Deployable {
@@ -76,7 +76,7 @@ export class FunctionsDeployer extends Deployer {
   private branch!: string;
   private force!: boolean;
   private quiet!: boolean;
-  private isPackageVersionCreate!: boolean;
+  private packageVersionCreate!: boolean;
 
   public constructor(private functionsDir: string) {
     super();
@@ -112,10 +112,10 @@ export class FunctionsDeployer extends Deployer {
     const redactedToken = this.auth;
     this.git = new Git([redactedToken ?? '']);
 
-    this.isPackageVersionCreate = options.isPackageVersionCreate || false;
+    this.packageVersionCreate = options.packageVersionCreate || false;
 
     if (flags.interactive) {
-      // TODO [FunctionsPackaging]: If isPackageVersionCreate is defined, interactive should not be supported.
+      // TODO [FunctionsPackaging]: If packageVersionCreate is defined, interactive should not be supported.
 
       this.username = await this.promptForUsername();
       this.branch = await this.promptForBranch();
@@ -123,12 +123,13 @@ export class FunctionsDeployer extends Deployer {
       this.quiet = await this.promptForQuiet();
     } else {
       this.username = options.username || (await this.promptForUsername());
-      this.branch = options.branch || (await this.promptForBranch());
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      this.branch = options.branch || (await this.git!.getCurrentBranch());
       this.force = typeof options.force === 'boolean' ? options.force : await this.promptForForce();
       this.quiet = typeof options.quiet === 'boolean' ? options.quiet : await this.promptForQuiet();
     }
 
-    // TODO [FunctionsPackaging]: If isPackageVersionCreate is defined and quiet==true and until image_ref==null is fixed,
+    // TODO [FunctionsPackaging]: If packageVersionCreate is defined and quiet==true and until image_ref==null is fixed,
     //   fail as we need to parse the build out for image digests.
 
     return {
@@ -136,7 +137,7 @@ export class FunctionsDeployer extends Deployer {
       branch: this.branch,
       force: this.force,
       quiet: this.quiet,
-      isPackageVersionCreate: this.isPackageVersionCreate,
+      packageVersionCreate: this.packageVersionCreate,
     };
   }
 
@@ -146,16 +147,18 @@ export class FunctionsDeployer extends Deployer {
 
   // TODO: If functionsToBuild is provided, build and publish only given function dirs
   public async deployForPackaging(functionsToBuild: string[] = []): Promise<FunctionReference[]> {
-    this.log();
-    this.log(`Deploying ${cyan.bold(basename(this.functionsDir))}`);
-
     const flags = {
       'connected-org': this.username,
       branch: this.branch,
       force: this.force,
       quiet: this.quiet,
-      isPackageVersionCreate: this.isPackageVersionCreate,
+      packageVersionCreate: this.packageVersionCreate,
     };
+
+    if (!flags.packageVersionCreate) {
+      this.log();
+      this.log(`Deploying ${cyan.bold(basename(this.functionsDir))}`);
+    }
 
     // We don't want to deploy anything if they've got work that hasn't been committed yet because
     // it could end up being really confusing since the user isn't calling git directly
@@ -189,7 +192,7 @@ export class FunctionsDeployer extends Deployer {
       throw error;
     }
 
-    if (flags.force && app.sales_org_connection?.sales_org_stage === 'prod') {
+    if (flags.force && app.sales_org_connection?.sales_org_stage === 'prod' && !flags.packageVersionCreate) {
       throw new Error('You cannot use the force option with a production org.');
     }
 
@@ -223,7 +226,7 @@ export class FunctionsDeployer extends Deployer {
     }
 
     // Gather and set FunctionReference.ImageReference values for package version create requests
-    if (this.isPackageVersionCreate) {
+    if (flags.packageVersionCreate) {
       // TODO: Currently, formation.docker_image.image_ref is missing.  See link below for bug to fix.
       //   Until then, we'll parse the build output.  But, if function source was not updated, build
       //   output will be 'Everything up-to-date'. If so, then customers need to change source to force
@@ -322,7 +325,7 @@ export class FunctionsDeployer extends Deployer {
       }
     }
 
-    // Return all (REVIEWME: Exclude removed?)
+    // Return all (REVIEWME: Exclude removed FunctionReferences?)
     return functionReferences;
   }
 
