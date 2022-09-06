@@ -32,6 +32,31 @@ export interface ComputeEnvironment extends Heroku.App {
   };
 }
 
+// https://devcenter.heroku.com/articles/platform-api-reference#build-info
+export interface Build {
+  app: {
+    id: string;
+    name: string;
+  };
+  created_at: string;
+  id: string;
+  release: {
+    id: string;
+  };
+  status: string;
+}
+
+export interface Release {
+  app: {
+    id: string;
+    name: string;
+  };
+  created_at: string;
+  id: string;
+  status: string;
+  current: boolean;
+}
+
 export interface Formation {
   app: {
     id: string;

@@ -464,7 +464,7 @@ describe('sf project deploy functions', () => {
       expect(ctx.stderr).to.not.include('Reference for sweet_project-fnerror created');
     });
 
-  it('parse build output to obtain image digests', async () => {
+  it('parse build output to obtain build id', async () => {
     const fs = require('fs');
     const buildDeployOutput = fs.readFileSync(path.resolve(__dirname, '../../../fixtures/deploy.out'), {
       encoding: 'utf8',
@@ -482,16 +482,18 @@ describe('sf project deploy functions', () => {
         label: 'anotherfunction',
       },
     ];
+    const buildIds: string[] = [];
     functionReferences.forEach((fr) => {
       // Eg "b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/unitofworkfunction:3b328335-c9c1-47ce-aabd-1aaaee800303"
-      // where the first UUID is the ComputeEnv and 2nd is the image digest
+      // where the first UUID is the ComputeEnv and 2nd is the build id
       const found = [...buildDeployOutput.matchAll(new RegExp(`[a-z0-9-]*/${fr.label}:([a-z0-9-]*)`, 'gm'))];
       if (found && found.length === 1 && found[0].length === 2) {
-        fr.imageReference = found[0][1];
+        buildIds.push(found[0][1]);
       }
     });
-    // Ensure that all FR.ImageReferences are set
-    const missingImageReferences = functionReferences.filter((fr) => !fr.imageReference);
-    expect(missingImageReferences).to.be.an('array').that.is.empty;
+    // Ensure buildIds are set and match
+    expect(buildIds.length).to.equal(2);
+    const shouldHaveOneBuildIdForAll = buildIds.filter((v, i, a) => a.indexOf(v) === i);
+    expect(shouldHaveOneBuildIdForAll.length).to.equal(1);
   });
 });

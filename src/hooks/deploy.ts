@@ -14,7 +14,7 @@ import { cyan } from 'chalk';
 import debugFactory from 'debug';
 import APIClient, { herokuClientApiUrl } from '../lib/api-client';
 import Git from '../lib/git';
-import { ComputeEnvironment, Formation, FunctionReference } from '../lib/sfdc-types';
+import { Build, ComputeEnvironment, Formation, FunctionReference, Release } from '../lib/sfdc-types';
 import { fetchAppForProject, fetchOrg, fetchSfdxProject } from '../lib/utils';
 import {
   ensureArray,
@@ -227,40 +227,70 @@ export class FunctionsDeployer extends Deployer {
 
     // Gather and set FunctionReference.ImageReference values for package version create requests
     if (flags.packageVersionCreate) {
-      // TODO: Currently, formation.docker_image.image_ref is missing.  See link below for bug to fix.
-      //   Until then, we'll parse the build output.  But, if function source was not updated, build
-      //   output will be 'Everything up-to-date'. If so, then customers need to change source to force
-      //   a function build for this to work.
-      //   https://salesforce-internal.slack.com/archives/C01068P24S3/p1661791353086689?thread_ts=1661787637.467259&cid=C01068P24S3
-      //   https://gus.lightning.force.com/lightning/r/ADM_Work__c/a07EE000015GsvYYAS/view
       if (buildDeployOutput && buildDeployOutput !== 'Everything up-to-date') {
-        // Parse the build output finding each function's image digest
+        // Okay, functions are new or change(s) were detected - a build was performed.
+        // Parse the build output finding build ids - should be the same build id for each function.
+        // We'll use the build id to ensure that this build was the latest build before retrieving function image digests.
+        const foundBuildIds: string[] = [];
         functionReferences.forEach((fr) => {
           // Eg "b085ee56-e04b-48a2-b4d6-580ce0e9f3a8/unitofworkfunction:3b328335-c9c1-47ce-aabd-1aaaee800303"
-          // where the first UUID is the ComputeEnv and 2nd is the image digest
+          // where the 1st UUID is the compute env id and 2nd is the build id
           const found = [...buildDeployOutput.matchAll(new RegExp(`[a-z0-9-]*/${fr.label}:([a-z0-9-]*)`, 'gm'))];
           if (found && found.length === 1 && found[0].length === 2) {
-            fr.imageReference = found[0][1];
+            foundBuildIds.push(found[0][1]);
           }
         });
-      } else {
-        // Get image references for successfully deployed functions
-        const { data } = await this.client!.get<Formation[]>(`/apps/${app.id}/formation`, {
+
+        // Ensure build ids are the same - should just have 1 build id for all
+        const shouldHaveOneBuildIdForAll = foundBuildIds.filter(
+          (value, idx, buildIds) => buildIds.indexOf(value) === idx
+        );
+        if (shouldHaveOneBuildIdForAll.length !== 1) {
+          throw new Error(
+            `There was an issue when deploying your functions - found multiple build ids. [${shouldHaveOneBuildIdForAll.join(
+              ','
+            )}]`
+          );
+        }
+
+        // Get release id to be used to query release info below
+        const buildResponse = await this.client!.get<Build>(`/apps/${app.name}/builds/${shouldHaveOneBuildIdForAll[0]}`, {
           headers: {
-            ...herokuVariant('docker-releases'),
+            Accept: 'application/vnd.heroku+json; version=3',
           },
         });
-        // Now set API's formation.docker_image.image_ref to FR.ImageReference
-        functionReferences.forEach((fr) => {
-          const formation = data.find(({ type }) => type === fr.label);
-          if (formation && formation.docker_image) {
-            fr.imageReference =
-              formation.docker_image.image_ref === null
-                ? 'TODO: image_ref value is missing'
-                : formation.docker_image.image_ref;
-          }
+        if (buildResponse.data.status !== 'succeeded') {
+          throw new Error('There was an issue when deploying your functions');
+        }
+
+        // Ensure that this build is the latest before grabbing image_refs for deployed functions
+        const releaseResponse = await this.client!.get<Release>(`/apps/${app.name}/releases/${buildResponse.data.release.id}`, {
+          headers: {
+            Accept: 'application/vnd.heroku+json; version=3',
+          },
         });
+        if (!releaseResponse.data.current) {
+          throw new Error('This function build is not the latest.  Please invoke command again to rebuild.');
+        }
       }
+
+      // Get image references for successfully deployed functions
+      const { data } = await this.client!.get<Formation[]>(`/apps/${app.id}/formation`, {
+        headers: {
+          ...herokuVariant('docker-releases'),
+        },
+      });
+      // Now set API's formation.docker_image.image_ref to FR.ImageReference
+      // TODO: Currently, formation.docker_image.image_ref is missing.  See link below for bug to fix.
+      // https://gus.lightning.force.com/lightning/r/ADM_Work__c/a07EE000015GsvYYAS/view
+      functionReferences.forEach((fr) => {
+        const formation = data.find(({ type }) => type === fr.label);
+        if (formation) {
+          fr.imageReference = JSON.stringify(formation);
+        } else {
+          throw new Error(`Function image not found for function ${fr.label}`);
+        }
+      });
 
       // Ensure that all FR.ImageReferences are set
       const missingImageReferences = functionReferences.filter((fr) => !fr.imageReference);
