@@ -152,7 +152,10 @@ describe('sf run function', () => {
       .stderr()
       .stub(process, 'exit', () => '')
       .command(['run:function', '-l', targetUrl, '-p', userpayload])
-      .catch((error) => expect(error.message).to.contain('500 undefined'))
+      .catch((error) => {
+        expect(error.message).to.contain('500 undefined');
+        expect(error.message).to.contain('Something bad happened!');
+      })
       .finally(() => {
         sinon.assert.calledWith(stopActionSub, sinon.match('failed'));
       })
