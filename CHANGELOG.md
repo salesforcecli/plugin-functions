@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.7](https://github.com/salesforcecli/plugin-functions/compare/v1.13.5...v1.13.7) (2022-09-12)
+
+### Bug Fixes
+
+- **deps:** update function templates ([#481](https://github.com/salesforcecli/plugin-functions/issues/481)) ([5366618](https://github.com/salesforcecli/plugin-functions/commit/5366618d38e3789a00a7ae889f0de03cf73a030d))
+- show the HTTP body for functions non HTTP-200 responses ([#491](https://github.com/salesforcecli/plugin-functions/issues/491)) ([ed95be3](https://github.com/salesforcecli/plugin-functions/commit/ed95be383c80e24a938299892127bd4227eda315)), closes [/github.com/forcedotcom/salesforcedx-vscode/blob/e391707d0225de338f4f8e0e79e0a5cdd6b51f11/packages/salesforcedx-vscode-core/src/commands/functions/forceFunctionInvoke.ts#L61](https://github.com/salesforcecli//github.com/forcedotcom/salesforcedx-vscode/blob/e391707d0225de338f4f8e0e79e0a5cdd6b51f11/packages/salesforcedx-vscode-core/src/commands/functions/forceFunctionInvoke.ts/issues/L61)
+
 ### [1.13.6](https://github.com/salesforcecli/plugin-functions/compare/v1.13.5...v1.13.6) (2022-08-29)
 
 ### Bug Fixes
