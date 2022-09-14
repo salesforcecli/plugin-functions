@@ -19,21 +19,6 @@ import { fetchSfdxProject } from '../../../lib/utils';
 // It does not require a client secret, is marked as public in the database and scoped accordingly
 const PUBLIC_CLIENT_ID = '1e9cdca9-cec7-4dbf-ae84-408694b22bac';
 
-interface OAuthToken {
-  authorization: {
-    id: string;
-    scope: ['evergreen'];
-  };
-  access_token: {
-    expires_in: number;
-    id: string;
-    token: string;
-  };
-  user: {
-    id: string;
-  };
-}
-
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'login.functions.jwt');
 

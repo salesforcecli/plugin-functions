@@ -8,7 +8,6 @@
 import * as path from 'path';
 import { Messages } from '@salesforce/core';
 import { Flags } from '@oclif/core';
-import { cli } from 'cli-ux';
 
 import Local from './start/local';
 

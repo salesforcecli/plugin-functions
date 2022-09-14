@@ -12,7 +12,6 @@ import herokuColor from '@heroku-cli/color';
 import { AxiosResponse, AxiosError } from 'axios';
 import { ConfigAggregator, Messages } from '@salesforce/core';
 import getStdin from '../../lib/get-stdin';
-import { FunctionsFlagBuilder } from '../../lib/flags';
 import Command from '../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);

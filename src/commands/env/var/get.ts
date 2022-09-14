@@ -8,7 +8,6 @@ import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Messages } from '@salesforce/core';
 import { Errors } from '@oclif/core';
-import { cli } from 'cli-ux';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 import Command from '../../../lib/base';
