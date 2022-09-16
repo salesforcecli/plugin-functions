@@ -5,10 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { Flags } from '@oclif/core';
-import { cli } from 'cli-ux';
 import { dim, cyan } from 'chalk';
 import { Messages } from '@salesforce/core';
-import { FunctionsFlagBuilder } from '../../lib/flags';
 import Command from '../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);

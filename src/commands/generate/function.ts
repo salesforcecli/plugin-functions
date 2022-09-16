@@ -6,7 +6,6 @@
  */
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
-import { cli } from 'cli-ux';
 import { Errors, Flags } from '@oclif/core';
 import { generateFunction, Language } from '@hk/functions-core';
 import Command from '../../lib/base';
