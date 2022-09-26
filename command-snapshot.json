@@ -90,6 +90,12 @@
     "alias": []
   },
   {
+    "command": "login:functions:device",
+    "plugin": "@salesforce/plugin-functions",
+    "flags": ["alias", "instance-url", "instanceurl", "set-default", "set-default-dev-hub"],
+    "alias": []
+  },
+  {
     "command": "login:functions:jwt",
     "plugin": "@salesforce/plugin-functions",
     "flags": [
