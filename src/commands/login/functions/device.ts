@@ -79,21 +79,11 @@ export default class DeviceLogin extends Command {
 
     const authInfo = await deviceOauthService.authorizeAndSave(approval);
 
-    // Take care of any alias/default setting that needs to happen for the sfdx credential
-    // before we move on to the heroku stuff
-    if (flags.alias) {
-      await authInfo.setAlias(flags.alias);
-    }
-    if (flags['set-default']) {
-      await authInfo.setAsDefault({
-        org: true,
-      });
-    }
-    if (flags['set-default-dev-hub']) {
-      await authInfo.setAsDefault({
-        devHub: true,
-      });
-    }
+    await authInfo.handleAliasAndDefaultSettings({
+        alias: flags.alias,
+        setDefault: flags['set-default'],
+        setDefaultDevHub: flags['set-default-dev-hub'],
+    });
     await authInfo.save();
 
     // Obtain sfdx access token from Auth info
