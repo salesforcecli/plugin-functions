@@ -83,12 +83,10 @@ export default class ConfigUnset extends Command {
       this.error(error);
     }
 
-    const configPairs = argv.reduce((acc: any, elem: any) => {
-      return {
+    const configPairs = argv.reduce((acc: any, elem: any) => ({
         ...acc,
         [elem]: null,
-      };
-    }, {});
+      }), {});
 
     const message = `Unsetting ${Object.keys(configPairs)
       .map((key) => herokuColor.configVar(key))

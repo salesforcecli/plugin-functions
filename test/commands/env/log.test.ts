@@ -21,9 +21,7 @@ describe('sf env logs', () => {
   test
     .stdout()
     .nock(logSessionURLBase, {}, (api) =>
-      api.get(logSessionURLAddress).reply(200, (_uri: any, _requestBody: any) => {
-        return fs.createReadStream('test/helpers/logoutput.txt');
-      })
+      api.get(logSessionURLAddress).reply(200, (_uri: any, _requestBody: any) => fs.createReadStream('test/helpers/logoutput.txt'))
     )
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${appName}/log-sessions`).reply(200, fakeResponseData))
     .command(['env:log', `--target-compute=${appName}`])
@@ -35,9 +33,7 @@ describe('sf env logs', () => {
   test
     .stdout()
     .nock(logSessionURLBase, {}, (api) =>
-      api.get(logSessionURLAddress).reply(200, (_uri: any, _requestBody: any) => {
-        return fs.createReadStream('test/helpers/logoutput.txt');
-      })
+      api.get(logSessionURLAddress).reply(200, (_uri: any, _requestBody: any) => fs.createReadStream('test/helpers/logoutput.txt'))
     )
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${appName}/log-sessions`).reply(200, fakeResponseData))
     .command(['env:log', `--target-compute=${appName}`, '--num=3'])
@@ -49,9 +45,7 @@ describe('sf env logs', () => {
   test
     .stdout()
     .nock(logSessionURLBase, {}, (api) =>
-      api.get(logSessionURLAddress).reply(200, (_uri: any, _requestBody: any) => {
-        return fs.createReadStream('test/helpers/logoutput.txt');
-      })
+      api.get(logSessionURLAddress).reply(200, (_uri: any, _requestBody: any) => fs.createReadStream('test/helpers/logoutput.txt'))
     )
     .nock('https://api.heroku.com', (api) => api.post(`/apps/${appName}/log-sessions`).reply(200, fakeResponseData))
     .command(['env:log', `--environment=${appName}`])

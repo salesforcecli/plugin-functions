@@ -98,12 +98,10 @@ async function resolveAliasesForComputeEnvironments(envs: ComputeEnvironment[]) 
   const entries = Object.entries(stateAggregator.aliases.getAll()) as ConfigEntry[];
 
   return Promise.all(
-    envs.map(async (env) => {
-      return {
+    envs.map(async (env) => ({
         ...env,
         alias: await resolveAliasForValue(env.id!, entries),
-      };
-    })
+      }))
   );
 }
 
@@ -143,16 +141,14 @@ const hook: SfHook.EnvList<ComputeEnv> = async function (opts) {
     {
       type: EnvList.EnvType.computeEnvs,
       title: 'Compute Environments',
-      data: environments.map((env) => {
-        return {
+      data: environments.map((env) => ({
           alias: env.alias,
           projectName: env.sfdx_project_name,
           connectedOrgAlias: env.orgAlias,
           connectedOrgId: env.sales_org_connection?.sales_org_id,
           computeEnvironmentName: env.name,
           computeEnvironmentId: env.id,
-        };
-      }),
+        })),
     },
   ];
 };

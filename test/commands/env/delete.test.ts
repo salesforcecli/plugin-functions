@@ -24,16 +24,12 @@ export const PROJECT_CONFIG_MOCK = {
 
 const ORG_MOCK = {
   getUsername: () => 'fakeUsername',
-  getConnection: () => {
-    return {
+  getConnection: () => ({
       metadata: {
-        list: () => {
-          return [];
-        },
+        list: () => [],
         delete: () => 200,
       },
-    };
-  },
+    }),
   getOrgId: () => 'fakeid',
 };
 
@@ -105,9 +101,7 @@ describe('sf env delete', () => {
     .do(() => {
       sandbox.stub(Utils, 'findOrgExpirationStatus' as any).throws('This function should not have been called');
     })
-    .add('findOrgStub', () => {
-      return sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
-    })
+    .add('findOrgStub', () => sandbox.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK))
     .finally(() => {
       sandbox.restore();
     })

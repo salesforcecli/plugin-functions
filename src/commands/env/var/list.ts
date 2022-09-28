@@ -57,12 +57,10 @@ export default class ConfigList extends Command {
 
     const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
 
-    const configArray = flatMap(config, (value, key) => {
-      return {
+    const configArray = flatMap(config, (value, key) => ({
         key,
         value,
-      };
-    });
+      }));
 
     if (configArray.length === 0) {
       this.warn(`No config vars found for environment ${targetCompute}`);

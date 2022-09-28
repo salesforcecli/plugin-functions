@@ -42,8 +42,7 @@ const FUNCTION_REFS_MOCK = [
 const USERNAME = 'fakeusername@salesforce.com';
 
 const METADATA_MOCK = {
-  upsert: (type: string, refs: any[]) => {
-    return refs.map((ref) => {
+  upsert: (type: string, refs: any[]) => refs.map((ref) => {
       if (ref.fullName.includes('error')) {
         return {
           fullName: ref.fullName,
@@ -55,15 +54,10 @@ const METADATA_MOCK = {
         success: true,
         created: true,
       };
-    });
-  },
-  list: () => {
-    return FUNCTION_REFS_MOCK.map((ref) => {
-      return {
+    }),
+  list: () => FUNCTION_REFS_MOCK.map((ref) => ({
         fullName: ref.fullName,
-      };
-    });
-  },
+      })),
   delete: sandbox.stub(),
 };
 
@@ -107,21 +101,17 @@ ORG_MOCK_WITH_DELETED_FUNCTION.getConnection = function () {
   return {
     metadata: {
       ...METADATA_MOCK,
-      list: () => {
-        return [
-          ...FUNCTION_REFS_MOCK.map((ref) => {
-            return {
+      list: () => [
+          ...FUNCTION_REFS_MOCK.map((ref) => ({
               fullName: ref.fullName,
-            };
-          }),
+            })),
           {
             fullName: 'sweet_project-fn2bedeleted',
           },
           {
             fullName: 'other_sweet_project-fn1',
           },
-        ];
-      },
+        ],
     },
   };
 };
@@ -273,9 +263,7 @@ describe('sf project deploy functions', () => {
 
       sandbox.stub(FunctionReferenceUtils, 'resolveFunctionReferences' as any).returns(FUNCTION_REFS_MOCK);
     })
-    .add('execStub', () => {
-      return sandbox.stub(Git.prototype, 'exec' as any);
-    })
+    .add('execStub', () => sandbox.stub(Git.prototype, 'exec' as any))
     .finally(() => {
       sandbox.restore();
     })

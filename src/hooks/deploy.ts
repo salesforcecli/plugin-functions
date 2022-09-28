@@ -285,7 +285,7 @@ export class FunctionsDeployer extends Deployer {
 
       return branch;
     } else {
-      return await this.git!.getCurrentBranch();
+      return this.git!.getCurrentBranch();
     }
   }
 

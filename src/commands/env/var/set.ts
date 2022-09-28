@@ -39,7 +39,7 @@ export default class ConfigSet extends Command {
     }
 
     return pairs.reduce((acc, elem) => {
-      if (elem.indexOf('=') === -1) {
+      if (!elem.includes('=')) {
         this.error(`${herokuColor.cyan(elem)} is invalid. Please use the format ${herokuColor.cyan('key=value')}`);
       }
 

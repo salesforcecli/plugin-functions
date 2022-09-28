@@ -91,9 +91,7 @@ describe('sf login functions jwt', () => {
   test
     .stdout()
     .stderr()
-    .add('AuthInfoCreateStub', () => {
-      return sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
-    })
+    .add('AuthInfoCreateStub', () => sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB))
     .finally(() => sinon.restore())
     .nock('https://api.heroku.com', (api) => {
       api
@@ -131,9 +129,7 @@ describe('sf login functions jwt', () => {
   test
     .stdout()
     .stderr()
-    .add('AuthInfoCreateStub', () => {
-      return sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
-    })
+    .add('AuthInfoCreateStub', () => sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB))
     .finally(() => sinon.restore())
     .nock('https://api.heroku.com', (api) => {
       api
@@ -179,9 +175,7 @@ describe('sf login functions jwt', () => {
     .do(() => {
       sinon.stub(SfProject, 'resolve' as any).returns(PROJECT_MOCK);
     })
-    .add('AuthInfoCreateStub', () => {
-      return sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB);
-    })
+    .add('AuthInfoCreateStub', () => sinon.stub(AuthInfo, 'create' as any).returns(AUTH_INFO_STUB))
     .finally(() => sinon.restore())
     .nock('https://api.heroku.com', (api) => {
       api
