@@ -22,7 +22,7 @@ Functions plugin for the SF CLI
 
 # Usage
 
-1. Install the SF CLI: [Install instructions](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)
+1. Install the SF CLI: [Install instructions](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_CliUx.uxhtm)
 2. Then run `sf plugins:install @salesforce/plugin-functions`:
 
 ```sh-session

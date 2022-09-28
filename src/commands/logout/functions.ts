@@ -4,9 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
-
+import { CliUx } from '@oclif/core';
 import Command from '../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);
@@ -23,12 +22,12 @@ export default class Login extends Command {
     const { flags } = await this.parse(Login);
     this.postParseHook(flags);
 
-    cli.action.start(messages.getMessage('action.start'));
+    CliUx.ux.action.start(messages.getMessage('action.start'));
 
     this.stateAggregator.tokens.unset(Command.TOKEN_BEARER_KEY);
     await this.stateAggregator.tokens.write();
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
 
     return 'Logged out';
   }

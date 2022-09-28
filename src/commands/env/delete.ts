@@ -7,8 +7,7 @@
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Org, Messages } from '@salesforce/core';
-import { cli } from 'cli-ux';
-import { Errors } from '@oclif/core';
+import { Errors, CliUx } from '@oclif/core';
 import {
   filterProjectReferencesToRemove,
   splitFullName,
@@ -63,7 +62,7 @@ export default class EnvDelete extends Command {
 
     await this.confirmRemovePrompt('environment', targetCompute, flags.confirm);
 
-    cli.action.start(`Deleting environment ${targetCompute}`);
+    CliUx.ux.action.start(`Deleting environment ${targetCompute}`);
 
     if (targetCompute) {
       try {
@@ -155,7 +154,7 @@ export default class EnvDelete extends Command {
       },
     });
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
 
     return 'Environment deleted.';
   }

@@ -7,7 +7,7 @@
 import { expect, test } from '@oclif/test';
 import type { SfTokens } from '@salesforce/core';
 import { TokenAccessor } from '@salesforce/core/lib/stateAggregator';
-import { cli } from 'cli-ux';
+import { CliUx } from '@oclif/core';
 import * as sinon from 'sinon';
 import { AuthStubs } from '../../helpers/auth';
 
@@ -26,7 +26,7 @@ describe('sf login functions', () => {
   test
     .stdout()
     .stderr()
-    .stub(cli, 'open', () => windowOpenStub)
+    .stub(CliUx.ux, 'open', () => windowOpenStub)
     .nock('https://cli-auth.heroku.com', (api) => {
       api
         .post('/sfdx/auth', { description: 'Login from Sfdx CLI' })
@@ -67,7 +67,7 @@ describe('sf login functions', () => {
     test
       .stdout()
       .stderr()
-      .stub(cli, 'open', () => windowOpenStub)
+      .stub(CliUx.ux, 'open', () => windowOpenStub)
       .nock(SALESFORCE_FUNCTIONS_IDENTITY_URL, (api) => {
         api.post('/sfdx/auth').reply(200, {
           browser_url: '/browser_url',

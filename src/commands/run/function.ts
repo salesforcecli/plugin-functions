@@ -5,9 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as fs from 'fs';
-import { Errors, Flags } from '@oclif/core';
+import { Errors, Flags, CliUx } from '@oclif/core';
 import { runFunction, RunFunctionOptions } from '@hk/functions-core';
-import { cli } from 'cli-ux';
 import herokuColor from '@heroku-cli/color';
 import { AxiosResponse, AxiosError } from 'axios';
 import { ConfigAggregator, Messages } from '@salesforce/core';
@@ -80,7 +79,7 @@ export default class Invoke extends Command {
     const aliasOrUser = flags['connected-org'] || `target-org ${targetOrg}`;
     this.log(`Using ${aliasOrUser} login credential to initialize context`);
 
-    cli.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
+    CliUx.ux.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
 
     const runFunctionOptions = {
       ...flags,
@@ -92,7 +91,7 @@ export default class Invoke extends Command {
 
     try {
       response = await runFunction(runFunctionOptions as RunFunctionOptions);
-      cli.action.stop(herokuColor.greenBright(response.status.toString()));
+      CliUx.ux.action.stop(herokuColor.greenBright(response.status.toString()));
 
       if (!flags.json) {
         this.writeResponse(response);

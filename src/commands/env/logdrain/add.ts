@@ -6,8 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Errors, Flags } from '@oclif/core';
-import { cli } from 'cli-ux';
+import { Errors, Flags, CliUx } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
@@ -79,7 +78,7 @@ export default class LogDrainAdd extends Command {
     const appName = await resolveAppNameForEnvironment(targetCompute);
 
     try {
-      cli.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
+      CliUx.ux.action.start(`Creating drain for environment ${herokuColor.app(targetCompute)}`);
 
       const result = await this.client.post<Heroku.LogDrain>(`/apps/${appName}/log-drains`, {
         data: {
@@ -87,7 +86,7 @@ export default class LogDrainAdd extends Command {
         },
       });
 
-      cli.action.stop();
+      CliUx.ux.action.stop();
 
       return [
         {

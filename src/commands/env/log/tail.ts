@@ -5,10 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import herokuColor from '@heroku-cli/color';
-import { cli } from 'cli-ux';
 import * as Heroku from '@heroku-cli/schema';
 import { Messages } from '@salesforce/core';
-import { Errors } from '@oclif/core';
+import { Errors, CliUx } from '@oclif/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
 import { resolveAppNameForEnvironment } from '../../../lib/utils';
@@ -68,6 +67,6 @@ export default class LogTail extends Command {
     } else {
       this.error("Couldn't retreive logs");
     }
-    cli.action.stop();
+    CliUx.ux.action.stop();
   }
 }

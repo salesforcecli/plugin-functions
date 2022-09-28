@@ -6,8 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
-import { Flags } from '@oclif/core';
-import { cli } from 'cli-ux';
+import { Flags, CliUx } from '@oclif/core';
 import debugFactory from 'debug';
 import { UpsertResult } from 'jsforce';
 import Command from '../../lib/base';
@@ -73,7 +72,7 @@ export default class DeployFunctions extends Command {
     }
 
     // Heroku side: Fetch git remote URL and push working branch to Heroku git server
-    cli.action.start('Pushing changes to functions');
+    CliUx.ux.action.start('Pushing changes to functions');
     const org = await fetchOrg(flags['connected-org']);
     const project = await fetchSfdxProject();
 
@@ -144,7 +143,7 @@ export default class DeployFunctions extends Command {
     results.forEach((result) => {
       if (!result.success) {
         shouldExitNonZero = true;
-        cli.error(`Unable to deploy FunctionReference for ${result.fullName}.`, { exit: false });
+        CliUx.ux.error(`Unable to deploy FunctionReference for ${result.fullName}.`, { exit: false });
       }
 
       if (!flags.quiet && !flags.json) {
@@ -183,7 +182,7 @@ export default class DeployFunctions extends Command {
       await batchCall(referencesToRemove, (chunk) => connection.metadata.delete('FunctionReference', chunk));
     }
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
 
     if (shouldExitNonZero) {
       this.exit(1);

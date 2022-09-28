@@ -4,18 +4,17 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { Flags } from '@oclif/core';
+import { Flags, CliUx } from '@oclif/core';
 import { AuthInfo, AuthRemover, Messages } from '@salesforce/core';
 import { getString } from '@salesforce/ts-types';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as Transport from 'jsforce/lib/transport';
-import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
 import { herokuVariant } from '../../../lib/heroku-variant';
 import { fetchSfdxProject } from '../../../lib/utils';
 
-// This is a public Oauth client created expressly for the purpose of headless auth in the functions CLI.
+// This is a public Oauth client created expressly for the purpose of headless auth in the functions CliUx.ux
 // It does not require a client secret, is marked as public in the database and scoped accordingly
 const PUBLIC_CLIENT_ID = '1e9cdca9-cec7-4dbf-ae84-408694b22bac';
 
@@ -128,7 +127,7 @@ export default class JwtLogin extends Command {
       this.warn(messages.getMessage('flags.instanceurl.deprecation'));
     }
 
-    cli.action.start('Logging in via JWT');
+    CliUx.ux.action.start('Logging in via JWT');
 
     // Use keyfile, clientid, and username to auth with salesforce via the same workflow
     // as sfdx auth:jwt:grant --json
@@ -209,7 +208,7 @@ export default class JwtLogin extends Command {
 
     await this.stateAggregator.tokens.write();
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
 
     return {
       username: authFields.username,

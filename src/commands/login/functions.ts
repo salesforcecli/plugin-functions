@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { cli } from 'cli-ux';
+import { CliUx } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -38,9 +38,9 @@ export default class Login extends Command {
 
     this.log(`Opening browser to ${browserUrl}\n`);
 
-    await cli.open(browserUrl);
+    await CliUx.ux.open(browserUrl);
 
-    cli.action.start('Waiting for login');
+    CliUx.ux.action.start('Waiting for login');
     const headers = { Authorization: 'Bearer ' + token };
     const response = await new Transport().httpRequest({
       url: cliUrl,
@@ -54,9 +54,9 @@ export default class Login extends Command {
       return this.error(`${data.error}`);
     }
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
 
-    cli.action.start('Saving credentials');
+    CliUx.ux.action.start('Saving credentials');
 
     const bearerToken = data.access_token;
 
@@ -80,6 +80,6 @@ export default class Login extends Command {
 
     await this.stateAggregator.tokens.write();
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
   }
 }

@@ -6,10 +6,9 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Flags } from '@oclif/core';
+import { Flags, CliUx } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
-import { cli } from 'cli-ux';
 import Command from '../../../lib/base';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import pollForResult from '../../../lib/poll-for-result';
@@ -63,7 +62,7 @@ export default class EnvCreateCompute extends Command {
           )} to the "features" list in your scratch org definition JSON file, e.g. "features": ["Functions"]`
       );
     }
-    cli.action.start(`Creating compute environment for org ID ${orgId}`);
+    CliUx.ux.action.start(`Creating compute environment for org ID ${orgId}`);
     const project = await fetchSfdxProject();
     const projectName = project.name;
 
@@ -135,18 +134,18 @@ export default class EnvCreateCompute extends Command {
         },
       });
 
-      cli.action.stop();
+      CliUx.ux.action.stop();
 
       this.log(`New compute environment created with ID ${app.name}`);
 
-      cli.action.start('Connecting environments');
+      CliUx.ux.action.start('Connecting environments');
 
       if (alias) {
         this.stateAggregator.aliases.set(alias, app.id!);
         await this.stateAggregator.aliases.write();
       }
 
-      cli.action.stop();
+      CliUx.ux.action.stop();
       this.log(
         alias
           ? `Your compute environment with local alias ${herokuColor.cyan(alias)} is ready.`
@@ -158,7 +157,7 @@ export default class EnvCreateCompute extends Command {
       const INVALID_PROJECT_NAME =
         "Sfdx project name may only contain numbers (0-9), letters (a-z A-Z) and non-consecutive underscores ('_'). It must begin with a letter and end with either a number or letter.";
       const error = err as { data: { message?: string } };
-      cli.action.stop('error!');
+      CliUx.ux.action.stop('error!');
 
       if (error.data?.message?.includes(INVALID_PROJECT_NAME)) {
         this.error(

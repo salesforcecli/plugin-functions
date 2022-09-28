@@ -6,8 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Errors, Flags } from '@oclif/core';
-import { cli } from 'cli-ux';
+import { Errors, Flags, CliUx } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
@@ -75,11 +74,11 @@ export default class LogDrainRemove extends Command {
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
     try {
-      cli.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
+      CliUx.ux.action.start(`Deleting drain for environment ${herokuColor.app(targetCompute)}`);
 
       await this.client.delete<Heroku.LogDrain>(`/apps/${appName}/log-drains/${encodeURIComponent(url)}`);
 
-      cli.action.stop();
+      CliUx.ux.action.stop();
 
       return 'Removed drain-url';
     } catch (e) {
