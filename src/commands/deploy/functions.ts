@@ -6,7 +6,8 @@
  */
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
-import { Flags, CliUx } from '@oclif/core';
+import { CliUx } from '@oclif/core';
+import { Flags } from '@salesforce/sf-plugins-core';
 import debugFactory from 'debug';
 import { UpsertResult } from 'jsforce';
 import Command from '../../lib/base';

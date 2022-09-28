@@ -5,7 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as fs from 'fs';
-import { Errors, Flags, CliUx } from '@oclif/core';
+import { Flags } from '@salesforce/sf-plugins-core';
+import { Errors, CliUx } from '@oclif/core';
 import { runFunction, RunFunctionOptions } from '@hk/functions-core';
 import herokuColor from '@heroku-cli/color';
 import { AxiosResponse, AxiosError } from 'axios';

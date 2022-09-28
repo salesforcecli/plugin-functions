@@ -7,7 +7,7 @@
 
 import * as path from 'path';
 import { Messages } from '@salesforce/core';
-import { Flags } from '@oclif/core';
+import { Flags } from '@salesforce/sf-plugins-core';
 
 import Local from './start/local';
 

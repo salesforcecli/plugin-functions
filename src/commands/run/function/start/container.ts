@@ -7,7 +7,8 @@
 import * as path from 'path';
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
-import { Command, Flags, CliUx } from '@oclif/core';
+import { Flags } from '@salesforce/sf-plugins-core';
+import { Command, CliUx } from '@oclif/core';
 import { getFunctionsBinary, getProjectDescriptor } from '@hk/functions-core';
 import { JsonMap } from '@salesforce/ts-types';
 

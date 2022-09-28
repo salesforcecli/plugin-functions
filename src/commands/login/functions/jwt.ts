@@ -4,7 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { Flags, CliUx } from '@oclif/core';
+import { CliUx } from '@oclif/core';
+import { Flags } from '@salesforce/sf-plugins-core';
 import { AuthInfo, AuthRemover, Messages } from '@salesforce/core';
 import { getString } from '@salesforce/ts-types';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
