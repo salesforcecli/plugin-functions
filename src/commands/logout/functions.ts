@@ -20,6 +20,7 @@ export default class Login extends Command {
 
   async run() {
     const { flags } = await this.parse(Login);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     this.postParseHook(flags);
 
     CliUx.ux.action.start(messages.getMessage('action.start'));

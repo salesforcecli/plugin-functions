@@ -108,6 +108,7 @@ export default class Invoke extends Command {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async getPayloadData(payload: string | undefined): Promise<string | undefined> {
     if (payload?.startsWith('@')) {
       return fs.readFileSync(payload.slice(1), 'utf8');
@@ -117,6 +118,7 @@ export default class Invoke extends Command {
   writeResponse(response: AxiosResponse) {
     const contentType = response.headers['content-type'];
     if (contentType.includes('application/json') || contentType.includes('application/cloudevents+json')) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       this.styledJSON(response.data);
     } else {
       this.log(response.data as string);

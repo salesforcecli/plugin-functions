@@ -12,6 +12,7 @@ export async function batchCall<T, U>(data: T[], fn: (chunk: T[]) => Promise<U[]
   let results: U[] = [];
 
   for (const chunk of chunked) {
+    // eslint-disable-next-line no-await-in-loop
     const result = await fn(chunk);
 
     results = [...results, ...ensureArray(result)];

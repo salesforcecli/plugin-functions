@@ -61,6 +61,7 @@ export default class APIClient {
 
     const response = await new Transport().httpRequest(req);
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       response.data = JSON.parse(response.body);
     } catch (err) {
       // not json

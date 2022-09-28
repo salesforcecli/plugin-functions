@@ -193,6 +193,7 @@ export default class JwtLogin extends Command {
       this.error(error);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const data = JSON.parse(rawResponse.body);
     const bearerToken = data.access_token.token;
 

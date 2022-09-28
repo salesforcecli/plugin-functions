@@ -93,6 +93,7 @@ export default class ConfigSet extends Command {
       if (error.data?.message?.includes("Couldn't find that app")) {
         this.error(new Error(`Could not find environment ${appName}`));
       }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       this.error(error);
     }
   }

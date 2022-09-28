@@ -32,6 +32,7 @@ export default class Login extends Command {
       }),
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const { browser_url, cli_url, token } = JSON.parse(rawResponse.body);
     const browserUrl = identityUrl + browser_url;
     const cliUrl = identityUrl + cli_url;
@@ -48,6 +49,7 @@ export default class Login extends Command {
       headers,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const data = JSON.parse(response.body);
 
     if (data.error) {

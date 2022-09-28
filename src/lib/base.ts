@@ -29,6 +29,7 @@ export default abstract class Command extends SfCommand<any> {
     this.stateAggregator = await StateAggregator.getInstance();
   }
 
+  // eslint-disable-next-line class-methods-use-this
   protected get identityUrl(): URL {
     const defaultUrl = 'https://cli-auth.heroku.com';
     const envVarUrl = process.env.SALESFORCE_FUNCTIONS_IDENTITY_URL;
@@ -97,6 +98,7 @@ export default abstract class Command extends SfCommand<any> {
     return data;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   protected async isFunctionsEnabled(org: Org) {
     const conn = org.getConnection();
 
@@ -120,22 +122,13 @@ export default abstract class Command extends SfCommand<any> {
     }
   }
 
-  private fetchConfirmationValue(name: string, confirm?: string | string[]): string | undefined {
-    // If multiple confirm values have been specified, we iterate over each one until finding something that could match
-    // If there isn't a match, we'll simply return undefined
-    if (Array.isArray(confirm)) {
-      return confirm.find((value) => value === name);
-    }
-    return confirm;
-  }
-
   protected async confirmRemovePrompt(
     type: 'environment',
     name: string,
     confirm?: string | string[],
     warningMessage?: string
   ) {
-    const confirmedValue = this.fetchConfirmationValue(name, confirm);
+    const confirmedValue = fetchConfirmationValue(name, confirm);
     if (name !== confirmedValue) {
       warningMessage = warningMessage ?? `This will delete the ${type} ${name}`;
       this.warn(`${warningMessage}\nTo proceed, enter the ${type} name (${name}) again in the prompt below:`);
@@ -170,6 +163,7 @@ export default abstract class Command extends SfCommand<any> {
       });
       this.exit(1);
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       super.error(input, options as any);
     }
   }
@@ -178,3 +172,12 @@ export default abstract class Command extends SfCommand<any> {
     this.outputJSON = flags.json as boolean;
   }
 }
+
+const fetchConfirmationValue = (name: string, confirm?: string | string[]): string | undefined => {
+  // If multiple confirm values have been specified, we iterate over each one until finding something that could match
+  // If there isn't a match, we'll simply return undefined
+  if (Array.isArray(confirm)) {
+    return confirm.find((value) => value === name);
+  }
+  return confirm;
+};

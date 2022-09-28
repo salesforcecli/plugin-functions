@@ -48,6 +48,7 @@ export class FunctionsDeployable extends Deployable {
     return basename(this.functionsDir);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   public getType(): string {
     return 'function';
   }
@@ -79,6 +80,7 @@ export class FunctionsDeployer extends Deployer {
     this.deployables = [new FunctionsDeployable(functionsDir, this)];
   }
 
+  // eslint-disable-next-line class-methods-use-this
   public getName(): string {
     return FunctionsDeployer.NAME;
   }

@@ -83,11 +83,15 @@ export default class ConfigUnset extends Command {
       this.error(error);
     }
 
-    const configPairs = argv.reduce((acc: any, elem: any) => ({
+    const configPairs = argv.reduce(
+      (acc: any, elem: any) => ({
         ...acc,
         [elem]: null,
-      }), {});
+      }),
+      {}
+    );
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const message = `Unsetting ${Object.keys(configPairs)
       .map((key) => herokuColor.configVar(key))
       .join(', ')} and restarting ${herokuColor.app(targetCompute)}`;

@@ -12,7 +12,7 @@ import Command from '../../lib/base';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'whoami.functions');
 
-const FIELDS = <const>['id', 'email', 'token'];
+const FIELDS = ['id', 'email', 'token'] as const;
 
 export type FunctionsInformationKey = typeof FIELDS[number];
 export type FunctionsInformation = { [key in FunctionsInformationKey]?: string };
