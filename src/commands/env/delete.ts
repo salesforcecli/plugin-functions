@@ -115,7 +115,7 @@ export default class EnvDelete extends Command {
       const error = err as Error;
       // It's possible that they are deleting the compute environment after deleting the org it was
       // connected to, in which case `resolveOrg` will error and we simply want to skip the process
-      // of cleaning up functon refs since they're all already gone. Otherwise, something else has
+      // of cleaning up function refs since they're all already gone. Otherwise, something else has
       // gone wrong and we go ahead and bail out.
       if (error.message !== 'Attempted to resolve an org without a valid org ID') {
         this.error(error);
