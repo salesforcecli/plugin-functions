@@ -136,7 +136,7 @@ export default class EnvDelete extends Command {
         let refList = await connection.metadata.list({ type: 'FunctionReference' });
         refList = ensureArray(refList);
 
-        if (refList && refList.length) {
+        if (refList?.length) {
           const allReferences = refList.reduce((acc: FullNameReference[], ref) => {
             acc.push(splitFullName(ref.fullName));
             return acc;

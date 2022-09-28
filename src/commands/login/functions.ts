@@ -22,7 +22,7 @@ export default class Login extends Command {
   static examples = messages.getMessages('examples');
 
   async run() {
-    const identityUrl = process.env.SALESFORCE_FUNCTIONS_IDENTITY_URL || 'https://cli-auth.heroku.com';
+    const identityUrl = process.env.SALESFORCE_FUNCTIONS_IDENTITY_URL ?? 'https://cli-auth.heroku.com';
 
     const rawResponse = await new Transport().httpRequest({
       method: 'POST',

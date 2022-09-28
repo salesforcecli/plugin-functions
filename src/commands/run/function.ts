@@ -76,7 +76,7 @@ export default class Invoke extends Command {
     if (!flags['connected-org'] && !targetOrg) {
       this.warn('No -o connected org or target-org found, context will be partially initialized');
     }
-    const aliasOrUser = flags['connected-org'] || `target-org ${targetOrg}`;
+    const aliasOrUser = flags['connected-org'] ?? `target-org ${targetOrg}`;
     this.log(`Using ${aliasOrUser} login credential to initialize context`);
 
     CliUx.ux.action.start(`${herokuColor.cyanBright('POST')} ${url}`);
@@ -109,10 +109,10 @@ export default class Invoke extends Command {
   }
 
   async getPayloadData(payload: string | undefined): Promise<string | undefined> {
-    if (payload && payload.startsWith('@')) {
+    if (payload?.startsWith('@')) {
       return fs.readFileSync(payload.slice(1), 'utf8');
     }
-    return payload || getStdin();
+    return payload ?? getStdin();
   }
   writeResponse(response: AxiosResponse) {
     const contentType = response.headers['content-type'];

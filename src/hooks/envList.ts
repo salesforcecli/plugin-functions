@@ -99,9 +99,9 @@ async function resolveAliasesForComputeEnvironments(envs: ComputeEnvironment[]) 
 
   return Promise.all(
     envs.map(async (env) => ({
-        ...env,
-        alias: await resolveAliasForValue(env.id!, entries),
-      }))
+      ...env,
+      alias: await resolveAliasForValue(env.id!, entries),
+    }))
   );
 }
 
@@ -111,7 +111,7 @@ function resolveAliasesForConnectedOrg(envs: ComputeEnvironment[], orgs: OrgAuth
 
     const orgAlias = orgs.reduce((result, org) => {
       if (org.orgId === orgId) {
-        return (org.aliases && org.aliases[0]) ?? '';
+        return org.aliases?.[0] ?? '';
       }
 
       return result;
@@ -142,13 +142,13 @@ const hook: SfHook.EnvList<ComputeEnv> = async function (opts) {
       type: EnvList.EnvType.computeEnvs,
       title: 'Compute Environments',
       data: environments.map((env) => ({
-          alias: env.alias,
-          projectName: env.sfdx_project_name,
-          connectedOrgAlias: env.orgAlias,
-          connectedOrgId: env.sales_org_connection?.sales_org_id,
-          computeEnvironmentName: env.name,
-          computeEnvironmentId: env.id,
-        })),
+        alias: env.alias,
+        projectName: env.sfdx_project_name,
+        connectedOrgAlias: env.orgAlias,
+        connectedOrgId: env.sales_org_connection?.sales_org_id,
+        computeEnvironmentName: env.name,
+        computeEnvironmentId: env.id,
+      })),
     },
   ];
 };

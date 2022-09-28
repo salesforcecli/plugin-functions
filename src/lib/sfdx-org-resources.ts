@@ -19,7 +19,7 @@ export async function retrieveApiVersion(plugins: Interfaces.Plugin[]): Promise<
 
   if (plugins) {
     const plugin =
-      plugins.find((plugin) => plugin.name === 'salesforce-alm') ||
+      plugins.find((plugin) => plugin.name === 'salesforce-alm') ??
       plugins.find((plugin) => plugin.name === 'salesforcedx');
     if (plugin) return plugin.version;
   }

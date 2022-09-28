@@ -123,7 +123,7 @@ export default class Container extends Command {
       }
 
       // evergreen:benny:message {"type":"log","timestamp":"2021-05-10T10:00:27.953248-05:00","level":"info","fields":{"debugPort":"9229","localImageName":"jvm-fn-init","network":"","port":"8080"}} +21ms
-      if (msg.fields && msg.fields.localImageName) {
+      if (msg.fields?.localImageName) {
         this.log(`${herokuColor.magenta('Running on port')} :${herokuColor.cyan(msg.fields.port as string)}`);
         this.log(
           `${herokuColor.magenta('Debugger running on port')} :${herokuColor.cyan(msg.fields.debugPort as string)}`

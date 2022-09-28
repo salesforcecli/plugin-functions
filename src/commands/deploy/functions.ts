@@ -104,7 +104,7 @@ export default class DeployFunctions extends Command {
 
     const currentBranch = await this.git.getCurrentBranch();
 
-    const pushCommand = ['push', remote, `${flags.branch || currentBranch}:master`];
+    const pushCommand = ['push', remote, `${flags.branch ?? currentBranch}:master`];
 
     // Since we error out if they try to use `--force` with a production org, we don't check for
     // a production org here since this code would be unreachable in that scenario

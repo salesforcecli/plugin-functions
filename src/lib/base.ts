@@ -32,7 +32,7 @@ export default abstract class Command extends SfCommand<any> {
   protected get identityUrl(): URL {
     const defaultUrl = 'https://cli-auth.heroku.com';
     const envVarUrl = process.env.SALESFORCE_FUNCTIONS_IDENTITY_URL;
-    const identityUrl = new URL(envVarUrl || defaultUrl);
+    const identityUrl = new URL(envVarUrl ?? defaultUrl);
     return identityUrl;
   }
 
@@ -137,7 +137,7 @@ export default abstract class Command extends SfCommand<any> {
   ) {
     const confirmedValue = this.fetchConfirmationValue(name, confirm);
     if (name !== confirmedValue) {
-      warningMessage = warningMessage || `This will delete the ${type} ${name}`;
+      warningMessage = warningMessage ?? `This will delete the ${type} ${name}`;
       this.warn(`${warningMessage}\nTo proceed, enter the ${type} name (${name}) again in the prompt below:`);
       // This is a workaround for cli-ux
       // & fancy-test stubbing issues

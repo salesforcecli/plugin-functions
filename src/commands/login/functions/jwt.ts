@@ -166,7 +166,7 @@ export default class JwtLogin extends Command {
     try {
       rawResponse = await new Transport().httpRequest({
         method: 'POST',
-        url: `${process.env.SALESFORCE_FUNCTIONS_API || 'https://api.heroku.com'}/oauth/tokens`,
+        url: `${process.env.SALESFORCE_FUNCTIONS_API ?? 'https://api.heroku.com'}/oauth/tokens`,
         body: JSON.stringify({
           client: {
             id: herokuClientId,

@@ -44,7 +44,7 @@ export default class APIClient {
     }
     const baseURL = `${this.apiUrl.origin}`;
 
-    const envHeaders = JSON.parse(process.env.SALESFORCE_FUNCTIONS_HEADERS || '{}');
+    const envHeaders = JSON.parse(process.env.SALESFORCE_FUNCTIONS_HEADERS ?? '{}');
 
     options.headers = {
       Accept: 'application/vnd.heroku+json; version=3',
@@ -99,6 +99,6 @@ export default class APIClient {
 export function herokuClientApiUrl(): URL {
   const defaultUrl = 'https://api.heroku.com';
   const envVarURL = process.env.SALESFORCE_FUNCTIONS_API;
-  const apiURL = new URL(envVarURL || defaultUrl);
+  const apiURL = new URL(envVarURL ?? defaultUrl);
   return apiURL;
 }

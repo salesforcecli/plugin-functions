@@ -114,8 +114,8 @@ export class FunctionsDeployer extends Deployer {
       this.force = await this.promptForForce();
       this.quiet = await this.promptForQuiet();
     } else {
-      this.username = options.username || (await this.promptForUsername());
-      this.branch = options.branch || (await this.promptForBranch());
+      this.username = options.username ?? (await this.promptForUsername());
+      this.branch = options.branch ?? (await this.promptForBranch());
       this.force = typeof options.force === 'boolean' ? options.force : await this.promptForForce();
       this.quiet = typeof options.quiet === 'boolean' ? options.quiet : await this.promptForQuiet();
     }
@@ -194,7 +194,7 @@ export class FunctionsDeployer extends Deployer {
       // if they've passed `--quiet` we don't want to show any build server output *unless* there's
       // an error, in which case we want to show all of it
       if (flags.quiet) {
-        throw new Error(error.message.replace(this.auth || '', '<REDACTED>'));
+        throw new Error(error.message.replace(this.auth ?? '', '<REDACTED>'));
       }
 
       // In this case, they have not passed `--quiet`, in which case we have already streamed
