@@ -4,8 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { Flags, Errors, Interfaces } from '@oclif/core';
-import { cli } from 'cli-ux';
+import { Flags, Errors, Interfaces, CliUx } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
@@ -62,7 +61,7 @@ export const FunctionsTableFlags: Interfaces.FlagInput<any> = {
   // only let supertable alternatively
   // output in json & csv for now
   // Cast until cli-us uses oclif/core
-  ...(cli.table.flags({ except: ['csv', 'output'] }) as unknown as Interfaces.FlagInput<any>),
+  ...(CliUx.ux.table.flags({ except: ['csv', 'output'] }) as unknown as Interfaces.FlagInput<any>),
   output: Flags.string({
     exclusive: ['no-truncate', 'csv'],
     description: messages.getMessage('flags.FunctionsTableFlags.summary'),

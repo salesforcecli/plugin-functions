@@ -6,8 +6,7 @@
  */
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
-import { Errors } from '@oclif/core';
-import { cli } from 'cli-ux';
+import { Errors, CliUx } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../../lib/flags';
 import Command from '../../../../lib/base';
@@ -42,7 +41,7 @@ export default class ComputeCollaboratorAdd extends Command {
       );
     }
 
-    cli.action.start(
+    CliUx.ux.action.start(
       `Adding Heroku user ${herokuColor.heroku(herokuUser)} as a collaborator on this Functions account`
     );
 
@@ -70,7 +69,7 @@ export default class ComputeCollaboratorAdd extends Command {
       this.error(error.message);
     }
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
     this.log(
       'For more information about attaching Heroku add-ons to your compute environments, run $ heroku addons:attach --help.'
     );

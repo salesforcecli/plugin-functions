@@ -6,10 +6,9 @@
  */
 import * as Heroku from '@heroku-cli/schema';
 import herokuColor from '@heroku-cli/color';
-import { cli } from 'cli-ux';
 import { flatMap } from 'lodash';
 import { Messages } from '@salesforce/core';
-import { Errors } from '@oclif/core';
+import { Errors, CliUx } from '@oclif/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
 import { resolveAppNameForEnvironment } from '../../../lib/utils';
@@ -68,7 +67,7 @@ export default class ConfigList extends Command {
     if (configArray.length === 0) {
       this.warn(`No config vars found for environment ${targetCompute}`);
     } else {
-      cli.table(
+      CliUx.ux.table(
         configArray,
         {
           key: {

@@ -5,10 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { URL } from 'url';
-import { Interfaces } from '@oclif/core';
+import { Interfaces, CliUx } from '@oclif/core';
 import { SfCommand } from '@salesforce/sf-plugins-core';
 import { StateAggregator, Org } from '@salesforce/core';
-import { cli } from 'cli-ux';
 import APIClient, { herokuClientApiUrl } from './api-client';
 import herokuVariant from './heroku-variant';
 import { SfdcAccount } from './sfdc-types';
@@ -79,7 +78,7 @@ export default abstract class Command extends SfCommand<any> {
   }
 
   protected catch(err: any): any {
-    cli.action.stop('failed');
+    CliUx.ux.action.stop('failed');
 
     if (err.http?.response?.status === 401) {
       this.error('Your token has expired, please login with sf login functions');
@@ -146,7 +145,7 @@ export default abstract class Command extends SfCommand<any> {
       // and causes tests to fail (false negatives)
       // Move this import up to the top of the file
       // when that issue has been resolved
-      const prompt = await cli.prompt('');
+      const prompt = await CliUx.ux.prompt('');
       if (prompt !== name) {
         this.error('Confirmation name does not match');
       }
@@ -163,7 +162,7 @@ export default abstract class Command extends SfCommand<any> {
     if (this.outputJSON) {
       if (typeof input === 'string') input = new Error(input);
       const { message, name } = input;
-      cli.styledJSON({
+      CliUx.ux.styledJSON({
         status: 1,
         message,
         name,

@@ -6,8 +6,7 @@
  */
 import { expect, test } from '@oclif/test';
 import { Config, OrgConfigProperties } from '@salesforce/core';
-import { cli } from 'cli-ux';
-
+import { CliUx } from '@oclif/core';
 import { MockTestOrgData, testSetup } from '@salesforce/core/lib/testSetup';
 import * as sinon from 'sinon';
 
@@ -31,7 +30,7 @@ describe('sf run function', () => {
       data: 'Something happened!',
       status: 200,
     });
-    stopActionSub = sandbox.stub(cli.action, 'stop');
+    stopActionSub = sandbox.stub(CliUx.ux.action, 'stop');
   });
 
   afterEach(() => {

@@ -7,8 +7,7 @@
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Messages } from '@salesforce/core';
-import { Errors } from '@oclif/core';
-import { cli } from 'cli-ux';
+import { Errors, CliUx } from '@oclif/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 import Command from '../../../lib/base';
@@ -94,13 +93,13 @@ export default class ConfigUnset extends Command {
     const message = `Unsetting ${Object.keys(configPairs)
       .map((key) => herokuColor.configVar(key))
       .join(', ')} and restarting ${herokuColor.app(targetCompute)}`;
-    cli.action.start(message);
+    CliUx.ux.action.start(message);
 
     await this.client.patch(`/apps/${appName}/config-vars`, {
       data: configPairs,
     });
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
 
     return 'Unset env var';
   }

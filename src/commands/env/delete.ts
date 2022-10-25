@@ -7,8 +7,7 @@
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Org, Messages } from '@salesforce/core';
-import { cli } from 'cli-ux';
-import { Errors } from '@oclif/core';
+import { Errors, CliUx } from '@oclif/core';
 import {
   filterProjectReferencesToRemove,
   splitFullName,
@@ -63,7 +62,7 @@ export default class EnvDelete extends Command {
 
     await this.confirmRemovePrompt('environment', targetCompute, flags.confirm);
 
-    cli.action.start(`Deleting environment ${targetCompute}`);
+    CliUx.ux.action.start(`Deleting environment ${targetCompute}`);
 
     if (targetCompute) {
       try {
@@ -116,7 +115,7 @@ export default class EnvDelete extends Command {
       const error = err as Error;
       // It's possible that they are deleting the compute environment after deleting the org it was
       // connected to, in which case `resolveOrg` will error and we simply want to skip the process
-      // of cleaning up functon refs since they're all already gone. Otherwise, something else has
+      // of cleaning up function refs since they're all already gone. Otherwise, something else has
       // gone wrong and we go ahead and bail out.
       if (error.message !== 'Attempted to resolve an org without a valid org ID') {
         this.error(error);
@@ -155,7 +154,7 @@ export default class EnvDelete extends Command {
       },
     });
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
 
     return 'Environment deleted.';
   }

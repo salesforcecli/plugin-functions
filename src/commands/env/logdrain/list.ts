@@ -6,9 +6,8 @@
  */
 import * as Heroku from '@heroku-cli/schema';
 import herokuColor from '@heroku-cli/color';
-import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
-import { Errors } from '@oclif/core';
+import { Errors, CliUx } from '@oclif/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import Command from '../../../lib/base';
 import { resolveAppNameForEnvironment } from '../../../lib/utils';
@@ -58,7 +57,7 @@ export default class LogDrainList extends Command {
     if (drains.length === 0) {
       this.warn(`No log-drains found for environment ${targetCompute}`);
     } else {
-      cli.table<Heroku.LogDrain>(
+      CliUx.ux.table<Heroku.LogDrain>(
         drains,
         {
           id: {

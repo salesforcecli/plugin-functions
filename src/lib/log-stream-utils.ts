@@ -8,7 +8,7 @@ import * as Stream from 'stream';
 import * as util from 'util';
 import EventSource = require('@heroku/eventsource');
 import axios from 'axios';
-import { cli } from 'cli-ux';
+import { CliUx } from '@oclif/core';
 
 function lineTransform() {
   const transform = new Stream.Transform({ objectMode: true, decodeStrings: false });
@@ -105,7 +105,7 @@ export async function readLogs(logSessionURL: string, tail: boolean) {
   stream.setEncoding('utf8');
 
   stream.on('data', (data: string) => {
-    cli.log(data);
+    CliUx.ux.log(data);
   });
 
   const finished = util.promisify(Stream.finished);

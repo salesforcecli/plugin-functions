@@ -5,8 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import herokuColor from '@heroku-cli/color';
-import { Errors } from '@oclif/core';
-import { cli } from 'cli-ux';
+import { Errors, CliUx } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 
@@ -75,7 +74,7 @@ export default class ConfigSet extends Command {
 
     const configPairs = this.parseKeyValuePairs(argv);
 
-    cli.action.start(
+    CliUx.ux.action.start(
       `Setting ${Object.keys(configPairs)
         .map((key) => herokuColor.configVar(key))
         .join(', ')} and restarting ${herokuColor.app(targetCompute)}`
@@ -86,11 +85,11 @@ export default class ConfigSet extends Command {
         data: configPairs,
       });
 
-      cli.action.stop();
+      CliUx.ux.action.stop();
 
       return 'Set env var';
     } catch (error: any) {
-      cli.action.stop('failed');
+      CliUx.ux.action.stop('failed');
       if (error.data?.message?.includes("Couldn't find that app")) {
         this.error(new Error(`Could not find environment ${appName}`));
       }
