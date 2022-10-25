@@ -19,34 +19,35 @@ jobs:
       tag: prerelease
       githubTag: ${{ github.event.release.tag_name || inputs.tag }}
     secrets: inherit
-  canaries:
-    needs: [npm]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        # switched this from a docker container.  GHA could probably use a Go image, but this may be more performant
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.14
-      - name: Run canaries
-        run: |
-            TOKEN=$(curl -f -X POST ${{ secrets.RUNTIME_ID_SERVICETOKEN_ENDPOINT }} -d "{\"username\":\"${{ secrets.RUNTIME_ID_SERVICE_USERNAME }}\", \"password\":\"${{ secrets.RUNTIME_ID_SERVICE_PASSWORD }}\"}" -s --retry 3 | jq -r ".raw_id_token")
-            echo "$TOKEN" | docker login ${{ secrets.RUNTIME_REGISTRY }} -u x-runtime-id --password-stdin
+  # canaries:
+  #   needs: [npm]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       # switched this from a docker container.  GHA could probably use a Go image, but this may be more performant
+  #     - name: Set up Go
+  #       uses: actions/setup-go@v3
+  #       with:
+  #         go-version: 1.14
+  #     - name: Run canaries
+  #       run: |
+  #           TOKEN=$(curl -f -X POST ${{ secrets.RUNTIME_ID_SERVICETOKEN_ENDPOINT }} -d "{\"username\":\"${{ secrets.RUNTIME_ID_SERVICE_USERNAME }}\", \"password\":\"${{ secrets.RUNTIME_ID_SERVICE_PASSWORD }}\"}" -s --retry 3 | jq -r ".raw_id_token")
+  #           echo "$TOKEN" | docker login ${{ secrets.RUNTIME_REGISTRY }} -u x-runtime-id --password-stdin
 
-            echo "running canary"
-            docker run -e HEROKU_API_TOKEN=${{ secrets.HEROKU_API_TOKEN }} \
-              -e CIRCLECI_API_TOKEN=$CIRCLECI_API_TOKEN \
-              runtime-registry.herokai.com/s/heroku/evergreen-canary-keeper/cli:v1.7.0 \
-              evergreen-canary-keeper -run \
-              -name eg-canary-function-cli \
-              sfdx-cli-plugins="@salesforce/plugin-functions@prerelease"
+  #           echo "running canary"
+  #           docker run -e HEROKU_API_TOKEN=${{ secrets.HEROKU_API_TOKEN }} \
+  #             -e CIRCLECI_API_TOKEN=$CIRCLECI_API_TOKEN \
+  #             runtime-registry.herokai.com/s/heroku/evergreen-canary-keeper/cli:v1.7.0 \
+  #             evergreen-canary-keeper -run \
+  #             -name eg-canary-function-cli \
+  #             sfdx-cli-plugins="@salesforce/plugin-functions@prerelease"
   npm-promote:
-    needs: [canaries]
+    needs: [npm]
     runs-on:
       ubuntu-latest
       # if you try to use yarn here, it will attempt to use the wrong registry and throw 401s
     steps:
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: latest
