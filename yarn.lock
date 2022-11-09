@@ -453,10 +453,10 @@
     ajv-formats "^2.0.2"
     toml "^3.0.0"
 
-"@hk/functions-core@npm:@heroku/functions-core@0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.4.1.tgz#51f1d8458fd987d25db238fc7996cc3c8c6320bd"
-  integrity sha512-ZJGke5XM1WAVXFty56VMvimpZ+/7xwOLAtLo1m0vecD13UpkyCPJScSFpGQ4d0VwyZtKc7HjNYDb7QhOrb4O+A==
+"@hk/functions-core@npm:@heroku/functions-core@0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.4.3.tgz#fb68556ab27402975cb8f9a68aae9198315ab843"
+  integrity sha512-NCurnYhaabWtPTJNZIQ8aH5lCumznn5kpAjuldj5L+aa9kEq2n/9pr2GH4y8RwOOX05MhbfLvFlQXaWOLOSFkw==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku/project-descriptor" "0.0.6"
@@ -471,9 +471,9 @@
     mem-fs-editor "^9.5.0"
     node-fetch "^2.6.7"
     openpgp "^5.5.0"
-    semver "^7.3.7"
+    semver "^7.3.8"
     sha256-file "^1.0.0"
-    yeoman-environment "~3.10.0"
+    yeoman-environment "~3.12.1"
 
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
@@ -9395,10 +9395,10 @@ yeoman-environment@^3.9.1:
     textextensions "^5.12.0"
     untildify "^4.0.0"
 
-yeoman-environment@~3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/yeoman-environment/-/yeoman-environment-3.10.0.tgz#d8c56571b68d16b4af8abfb950f83acc503eed77"
-  integrity sha512-sYtSxBK9daq21QjoskJTHKLQ1xEsRPURkmFV/aM8HS8ZlQVzwx57Rz1zCs8EGPhK4vqsmTE8H92Gp1jg1fT3EA==
+yeoman-environment@~3.12.1:
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/yeoman-environment/-/yeoman-environment-3.12.1.tgz#20fc0ab05d76f84c956ad03ed112e3a32e65e862"
+  integrity sha512-q5nC954SE4BEkWFXOwkifbelEZrza6z7vnXCC9bTWvfHjRiaG45eqzv/M6/u4l6PvB/KMmBPgMrACV2mBHE+PQ==
   dependencies:
     "@npmcli/arborist" "^4.0.4"
     are-we-there-yet "^2.0.0"
