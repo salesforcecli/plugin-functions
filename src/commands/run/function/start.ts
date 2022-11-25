@@ -9,7 +9,7 @@ import * as path from 'path';
 import { Messages } from '@salesforce/core';
 import { Flags } from '@oclif/core';
 
-import Local from './start/local';
+import Local, { languageOptions } from './start/local';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start');
@@ -45,7 +45,7 @@ export default class Start extends Local {
     }),
     language: Flags.enum({
       description: messages.getMessage('flags.language.summary'),
-      options: ['auto', 'java', 'javascript', 'python', 'typescript'],
+      options: languageOptions,
       char: 'l',
       default: 'auto',
     }),
