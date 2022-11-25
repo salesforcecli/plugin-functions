@@ -67,6 +67,10 @@ export default class GenerateFunction extends Command {
       );
     }
 
+    if (flags.language === 'python') {
+      this.warn('Python support for Salesforce Functions is experimental.');
+    }
+
     if (flags.name) {
       this.warn(messages.getMessage('flags.name.deprecation'));
     }
