@@ -424,6 +424,17 @@
     supports-color "^5.5.0"
     tslib "^1.9.3"
 
+"@heroku-cli/color@^1.1.15":
+  version "1.1.15"
+  resolved "https://registry.yarnpkg.com/@heroku-cli/color/-/color-1.1.15.tgz#076cc78e129f8d1bca94be90d808c2783210bff2"
+  integrity sha512-eUjF6KD36iQm+32mMVExWosmLQsimtWIe6xdKFGpxGTTEM1SPd4ut+dsWVax38WRumezRsQpV0GADYUxuPewwQ==
+  dependencies:
+    ansi-styles "^3.2.1"
+    chalk "^2.4.1"
+    strip-ansi "^5.0.0"
+    supports-color "^5.5.0"
+    tslib "^1.9.3"
+
 "@heroku-cli/schema@^1.0.25":
   version "1.0.25"
   resolved "https://registry.yarnpkg.com/@heroku-cli/schema/-/schema-1.0.25.tgz#175d489d82c2ff0be700fe9fab8590b64c7e4f39"
@@ -453,17 +464,17 @@
     ajv-formats "^2.0.2"
     toml "^3.0.0"
 
-"@hk/functions-core@npm:@heroku/functions-core@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.4.3.tgz#fb68556ab27402975cb8f9a68aae9198315ab843"
-  integrity sha512-NCurnYhaabWtPTJNZIQ8aH5lCumznn5kpAjuldj5L+aa9kEq2n/9pr2GH4y8RwOOX05MhbfLvFlQXaWOLOSFkw==
+"@hk/functions-core@npm:@heroku/functions-core@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.5.0.tgz#5352f0eef6cd19623cecd73ebded6772994c1801"
+  integrity sha512-AzLNmDx3Kb/+K1EeQMQmhEHB8Jmd7CIGPbUMXbW8jcj65eAh2ejjTU8jOmtQuBVhoimAlEkB1qJCBgOqw7dZGw==
   dependencies:
-    "@heroku-cli/color" "^1.1.14"
+    "@heroku-cli/color" "^1.1.15"
     "@heroku/project-descriptor" "0.0.6"
     "@salesforce/core" "^2.37.1"
     "@salesforce/templates" "^55.1.0"
     axios "^0.27.2"
-    cloudevents "^6.0.2"
+    cloudevents "^6.0.3"
     fs-extra "^10.1.0"
     global-agent "^3.0.0"
     handlebars "^4.7.7"
@@ -2655,10 +2666,10 @@ cloudevents@^4.0.3:
     ajv "~6.12.3"
     uuid "~8.3.0"
 
-cloudevents@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/cloudevents/-/cloudevents-6.0.2.tgz#7b4990a92c6c30f6790eb4b59207b4d8949fca12"
-  integrity sha512-mn/4EZnAbhfb/TghubK2jPnxYM15JRjf8LnWJtXidiVKi5ZCkd+p9jyBZbL57w7nRm6oFAzJhjxRLsXd/DNaBQ==
+cloudevents@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/cloudevents/-/cloudevents-6.0.3.tgz#e406ab904289edb59586ae14f22656a8bbda87f8"
+  integrity sha512-ADEHAv2KShH/cDIy2GP+npFz3R6Fu/UCsUO/j4kYA9VqN4yhGdF+Zg6wmjeq6qlUvlaKdrVBwgZuH/w57IsyGQ==
   dependencies:
     ajv "^8.11.0"
     ajv-formats "^2.1.1"
