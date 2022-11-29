@@ -26,8 +26,8 @@ Port to bind the invoker to.
 
 # flags.debug-port.summary
 
-Port to use for debbugging the function.
+Port to use for debugging the function.
 
 # flags.language.summary
 
-The language that the function runs in.
+The language in which the function is written.

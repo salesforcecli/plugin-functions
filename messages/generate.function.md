@@ -18,7 +18,7 @@ Function name. Must start with a capital letter.
 
 # flags.language.summary
 
-Language. Can be one of: javascript, typescript, java.
+The language in which the function is written.
 
 # flags.name.deprecation
 

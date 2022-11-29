@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
+import * as process from 'process';
 import { Command, Flags } from '@oclif/core';
 import { LocalRun } from '@hk/functions-core';
 import { Messages } from '@salesforce/core';
@@ -12,6 +13,17 @@ import { LangRunnerOpts } from '@hk/functions-core/dist/lang-runner';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start.local');
+
+// TODO: Make sf-functions-core export the list of language options it supports
+// for the local functions runners, and use that instead of hardcoding here.
+// See W-12120598.
+export const languageOptions = [
+  'auto',
+  'java',
+  'javascript',
+  ...('PYTHON_FUNCTIONS_ALPHA' in process.env ? ['python'] : []),
+  'typescript',
+];
 
 export default class Local extends Command {
   static description = messages.getMessage('summary');
@@ -35,7 +47,7 @@ export default class Local extends Command {
       default: 9229,
     }),
     language: Flags.enum({
-      options: ['javascript', 'typescript', 'java', 'auto'],
+      options: languageOptions,
       description: messages.getMessage('flags.language.summary'),
       char: 'l',
       default: 'auto',

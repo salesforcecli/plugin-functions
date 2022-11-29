@@ -13,6 +13,16 @@ import Command from '../../lib/base';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'generate.function');
 
+// TODO: Make sf-functions-core export the list of language options it supports
+// for the generate function feature, and use that instead of hardcoding here.
+// See W-12120598.
+const languageOptions = [
+  'java',
+  'javascript',
+  ...('PYTHON_FUNCTIONS_ALPHA' in process.env ? ['python'] : []),
+  'typescript',
+];
+
 /**
  * Based on given language, create function project with specific scaffolding.
  */
@@ -38,7 +48,7 @@ export default class GenerateFunction extends Command {
       hidden: true,
     }),
     language: Flags.enum({
-      options: ['javascript', 'typescript', 'java'],
+      options: languageOptions,
       description: messages.getMessage('flags.language.summary'),
       char: 'l',
       required: true,
@@ -55,6 +65,10 @@ export default class GenerateFunction extends Command {
        -n, --function-name FUNCTION-NAME  ${herokuColor.dim('Function name.')}
        See more help with --help`
       );
+    }
+
+    if (flags.language === 'python') {
+      this.warn('Python support for Salesforce Functions is experimental.');
     }
 
     if (flags.name) {
