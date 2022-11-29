@@ -177,7 +177,7 @@
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint && yarn test:deprecation-policy",
     "prepack": "sf-prepack",
-    "prepare": "sf-install && husky install",
+    "prepare": "sf-install",
     "pretest": "sf-compile-test",
     "promote-dist-tags": "./bin/promote-dist-tags",
     "test": "sf-test",
