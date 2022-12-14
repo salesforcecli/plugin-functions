@@ -1,3 +1,12 @@
+# [1.17.0](https://github.com/salesforcecli/plugin-functions/compare/1.16.2...1.17.0) (2022-12-14)
+
+
+### Features
+
+* Make Python functions support visible without an env var ([#551](https://github.com/salesforcecli/plugin-functions/issues/551)) ([2d8378d](https://github.com/salesforcecli/plugin-functions/commit/2d8378d3534151a1b15f8aeb1d5525e35e876353))
+
+
+
 ## [1.16.2](https://github.com/salesforcecli/plugin-functions/compare/1.16.1...1.16.2) (2022-12-14)
 
 
