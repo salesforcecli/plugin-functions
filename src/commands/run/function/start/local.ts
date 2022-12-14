@@ -17,13 +17,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.func
 // TODO: Make sf-functions-core export the list of language options it supports
 // for the local functions runners, and use that instead of hardcoding here.
 // See W-12120598.
-export const languageOptions = [
-  'auto',
-  'java',
-  'javascript',
-  ...('PYTHON_FUNCTIONS_ALPHA' in process.env ? ['python'] : []),
-  'typescript',
-];
+export const languageOptions = ['auto', 'java', 'javascript', 'python', 'typescript'];
 
 export default class Local extends Command {
   static description = messages.getMessage('summary');

@@ -16,12 +16,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'generate
 // TODO: Make sf-functions-core export the list of language options it supports
 // for the generate function feature, and use that instead of hardcoding here.
 // See W-12120598.
-const languageOptions = [
-  'java',
-  'javascript',
-  ...('PYTHON_FUNCTIONS_ALPHA' in process.env ? ['python'] : []),
-  'typescript',
-];
+const languageOptions = ['java', 'javascript', 'python', 'typescript'];
 
 /**
  * Based on given language, create function project with specific scaffolding.
