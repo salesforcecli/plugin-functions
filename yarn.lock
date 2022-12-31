@@ -413,21 +413,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@heroku-cli/color@^1.1.14":
-  version "1.1.14"
-  resolved "https://registry.yarnpkg.com/@heroku-cli/color/-/color-1.1.14.tgz#035ac4e48e564fcab37c3dc4bd09dbe596f2ad68"
-  integrity sha512-2JYy//YE2YINTe21hpdVMBNc7aYFkgDeY9JUz/BCjFZmYLn0UjGaCc4BpTcMGXNJwuqoUenw2WGOFGHsJqlIDw==
-  dependencies:
-    ansi-styles "^3.2.1"
-    chalk "^2.4.1"
-    strip-ansi "^5.0.0"
-    supports-color "^5.5.0"
-    tslib "^1.9.3"
-
-"@heroku-cli/color@^1.1.15":
-  version "1.1.15"
-  resolved "https://registry.yarnpkg.com/@heroku-cli/color/-/color-1.1.15.tgz#076cc78e129f8d1bca94be90d808c2783210bff2"
-  integrity sha512-eUjF6KD36iQm+32mMVExWosmLQsimtWIe6xdKFGpxGTTEM1SPd4ut+dsWVax38WRumezRsQpV0GADYUxuPewwQ==
+"@heroku-cli/color@^1.1.15", "@heroku-cli/color@^1.1.16":
+  version "1.1.16"
+  resolved "https://registry.yarnpkg.com/@heroku-cli/color/-/color-1.1.16.tgz#713b7e57441b27ae93d8d0f695b8036aaef8ec1e"
+  integrity sha512-97bYxNaDe/+GCUAKu0V2qudQmR3NFRnv3SrQd2FTtOAa9OWKwkvoBs2WzT7MkNwP4DIpYL6W/e3CSfShfhzEMw==
   dependencies:
     ansi-styles "^3.2.1"
     chalk "^2.4.1"
