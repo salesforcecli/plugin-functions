@@ -1,3 +1,12 @@
+## [1.17.3](https://github.com/salesforcecli/plugin-functions/compare/1.17.2...1.17.3) (2022-12-31)
+
+
+### Bug Fixes
+
+* **deps:** bump @heroku-cli/color from 1.1.14 to 1.1.16 ([#559](https://github.com/salesforcecli/plugin-functions/issues/559)) ([31c54f7](https://github.com/salesforcecli/plugin-functions/commit/31c54f75ef46a7d0e284922516607e81c02c8894))
+
+
+
 ## [1.17.2](https://github.com/salesforcecli/plugin-functions/compare/1.17.1...1.17.2) (2022-12-24)
 
 
