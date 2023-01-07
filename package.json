@@ -14,7 +14,7 @@
     "@heroku/function-toml": "^0.0.3",
     "@heroku/project-descriptor": "0.0.6",
     "@hk/functions-core": "npm:@heroku/functions-core@0.5.2",
-    "@oclif/core": "^1.6.0",
+    "@oclif/core": "^1.23.1",
     "@salesforce/core": "^3.32.12",
     "@salesforce/sf-plugins-core": "^1.7.2",
     "@salesforce/ts-types": "^1.7.1",
