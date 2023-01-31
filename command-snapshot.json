@@ -86,7 +86,7 @@
   {
     "command": "login:functions",
     "plugin": "@salesforce/plugin-functions",
-    "flags": [],
+    "flags": ["json"],
     "alias": []
   },
   {
