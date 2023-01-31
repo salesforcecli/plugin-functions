@@ -1,3 +1,12 @@
+## [1.18.2](https://github.com/salesforcecli/plugin-functions/compare/1.18.1...1.18.2) (2023-01-31)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/ts-types from 1.7.2 to 1.7.3 ([#593](https://github.com/salesforcecli/plugin-functions/issues/593)) ([d5db88b](https://github.com/salesforcecli/plugin-functions/commit/d5db88bfab3dac85b0f488407c59805d21be1a21))
+
+
+
 ## [1.18.1](https://github.com/salesforcecli/plugin-functions/compare/1.18.0...1.18.1) (2023-01-31)
 
 
