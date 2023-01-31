@@ -14,7 +14,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'whoami.f
 
 const FIELDS = <const>['id', 'email', 'token'];
 
-export type FunctionsInformationKey = typeof FIELDS[number];
+export type FunctionsInformationKey = (typeof FIELDS)[number];
 export type FunctionsInformation = { [key in FunctionsInformationKey]?: string };
 
 export default class WhoAmI extends Command {
