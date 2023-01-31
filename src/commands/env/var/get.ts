@@ -7,7 +7,7 @@
 import herokuColor from '@heroku-cli/color';
 import * as Heroku from '@heroku-cli/schema';
 import { Messages } from '@salesforce/core';
-import { Errors } from '@oclif/core';
+import { Args, Errors } from '@oclif/core';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 
 import Command from '../../../lib/base';
@@ -34,12 +34,9 @@ export default class VarGet extends Command {
     }),
   };
 
-  static args = [
-    {
-      name: 'key',
-      required: true,
-    },
-  ];
+  static args = {
+    key: Args.string({ required: true }),
+  };
 
   async run() {
     const { flags, args } = await this.parse(VarGet);
@@ -68,12 +65,10 @@ export default class VarGet extends Command {
 
     if (!value) {
       if (flags.json) {
-        this.warn(`No config var named ${args.key as string} found for environment ${targetCompute}`);
+        this.warn(`No config var named ${args.key} found for environment ${targetCompute}`);
       } else {
         this.warn(
-          `No config var named ${herokuColor.cyan(args.key as string)} found for environment ${herokuColor.cyan(
-            targetCompute
-          )}`
+          `No config var named ${herokuColor.cyan(args.key)} found for environment ${herokuColor.cyan(targetCompute)}`
         );
       }
     } else {

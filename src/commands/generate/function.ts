@@ -42,8 +42,9 @@ export default class GenerateFunction extends Command {
       char: 'n',
       hidden: true,
     }),
-    language: Flags.enum({
+    language: Flags.custom<Language>({
       options: languageOptions,
+    })({
       description: messages.getMessage('flags.language.summary'),
       char: 'l',
       required: true,
@@ -70,7 +71,7 @@ export default class GenerateFunction extends Command {
       this.warn(messages.getMessage('flags.name.deprecation'));
     }
 
-    const { name, path, language, welcomeText } = await generateFunction(fnName, flags.language as Language);
+    const { name, path, language, welcomeText } = await generateFunction(fnName, flags.language);
     this.log(`Created ${language} function ${herokuColor.green(name)} in ${herokuColor.green(path)}.`);
     if (welcomeText) {
       this.log('');

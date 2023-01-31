@@ -7,7 +7,7 @@
 import * as path from 'path';
 import * as process from 'process';
 import { Command, Flags } from '@oclif/core';
-import { LocalRun } from '@hk/functions-core';
+import { Language, LocalRun } from '@hk/functions-core';
 import { Messages } from '@salesforce/core';
 import { LangRunnerOpts } from '@hk/functions-core/dist/lang-runner';
 
@@ -40,8 +40,9 @@ export default class Local extends Command {
       description: messages.getMessage('flags.debug-port.summary'),
       default: 9229,
     }),
-    language: Flags.enum({
+    language: Flags.custom<Language | 'auto'>({
       options: languageOptions,
+    })({
       description: messages.getMessage('flags.language.summary'),
       char: 'l',
       default: 'auto',
