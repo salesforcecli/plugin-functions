@@ -9,9 +9,9 @@ import { ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
 import { expect, test } from '@oclif/test';
 import * as sinon from 'sinon';
-import { LocalRun, LocalRunProcess } from '@hk/functions-core';
+import { LocalRun, LocalRunProcess } from '@heroku/functions-core';
 import { SinonStub, SinonStubbedInstance } from 'sinon';
-import { LangRunnerOpts } from '@hk/functions-core/dist/lang-runner';
+import { LangRunnerOpts } from '@heroku/functions-core/dist/lang-runner';
 import Local from '../../../../../src/commands/run/function/start/local';
 
 describe('sf run function start local', () => {
