@@ -1,3 +1,12 @@
+## [1.18.3](https://github.com/salesforcecli/plugin-functions/compare/1.18.2...1.18.3) (2023-02-01)
+
+
+### Bug Fixes
+
+* **deps:** Switch back to non-shortened @heroku/functions-core dependency name ([#595](https://github.com/salesforcecli/plugin-functions/issues/595)) ([14d7dc4](https://github.com/salesforcecli/plugin-functions/commit/14d7dc4fc43f83c2460cf57005ecc20f9546b0ff)), closes [salesforcecli/plugin-functions#403](https://github.com/salesforcecli/plugin-functions/issues/403) [heroku/sf-functions-core#22](https://github.com/heroku/sf-functions-core/issues/22)
+
+
+
 ## [1.18.2](https://github.com/salesforcecli/plugin-functions/compare/1.18.1...1.18.2) (2023-01-31)
 
 
