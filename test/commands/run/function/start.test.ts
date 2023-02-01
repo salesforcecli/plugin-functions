@@ -9,7 +9,7 @@ import { EventEmitter } from 'events';
 import { Readable } from 'stream';
 import { expect, test } from '@oclif/test';
 import * as sinon from 'sinon';
-import { LocalRun, LocalRunProcess } from '@hk/functions-core';
+import { LocalRun, LocalRunProcess } from '@heroku/functions-core';
 
 describe('sdf run function start', () => {
   let sandbox: sinon.SinonSandbox;

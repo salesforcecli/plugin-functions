@@ -7,9 +7,9 @@
 import * as path from 'path';
 import * as process from 'process';
 import { Command, Flags } from '@oclif/core';
-import { Language, LocalRun } from '@hk/functions-core';
+import { Language, LocalRun } from '@heroku/functions-core';
 import { Messages } from '@salesforce/core';
-import { LangRunnerOpts } from '@hk/functions-core/dist/lang-runner';
+import { LangRunnerOpts } from '@heroku/functions-core/dist/lang-runner';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'run.function.start.local');

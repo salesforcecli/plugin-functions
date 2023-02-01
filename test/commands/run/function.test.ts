@@ -11,7 +11,7 @@ import { cli } from 'cli-ux';
 import { MockTestOrgData, testSetup } from '@salesforce/core/lib/testSetup';
 import * as sinon from 'sinon';
 
-import * as library from '@hk/functions-core';
+import * as library from '@heroku/functions-core';
 import vacuum from '../../helpers/vacuum';
 
 describe('sf run function', () => {

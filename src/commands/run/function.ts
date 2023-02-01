@@ -6,7 +6,7 @@
  */
 import * as fs from 'fs';
 import { Errors, Flags } from '@oclif/core';
-import { runFunction, RunFunctionOptions } from '@hk/functions-core';
+import { runFunction, RunFunctionOptions } from '@heroku/functions-core';
 import { cli } from 'cli-ux';
 import herokuColor from '@heroku-cli/color';
 import { AxiosResponse, AxiosError } from 'axios';
