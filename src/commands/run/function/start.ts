@@ -9,7 +9,7 @@ import * as path from 'path';
 import { Messages } from '@salesforce/core';
 import { Flags } from '@oclif/core';
 
-import { Language } from '@hk/functions-core';
+import { Language } from '@heroku/functions-core';
 import Local, { languageOptions } from './start/local';
 
 Messages.importMessagesDirectory(__dirname);
