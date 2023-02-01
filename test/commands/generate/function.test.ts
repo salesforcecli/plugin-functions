@@ -6,7 +6,7 @@
  */
 import { expect, test } from '@oclif/test';
 import * as sinon from 'sinon';
-import * as library from '@hk/functions-core';
+import * as library from '@heroku/functions-core';
 import vacuum from '../../helpers/vacuum';
 
 describe('sf generate function', () => {

@@ -7,7 +7,7 @@
 import herokuColor from '@heroku-cli/color';
 import { Messages } from '@salesforce/core';
 import { Errors, Flags } from '@oclif/core';
-import { generateFunction, Language } from '@hk/functions-core';
+import { generateFunction, Language } from '@heroku/functions-core';
 import Command from '../../lib/base';
 
 Messages.importMessagesDirectory(__dirname);
