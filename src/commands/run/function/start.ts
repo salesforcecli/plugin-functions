@@ -9,6 +9,7 @@ import * as path from 'path';
 import { Messages } from '@salesforce/core';
 import { Flags } from '@oclif/core';
 
+import { Language } from '@heroku/functions-core';
 import Local, { languageOptions } from './start/local';
 
 Messages.importMessagesDirectory(__dirname);
@@ -43,9 +44,10 @@ export default class Start extends Local {
       multiple: true,
       hidden: true,
     }),
-    language: Flags.enum({
-      description: messages.getMessage('flags.language.summary'),
+    language: Flags.custom<Language | 'auto'>({
       options: languageOptions,
+    })({
+      description: messages.getMessage('flags.language.summary'),
       char: 'l',
       default: 'auto',
     }),

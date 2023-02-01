@@ -64,7 +64,7 @@ export default class ConfigUnset extends Command {
 
     try {
       const { data: config } = await this.client.get<Heroku.ConfigVars>(`/apps/${appName}/config-vars`);
-      const value = config[argv[0]];
+      const value = config[argv[0] as string];
 
       if (!value) {
         this.error('not correct config var', { exit: 401 });
@@ -84,7 +84,7 @@ export default class ConfigUnset extends Command {
       this.error(error);
     }
 
-    const configPairs = argv.reduce((acc: any, elem: any) => {
+    const configPairs = (argv as string[]).reduce((acc: any, elem: any) => {
       return {
         ...acc,
         [elem]: null,

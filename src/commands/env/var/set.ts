@@ -73,7 +73,7 @@ export default class ConfigSet extends Command {
 
     const appName = await resolveAppNameForEnvironment(targetCompute);
 
-    const configPairs = this.parseKeyValuePairs(argv);
+    const configPairs = this.parseKeyValuePairs(argv as string[]);
 
     cli.action.start(
       `Setting ${Object.keys(configPairs)

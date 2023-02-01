@@ -4,27 +4,28 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { Flags, Errors, Interfaces } from '@oclif/core';
+import { Flags, Errors } from '@oclif/core';
 import { cli } from 'cli-ux';
 import { Messages } from '@salesforce/core';
+import { FlagInput } from '@oclif/core/lib/interfaces/parser';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'lib.flags');
 
 export const FunctionsFlagBuilder = {
-  environment: Flags.build({
+  environment: Flags.custom<string>({
     char: 'e',
     description: messages.getMessage('flags.target-compute.summary'),
     required: false,
   }),
 
-  connectedOrg: Flags.build({
+  connectedOrg: Flags.custom<string>({
     char: 'o',
     description: messages.getMessage('flags.connectedOrg.summary'),
     required: false,
   }),
 
-  keyValueFlag: Flags.build({
+  keyValueFlag: Flags.custom({
     description: messages.getMessage('flags.keyValueFlag.summary'),
     async parse(input) {
       const [key, ...rest] = input.split('=');
@@ -58,11 +59,11 @@ export const waitFlag = Flags.boolean({
   description: messages.getMessage('flags.waitFlag.summary'),
 });
 
-export const FunctionsTableFlags: Interfaces.FlagInput<any> = {
+export const FunctionsTableFlags: FlagInput<any> = {
   // only let supertable alternatively
   // output in json & csv for now
   // Cast until cli-us uses oclif/core
-  ...(cli.table.flags({ except: ['csv', 'output'] }) as unknown as Interfaces.FlagInput<any>),
+  ...(cli.table.flags({ except: ['csv', 'output'] }) as unknown as FlagInput<any>),
   output: Flags.string({
     exclusive: ['no-truncate', 'csv'],
     description: messages.getMessage('flags.FunctionsTableFlags.summary'),
