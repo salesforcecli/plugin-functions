@@ -438,10 +438,10 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@^0.5.5":
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.5.5.tgz#56fa838af85e255d793138a535e56d5a2d79581e"
-  integrity sha512-0XpnL/sNdK9JpdUejlMSt5yj7kdK/AxhPFVBzxKqFzB24CiPiCHzrl/Me9+bJKJto3xUVILABu8/RQnz7dnYQQ==
+"@heroku/functions-core@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.6.0.tgz#35e814400b316d202b14a67e0689e9d5b051ad6c"
+  integrity sha512-jGGYFwWov9eyqpIrdtSO96oZEFn9jilG8dVzUHfe2+7pyUSDWVXGBYMEk50pE3HtDQp2Oz8F5FLALQGcOjINVg==
   dependencies:
     "@heroku-cli/color" "^1.1.16"
     "@heroku/project-descriptor" "0.0.6"
@@ -453,7 +453,7 @@
     global-agent "^3.0.0"
     handlebars "^4.7.7"
     mem-fs "^2.2.1"
-    mem-fs-editor "^9.5.0"
+    mem-fs-editor "^9.6.0"
     node-fetch "^2.6.8"
     openpgp "^5.5.0"
     semver "^7.3.8"
@@ -5920,7 +5920,7 @@ matcher@^3.0.0:
   dependencies:
     escape-string-regexp "^4.0.0"
 
-"mem-fs-editor@^8.1.2 || ^9.0.0", mem-fs-editor@^9.5.0:
+"mem-fs-editor@^8.1.2 || ^9.0.0", mem-fs-editor@^9.6.0:
   version "9.6.0"
   resolved "https://registry.yarnpkg.com/mem-fs-editor/-/mem-fs-editor-9.6.0.tgz#a867377737b12c0d02ca756d90bc70c51883aa38"
   integrity sha512-CsuAd+s0UPZnGzm3kQ5X7gGmVmwiX9XXRAmXj9Mbq0CJa8YWUkPqneelp0aG2g+7uiwCBHlJbl30FYtToLT3VQ==
