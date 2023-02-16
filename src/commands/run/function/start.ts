@@ -25,24 +25,10 @@ export default class Start extends Local {
   static description = messages.getMessage('description');
 
   static flags = {
-    builder: Flags.string({
-      hidden: true,
-    }),
-    'clear-cache': Flags.boolean({
-      hidden: true,
-    }),
     'debug-port': Flags.integer({
       char: 'b',
       description: messages.getMessage('flags.debug-port.summary'),
       default: 9229,
-    }),
-    descriptor: Flags.string({
-      hidden: true,
-    }),
-    env: Flags.string({
-      char: 'e',
-      multiple: true,
-      hidden: true,
     }),
     language: Flags.custom<Language | 'auto'>({
       options: languageOptions,
@@ -50,18 +36,6 @@ export default class Start extends Local {
       description: messages.getMessage('flags.language.summary'),
       char: 'l',
       default: 'auto',
-    }),
-    network: Flags.string({
-      hidden: true,
-    }),
-    'no-build': Flags.boolean({
-      hidden: true,
-    }),
-    'no-pull': Flags.boolean({
-      hidden: true,
-    }),
-    'no-run': Flags.boolean({
-      hidden: true,
     }),
     path: Flags.string({
       description: messages.getMessage('flags.path.summary'),
