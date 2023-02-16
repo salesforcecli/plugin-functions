@@ -1,3 +1,12 @@
+## [1.19.4](https://github.com/salesforcecli/plugin-functions/compare/1.19.3...1.19.4) (2023-02-16)
+
+
+### Bug Fixes
+
+* invalidate session on logout ([#611](https://github.com/salesforcecli/plugin-functions/issues/611)) ([828e928](https://github.com/salesforcecli/plugin-functions/commit/828e9283e6f5b6fdc8b26bb699812478f24a0577))
+
+
+
 ## [1.19.3](https://github.com/salesforcecli/plugin-functions/compare/1.19.2...1.19.3) (2023-02-11)
 
 
