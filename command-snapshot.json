@@ -120,40 +120,13 @@
   {
     "command": "run:function:start",
     "plugin": "@salesforce/plugin-functions",
-    "flags": [
-      "builder",
-      "clear-cache",
-      "debug-port",
-      "descriptor",
-      "env",
-      "language",
-      "network",
-      "no-build",
-      "no-pull",
-      "no-run",
-      "path",
-      "port",
-      "verbose"
-    ],
+    "flags": ["debug-port", "language", "path", "port", "verbose"],
     "alias": []
   },
   {
     "command": "run:function:start:container",
     "plugin": "@salesforce/plugin-functions",
-    "flags": [
-      "builder",
-      "clear-cache",
-      "debug-port",
-      "descriptor",
-      "env",
-      "network",
-      "no-build",
-      "no-pull",
-      "no-run",
-      "path",
-      "port",
-      "verbose"
-    ],
+    "flags": [],
     "alias": []
   },
   {

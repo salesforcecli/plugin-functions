@@ -7,7 +7,7 @@
 import { ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
 import { Readable } from 'stream';
-import { expect, test } from '@oclif/test';
+import { test } from '@oclif/test';
 import * as sinon from 'sinon';
 import { LocalRun, LocalRunProcess } from '@heroku/functions-core';
 
@@ -42,30 +42,6 @@ describe('sdf run function start', () => {
     .it('Should call LocalRun.exec', async () => {
       sinon.assert.calledOnce(localRunExecStub);
     });
-
-  ['--builder', '--network', '--env'].forEach((deprecatedArg) => {
-    describe(`with deprecated arg ${deprecatedArg}`, () => {
-      test
-        .do(setupSuccessfulExecution)
-        .stderr()
-        .command(['run:function:start', deprecatedArg, 'some:val'])
-        .it('will include a deprecation notice', (ctx) => {
-          expect(ctx.stderr).to.contain(`${deprecatedArg} is deprecated`);
-        });
-    });
-  });
-
-  ['--no-pull', '--no-run', '--no-build'].forEach((deprecatedArg) => {
-    describe(`with deprecated flag ${deprecatedArg}`, () => {
-      test
-        .do(setupSuccessfulExecution)
-        .stderr()
-        .command(['run:function:start', deprecatedArg])
-        .it('will include a deprecation notice', (ctx) => {
-          expect(ctx.stderr).to.contain(`${deprecatedArg} is deprecated`);
-        });
-    });
-  });
 });
 
 function createMockChildProcess(): ChildProcess {

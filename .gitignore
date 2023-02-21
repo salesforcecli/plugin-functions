@@ -35,8 +35,5 @@ node_modules
 .DS_Store
 .idea
 
-# ignore downloaded benny binary
-/bin/benny-*
-
 # don't ignore the actual lib folder in our source code
 !src/lib
