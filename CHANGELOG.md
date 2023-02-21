@@ -1,3 +1,12 @@
+# [1.20.0](https://github.com/salesforcecli/plugin-functions/compare/1.19.5...1.20.0) (2023-02-21)
+
+
+### Features
+
+* remove run function start container ([#612](https://github.com/salesforcecli/plugin-functions/issues/612)) ([2a0ec41](https://github.com/salesforcecli/plugin-functions/commit/2a0ec41dff1954cbaf48f80101128d61f5b0aa2e))
+
+
+
 ## [1.19.5](https://github.com/salesforcecli/plugin-functions/compare/1.19.4...1.19.5) (2023-02-18)
 
 
