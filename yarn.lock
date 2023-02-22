@@ -438,10 +438,10 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.6.0.tgz#35e814400b316d202b14a67e0689e9d5b051ad6c"
-  integrity sha512-jGGYFwWov9eyqpIrdtSO96oZEFn9jilG8dVzUHfe2+7pyUSDWVXGBYMEk50pE3HtDQp2Oz8F5FLALQGcOjINVg==
+"@heroku/functions-core@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.7.0.tgz#35e1e88c22591fe8b5f3800e832966fb99a6f35b"
+  integrity sha512-MAruKomR03ar4F95EUKJyQPBI+qLbUyquGjZSfqUuKfjxCQ4GbDlaQuoembU2NnulCNuvD8G3mA0koxpx8N6zg==
   dependencies:
     "@heroku-cli/color" "^1.1.16"
     "@heroku/project-descriptor" "0.0.6"
@@ -450,14 +450,10 @@
     axios "^0.27.2"
     cloudevents "^6.0.3"
     fs-extra "^11.1.0"
-    global-agent "^3.0.0"
     handlebars "^4.7.7"
     mem-fs "^2.2.1"
     mem-fs-editor "^9.6.0"
-    node-fetch "^2.6.8"
-    openpgp "^5.5.0"
     semver "^7.3.8"
-    sha256-file "^1.0.0"
     yeoman-environment "~3.13.0"
 
 "@heroku/project-descriptor@0.0.6":
@@ -2077,16 +2073,6 @@ asap@*, asap@^2.0.0, asap@~2.0.3:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
-asn1.js@^5.0.0:
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-5.4.1.tgz#11a980b84ebb91781ce35b0fdc2ee294e3783f07"
-  integrity sha512-+I//4cYPccV8LdmBLiX8CYvf9Sp3vQsrqu2QNXRcrbiWvcx/UdlFiqUJJzxRQxgsZmvhXhn4cSKeSmoFjVdupA==
-  dependencies:
-    bn.js "^4.0.0"
-    inherits "^2.0.1"
-    minimalistic-assert "^1.0.0"
-    safer-buffer "^2.1.0"
-
 asn1@~0.2.3:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/asn1/-/asn1-0.2.6.tgz#0d3a7bb6e64e02a90c0303b31f292868ea09a08d"
@@ -2240,11 +2226,6 @@ bl@^4.0.3, bl@^4.1.0:
     buffer "^5.5.0"
     inherits "^2.0.4"
     readable-stream "^3.4.0"
-
-bn.js@^4.0.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"
-  integrity sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==
 
 bn@^1.0.4, bn@^1.0.5:
   version "1.0.5"
@@ -6013,11 +5994,6 @@ min-indent@^1.0.0:
   resolved "https://registry.yarnpkg.com/min-indent/-/min-indent-1.0.1.tgz#a63f681673b30571fbe8bc25686ae746eefa9869"
   integrity sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==
 
-minimalistic-assert@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/minimalistic-assert/-/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
-  integrity sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==
-
 "minimatch@2 || 3", minimatch@^3.0.4, minimatch@^3.1.1, minimatch@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
@@ -6389,7 +6365,7 @@ node-fetch@*, node-fetch@^3.3.0:
     fetch-blob "^3.1.4"
     formdata-polyfill "^4.0.10"
 
-node-fetch@^2.6.1, node-fetch@^2.6.7, node-fetch@^2.6.8:
+node-fetch@^2.6.1, node-fetch@^2.6.7:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.9.tgz#7c7f744b5cc6eb5fd404e0c7a9fec630a55657e6"
   integrity sha512-DJm/CJkZkRjKKj4Zi4BsKVZh3ValV5IR5s7LVZnW+6YMh0W1BfNA8XSs6DLMGYlId5F3KnA70uu2qepcR08Qqg==
@@ -6696,13 +6672,6 @@ open@^7.0.0:
   dependencies:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
-
-openpgp@^5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.5.0.tgz#235ae5a49d5fda5cfd1d82c4c42cd91433478c14"
-  integrity sha512-SpwcJnxrK9Y0HRM6KxSFqkAEOSWEabCH/c8dII/+y2e5f6KvuDG5ZE7JXaPBaVJNE4VUZZeTphxXDoZD0KOHrw==
-  dependencies:
-    asn1.js "^5.0.0"
 
 opn@^5.3.0:
   version "5.5.0"
