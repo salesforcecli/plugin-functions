@@ -16,7 +16,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-functions', 'generate
 // TODO: Make sf-functions-core export the list of language options it supports
 // for the generate function feature, and use that instead of hardcoding here.
 // See W-12120598.
-const languageOptions = ['java', 'javascript', 'python', 'typescript'];
+const languageOptions = ['java', 'javascript', 'typescript'];
 
 /**
  * Based on given language, create function project with specific scaffolding.
@@ -61,10 +61,6 @@ export default class GenerateFunction extends Command {
        -n, --function-name FUNCTION-NAME  ${herokuColor.dim('Function name.')}
        See more help with --help`
       );
-    }
-
-    if (flags.language === 'python') {
-      this.warn('Python support for Salesforce Functions is experimental.');
     }
 
     if (flags.name) {
