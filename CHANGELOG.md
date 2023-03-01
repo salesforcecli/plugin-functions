@@ -1,3 +1,12 @@
+## [1.21.2](https://github.com/salesforcecli/plugin-functions/compare/1.21.1...1.21.2) (2023-03-01)
+
+
+### Bug Fixes
+
+* exit 1 on sf run function start container ([#618](https://github.com/salesforcecli/plugin-functions/issues/618)) ([57ab45c](https://github.com/salesforcecli/plugin-functions/commit/57ab45ce83437b13a15f88c3536641dac6e3900c))
+
+
+
 ## [1.21.1](https://github.com/salesforcecli/plugin-functions/compare/1.21.0...1.21.1) (2023-02-25)
 
 
