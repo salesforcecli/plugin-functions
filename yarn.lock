@@ -1599,10 +1599,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-15.14.9.tgz#bc43c990c3c9be7281868bbc7b8fdd6e2b57adfa"
   integrity sha512-qjd88DrCxupx/kJD5yQgZdcYKZKSIGBVDIBE1/LTGcNm3d2Np/jxojkdePDdfnBHJc5W7vSMpbJ1aB7p/Py69A==
 
-"@types/nodegit@^0.28.2":
-  version "0.28.2"
-  resolved "https://registry.yarnpkg.com/@types/nodegit/-/nodegit-0.28.2.tgz#e167aff042c4303d388e9e498e9ac3b408ddd3d0"
-  integrity sha512-lZYCmq7A2NpU3syi+QH2gkjYnKJXuoyWJmHBB6paTja15cizroE+4dKisyJ78S2vxe4DHnNPZuAdYs4gAh9b5A==
+"@types/nodegit@^0.28.3":
+  version "0.28.3"
+  resolved "https://registry.yarnpkg.com/@types/nodegit/-/nodegit-0.28.3.tgz#6c9a3f18e09326f2118ef43fa67d1365e0f0a39d"
+  integrity sha512-uAS8UIOydbQZMEwVsglO+tCyiOf+mBDAsjEw0JoE1BEYxfdQnP4Ql/sPXiUSnbZWEJJ/S5RfDNyqHjyVmoJN7w==
   dependencies:
     "@types/node" "*"
 
