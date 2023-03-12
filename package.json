@@ -15,7 +15,7 @@
     "@heroku/functions-core": "^0.7.0",
     "@heroku/project-descriptor": "0.0.6",
     "@oclif/core": "^2.4.0",
-    "@salesforce/core": "^3.33.4",
+    "@salesforce/core": "^3.33.6",
     "@salesforce/sf-plugins-core": "^2.0.1",
     "@salesforce/ts-types": "^1.7.3",
     "axios": "^0.27.2",
