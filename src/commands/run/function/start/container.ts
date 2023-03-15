@@ -7,6 +7,7 @@
 import { Command } from '@oclif/core';
 
 export default class Container extends Command {
+  public static hidden = false;
   async run() {
     this.log('Starting functions in container mode has been removed. Please use "sf run function start" instead.');
     this.exit(1);
