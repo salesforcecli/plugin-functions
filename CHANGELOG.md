@@ -1,3 +1,12 @@
+## [1.21.6](https://github.com/salesforcecli/plugin-functions/compare/1.21.5...1.21.6) (2023-03-18)
+
+
+### Bug Fixes
+
+* **deps:** bump node-fetch from 3.3.0 to 3.3.1 ([#635](https://github.com/salesforcecli/plugin-functions/issues/635)) ([65414d3](https://github.com/salesforcecli/plugin-functions/commit/65414d3ce85092bcf31dc5f57110c178e63e4b15))
+
+
+
 ## [1.21.5](https://github.com/salesforcecli/plugin-functions/compare/1.21.4...1.21.5) (2023-03-18)
 
 
