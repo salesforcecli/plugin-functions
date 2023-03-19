@@ -1143,15 +1143,15 @@
     mv "~2"
     safe-json-stringify "~1"
 
-"@salesforce/command@^5.2.39":
-  version "5.2.43"
-  resolved "https://registry.yarnpkg.com/@salesforce/command/-/command-5.2.43.tgz#32934cea940ade9246d9019a08275d509737e07d"
-  integrity sha512-FIG5VjY5WSyB8oVUxS7/ow69EwD8fweHCU7oO9SJf6zlM2D+Vd/zJf8hw3aX+j/whb28runX5rDAtI6oelQ8rg==
+"@salesforce/command@^5.3.3":
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/command/-/command-5.3.3.tgz#863380090d8febeb803ceb32690302c490ffe1fc"
+  integrity sha512-p6I5AiQG85Ptk6hxh0r9Xg34MTshnGmDkGSY+S1yqodOF8oV+frCnUenInjwibxyuSqL0hPm+scx8/jwhqLNVA==
   dependencies:
     "@oclif/core" "^1.25.0"
     "@oclif/test" "^2.2.21"
-    "@salesforce/core" "^3.33.1"
-    "@salesforce/kit" "^1.8.2"
+    "@salesforce/core" "^3.33.6"
+    "@salesforce/kit" "^1.8.5"
     "@salesforce/ts-types" "^1.7.1"
     chalk "^2.4.2"
 
@@ -1247,7 +1247,7 @@
     typedoc-plugin-missing-exports "0.23.0"
     typescript "^4.1.3"
 
-"@salesforce/kit@^1.5.17", "@salesforce/kit@^1.7.1", "@salesforce/kit@^1.8.2", "@salesforce/kit@^1.8.3", "@salesforce/kit@^1.9.0":
+"@salesforce/kit@^1.5.17", "@salesforce/kit@^1.7.1", "@salesforce/kit@^1.8.3", "@salesforce/kit@^1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-1.9.0.tgz#ddc179ff588b68f3e8f5c237ab74ed4b9c8d5274"
   integrity sha512-a1DnVf2ZN/fZ4Zq0T6pxrDpwOyWSKt6Es1erpUJLvM13H+Y3C4uxSUy4aS4WSHIJA8zvWvvEiWYOV17TD0Dmug==
@@ -1256,13 +1256,22 @@
     shx "^0.3.3"
     tslib "^2.5.0"
 
-"@salesforce/plugin-command-reference@^1.6.3":
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-1.6.3.tgz#c8c21b218f07be385bbfb59639ae853677b941c8"
-  integrity sha512-xaHJUd6OD/LBJibNY5HzaWvtlbEhm2xFAdWmdLlmvkh2N91FGSrpjyQQ0dy+i8PlrMbejFdtDfK+zXzJEyt2Tw==
+"@salesforce/kit@^1.8.5":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-1.9.2.tgz#d232f135428363cdfe2649cb99a94bc2eb0a12fd"
+  integrity sha512-kjZvjFNP6njhAiEa/ErdLXSDWZKafHYJyKCKz1wnSFmDM8TOpKHCCVw5cQo87ZQr8OqxqwUDIAlSBLyMzKi4Lg==
   dependencies:
-    "@salesforce/command" "^5.2.39"
-    "@salesforce/core" "^3.33.1"
+    "@salesforce/ts-types" "^1.7.3"
+    shx "^0.3.3"
+    tslib "^2.5.0"
+
+"@salesforce/plugin-command-reference@^1.6.6":
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-1.6.6.tgz#16406861e49270a3889a8813b09c45dbff4cc4cd"
+  integrity sha512-4jO3wx+ceJZ4OevaROH2qKySGF+mE6rifbIXPzOQhVFZIlCUYyt1rEF7RNBAbvtBUazDgBCQ6Y8sZVkTl5JcLQ==
+  dependencies:
+    "@salesforce/command" "^5.3.3"
+    "@salesforce/core" "^3.33.6"
     "@types/lodash.uniqby" "^4.7.7"
     chalk "^3.0.0"
     handlebars "4.7.7"
