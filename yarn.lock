@@ -1179,14 +1179,14 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.24.0", "@salesforce/core@^3.33.1", "@salesforce/core@^3.33.6", "@salesforce/core@^3.34.1":
-  version "3.34.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.34.4.tgz#6fa11c32f14d20130a0c92c5d306f368671ec104"
-  integrity sha512-WasR/6IXKcNj3MgZIcVaT7W5Ic/blxOgpQIzob/7JEsnLVr3pPPb+9/axRvxEGdJr/gOnL1vR0NbBX+Mz6TtkQ==
+"@salesforce/core@^3.24.0", "@salesforce/core@^3.33.1", "@salesforce/core@^3.33.6", "@salesforce/core@^3.34.4":
+  version "3.34.6"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.34.6.tgz#816031d3aab098d56165d876db626a3610d86c6e"
+  integrity sha512-9Nd+bQRSvCYDiZo97bhseajLhr7d51J9gsPUnfN3nHy1/TBQXjN+upRAPAeldvzU8G3L98WGDMtEpSTOG/PxkQ==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
     "@salesforce/kit" "^1.9.2"
-    "@salesforce/schemas" "^1.5.0"
+    "@salesforce/schemas" "^1.5.1"
     "@salesforce/ts-types" "^1.7.2"
     "@types/graceful-fs" "^4.1.6"
     "@types/semver" "^7.3.13"
@@ -1265,13 +1265,13 @@
     shx "^0.3.3"
     tslib "^2.5.0"
 
-"@salesforce/plugin-command-reference@^1.6.7":
-  version "1.6.7"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-1.6.7.tgz#aef7eaf0824eb40902db70361f0805e369058026"
-  integrity sha512-sqMHFwG7yoiDwmYAXY/eAlTBsriuN1YD/ktoCFiEBECK1aFv1RyhPt6IHPK1xvetsGdkzjsQXXvC6FTibXTWsg==
+"@salesforce/plugin-command-reference@^1.6.8":
+  version "1.6.8"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-1.6.8.tgz#e346e70f5724b854e79585048049d3efd649c879"
+  integrity sha512-yypJrE2Jc00Q1WSnCLo4Bv99eWUT+ZwojYRS1dqdzhOTvJeworyxBb5O50ECtwL2oux1Lqb5Rw0MLaVDYw88TQ==
   dependencies:
     "@salesforce/command" "^5.3.3"
-    "@salesforce/core" "^3.34.1"
+    "@salesforce/core" "^3.34.4"
     "@types/lodash.uniqby" "^4.7.7"
     chalk "^3.0.0"
     handlebars "4.7.7"
@@ -1284,7 +1284,7 @@
   resolved "https://registry.yarnpkg.com/@salesforce/prettier-config/-/prettier-config-0.0.2.tgz#ded39bf7cb75238edc9db6dd093649111350f8bc"
   integrity sha512-KExM355BLbxCW6siGBV7oUOotXvvVp0tAWERgzUkM2FcMb9fWrjwXDrIHc8V0UdDlA3UXtFltDWgN+Yqi+BA/g==
 
-"@salesforce/schemas@^1.0.1", "@salesforce/schemas@^1.5.0":
+"@salesforce/schemas@^1.0.1", "@salesforce/schemas@^1.5.1":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.5.1.tgz#2d1bfdcf593caaa04cd4b3e6fe621097ff7f28fe"
   integrity sha512-MRqU+tn8w5IFvZ0Lm9YKLgxYxr2MQMI+fXXsTrwfUnijsps+ybF9IOTu6MOMxxl2vCUkO8XDjA435wXlWSLI6g==
