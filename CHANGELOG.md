@@ -1,3 +1,30 @@
+## [1.21.7](https://github.com/salesforcecli/plugin-functions/compare/1.21.6...1.21.7) (2023-04-01)
+
+
+### Bug Fixes
+
+* **deps:** bump @oclif/core from 2.7.1 to 2.8.0 ([#646](https://github.com/salesforcecli/plugin-functions/issues/646)) ([b04276b](https://github.com/salesforcecli/plugin-functions/commit/b04276b4d4f90bfa132250d19ebb73583cbecf17))
+
+
+
+## [1.21.6](https://github.com/salesforcecli/plugin-functions/compare/1.21.5...1.21.6) (2023-03-18)
+
+
+### Bug Fixes
+
+* **deps:** bump node-fetch from 3.3.0 to 3.3.1 ([#635](https://github.com/salesforcecli/plugin-functions/issues/635)) ([65414d3](https://github.com/salesforcecli/plugin-functions/commit/65414d3ce85092bcf31dc5f57110c178e63e4b15))
+
+
+
+## [1.21.5](https://github.com/salesforcecli/plugin-functions/compare/1.21.4...1.21.5) (2023-03-18)
+
+
+### Bug Fixes
+
+* **deps:** bump @oclif/core from 2.4.0 to 2.6.4 ([#637](https://github.com/salesforcecli/plugin-functions/issues/637)) ([939c483](https://github.com/salesforcecli/plugin-functions/commit/939c4835c6be0d3992c96eafcc0c2c62c0b208d7))
+
+
+
 ## [1.21.4](https://github.com/salesforcecli/plugin-functions/compare/1.21.3...1.21.4) (2023-03-12)
 
 
