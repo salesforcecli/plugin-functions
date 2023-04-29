@@ -1,3 +1,12 @@
+## [1.21.8](https://github.com/salesforcecli/plugin-functions/compare/1.21.7...1.21.8) (2023-04-29)
+
+
+### Bug Fixes
+
+* **deps:** bump jsforce from 1.11.0 to 1.11.1 ([#664](https://github.com/salesforcecli/plugin-functions/issues/664)) ([85e6b77](https://github.com/salesforcecli/plugin-functions/commit/85e6b77a2653b0f674043b15e5e91117a15648ba))
+
+
+
 ## [1.21.7](https://github.com/salesforcecli/plugin-functions/compare/1.21.6...1.21.7) (2023-04-01)
 
 
