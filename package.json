@@ -28,7 +28,7 @@
     "fs-extra": "^10.0.1",
     "global-agent": "^3.0.0",
     "handlebars": "^4.7.7",
-    "jsforce": "^1.11.0",
+    "jsforce": "^1.11.1",
     "kbpgp": "^2.1.15",
     "lodash": "^4.17.21",
     "netrc-parser": "^3.1.6",
