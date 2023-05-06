@@ -1,3 +1,12 @@
+## [1.21.9](https://github.com/salesforcecli/plugin-functions/compare/1.21.8...1.21.9) (2023-05-06)
+
+
+### Bug Fixes
+
+* **deps:** bump date-fns from 2.29.3 to 2.30.0 ([#666](https://github.com/salesforcecli/plugin-functions/issues/666)) ([57e4093](https://github.com/salesforcecli/plugin-functions/commit/57e4093f6ee5bb77a2ed65e63986e1f1202e278f))
+
+
+
 ## [1.21.8](https://github.com/salesforcecli/plugin-functions/compare/1.21.7...1.21.8) (2023-04-29)
 
 
