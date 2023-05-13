@@ -1143,14 +1143,14 @@
     mv "~2"
     safe-json-stringify "~1"
 
-"@salesforce/command@^5.3.6":
-  version "5.3.6"
-  resolved "https://registry.yarnpkg.com/@salesforce/command/-/command-5.3.6.tgz#37fb6770a960e753c7737ca479d4e8d190488d31"
-  integrity sha512-4cw3OK1eWZZV9jPZ1WCAOW6uEHcAmcSCcjcZwE34UloalE+tzM5W8ud0d7YnROLVjjNNsJFstZD14RIlfjs5aA==
+"@salesforce/command@^5.3.7":
+  version "5.3.8"
+  resolved "https://registry.yarnpkg.com/@salesforce/command/-/command-5.3.8.tgz#cd834b3d1223ca424572d36a88028bd41ca3c3a8"
+  integrity sha512-6kStt6Fby9sjAFBMxK1Gx7Un7VVI5pihfpP4anX+he7x6bsiOAPAyMDw9XazdXiIgK1C/JJqYqOZRwlwAdVGRQ==
   dependencies:
     "@oclif/core" "^1.25.0"
     "@oclif/test" "^2.2.21"
-    "@salesforce/core" "^3.34.8"
+    "@salesforce/core" "^3.36.1"
     "@salesforce/kit" "^1.8.5"
     "@salesforce/ts-types" "^1.7.1"
     chalk "^2.4.2"
@@ -1179,10 +1179,10 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.24.0", "@salesforce/core@^3.33.1", "@salesforce/core@^3.33.6", "@salesforce/core@^3.34.6", "@salesforce/core@^3.34.8":
-  version "3.36.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.36.0.tgz#cbff147d888eee0b921e368c1fdc1a1a3c2eacab"
-  integrity sha512-LOeSJgozf5B1S8C98/K3afewRsathfEm+HrXxaFXJjITFfIhxqcIDB5xC1cw0VikfRUlq7dQocmVsvezcK0Ghw==
+"@salesforce/core@^3.24.0", "@salesforce/core@^3.33.1", "@salesforce/core@^3.33.6", "@salesforce/core@^3.34.6", "@salesforce/core@^3.36.1":
+  version "3.36.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.36.1.tgz#053a5e1079b9749b62e461e6ac3e630b5689694a"
+  integrity sha512-kcjyr9bj35nnL8Bqv8U39xeho3CrZYXJiS/X5X1eEHVNZLd9zckrmKrh1V7z8ElCFpsJrewT989SJsdvi9kE8w==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
     "@salesforce/kit" "^1.9.2"
@@ -1263,12 +1263,12 @@
     shx "^0.3.3"
     tslib "^2.5.0"
 
-"@salesforce/plugin-command-reference@^1.6.14":
-  version "1.6.14"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-1.6.14.tgz#25487d4e3d2af41c59f022a22f96ba6541522552"
-  integrity sha512-QPlo1YzFGoI5jZ4hbealD4ZjKmv36mHqwxefAZkB6VLRx5vLt9Q5yNC1MRefLNdvQFXeNJOzzOg4RQtDdk1Sdw==
+"@salesforce/plugin-command-reference@^1.6.15":
+  version "1.6.15"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-1.6.15.tgz#7988fb43b521fb05d373cc9a99763723a42333c5"
+  integrity sha512-6GpZpRsktTJv4ggvhPUoGq5mpYJwf/jKXh460KagqQEWsab5jThN40BVLRzJIwXmClyzOyrXPDndJLpTaD9ZwA==
   dependencies:
-    "@salesforce/command" "^5.3.6"
+    "@salesforce/command" "^5.3.7"
     "@salesforce/core" "^3.34.6"
     "@types/lodash.uniqby" "^4.7.7"
     chalk "^3.0.0"
