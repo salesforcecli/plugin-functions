@@ -44,7 +44,7 @@
     "@salesforce/dev-config": "^3.0.0",
     "@salesforce/dev-scripts": "^2.0.3",
     "@salesforce/plugin-command-reference": "^1.6.14",
-    "@salesforce/prettier-config": "^0.0.2",
+    "@salesforce/prettier-config": "^0.0.3",
     "@salesforce/ts-sinon": "^1.4.6",
     "@types/fs-extra": "^9.0.13",
     "@types/node-fetch": "^3.0.3",
