@@ -43,7 +43,7 @@
     "@oclif/test": "^2",
     "@salesforce/dev-config": "^3.0.0",
     "@salesforce/dev-scripts": "^2.0.3",
-    "@salesforce/plugin-command-reference": "^1.6.17",
+    "@salesforce/plugin-command-reference": "^1.6.18",
     "@salesforce/prettier-config": "^0.0.3",
     "@salesforce/ts-sinon": "^1.4.7",
     "@types/fs-extra": "^9.0.13",
