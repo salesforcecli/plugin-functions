@@ -1254,10 +1254,10 @@
     shx "^0.3.3"
     tslib "^2.5.0"
 
-"@salesforce/plugin-command-reference@^1.6.17":
-  version "1.6.17"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-1.6.17.tgz#48e961295e88f55b481faee884e0c4fadc598ccc"
-  integrity sha512-Agpaso3Nb3x8J6+iW9HNeE1PDVq8WTrYs1a3oxjm8/nV5+hxWWyoyHsBYyKqoJLyua6Xd2j8ITLwGiDwZOBb6g==
+"@salesforce/plugin-command-reference@^1.6.18":
+  version "1.6.18"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-command-reference/-/plugin-command-reference-1.6.18.tgz#16ecfd593a5ade7b47b8999cf6b9c340b1bc5532"
+  integrity sha512-Ts0jpTd1ypE0WwwMP54Id3rS5LLhEzMHNgKTNQsJ4HHCYM1srCQEZMaOT6+PUhc+4ez5bXERfdtH1lLw8hsnEg==
   dependencies:
     "@salesforce/command" "^5.3.7"
     "@salesforce/core" "^3.36.1"
