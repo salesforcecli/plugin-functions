@@ -1,3 +1,12 @@
+## [1.21.11](https://github.com/salesforcecli/plugin-functions/compare/1.21.10...1.21.11) (2023-08-03)
+
+
+### Bug Fixes
+
+* hide `run function start container` cmd ([#633](https://github.com/salesforcecli/plugin-functions/issues/633)) ([431a9ee](https://github.com/salesforcecli/plugin-functions/commit/431a9eeb210dcfb471916890cce1944d7d43ffd4))
+
+
+
 ## [1.21.10](https://github.com/salesforcecli/plugin-functions/compare/1.21.9...1.21.10) (2023-05-27)
 
 
