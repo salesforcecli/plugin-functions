@@ -71,7 +71,7 @@
     "lint-staged": "^12.3.6",
     "mocha": "^9.2.2",
     "nyc": "^15.1.0",
-    "oclif": "^3.9.0",
+    "oclif": "^3.14.0",
     "prettier": "^2.8.8",
     "pretty-quick": "^3.1.3",
     "shx": "^0.3.4",
@@ -89,7 +89,8 @@
     "/messages",
     "/templates",
     "/oclif.manifest.json",
-    "/schemas"
+    "/schemas",
+    "/oclif.lock"
   ],
   "homepage": "https://github.com/salesforcecli/plugin-functions",
   "keywords": [
@@ -176,7 +177,7 @@
     "lint": "sf-lint",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint && yarn test:deprecation-policy",
-    "prepack": "sf-prepack",
+    "prepack": "sf-prepack && oclif lock",
     "prepare": "sf-install",
     "pretest": "sf-compile-test",
     "promote-dist-tags": "./bin/promote-dist-tags",
