@@ -34,5 +34,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/ban-types': 'off',
     camelcase: 'off',
+
+    'jsdoc/newline-after-description': 'off',
   },
 };
