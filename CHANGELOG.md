@@ -1,3 +1,12 @@
+## [1.21.12](https://github.com/salesforcecli/plugin-functions/compare/1.21.11...1.21.12) (2023-09-07)
+
+
+### Bug Fixes
+
+* **dep:** bump eslint-plugin-jsdoc from ^39.9.1 to ^43.0.5 ([#721](https://github.com/salesforcecli/plugin-functions/issues/721)) ([39e2c6d](https://github.com/salesforcecli/plugin-functions/commit/39e2c6df1fb44caf102fe9fa52de415491a59aa3))
+
+
+
 ## [1.21.11](https://github.com/salesforcecli/plugin-functions/compare/1.21.10...1.21.11) (2023-08-03)
 
 
