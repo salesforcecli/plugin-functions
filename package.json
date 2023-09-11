@@ -89,7 +89,8 @@
     "/messages",
     "/templates",
     "/oclif.manifest.json",
-    "/schemas"
+    "/schemas",
+    "/oclif.lock"
   ],
   "homepage": "https://github.com/salesforcecli/plugin-functions",
   "keywords": [
@@ -176,7 +177,7 @@
     "lint": "sf-lint",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint && yarn test:deprecation-policy",
-    "prepack": "sf-prepack",
+    "prepack": "sf-prepack && oclif lock",
     "prepare": "sf-install",
     "pretest": "sf-compile-test",
     "promote-dist-tags": "./bin/promote-dist-tags",
