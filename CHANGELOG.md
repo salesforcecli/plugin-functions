@@ -1,3 +1,12 @@
+## [1.22.1](https://github.com/salesforcecli/plugin-functions/compare/1.22.0...1.22.1) (2023-09-16)
+
+
+### Bug Fixes
+
+* **deps:** bump handlebars from 4.7.7 to 4.7.8 ([#724](https://github.com/salesforcecli/plugin-functions/issues/724)) ([1eded80](https://github.com/salesforcecli/plugin-functions/commit/1eded80d05e21bfa867869fc4ba35496836b0f63))
+
+
+
 # [1.22.0](https://github.com/salesforcecli/plugin-functions/compare/1.21.12...1.22.0) (2023-09-11)
 
 
