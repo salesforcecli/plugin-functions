@@ -87,18 +87,6 @@ describe('sf run function start local', () => {
       });
   });
 
-  context('with -l python', () => {
-    test
-      .command(['run:function:start:local', '-l', 'python'])
-      .it('should start the local runner in python mode', (ctx) => {
-        expect(localRunConstructor).to.have.been.calledWith('python', {
-          port: 8080,
-          debugPort: 9229,
-          path: defaultFunctionPath,
-        });
-      });
-  });
-
   context('with -l typescript', () => {
     test
       .command(['run:function:start:local', '-l', 'typescript'])
