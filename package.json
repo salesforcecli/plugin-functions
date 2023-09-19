@@ -32,7 +32,7 @@
     "kbpgp": "^2.1.15",
     "lodash": "^4.17.21",
     "netrc-parser": "^3.1.6",
-    "node-fetch": "^3.3.1",
+    "node-fetch": "^3.3.2",
     "sha256-file": "^1.0.0",
     "uuid": "^8.3.2"
   },
