@@ -51,7 +51,7 @@
     "@types/nodegit": "^0.28.6",
     "@types/semver": "^7.5.3",
     "@types/sha256-file": "^1.0.2",
-    "@types/sinon-chai": "^3.2.10",
+    "@types/sinon-chai": "^3.2.11",
     "@types/supports-color": "^8.1.2",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
