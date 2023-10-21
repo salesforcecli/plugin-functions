@@ -1625,10 +1625,10 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.3.tgz#9a726e116beb26c24f1ccd6850201e1246122e04"
   integrity sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==
 
-"@types/sha256-file@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/sha256-file/-/sha256-file-1.0.1.tgz#e00ca4732284a5fd8a504ba48a0240683a152a7e"
-  integrity sha512-YnDbU9sc81JuLjARNq2Q4Gw6eXuFsfgbNL6xEso8bQJeTpXR9bhGVZErFqSfXA4+6O0U53gHb1kobbZB2Du07A==
+"@types/sha256-file@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/sha256-file/-/sha256-file-1.0.2.tgz#064a3bf6058f65f6d9aa85e0c179c1573cc39c63"
+  integrity sha512-Fap0ULFC6Q8AgNYwAVVEYYiSBSvRVU1Icr5+qFM87HaXU0uOT+LUY7/npmwjisJtWWsQOoSHG6sKFjwB0bo+iQ==
 
 "@types/sinon-chai@^3.2.10":
   version "3.2.10"
