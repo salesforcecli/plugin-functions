@@ -1,3 +1,12 @@
+## [1.22.8](https://github.com/salesforcecli/plugin-functions/compare/1.22.7...1.22.8) (2023-10-27)
+
+
+### Bug Fixes
+
+* **compute:** fix linting error ([#754](https://github.com/salesforcecli/plugin-functions/issues/754)) ([049711c](https://github.com/salesforcecli/plugin-functions/commit/049711c39bc2fcfa0aa0cf2f7b262ae3ceb492f0))
+
+
+
 ## [1.22.7](https://github.com/salesforcecli/plugin-functions/compare/1.22.6...1.22.7) (2023-10-27)
 
 
