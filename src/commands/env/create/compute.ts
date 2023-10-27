@@ -175,7 +175,7 @@ export default class EnvCreateCompute extends Command {
     debug(`begin GET /sales-org-connections/${orgId}/apps/${projectName} ...`);
     const app = await fetchAppForProject(this.client, projectName, org.getUsername());
     const fetchMillis = new Date().getTime() - fetchStart;
-    debug(`end GET millis=${fetchMillis} app=${JSON.stringify(app)}`)
+    debug(`end GET millis=${fetchMillis} app=${JSON.stringify(app)}`);
     return {
       alias,
       projectName,
