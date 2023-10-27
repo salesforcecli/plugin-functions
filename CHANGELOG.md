@@ -1,3 +1,12 @@
+## [1.22.7](https://github.com/salesforcecli/plugin-functions/compare/1.22.6...1.22.7) (2023-10-27)
+
+
+### Bug Fixes
+
+* **compute:** add more logging around start of sf env create compute ([#753](https://github.com/salesforcecli/plugin-functions/issues/753)) ([b4b1916](https://github.com/salesforcecli/plugin-functions/commit/b4b19169209fb384821c34a231a60aec0f2aff6d))
+
+
+
 ## [1.22.6](https://github.com/salesforcecli/plugin-functions/compare/1.22.5...1.22.6) (2023-10-25)
 
 
