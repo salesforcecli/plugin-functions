@@ -10,6 +10,7 @@ import { Flags } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { QueryResult } from 'jsforce';
 import { cli } from 'cli-ux';
+import debugFactory from 'debug';
 import Command from '../../../lib/base';
 import { FunctionsFlagBuilder } from '../../../lib/flags';
 import pollForResult from '../../../lib/poll-for-result';
@@ -23,6 +24,8 @@ interface FunctionConnectionRecord {
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.create.compute');
+
+const debug = debugFactory('env:create:compute');
 
 export default class EnvCreateCompute extends Command {
   static summary = messages.getMessage('summary');
@@ -76,56 +79,49 @@ export default class EnvCreateCompute extends Command {
       // This query allows us to verify that the org connection has actually been created before
       // attempting to create a compute environment. If we don't wait for this to happen, environment
       // creation will fail since Heroku doesn't yet know about the org
-      let response: QueryResult<FunctionConnectionRecord>;
-
-      try {
-        response = await connection.query<FunctionConnectionRecord>(`SELECT
+      const queryStart = new Date().getTime();
+      const response: QueryResult<FunctionConnectionRecord> = await connection.query<FunctionConnectionRecord>(`SELECT
           Id,
           Status,
           Error
-          FROM FunctionsConnection`);
-      } catch (err) {
-        const error = err as Error;
-        // This is obviously heinous, but should only exist short-term until the move from `FunctionsConnection`
-        // to `FunctionConnection` is complete. Once that's done, we can remove this and go back to a simple
-        // query against `FunctionConnection`
-        if (!error.message.includes("sObject type 'FunctionsConnection' is not supported.")) {
-          this.error(error);
-        }
-        response = await connection.query<FunctionConnectionRecord>(`SELECT
-            Id,
-            Status,
-            Error
-            FROM FunctionConnection`);
-      }
+          FROM FunctionConnection`);
 
       // If it's a newly created org, we likely won't get anything back for the first few iterations,
       // we keep polling
+      const queryMillis = new Date().getTime() - queryStart;
+      debug(`query FunctionConnection records=${response.records.length} millis=${queryMillis}`);
       if (!response.records.length) {
         return false;
       }
 
       const record: FunctionConnectionRecord = response.records[0];
+      debug(`record FunctionConnection id=${record.Id} status=${record.Status} error=${record.Error}`);
 
       // This error is also expected when working with a newly created org. This error just means
       // that the devhub hasn't yet enabled functions on the new org (this is an automated async process
       // so it takes a bit of time)
       if (record.Error === 'Enable Salesforce Functions from Setup Page') {
+        debug(`got FunctionConnection.Error=${record.Error}, devhub Functions setup incomplete`);
         return false;
       }
 
       // If there is any other error besides the one mentioned above, something is actually wrong
       // and we should bail
       if (record.Error) {
+        debug(`FunctionConnection Error exists (${record.Error}. Waiting.)`);
         this.error(`${record.Error}`);
       }
 
       // This is the go signal. Once we have this status it means that the connection is fully up
       // and running, and we are good to create a compute environment.
+      const readyMsg = record.Status === 'TrustedBiDirection' ? 'is ready, proceeding.' : 'NOT ready, waiting.';
+      debug(`FunctionConnection Status=${record.Status} ${readyMsg}`);
       return record.Status === 'TrustedBiDirection';
     });
 
     try {
+      const postStart = new Date().getTime();
+      debug(`begin POST /sales-org-connections/${orgId}/apps sfdx_project_name=${projectName} ...`);
       const { data: app } = await this.client.post<Heroku.App>(`/sales-org-connections/${orgId}/apps`, {
         headers: {
           Accept: 'application/vnd.heroku+json; version=3.evergreen',
@@ -136,6 +132,8 @@ export default class EnvCreateCompute extends Command {
       });
 
       cli.action.stop();
+      const postMillis = new Date().getTime() - postStart;
+      debug(`end POST millis=${postMillis} app=${JSON.stringify(app)}`);
 
       this.log(`New compute environment created with ID ${app.name}`);
 
@@ -173,7 +171,11 @@ export default class EnvCreateCompute extends Command {
       }
       this.error(`${error.data.message}`);
     }
+    const fetchStart = new Date().getTime();
+    debug(`begin GET /sales-org-connections/${orgId}/apps/${projectName} ...`);
     const app = await fetchAppForProject(this.client, projectName, org.getUsername());
+    const fetchMillis = new Date().getTime() - fetchStart;
+    debug(`end GET millis=${fetchMillis} app=${JSON.stringify(app)}`)
     return {
       alias,
       projectName,

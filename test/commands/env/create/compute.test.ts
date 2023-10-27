@@ -300,9 +300,8 @@ describe('sf env create compute', () => {
       expect(orgStub).to.have.been.calledWith({ aliasOrUsername: ORG_ALIAS });
       expect(aliasSetSpy).to.have.been.calledWith(ENVIRONMENT_ALIAS, APP_MOCK.id);
       expect(aliasWriteSpy).to.have.been.called;
-      // This is the assertion we rally care about for this test. We want to verify that everything proceeds
-      // as normal even if the first query errors because we're using the old object type
-      expect(ctx.queryStub).to.have.been.calledTwice;
+      // Latest revision should ONLY call query once, for FunctionConnection, not FunctionsConnection.
+      expect(ctx.queryStub).to.have.been.calledOnce;
     });
 
   test
