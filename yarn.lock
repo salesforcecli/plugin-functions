@@ -510,17 +510,17 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.7.0.tgz#35e1e88c22591fe8b5f3800e832966fb99a6f35b"
-  integrity sha512-MAruKomR03ar4F95EUKJyQPBI+qLbUyquGjZSfqUuKfjxCQ4GbDlaQuoembU2NnulCNuvD8G3mA0koxpx8N6zg==
+"@heroku/functions-core@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.7.1.tgz#30bb57708491ae19cb559cf019b851ce87e29281"
+  integrity sha512-TZ8Gc1bVfzC1hCihFy/YbJUDJhNr1Kx9/FHG4JfPgDM7Q6yowYiSjz3+FjpDK9vSHI7Q6nLpBF/JhlkbYv0Jag==
   dependencies:
     "@heroku-cli/color" "^1.1.16"
     "@heroku/project-descriptor" "0.0.6"
     "@salesforce/core" "^2.37.1"
     "@salesforce/templates" "^57.1.0"
     axios "^0.27.2"
-    cloudevents "^6.0.3"
+    cloudevents "6.0.3"
     fs-extra "^11.1.0"
     handlebars "^4.7.7"
     mem-fs "^2.2.1"
@@ -1911,7 +1911,7 @@ ajv-formats@^2.0.2, ajv-formats@^2.1.1:
   dependencies:
     ajv "^8.0.0"
 
-ajv@^6.10.0, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4, ajv@~6.12.3:
+ajv@^6.10.0, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4:
   version "6.12.6"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
   integrity sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==
@@ -2859,15 +2859,7 @@ cloneable-readable@^1.0.0:
     process-nextick-args "^2.0.0"
     readable-stream "^2.3.5"
 
-cloudevents@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/cloudevents/-/cloudevents-4.0.3.tgz#47170fc464f71eda7b261b05aa2bada7ca2b56b3"
-  integrity sha512-FpwsQ0JZzGH1PcJmZTXRQkQSt5YFjwlppUrEUfTU0Ey175IIdYYDCIMeqMIX+qvDUhj8bFDrgU23xWA1JQbR1Q==
-  dependencies:
-    ajv "~6.12.3"
-    uuid "~8.3.0"
-
-cloudevents@^6.0.3:
+cloudevents@6.0.3:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/cloudevents/-/cloudevents-6.0.3.tgz#e406ab904289edb59586ae14f22656a8bbda87f8"
   integrity sha512-ADEHAv2KShH/cDIy2GP+npFz3R6Fu/UCsUO/j4kYA9VqN4yhGdF+Zg6wmjeq6qlUvlaKdrVBwgZuH/w57IsyGQ==
@@ -9042,7 +9034,7 @@ uuid@^3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
-uuid@^8.3.2, uuid@~8.3.0:
+uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
