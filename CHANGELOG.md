@@ -1,3 +1,12 @@
+## [1.22.9](https://github.com/salesforcecli/plugin-functions/compare/1.22.8...1.22.9) (2023-10-31)
+
+
+### Bug Fixes
+
+* bump heroku/functions-core and remove cloudevents ([#755](https://github.com/salesforcecli/plugin-functions/issues/755)) ([25b8e18](https://github.com/salesforcecli/plugin-functions/commit/25b8e18835857c0f8ed1d64240cf03ac805734f8))
+
+
+
 ## [1.22.8](https://github.com/salesforcecli/plugin-functions/compare/1.22.7...1.22.8) (2023-10-27)
 
 
