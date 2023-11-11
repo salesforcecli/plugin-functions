@@ -48,7 +48,7 @@
     "@types/fs-extra": "^9.0.13",
     "@types/node-fetch": "^3.0.3",
     "@types/nodegit": "^0.28.6",
-    "@types/semver": "^7.5.4",
+    "@types/semver": "^7.5.5",
     "@types/sha256-file": "^1.0.2",
     "@types/sinon-chai": "^3.2.12",
     "@types/supports-color": "^8.1.2",
