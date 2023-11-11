@@ -1720,10 +1720,10 @@
   resolved "https://registry.yarnpkg.com/@types/sha256-file/-/sha256-file-1.0.2.tgz#064a3bf6058f65f6d9aa85e0c179c1573cc39c63"
   integrity sha512-Fap0ULFC6Q8AgNYwAVVEYYiSBSvRVU1Icr5+qFM87HaXU0uOT+LUY7/npmwjisJtWWsQOoSHG6sKFjwB0bo+iQ==
 
-"@types/sinon-chai@^3.2.11":
-  version "3.2.11"
-  resolved "https://registry.yarnpkg.com/@types/sinon-chai/-/sinon-chai-3.2.11.tgz#d32faab4c5f593f7b877fcdd8f74e0f6d884ddba"
-  integrity sha512-1C5SBFzwn9hjiMr1xfqbULcSI9qXVpkGZT/LYbbd3jWiTo2MSvA+iFfwODlSoAXGeCgBw6S509dxy8zSIacr3Q==
+"@types/sinon-chai@^3.2.12":
+  version "3.2.12"
+  resolved "https://registry.yarnpkg.com/@types/sinon-chai/-/sinon-chai-3.2.12.tgz#c7cb06bee44a534ec84f3a5534c3a3a46fd779b6"
+  integrity sha512-9y0Gflk3b0+NhQZ/oxGtaAJDvRywCa5sIyaVnounqLvmf93yBF4EgIRspePtkMs3Tr844nCclYMlcCNmLCvjuQ==
   dependencies:
     "@types/chai" "*"
     "@types/sinon" "*"
