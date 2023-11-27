@@ -1,3 +1,12 @@
+## [1.22.10](https://github.com/salesforcecli/plugin-functions/compare/1.22.9...1.22.10) (2023-11-27)
+
+
+### Bug Fixes
+
+* add "logout" topic to package.json ([#762](https://github.com/salesforcecli/plugin-functions/issues/762)) ([1fa87a5](https://github.com/salesforcecli/plugin-functions/commit/1fa87a5193d695187f52e4b1e30f195092541a08))
+
+
+
 ## [1.22.9](https://github.com/salesforcecli/plugin-functions/compare/1.22.8...1.22.9) (2023-10-31)
 
 
