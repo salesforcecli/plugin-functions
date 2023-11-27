@@ -151,6 +151,14 @@
           }
         }
       },
+      "logout": {
+        "description": "Commands to log out of an environment.",
+        "subtopics": {
+          "functions": {
+            "description": "Commands to log out of Salesforce Functions."
+          }
+        }
+      },
       "run": {
         "description": "Commands to run a function.",
         "subtopics": {
