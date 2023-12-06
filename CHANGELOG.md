@@ -1,3 +1,12 @@
+## [1.22.11](https://github.com/salesforcecli/plugin-functions/compare/1.22.10...1.22.11) (2023-12-06)
+
+
+### Bug Fixes
+
+* **deps:** bump @heroku/functions-core from 0.7.1 to 0.7.2 ([#764](https://github.com/salesforcecli/plugin-functions/issues/764)) ([ab71fa5](https://github.com/salesforcecli/plugin-functions/commit/ab71fa551cccc8c478b98971f6d35d531f80d825))
+
+
+
 ## [1.22.10](https://github.com/salesforcecli/plugin-functions/compare/1.22.9...1.22.10) (2023-11-27)
 
 
