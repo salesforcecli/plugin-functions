@@ -1,3 +1,12 @@
+# [1.23.0](https://github.com/salesforcecli/plugin-functions/compare/1.22.11...1.23.0) (2024-03-05)
+
+
+### Features
+
+* publish npm-shrinkwrap.json ([#772](https://github.com/salesforcecli/plugin-functions/issues/772)) ([a343057](https://github.com/salesforcecli/plugin-functions/commit/a34305753532ae405d70f14e9b0bec91e5951a0f))
+
+
+
 ## [1.22.11](https://github.com/salesforcecli/plugin-functions/compare/1.22.10...1.22.11) (2023-12-06)
 
 
