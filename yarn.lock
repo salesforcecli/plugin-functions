@@ -490,6 +490,16 @@
     supports-color "^5.5.0"
     tslib "^1.9.3"
 
+"@heroku-cli/color@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@heroku-cli/color/-/color-2.0.1.tgz#283ec9f489f6648b1997430652a361ab5183ebf9"
+  integrity sha512-iRDAAqA3Ep6HfR6c3fy1RUPDICq4ovrpX9k5BIiOPsGAtXufQfK18dyV8Z+fiAMGHvVai82NkR2Ht9TLmXa9Fg==
+  dependencies:
+    ansi-styles "^4.3.0"
+    chalk "^4.1.2"
+    supports-color "^7.2.0"
+    tslib "^1.9.3"
+
 "@heroku-cli/schema@^1.0.25":
   version "1.0.25"
   resolved "https://registry.yarnpkg.com/@heroku-cli/schema/-/schema-1.0.25.tgz#175d489d82c2ff0be700fe9fab8590b64c7e4f39"
@@ -510,22 +520,22 @@
     ajv "^6.12.2"
     toml "^3.0.0"
 
-"@heroku/functions-core@^0.7.2":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.7.2.tgz#275c0ccf8191f1b89d1b89a1bfe46ec32a5b4973"
-  integrity sha512-Oz5wYmriilBfeODgVPXdq2nlzpb6+XNScQ9I2lZzu+3XFWc+bJUxcGOPVD4qSB7tST5hk6qwLAIBD08/tWrxaw==
+"@heroku/functions-core@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@heroku/functions-core/-/functions-core-0.7.3.tgz#85a100a1830a03af0cc269ce95dee1b1d4963a63"
+  integrity sha512-2I0xRjICP8LXkQvtvu7ERg0RWlC4HuHG53ZDxA6aE+BgE2ug8mEAtzR0e7Q/A59RXL+nZzK8WmU1nfdH+TDxqg==
   dependencies:
-    "@heroku-cli/color" "^1.1.16"
+    "@heroku-cli/color" "^2.0.1"
     "@heroku/project-descriptor" "0.0.6"
     "@salesforce/core" "^2.37.1"
     "@salesforce/templates" "^59.0.1"
     axios "^0.27.2"
     cloudevents "6.0.3"
-    fs-extra "^11.1.1"
+    fs-extra "^11.2.0"
     handlebars "^4.7.8"
     mem-fs "^2.2.1"
     mem-fs-editor "^9.6.0"
-    semver "^7.5.4"
+    semver "^7.6.2"
     yeoman-environment "~3.13.0"
 
 "@heroku/project-descriptor@0.0.6":
@@ -4278,7 +4288,7 @@ fs-extra@^10.0.0, fs-extra@^10.0.1:
     jsonfile "^6.0.1"
     universalify "^2.0.0"
 
-fs-extra@^11.1.1:
+fs-extra@^11.2.0:
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-11.2.0.tgz#e70e17dfad64232287d01929399e0ea7c86b0e5b"
   integrity sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==
@@ -7977,12 +7987,10 @@ semver@^6.0.0, semver@^6.3.0, semver@^6.3.1:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
-semver@^7.1.1, semver@^7.1.3, semver@^7.2.1, semver@^7.3.2, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8, semver@^7.5.0, semver@^7.5.1, semver@^7.5.4:
-  version "7.5.4"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
-  integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
-  dependencies:
-    lru-cache "^6.0.0"
+semver@^7.1.1, semver@^7.1.3, semver@^7.2.1, semver@^7.3.2, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8, semver@^7.5.0, semver@^7.5.1, semver@^7.5.4, semver@^7.6.2:
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.2.tgz#1e3b34759f896e8f14d6134732ce798aeb0c6e13"
+  integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
 
 sentence-case@^3.0.4:
   version "3.0.4"
