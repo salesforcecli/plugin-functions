@@ -132,6 +132,7 @@ Once the package has been built and signed it will be published to npm. The comm
 - [`sf env var unset`](#sf-env-var-unset)
 - [`sf generate function`](#sf-generate-function)
 - [`sf login functions`](#sf-login-functions)
+- [`sf login functions device`](#sf-login-functions-device)
 - [`sf login functions jwt`](#sf-login-functions-jwt)
 - [`sf logout functions`](#sf-logout-functions)
 - [`sf run function`](#sf-run-function)
@@ -520,6 +521,40 @@ EXAMPLES
   Log in to Salesforce Functions:
 
     $ sf login functions
+```
+
+## `sf login functions device`
+
+Login using device flow instead of default web-based flow. This will authenticate you with both sf and Salesforce Functions.
+
+```
+USAGE
+  $ sf login functions device [--json] [-l <value> | ] [-a <value>] [-d] [-v]
+
+FLAGS
+  -a, --alias=<value>         Alias for the org.
+  -d, --set-default           Set the org as the default that all org-related commands run against.
+  -l, --instance-url=<value>  The login URL of the instance the org lives on.
+  -v, --set-default-dev-hub   Set the org as the default Dev Hub for scratch org creation.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Login using device flow instead of default web-based flow. This will authenticate you with both sf and Salesforce
+  Functions.
+
+  Use this command when executing from a script.
+
+EXAMPLES
+  Log in using device flow:
+
+    $ sf login functions device
+
+  Log in and specify the org alias and URL, set as default org and default Dev Hub, and format output as JSON:
+
+    $ sf login functions device --alias org-alias --set-default --set-default-dev-hub --instance-url \
+      https://path/to/instance --json
 ```
 
 ## `sf login functions jwt`
