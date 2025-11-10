@@ -8,7 +8,7 @@
   {
     "command": "env:compute:collaborator:add",
     "plugin": "@salesforce/plugin-functions",
-    "flags": ["heroku-user"],
+    "flags": ["heroku-user", "json"],
     "alias": []
   },
   {

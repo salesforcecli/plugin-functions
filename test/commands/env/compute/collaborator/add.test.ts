@@ -9,6 +9,14 @@ import herokuColor from '@heroku-cli/color';
 
 const HEROKU_USER = 'rick@morty.com';
 
+const jsonSuccess = {
+  status: 0,
+  result: {
+    added: [HEROKU_USER],
+  },
+  warnings: [],
+};
+
 describe('sf env compute collaborator add', () => {
   test
     .stdout()
@@ -36,10 +44,22 @@ describe('sf env compute collaborator add', () => {
   test
     .stdout()
     .stderr()
+    .nock('https://api.heroku.com', (api) => api.post('/salesforce-orgs/collaborators').reply(200, {}))
+    .command(['env:compute:collaborator:add', '-h', HEROKU_USER, '--json'])
+    .it('will show json output with success', (ctx) => {
+      const succJSON = JSON.parse(ctx.stdout);
+
+      expect(succJSON.status).to.deep.equal(jsonSuccess.status);
+      expect(succJSON.result).to.eql(jsonSuccess.result);
+    });
+
+  test
+    .stdout()
+    .stderr()
     .nock('https://api.heroku.com', (api) => api.post('/salesforce-orgs/collaborators').reply(404, {}))
     .command(['env:compute:collaborator:add', '-h', HEROKU_USER])
     .catch((error) => {
-      expect(error.message).contains(`${herokuColor.heroku(HEROKU_USER)} does not exist.`);
+      expect(error.message).contains(`Couldn't find Heroku user ${herokuColor.heroku(HEROKU_USER)}.`);
     })
     .it('alerts user if user entered does not exist');
 });

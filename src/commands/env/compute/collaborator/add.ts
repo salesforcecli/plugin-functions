@@ -16,8 +16,6 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-functions', 'env.compute.collaborator.add');
 
 export default class ComputeCollaboratorAdd extends Command {
-  static enableJsonFlag = false;
-
   static summary = messages.getMessage('summary');
 
   static examples = messages.getMessages('examples');
@@ -64,7 +62,7 @@ export default class ComputeCollaboratorAdd extends Command {
       }
 
       if (error.message?.includes('404')) {
-        this.error(`${herokuColor.heroku(herokuUser)} does not exist.`);
+        this.error(`Couldn't find Heroku user ${herokuColor.heroku(herokuUser)}.`);
       }
 
       this.error(error.message);
@@ -74,5 +72,8 @@ export default class ComputeCollaboratorAdd extends Command {
     this.log(
       'For more information about attaching Heroku add-ons to your compute environments, run $ heroku addons:attach --help.'
     );
+    return {
+      added: [`${herokuUser}`],
+    };
   }
 }
