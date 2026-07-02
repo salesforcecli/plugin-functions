@@ -18,6 +18,7 @@ jobs:
       sign: true
       tag: prerelease
       githubTag: ${{ github.event.release.tag_name || inputs.tag }}
+      nodeVersion: ${{ vars.NODE_VERSION_OVERRIDE }}
     secrets: inherit
   # canaries:
   #   needs: [npm]
