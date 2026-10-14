@@ -12,4 +12,6 @@ jobs:
   windows-unit-tests:
     uses: salesforcecli/github-workflows/.github/workflows/unitTestsWindows.yml@main
   inclusion:
+    # skipped: @salesforce/templates (via @heroku/functions-core) exceeds the Windows path length limit
+    if: false
     uses: salesforcecli/github-workflows/.github/workflows/inclusionTest.yml@main
