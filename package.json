@@ -88,9 +88,7 @@
     "/messages",
     "/templates",
     "/oclif.manifest.json",
-    "/schemas",
-    "/oclif.lock",
-    "/npm-shrinkwrap.json"
+    "/schemas"
   ],
   "homepage": "https://github.com/salesforcecli/plugin-functions",
   "keywords": [
@@ -185,7 +183,7 @@
     "lint": "sf-lint",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint && yarn test:deprecation-policy",
-    "prepack": "sf-prepack && oclif lock && npm shrinkwrap",
+    "prepack": "sf-prepack",
     "prepare": "sf-install",
     "pretest": "sf-compile-test",
     "promote-dist-tags": "./bin/promote-dist-tags",
