@@ -12,8 +12,12 @@ on:
         required: true
 jobs:
   npm:
+    permissions:
+      id-token: write
+      contents: read
     uses: salesforcecli/github-workflows/.github/workflows/npmPublish.yml@main
     with:
+      trustedPublishing: true
       ctc: true
       sign: true
       tag: prerelease

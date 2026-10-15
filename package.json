@@ -12,7 +12,7 @@
     "@heroku-cli/schema": "^1.0.25",
     "@heroku/eventsource": "^1.0.7",
     "@heroku/function-toml": "^0.0.3",
-    "@heroku/functions-core": "^0.7.2",
+    "@heroku/functions-core": "^0.9.1",
     "@heroku/project-descriptor": "0.0.6",
     "@oclif/core": "^2.8.0",
     "@salesforce/core": "^3.36.2",
@@ -88,9 +88,7 @@
     "/messages",
     "/templates",
     "/oclif.manifest.json",
-    "/schemas",
-    "/oclif.lock",
-    "/npm-shrinkwrap.json"
+    "/schemas"
   ],
   "homepage": "https://github.com/salesforcecli/plugin-functions",
   "keywords": [
@@ -185,7 +183,7 @@
     "lint": "sf-lint",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint && yarn test:deprecation-policy",
-    "prepack": "sf-prepack && oclif lock && npm shrinkwrap",
+    "prepack": "sf-prepack",
     "prepare": "sf-install",
     "pretest": "sf-compile-test",
     "promote-dist-tags": "./bin/promote-dist-tags",

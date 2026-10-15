@@ -2,6 +2,7 @@
   "recursive": true,
   "reporter": "spec",
   "require": ["ts-node/register", "source-map-support/register", "test/helpers/init.ts", "test/helpers/auth.ts"],
+  "node-option": ["no-experimental-strip-types"],
   "timeout": 60000,
   "watch-extensions": ["ts"]
 }
