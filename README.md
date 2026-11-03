@@ -51,11 +51,11 @@ cd plugin-functions
 yarn && yarn build
 ```
 
-To use your plugin, run using the local `./bin/dev.js` or `./bin/dev.cmd` file.
+To use your plugin, run using the local `./bin/dev` or `./bin/dev.cmd` file.
 
 ```bash
 # Run using local run file.
-./bin/dev.js env list
+./bin/dev env list
 ```
 
 # Update README.md
