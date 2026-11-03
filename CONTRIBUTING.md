@@ -43,10 +43,9 @@ Agreement. You can do so by going to https://cla.salesforce.com/sign-cla.
 
 ## Testing
 
-All changes must have associated tests. This plugin uses a combination of unit testing and NUTs (non-unit tests).
+All changes must have associated tests.
 
 - Run unit tests with `yarn test`. Tests use the mocha framework and are located in the `test` directory with the naming pattern `<test-file>.test.ts`.
-- Run integration tests (NUTs) with `yarn test:nuts`. NUTs use the [cli-plugins-testkit](https://github.com/salesforcecli/cli-plugins-testkit) framework and run against the default devhub in your environment.
 
 ## Debugging
 
@@ -57,5 +56,4 @@ Refer to the [Salesforce CLI Plugin Developer Guide](https://developer.salesforc
 - `yarn build` — Compile the TypeScript source
 - `yarn build --watch` — Recompile automatically on file changes
 - `yarn test` — Run unit tests
-- `yarn test:nuts` — Run integration tests (NUTs)
 - `yarn lint` — Run the linter
